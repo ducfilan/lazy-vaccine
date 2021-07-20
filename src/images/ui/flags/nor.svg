@@ -1,0 +1,17 @@
+<svg width="100" height="100" viewBox="0 0 100 100" 
+  xmlns="http://www.w3.org/2000/svg" 
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+    <path d="M49 .096V34h41.42A46.059 46.059 0 0 1 92 46c0 4.151-.55 8.174-1.58 12H49v33.904c-.992.064-1.992.096-3 .096a45.804 45.804 0 0 1-21-5.062V58H1.58A46.059 46.059 0 0 1 0 46c0-4.151.55-8.174 1.58-12H25V5.062A45.804 45.804 0 0 1 46 0c1.008 0 2.008.032 3 .096z" id="norway-a"></path>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <circle fill="#EE324A" cx="50" cy="50" r="46"></circle>
+    <g transform="translate(4 4)">
+      <mask id="norway-b" fill="#fff">
+        <use xlink:href="#norway-a"></use>
+      </mask>
+      <use fill="#FFF" xlink:href="#norway-a"></use>
+      <path d="M46 55h50V37H46V-4H28v41H-4v18h32v41h18V55z" fill="#008EC9" mask="url(#norway-b)"></path>
+    </g>
+  </g>
+</svg>

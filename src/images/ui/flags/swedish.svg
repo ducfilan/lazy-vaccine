@@ -1,0 +1,10 @@
+<svg width="100" height="100" viewBox="0 0 100 100" 
+  xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path d="M46 0v37h45.12c.577 2.91.88 5.92.88 9s-.303 6.09-.88 9H46v37a45.853 45.853 0 0 1-18-3.655V55H.88C.303 52.09 0 49.08 0 46s.303-6.09.88-9H28V3.655A45.853 45.853 0 0 1 46 0z" id="swedish-path"></path>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <circle fill="#008EC9" cx="50" cy="50" r="46"></circle>
+    <use fill="#FFD53F" xlink:href="#swedish-path" transform="translate(4 4)"></use>
+  </g>
+</svg>
