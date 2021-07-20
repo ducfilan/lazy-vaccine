@@ -1,0 +1,70 @@
+{
+  "appName": {
+    "message": "leanlearn",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "Gain more knowledge with less pain",
+    "description": "The description of the application"
+  },
+  "logout": {
+    "message": "đăng xuất"
+  },
+  "pageCreateSetTitle": {
+    "message": "Tạo bài học mới"
+  },
+  "pageSetsListTitle": {
+    "message": "Danh sách các bài học"
+  },
+  "pageSetDetailTitle": {
+    "message": "Chi tiết bài học"
+  },
+  "pageCreateSetItemsTitle": {
+    "message": "Thêm các mục cho bài học"
+  },
+  "setTitle": {
+    "message": "Tiêu đề"
+  },
+  "setTitlePlaceholder": {
+    "message": "Tên của bài học được tạo"
+  },
+  "setDescription": {
+    "message": "Mô tả"
+  },
+  "setDescriptionPlaceholder": {
+    "message": "Mô tả thêm về bài học sẽ được tạo"
+  },
+  "setVisibility": {
+    "message": "Chế độ"
+  },
+  "setVisibilityPublic": {
+    "message": "Công khai"
+  },
+  "setVisibilityOnlyMe": {
+    "message": "Chỉ mình tôi"
+  },
+  "setVisibilityNotFinished": {
+    "message": "Chưa hoàn thành"
+  },
+  "setCategory": {
+    "message": "Phân loại"
+  },
+  "setTags": {
+    "message": "Thẻ"
+  },
+  "setTagsPlaceholder": {
+    "message": ""
+  },
+  "setTagsHelpText": {
+    "message": "Ví dụ: IELTS, ngữ pháp tiếng Nhật N3, AWS associate mock test"
+  },
+  "setCreateSetButton": {
+    "message": "Tạo bài"
+  },
+  "cancel": {
+    "message": "Hủy"
+  },
+  "select": {
+    "message": "Lựa chọn"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "appName": {
+    "message": "leanlearn",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "Gain more knowledge with less pain",
+    "description": "The description of the application"
+  },
+  "logout": {
+    "message": "ログアウト"
+  },
+  "pageCreateSetTitle": {
+    "message": "セット作成"
+  },
+  "pageSetsListTitle": {
+    "message": "セット一覧"
+  },
+  "pageSetDetailTitle": {
+    "message": "セット詳細"
+  },
+  "pageCreateSetItemsTitle": {
+    "message": "セットの各アイテム追加"
+  },
+  "setTitle": {
+    "message": "名前"
+  },
+  "setTitlePlaceholder": {
+    "message": "セットの名前"
+  },
+  "setDescription": {
+    "message": "説明"
+  },
+  "setDescriptionPlaceholder": {
+    "message": "セットの詳細内容"
+  },
+  "setVisibility": {
+    "message": "可視"
+  },
+  "setVisibilityPublic": {
+    "message": "公開"
+  },
+  "setVisibilityOnlyMe": {
+    "message": "自分のみ"
+  },
+  "setVisibilityNotFinished": {
+    "message": "未完了"
+  },
+  "setCategory": {
+    "message": "カテゴリー"
+  },
+  "setTags": {
+    "message": "タグ"
+  },
+  "setTagsPlaceholder": {
+    "message": ""
+  },
+  "setTagsHelpText": {
+    "message": "例えば： IELTS, 英語文法, AWS associate mock test"
+  },
+  "setCreateSetButton": {
+    "message": "セットの作成"
+  },
+  "cancel": {
+    "message": "キャンセル"
+  },
+  "select": {
+    "message": "選択"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "appName": {
+    "message": "leanlearn",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "Gain more knowledge with less pain",
+    "description": "The description of the application"
+  },
+  "logout": {
+    "message": "logout"
+  },
+  "pageCreateSetTitle": {
+    "message": "Create a new set"
+  },
+  "pageSetsListTitle": {
+    "message": "Set list"
+  },
+  "pageSetDetailTitle": {
+    "message": "Set detail"
+  },
+  "pageCreateSetItemsTitle": {
+    "message": "Add items to the set"
+  },
+  "setTitle": {
+    "message": "Title"
+  },
+  "setTitlePlaceholder": {
+    "message": "Title for the set"
+  },
+  "setDescription": {
+    "message": "Description"
+  },
+  "setDescriptionPlaceholder": {
+    "message": "Detail information for the set"
+  },
+  "setVisibility": {
+    "message": "Visibility"
+  },
+  "setVisibilityPublic": {
+    "message": "Public"
+  },
+  "setVisibilityOnlyMe": {
+    "message": "Only me (Private)"
+  },
+  "setVisibilityNotFinished": {
+    "message": "Not finished"
+  },
+  "setCategory": {
+    "message": "Category"
+  },
+  "setTags": {
+    "message": "Tags"
+  },
+  "setTagsPlaceholder": {
+    "message": ""
+  },
+  "setTagsHelpText": {
+    "message": "E.g. IELTS, spanish grammar, AWS associate mock test"
+  },
+  "setCreateSetButton": {
+    "message": "Create set"
+  },
+  "cancel": {
+    "message": "Cancel"
+  },
+  "select": {
+    "message": "Select one"
+  }
+}
