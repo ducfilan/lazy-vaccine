@@ -1,0 +1,178 @@
+.items-add-panel--wrapper {
+  .items-add-panel--item {
+    @include box-shadow(5px, 5px, 5px, 0, fade-out($black, 0.85));
+
+    position: relative;
+    margin-bottom: 4em;
+    background: $white;
+
+    .items-add-panel--type-select {
+      position: absolute;
+      top: -2.5em;
+
+      select {
+        border: none;
+        border-radius: 0;
+        background: $primary;
+        color: findColorInvert($primary);
+      }
+
+      &:hover:after {
+        border-color: $grey-lighter;
+      }
+    }
+
+    .items-add-panel--textboxes {
+      margin-right: -2.25em;
+      padding: 0 1em;
+
+      input[type="text"],
+      textarea,
+      textarea:active,
+      textarea:focus {
+        margin-bottom: 0.5em;
+        border: none;
+        border-bottom: 2px solid $primary;
+        box-shadow: none;
+      }
+    }
+
+    .type-q-and-a {
+      .items-add-panel--textboxes {
+        margin-right: -1.5em;
+      }
+    }
+
+    .items-add-panel--check-guide {
+      position: relative;
+      width: fit-content;
+      margin: 1em 0 -1.5em 1.25em;
+      padding: 0.5em;
+      background: $primary;
+      font-size: .75rem;
+      vertical-align: middle;
+
+      &:after {
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        border-width: 3px;
+        border-style: solid;
+        border-color: $primary transparent transparent $primary;
+        content: "";
+      }
+    }
+
+    .items-add-panel--question {
+      margin-right: .75em;
+      padding: 1em;
+      background-color: $white-ter;
+    }
+
+    .items-add-panel--answer textarea {
+      margin-top: 1.25em;
+
+      &:last-child {
+        .items-add-panel--add-answer-button {
+          display: block;
+        }
+      }
+    }
+
+    .items-add-panel--is-correct-check {
+      margin: 0 0.75em;
+    }
+
+    .items-add-panel--answer-interact-buttons {
+      svg {
+        width: 1em;
+      }
+
+      .items-add-panel--add-answer-button {
+        display: none;
+        margin: 0 0.5em;
+
+        &:hover {
+          color: $primary;
+          cursor: pointer;
+        }
+      }
+
+      .items-add-panel--remove-answer-button {
+        margin: 0 0.5em;
+
+        &:hover {
+          color: $danger;
+          cursor: pointer;
+        }
+
+        svg {
+          transform: rotate(45deg);
+        }
+      }
+    }
+
+    .items-add-panel--choose-language {
+      margin-top: 1em;
+    }
+
+    .items-add-panel--interaction-controls {
+      margin-right: 1em;
+
+      .items-add-panel--delete-button,
+      .items-add-panel--drag-button {
+        @include borderless-button;
+        display: block;
+        width: 1em;
+        height: auto;
+
+        svg {
+          width: 1em;
+        }
+      }
+
+      .items-add-panel--delete-button {
+        &:hover {
+          color: $danger;
+        }
+      }
+    }
+
+    .vertical-divider {
+      @include vertical-divider($width: 1px,
+        $height: 60%,
+        $background: $grey-lighter);
+    }
+  }
+
+  .item-add-panel--add-item-button {
+    height: auto;
+
+    svg {
+      width: 2em;
+      margin: 0 5em;
+      vertical-align: middle;
+    }
+
+    .select {
+      select {
+        padding-right: 1.5em;
+        padding-left: 0.3em;
+        border: none;
+        border-bottom: 2px solid;
+        border-radius: 0;
+        background: $primary;
+        color: $white;
+      }
+
+      &::after {
+        right: 0.5em;
+        border-color: $white;
+      }
+
+      &:hover:after {
+        border-color: $grey-lighter;
+      }
+    }
+  }
+}

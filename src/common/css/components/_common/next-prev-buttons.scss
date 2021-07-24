@@ -1,0 +1,33 @@
+.next-prev-buttons--wrapper {
+  button {
+    @include box-shadow;
+
+    position: fixed;
+    z-index: 1;
+    top: calc(50% + 50px);
+    border: none;
+    border-radius: 0;
+    background: $primary;
+    opacity: 0.8;
+
+    * {
+      pointer-events: none;
+    }
+
+    svg {
+      width: 0.4em;
+    }
+  }
+
+  .next-prev-buttons--prev-button {
+    left: 0;
+    border-top-right-radius: 13px;
+    border-bottom-right-radius: 13px;
+  }
+
+  .next-prev-buttons--next-button {
+    right: 0;
+    border-top-left-radius: 13px;
+    border-bottom-left-radius: 13px;
+  }
+}

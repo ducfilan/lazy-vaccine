@@ -1,0 +1,62 @@
+@mixin box-shadow(
+  $h-shadow: 0,
+  $v-shadow: 1px,
+  $blur: 2px,
+  $spread: 0,
+  $color: fade-out($black, 0.85)
+) {
+  box-shadow: $h-shadow $v-shadow $blur $spread $color;
+}
+
+@mixin transitions(
+  $property: all,
+  $duration: 0.3s,
+  $timing: linear,
+  $delay: 0s
+) {
+  transition: $property $duration $timing $delay;
+}
+
+@mixin box-size($property: border-box) {
+  box-sizing: border-box;
+}
+
+@mixin font-smoothing {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@mixin footer-background {
+  background-image: url("../../../images/ui/greenery.png");
+  background-repeat: repeat-x;
+  background-position: bottom;
+  background-size: 60%;
+}
+
+@mixin horizontal-li {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    & > li {
+      float: left;
+    }
+  }
+}
+
+@mixin vertical-divider($width: 1px, $height: 50%, $background: $white) {
+  position: absolute;
+  z-index: 1;
+  top: calc(50% - #{$height/2});
+  left: 50%;
+  width: $width;
+  height: $height;
+  background: $background;
+}
+
+@mixin borderless-button {
+  padding: 0;
+  border: none;
+  background: none;
+}

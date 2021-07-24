@@ -1,0 +1,36 @@
+@media print,
+screen and (min-width: 769px) {
+
+  .modal-card,
+  .modal-content {
+    width: calc(100vw - 40px);
+  }
+}
+
+.modal.import-set-items--modal {
+  .import-set-items-modal--type-select {
+    margin: 1em -1em;
+    margin-top: 0;
+  }
+
+  .import-set-items-modal--delimiters {
+    margin-top: 1em;
+
+    .has-margin-right-1em {
+      margin-right: 1em;
+    }
+  }
+
+  .import-set-items-modal--actions-wrapper {
+    .import-set-items-modal--buttons {
+      .button {
+        margin-left: 1em;
+
+        svg {
+          width: 1em;
+        }
+      }
+    }
+  }
+
+}

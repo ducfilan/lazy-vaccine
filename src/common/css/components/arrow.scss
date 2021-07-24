@@ -1,0 +1,32 @@
+.arrow {
+  position: relative;
+
+  .arrow--line {
+    float: left;
+    width: 100%;
+    height: 2px;
+    margin-top: 4px;
+    background: $grey-lighter;
+
+    &:after {
+      display: inline-block;
+      padding: 0.5rem 0.5rem;
+      background: $white;
+      font-size: .75rem;
+      color: $grey-dark;
+      text-align: center;
+      content: attr(data-content);
+      transform: translateY(-1.1rem);
+    }
+  }
+
+  .arrow--point {
+    position: absolute;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 10px solid $grey-lighter;
+  }
+}

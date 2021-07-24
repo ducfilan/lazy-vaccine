@@ -1,0 +1,74 @@
+.creator-info-and-actions--wrapper {
+  @include horizontal-li;
+
+  ul>li {
+    margin: 0 0.5em;
+  }
+
+  .creator-info--avatar {
+    float: left;
+    overflow: hidden;
+    width: 4em;
+    height: 4em;
+    margin-right: 1em;
+    border-radius: 100%;
+  }
+
+  .creator-info--creator-name {
+    a {
+      font-size: 1.5em;
+      font-weight: 700;
+    }
+  }
+
+  .actions--icon {
+    @include box-shadow;
+    position: relative;
+    width: 2.25em;
+    height: 2.25em;
+    padding: 0.5em;
+    border-radius: 50%;
+    background-color: $white;
+    color: $primary;
+    cursor: pointer;
+
+    &:before,
+    &:after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      content: '';
+    }
+
+    &:before {
+      box-shadow: inset 0 0 0 0 $primary;
+      transition-duration: 0.5s;
+    }
+
+    &:hover:before {
+      box-shadow: inset 0 0 0 2.25em $primary;
+    }
+
+    &.facebook {
+      color: #3b5999;
+    }
+
+    &.twitter {
+      color: #55acee;
+    }
+
+    &:hover {
+      color: $white;
+      transition-duration: 0.5s;
+    }
+
+    svg {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

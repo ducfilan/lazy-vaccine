@@ -1,0 +1,22 @@
+@keyframes tracking-in-contract-bck {
+  0% {
+    letter-spacing: 1em;
+    opacity: 0;
+    transform: translateZ(400px);
+  }
+
+  40% {
+    opacity: .6;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateZ(0);
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}

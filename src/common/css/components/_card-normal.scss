@@ -1,0 +1,126 @@
+.card-normal {
+  @include box-shadow;
+  @include transitions;
+  position: relative;
+  z-index: 1;
+  display: block;
+  height: 330px;
+  background: $white;
+
+  &:hover {
+    @include box-shadow($blur: 15px, $color: fade-out($black, 0.7));
+
+    .thumbnail {
+      img {
+        opacity: 0.6;
+        transform: scale(1.1);
+        object-fit: cover;
+      }
+    }
+
+    .post-content {
+      .description {
+        max-height: 100px;
+      }
+    }
+  }
+
+  .thumbnail {
+    overflow: hidden;
+    height: 300px;
+    background: $black;
+
+    .date {
+      @include box-size;
+      position: absolute;
+      z-index: 1;
+      top: 10px;
+      right: 10px;
+      width: 55px;
+      height: 55px;
+      padding: 12.5px 0;
+      border-radius: 100%;
+      background: $primary;
+      font-weight: 700;
+      color: $white;
+      text-align: center;
+
+      .day {
+        font-size: 12px;
+      }
+
+      .month {
+        font-size: 9px;
+        text-transform: uppercase;
+      }
+    }
+
+    img {
+      @include transitions;
+      display: block;
+      width: 120%;
+    }
+  }
+
+  .post-content {
+    @include box-size;
+    @include transitions($timing: cubic-bezier(0.37, 0.75, 0.61, 1.05));
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+    background: $white;
+
+    .category {
+      position: absolute;
+      top: -41px;
+      left: 0;
+      padding: 10px 15px;
+      background: $primary;
+      font-size: 14px;
+      font-weight: 600;
+      color: $white;
+      text-transform: uppercase;
+    }
+
+    .set-info {
+      font-size: 0.9em;
+    }
+
+    .title {
+      overflow: hidden;
+      height: 1.2em;
+      margin: 0;
+      padding: 0 0 10px;
+      font-size: 1em;
+      font-weight: 700;
+      color: $grey-darker;
+      text-overflow: ellipsis;
+    }
+
+    .description {
+      @include transitions($timing: cubic-bezier(0.37, 0.75, 0.61, 1.05));
+      display: block;
+      overflow: hidden;
+      max-height: 0;
+      font-size: 14px;
+      line-height: 1.8em;
+      color: $grey-dark;
+      margin-bottom: 0;
+    }
+
+    .post-meta {
+      margin: 10px 0 0;
+      color: $grey;
+
+      .timestamp {
+        margin: 0 16px 0 0;
+      }
+
+      a {
+        color: $grey;
+        text-decoration: none;
+      }
+    }
+  }
+}

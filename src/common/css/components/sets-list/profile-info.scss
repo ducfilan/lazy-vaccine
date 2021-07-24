@@ -1,0 +1,122 @@
+.profile-info--wrapper {
+  width: $sidebar-width;
+  padding-top: 3em;
+  border: 1px solid $grey-lighter;
+  border-radius: 4px;
+  background: $white;
+
+  .profile-info--profile-picture {
+    overflow: hidden;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    border-radius: 100%;
+  }
+
+  .profile-info--name {
+    p {
+      font-size: 1.5em;
+      font-weight: 700;
+    }
+  }
+
+  .profile-info--level {
+    .profile-info--level-icon {
+      svg {
+        overflow: visible;
+        width: 0.5em;
+        font-size: 5em;
+      }
+    }
+
+    .profile-info--level-icon--before {
+      padding: 0.5rem 0.5rem 0 1.5em;
+    }
+
+    .profile-info--level-icon--next {
+      padding: 0.5rem 1.5em 0 0.5rem;
+    }
+  }
+
+  .profile-info--stats-wrapper {
+    position: relative;
+
+    &::after {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      margin-left: -10px;
+      border: solid transparent;
+      border-width: 10px;
+      border-color: rgba(136, 183, 213, 0);
+      border-bottom-color: $primary;
+      pointer-events: none;
+      content: " ";
+    }
+
+    .vertical-divider {
+      @include vertical-divider;
+    }
+  }
+
+  .profile-info--stats {
+    position: relative;
+    padding: 0.5rem;
+    background: $primary;
+    color: $white;
+
+    .profile-info--number {
+      font-size: 2em;
+      font-weight: 600;
+      line-height: 1em;
+    }
+
+    .profile-info--label {
+      font-weight: 300;
+    }
+  }
+
+  .profile-info--button {
+    margin: 1em;
+    padding: 0.5em;
+    border-left: 5px solid $white;
+    color: $grey;
+    vertical-align: middle;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:hover,
+    &.is-active {
+      border-color: $primary;
+
+      .profile-info--button-label {
+        font-weight: 600;
+      }
+
+      .profile-info--button-icon {
+        svg {
+          color: $primary;
+        }
+      }
+    }
+
+    .profile-info--button-icon {
+      position: absolute;
+      left: 1em;
+
+      svg {
+        overflow: visible;
+        width: 0.5em;
+        font-size: 3em;
+      }
+    }
+
+    .profile-info--button-label {
+      padding-left: 2em;
+    }
+  }
+}
