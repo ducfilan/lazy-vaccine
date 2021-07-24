@@ -34,13 +34,12 @@ module.exports = (_, { mode }) => {
           ],
         },
         {
-          test: /\.s[ac]ss$/i,
-          use: ["style-loader", "css-loader", "sass-loader"],
+          test: /\.s[ac]ss|css$/i,
+          use: ["style-loader", "css-loader", "resolve-url-loader", "sass-loader"],
         },
         {
           test: /\.(png|jpg|gif|svg)$/i,
           type: "asset/resource",
-          exclude: /node_modules/,
         },
       ],
     },
