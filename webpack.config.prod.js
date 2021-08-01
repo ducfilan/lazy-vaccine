@@ -40,7 +40,32 @@ module.exports = (_, { mode }) => {
         {
           test: /\.(png|jpg|gif|svg)$/i,
           type: "asset/resource",
+          exclude: path.join(__dirname, "src/images/ui/fa")
         },
+        {
+          test: /\.svg$/,
+          use: ["@svgr/webpack"],
+          include: path.join(__dirname, "src/images/ui/fa")
+        },
+        {
+          test: /\.less$/,
+          use: [{
+            loader: "style-loader",
+          }, {
+            loader: "css-loader",
+          }, {
+            loader: "less-loader",
+            options: {
+              lessOptions: {
+                modifyVars: {
+                  "primary-color": "#12b886",
+                  "font-family": "'Source Sans Pro', 'Noto Sans JP', BlinkMacSystemFont, -apple-system, 'Segoe UI', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol','Noto Color Emoji'",
+                },
+                javascriptEnabled: true,
+              },
+            },
+          }],
+        }
       ],
     },
     resolve: {
