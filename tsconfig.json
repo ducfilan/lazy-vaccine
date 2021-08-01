@@ -10,6 +10,15 @@
         "target": "es5",
         "allowJs": true,
         "jsx": "react",
+        "baseUrl": "./",
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ],
+            "@img/*": [
+                "./src/images/*"
+            ]
+        },
     },
     "include": [
         "src/**/*",

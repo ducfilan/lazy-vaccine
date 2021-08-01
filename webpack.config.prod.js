@@ -70,6 +70,10 @@ module.exports = (_, { mode }) => {
     },
     resolve: {
       extensions: [".js", ".jsx", ".tsx", ".ts"],
+      alias: {
+        '@': path.join(__dirname, 'src'),
+        '@img': path.join(__dirname, 'src/images'),
+      },
     },
     devServer: {
       contentBase: "./dist",
