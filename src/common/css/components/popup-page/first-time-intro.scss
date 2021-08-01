@@ -12,9 +12,8 @@
     .first-time-intro--title-wrapper {
       width: 100%;
       height: 100%;
-      padding: 2em 5em 3em;
-      background-image: url("../../../../images/ui/clouds.svg"),
-        url("../../../../images/ui/trees.svg"),
+      padding: 0 5em 3em;
+      background-image: url("../../../../images/ui/clouds.svg"), url("../../../../images/ui/trees.svg"),
         linear-gradient(to bottom, $primary, $primary-light);
       background-repeat: no-repeat, repeat-x;
       background-position: 0 0, 0 30px;
@@ -22,27 +21,35 @@
       color: $white;
       text-shadow: 1px 1px 1px $text-shadow;
 
-      h3 {
+      .title {
         line-height: 1.5;
         color: currentColor;
+        text-align: justify;
       }
     }
   }
 
   .first-time-intro--login-button {
     position: absolute;
-    bottom: -1.5em;
+    bottom: -2em;
     width: 100%;
 
-    .button {
+    button {
       @include box-shadow;
+
+      height: 60px;
+      font-size: 24px;
+      color: $primary;
+      padding: 0 50px;
 
       &:after {
         border-color: transparent transparent #dbdbdb #dbdbdb !important;
       }
 
-      .icon {
+      .anticon {
         color: $google-color;
+        font-size: 32px;
+        vertical-align: middle;
       }
     }
   }
