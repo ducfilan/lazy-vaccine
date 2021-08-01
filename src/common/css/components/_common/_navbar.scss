@@ -1,23 +1,14 @@
-.navbar {
-  .brand-name {
+.ant-page-header {
+  background-color: $primary;
+  padding: 0 8px;
+
+  .ant-page-header-heading-title {
     padding-top: 0;
     padding-bottom: 0;
     font-family: $family-sans-serif;
     font-weight: 300;
-    animation: tracking-in-contract-bck 1s cubic-bezier(.215, .61, .355, 1) both;
-  }
-
-  .logo {
-    margin-left: 5px;
-    padding: 3px;
-    padding-top: 5px;
-  }
-
-  @media screen and (max-width: 1023px) {
-    .navbar-menu {
-      position: absolute;
-      right: 0;
-      width: 250px;
-    }
+    text-transform: uppercase;
+    color: $white;
+    animation: tracking-in-contract-bck 1s cubic-bezier(0.215, 0.61, 0.355, 1) both;
   }
 }
