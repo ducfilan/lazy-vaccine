@@ -25,6 +25,8 @@
         line-height: 1.5;
         color: currentColor;
         text-align: justify;
+        white-space: pre-line;
+        text-align: center;
       }
     }
   }
@@ -53,4 +55,8 @@
       }
     }
   }
+}
+
+.first-time-intro--body-wrapper {
+  margin-top: 3em;
 }
