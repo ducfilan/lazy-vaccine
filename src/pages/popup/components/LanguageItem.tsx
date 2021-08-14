@@ -1,22 +1,17 @@
 import * as React from "react"
 
-import PlusIcon from "../../../images/ui/fa/plus-solid.svg"
-import GripLines from "../../../images/ui/fa/grip-lines-solid.svg"
-import Language from "../types/Language"
-import Flag from "../../../common/components/Flag"
+import { MinusCircleFilled } from "@ant-design/icons"
+import Flag from "@/common/components/Flag"
 
-function LanguageItem({ language }: { language: Language }) {
+function LanguageItem({ code, name }: { code: string; name: string }) {
   return (
     <div className="choose-languages--page-item has-text-white is-relative">
       <button className="button is-danger choose-languages--remove-button">
-        <PlusIcon />
+        <MinusCircleFilled />
       </button>
-      <div className="choose-languages--drag-icon">
-        <GripLines />
-      </div>
-      <span className="choose-language--language-label">{language.name}</span>
+      <span className="choose-language--language-label">{name}</span>
       <div className="choose-languages--flag">
-        <Flag langCode={language.code} />
+        <Flag langCode={code} />
       </div>
     </div>
   )
