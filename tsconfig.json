@@ -17,6 +17,15 @@
             ],
             "@img/*": [
                 "./src/images/*"
+            ],
+            "@hooks/*": [
+                "./src/common/hooks/*"
+            ],
+            "@consts/*": [
+                "./src/common/consts/*"
+            ],
+            "@facades/*": [
+                "./src/common/facades/*"
             ]
         },
     },
