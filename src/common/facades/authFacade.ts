@@ -59,8 +59,10 @@ export function signIn(this: any, type: string, callback: Function) {
 }
 
 export function signOut(callback?: () => void) {
-  let serviceAccessToken = cookies.get(CacheKeys.jwtToken)
+  _processGoogleAuthToken((serviceAccessToken: string) => {
+    http.get(`${GoogleApiUrls.revokeToken}${serviceAccessToken}`)
+    chrome.identity.removeCachedAuthToken({ token: serviceAccessToken }, callback)
+  })
 
-  http.get(`${GoogleApiUrls.revokeToken}${serviceAccessToken}`)
-  chrome.identity.removeCachedAuthToken({ token: serviceAccessToken }, callback)
+  cookies.remove(CacheKeys.jwtToken)
 }
