@@ -4,6 +4,8 @@ const webpack = require("webpack");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 
+const DotenvPlugin = require("dotenv-webpack");
+
 module.exports = (_, { mode }) => {
   const isDevelopment = mode === "development";
 
@@ -59,6 +61,8 @@ module.exports = (_, { mode }) => {
               lessOptions: {
                 modifyVars: {
                   "primary-color": "#12b886",
+                  "border-radius-base": "4px",
+                  "btn-border-radius-base": "8px",
                   "font-family": "'Source Sans Pro', 'Noto Sans JP', BlinkMacSystemFont, -apple-system, 'Segoe UI', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol','Noto Color Emoji'",
                 },
                 javascriptEnabled: true,
@@ -71,8 +75,11 @@ module.exports = (_, { mode }) => {
     resolve: {
       extensions: [".js", ".jsx", ".tsx", ".ts"],
       alias: {
-        '@': path.join(__dirname, 'src'),
-        '@img': path.join(__dirname, 'src/images'),
+        "@": path.join(__dirname, "src"),
+        "@img": path.join(__dirname, "src/images"),
+        "@hooks": path.join(__dirname, "src/common/hooks"),
+        "@consts": path.join(__dirname, "src/common/consts"),
+        "@facades": path.join(__dirname, "src/common/facades"),
       },
     },
     devServer: {
@@ -80,6 +87,7 @@ module.exports = (_, { mode }) => {
       hot: true,
     },
     plugins: [
+      new DotenvPlugin(),
       new CopyPlugin({
         patterns: [{ from: "public", to: "." }],
       }),
