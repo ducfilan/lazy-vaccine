@@ -5,7 +5,7 @@ import { usePopupContext } from "../contexts/PopupContext"
 import { Typography, Button, Alert } from "antd"
 import { GoogleOutlined } from "@ant-design/icons"
 import { signIn } from "@/common/facades/authFacade"
-import Constants from "@consts/constants"
+import { LoginTypes } from "@consts/constants"
 import RegisterSteps from "@consts/registerSteps"
 import useLocalStorage from "@hooks/useLocalStorage"
 import CacheKeys from "@consts/cacheKeys"
@@ -24,7 +24,7 @@ function FirstTime() {
     setIsShowLoginError(false)
 
     try {
-      signIn.call({ setIsShowLoginError }, Constants.loginTypes.google, (user: User) => {
+      signIn.call({ setIsShowLoginError }, LoginTypes.google, (user: User) => {
         setFinishedRegisterStep(RegisterSteps.Register)
         setUser(user)
       })
