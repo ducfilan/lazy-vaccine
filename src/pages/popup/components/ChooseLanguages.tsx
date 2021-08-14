@@ -27,8 +27,12 @@ function ChooseLanguages() {
 
   const addLanguage = (langCode: string) => {
     const uniqueLangCodes = Array.from(new Set([...choseLanguages, langCode]).values())
-
     setChoseLanguages(uniqueLangCodes)
+  }
+
+  const removeLanguage = (langCode: string) => {
+    const removedLanguageCodes = choseLanguages.filter((language) => language !== langCode)
+    setChoseLanguages(removedLanguageCodes)
   }
 
   return (
@@ -46,7 +50,7 @@ function ChooseLanguages() {
           <Row gutter={[16, 16]} className="choose-languages--selected-languages-wrapper">
             <Col span={12} offset={6}>
               {choseLanguages.map((code) => (
-                <LanguageItem key={code} code={code} name={langCodeToName(code)} />
+                <LanguageItem key={code} code={code} name={langCodeToName(code)} onRemove={removeLanguage} />
               ))}
             </Col>
           </Row>
