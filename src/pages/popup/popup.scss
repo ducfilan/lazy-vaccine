@@ -13,14 +13,17 @@
 
 @import "../../common/css/components/_common/next-prev-buttons";
 
+html {
+  height: unset;
+}
+
 body {
   @include footer-background;
   width: $popup-container-width;
   background-color: $white-ter;
   color: $text-black;
   padding-bottom: 6em;
-  height: 600px;
-  max-height: 600px;
+  min-height: 600px;
 }
 
 .loading-screen {
