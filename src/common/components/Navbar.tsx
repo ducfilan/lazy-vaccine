@@ -5,36 +5,59 @@ import { MenuOutlined } from "@ant-design/icons"
 
 import logo from "@img/ui/logo.png"
 
-const DropdownMenu = (props: { isLoggedIn: boolean }) => (
-  <Dropdown
-    overlay={
-      <Menu>
-        {props.isLoggedIn && (
-          <Menu.Item key="logout">
-            <Button type="link">{chrome.i18n.getMessage("logout")}</Button>
-          </Menu.Item>
-        )}
-      </Menu>
-    }
-    overlayStyle={{
-      minWidth: 120,
-    }}
-  >
-    <Button
-      type="text"
-      style={{
-        border: "none",
-        paddingRight: 8,
+import { signOut } from "@facades/authFacade"
+import { usePopupContext } from "@/pages/popup/contexts/PopupContext"
+import RegisterSteps from "@consts/registerSteps"
+import CacheKeys from "@consts/cacheKeys"
+import useLocalStorage from "@hooks/useLocalStorage"
+
+const DropdownMenu = (props: { isLoggedIn: boolean }) => {
+  const [, setFinishedRegisterStep] = useLocalStorage(CacheKeys.finishedRegisterStep)
+  const { setUser } = usePopupContext()
+
+  return (
+    <Dropdown
+      overlay={
+        <Menu>
+          {props.isLoggedIn && (
+            <Menu.Item key="logout">
+              <Button
+                type="link"
+                onClick={() => {
+                  signOut(() => {
+                    const finishedRegisterStep = RegisterSteps.Install
+
+                    setFinishedRegisterStep(finishedRegisterStep)
+                    setUser(null)
+                  })
+                }}
+              >
+                {chrome.i18n.getMessage("logout")}
+              </Button>
+            </Menu.Item>
+          )}
+        </Menu>
+      }
+      overlayStyle={{
+        minWidth: 120,
       }}
     >
-      <MenuOutlined
+      <Button
+        type="text"
         style={{
-          color: "white",
+          border: "none",
+          paddingRight: 8,
         }}
-      />
-    </Button>
-  </Dropdown>
-)
+      >
+        <MenuOutlined
+          style={{
+            color: "white",
+          }}
+        />
+      </Button>
+    </Dropdown>
+  )
+}
 
 function Navbar(props: { isLoggedIn: boolean }) {
   return (
