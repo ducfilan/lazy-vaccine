@@ -11,4 +11,8 @@
     color: $white;
     animation: tracking-in-contract-bck 1s cubic-bezier(0.215, 0.61, 0.355, 1) both;
   }
+
+  .ant-page-header-heading-extra .ant-avatar {
+    margin-right: -12px;
+  }
 }

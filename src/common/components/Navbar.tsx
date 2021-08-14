@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { PageHeader, Menu, Dropdown, Button } from "antd"
+import { PageHeader, Menu, Dropdown, Button, Avatar, Image } from "antd"
 import { MenuOutlined } from "@ant-design/icons"
 
 import logo from "@img/ui/logo.png"
@@ -59,12 +59,22 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
   )
 }
 
+function AvatarImage() {
+  const { user } = usePopupContext()
+
+  return user?.pictureUrl ? (
+    <Avatar src={<Image src={user?.pictureUrl} preview={false} />} />
+  ) : (
+    <Avatar>{(user?.name || "?")[0]}</Avatar>
+  )
+}
+
 function Navbar(props: { isLoggedIn: boolean }) {
   return (
     <PageHeader
       title={chrome.i18n.getMessage("appName")}
       avatar={{ gap: 0, src: logo, size: 48 }}
-      extra={[<DropdownMenu key="menu" isLoggedIn={props.isLoggedIn} />]}
+      extra={[<AvatarImage />, <DropdownMenu key="menu" isLoggedIn={props.isLoggedIn} />]}
     />
   )
 }
