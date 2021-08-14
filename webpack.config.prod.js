@@ -42,12 +42,15 @@ module.exports = (_, { mode }) => {
         {
           test: /\.(png|jpg|gif|svg)$/i,
           type: "asset/resource",
-          exclude: path.join(__dirname, "src/images/ui/fa")
+          exclude: [
+            path.join(__dirname, "src/images/ui/fa"),
+            path.join(__dirname, "src/images/ui/flags")
+          ]
         },
         {
           test: /\.svg$/,
           use: ["@svgr/webpack"],
-          include: path.join(__dirname, "src/images/ui/fa")
+          include: path.join(__dirname, "src/images/ui/flags")
         },
         {
           test: /\.less$/,

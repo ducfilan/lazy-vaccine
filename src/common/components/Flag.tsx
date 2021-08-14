@@ -65,7 +65,7 @@ function Flag({ langCode }: { langCode: string }) {
       break
   }
 
-  return <>{flag}</>
+  return <>{flag ?? ""}</>
 }
 
 export default Flag
