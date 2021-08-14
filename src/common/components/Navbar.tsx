@@ -59,7 +59,9 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
   )
 }
 
-function AvatarImage() {
+function AvatarImage(props: { isLoggedIn: boolean }) {
+  if (!props.isLoggedIn) return <></>
+
   const { user } = usePopupContext()
 
   return user?.pictureUrl ? (
@@ -74,7 +76,10 @@ function Navbar(props: { isLoggedIn: boolean }) {
     <PageHeader
       title={chrome.i18n.getMessage("appName")}
       avatar={{ gap: 0, src: logo, size: 48 }}
-      extra={[<AvatarImage />, <DropdownMenu key="menu" isLoggedIn={props.isLoggedIn} />]}
+      extra={[
+        <AvatarImage key="avatar" isLoggedIn={props.isLoggedIn} />,
+        <DropdownMenu key="menu" isLoggedIn={props.isLoggedIn} />,
+      ]}
     />
   )
 }
