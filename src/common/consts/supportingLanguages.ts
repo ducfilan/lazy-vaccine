@@ -1,74 +1,89 @@
-export default {
+type _ = {
+  UI: {
+    code: string;
+    name: string;
+  }[]
+  Set: {
+    [key: string]: {
+      code: string;
+      name: string;
+    }
+  }
+}
+
+const SupportingLanguages: _ = {
   UI: [
     {
-      code: 'en',
-      name: 'English'
+      code: "en",
+      name: "English"
     },
     {
-      code: 'vi',
-      name: 'Vietnamese'
+      code: "vi",
+      name: "Vietnamese"
     },
     {
-      code: 'ja',
-      name: 'Japanese'
+      code: "ja",
+      name: "Japanese"
     }
   ],
-  Set: [
-    {
-      code: 'ar',
-      name: 'Arabic'
+  Set: {
+    ar: {
+      code: "ar",
+      name: "Arabic"
     },
-    {
-      code: 'zh',
-      name: 'Chinese'
+    zh: {
+      code: "zh",
+      name: "Chinese"
     },
-    {
-      code: 'nl',
-      name: 'Dutch'
+    nl: {
+      code: "nl",
+      name: "Dutch"
     },
-    {
-      code: 'en',
-      name: 'English'
+    en: {
+      code: "en",
+      name: "English"
     },
-    {
-      code: 'de',
-      name: 'German'
+    de: {
+      code: "de",
+      name: "German"
     },
-    {
-      code: 'it',
-      name: 'Italian'
+    it: {
+      code: "it",
+      name: "Italian"
     },
-    {
-      code: 'ja',
-      name: 'Japanese'
+    ja: {
+      code: "ja",
+      name: "Japanese"
     },
-    {
-      code: 'ko',
-      name: 'Korean'
+    ko: {
+      code: "ko",
+      name: "Korean"
     },
-    {
-      code: 'mn',
-      name: 'Mongolian'
+    mn: {
+      code: "mn",
+      name: "Mongolian"
     },
-    {
-      code: 'pt',
-      name: 'Portuguese'
+    pt: {
+      code: "pt",
+      name: "Portuguese"
     },
-    {
-      code: 'ru',
-      name: 'Russian'
+    ru: {
+      code: "ru",
+      name: "Russian"
     },
-    {
-      code: 'sl',
-      name: 'Slovenian'
+    sl: {
+      code: "sl",
+      name: "Slovenian"
     },
-    {
-      code: 'es',
-      name: 'Spanish'
+    es: {
+      code: "es",
+      name: "Spanish"
     },
-    {
-      code: 'vi',
-      name: 'Vietnamese'
+    vi: {
+      code: "vi",
+      name: "Vietnamese"
     },
-  ],
+  },
 }
+
+export default SupportingLanguages
