@@ -1,5 +1,6 @@
 import SupportingLanguages from "@consts/supportingLanguages";
 import { KeyValuePair } from "@/common/types/types";
+import { DefaultLangCode } from "@consts/constants";
 
 export function formatString(template: string, values: KeyValuePair[]): string {
   for (let i = 0; i < values.length; i++) {
@@ -12,4 +13,4 @@ export function formatString(template: string, values: KeyValuePair[]): string {
 }
 
 export const langCodeToName = (code: string | undefined) =>
-  SupportingLanguages.Set[code || "en"].name || SupportingLanguages.Set["en"].name
+  SupportingLanguages.Set[code || DefaultLangCode].name

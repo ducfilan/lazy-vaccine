@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 import { Cookies } from "react-cookie"
 
 import StatusCode from "@consts/statusCodes"
-import Constants from "@consts/constants"
+import { ApiTimeOut } from "@consts/constants"
 import CacheKeys from "@consts/cacheKeys"
 
 const headers: Readonly<Record<string, string | boolean>> = {
@@ -42,7 +42,7 @@ class Http {
       baseURL: process.env.API_BASE_URL,
       headers,
       withCredentials: true,
-      timeout: Constants.ApiTimeOut,
+      timeout: ApiTimeOut,
     })
 
     http.interceptors.request.use(injectToken, (error) => Promise.reject(error))

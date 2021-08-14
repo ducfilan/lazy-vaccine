@@ -4,7 +4,7 @@ import { AxiosResponse } from "axios"
 import { http } from "@facades/axiosFacade"
 import Apis from "@consts/apis"
 import GoogleApiUrls from "@consts/googleApiUrls"
-import Constants from "@consts/constants"
+import { LoginTypes } from "@consts/constants"
 import CacheKeys from "@consts/cacheKeys"
 import { GoogleUserInfo, User } from "@/common/types/types"
 import registerSteps from "@consts/registerSteps"
@@ -31,7 +31,7 @@ let _processGoogleAuthToken = (callback: Function, options?: any) => {
 
 export function signIn(this: any, type: string, callback: Function) {
   switch (type) {
-    case Constants.loginTypes.google:
+    case LoginTypes.google:
       _processGoogleAuthToken(async (serviceAccessToken: string) => {
         try {
           const { data: userInfo } = await http.get<any, AxiosResponse<GoogleUserInfo>>(

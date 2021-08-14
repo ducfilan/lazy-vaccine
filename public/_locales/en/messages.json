@@ -7,8 +7,26 @@
     "message": "Gain more knowledge with less pain",
     "description": "The description of the application"
   },
+  "error": {
+    "message": "Error"
+  },
+  "login_google": {
+    "message": "Login with Google"
+  },
+  "login_failed_message": {
+    "message": "So sorry (｡╯︵╰｡)! Unexpected error occurred! Please try again once more now!"
+  },
   "logout": {
-    "message": "logout"
+    "message": "Logout"
+  },
+  "popup_introduce_first": {
+    "message": "WE SPEND SO MUCH TIME ON THE INTERNET.\nYes, no excuse. But a day remains 24 hours since we have the clock. From now on, I will help you use Internet more efficient.\nJust TRY to SEE! 😊"
+  },
+  "popup_introduce_choose_lang_1": {
+    "message": "Nice to meet you, {user_name}! 🎉 I know your first language is {first_language}, do you want to show content in other languages?"
+  },
+  "popup_select_a_language": {
+    "message": "Select a language"
   },
   "pageCreateSetTitle": {
     "message": "Create a new set"

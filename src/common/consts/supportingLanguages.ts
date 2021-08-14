@@ -19,21 +19,21 @@ const SupportingLanguages: _ = {
     },
     {
       code: "vi",
-      name: "Vietnamese"
+      name: "Vietnamese (Tiếng Việt)"
     },
     {
       code: "ja",
-      name: "Japanese"
+      name: "Japanese (日本語)"
     }
   ],
   Set: {
     ar: {
       code: "ar",
-      name: "Arabic"
+      name: "Arabic (عربى)"
     },
     zh: {
       code: "zh",
-      name: "Chinese"
+      name: "Chinese (中文)"
     },
     nl: {
       code: "nl",
@@ -45,43 +45,43 @@ const SupportingLanguages: _ = {
     },
     de: {
       code: "de",
-      name: "German"
+      name: "German (Deutsche)"
     },
     it: {
       code: "it",
-      name: "Italian"
+      name: "Italian (l'italiano)"
     },
     ja: {
       code: "ja",
-      name: "Japanese"
+      name: "Japanese (日本語)"
     },
     ko: {
       code: "ko",
-      name: "Korean"
+      name: "Korean (한국어)"
     },
     mn: {
       code: "mn",
-      name: "Mongolian"
+      name: "Mongolian (Монгол)"
     },
     pt: {
       code: "pt",
-      name: "Portuguese"
+      name: "Portuguese (Português)"
     },
     ru: {
       code: "ru",
-      name: "Russian"
+      name: "Russian (русский)"
     },
     sl: {
       code: "sl",
-      name: "Slovenian"
+      name: "Slovenian (Slovenščina)"
     },
     es: {
       code: "es",
-      name: "Spanish"
+      name: "Spanish (Español)"
     },
     vi: {
       code: "vi",
-      name: "Vietnamese"
+      name: "Vietnamese (Tiếng Việt)"
     },
   },
 }

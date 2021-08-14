@@ -7,8 +7,26 @@
     "message": "Gain more knowledge with less pain",
     "description": "The description of the application"
   },
+  "error": {
+    "message": "Có lỗi"
+  },
+  "login_google": {
+    "message": "Đăng nhập bằng Google"
+  },
+  "login_failed_message": {
+    "message": "Đăng nhập không thành công, bạn thử thêm 1 lần nữa nhé!"
+  },
   "logout": {
     "message": "đăng xuất"
+  },
+  "popup_introduce_first": {
+    "message": "We spend so much time on the Internet.\nYes, no excuse. But a day remains 24 hours since we have the clock. From now on, this extension will help you use Internet more efficient. Just try to see! 😊"
+  },
+  "popup_introduce_choose_lang_1": {
+    "message": "Nice to meet you, {user_name}! 🎉 I know your first language is {first_language}, do you want to show content in other languages?"
+  },
+  "popup_select_a_language": {
+    "message": "Chọn ngôn ngữ"
   },
   "pageCreateSetTitle": {
     "message": "Tạo bài học mới"

@@ -7,8 +7,26 @@
     "message": "Gain more knowledge with less pain",
     "description": "The description of the application"
   },
+  "error": {
+    "message": "エラー"
+  },
+  "login_google": {
+    "message": "Googleでログイン"
+  },
+  "login_failed_message": {
+    "message": "ログインに失敗しました。もう一度お願いします。"
+  },
   "logout": {
     "message": "ログアウト"
+  },
+  "popup_introduce_first": {
+    "message": "We spend so much time on the Internet.\nYes, no excuse. But a day remains 24 hours since we have the clock. From now on, this extension will help you use Internet more efficient. Just try to see! 😊"
+  },
+  "popup_introduce_choose_lang_1": {
+    "message": "Nice to meet you, {user_name}! 🎉 I know your first language is {first_language}, do you want to show content in other languages?"
+  },
+  "popup_select_a_language": {
+    "message": "言語選択"
   },
   "pageCreateSetTitle": {
     "message": "セット作成"
