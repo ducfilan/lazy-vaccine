@@ -22,63 +22,6 @@ body {
   width: $popup-container-width;
   background-color: $white-ter;
   color: $text-black;
-  padding-bottom: 6em;
+  padding-bottom: 7em;
   min-height: 600px;
-}
-
-.loading-screen {
-  .loading-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    h4 {
-      font-weight: 300;
-    }
-  }
-}
-
-.info {
-  position: relative;
-  margin: -3rem -1.5rem;
-  margin-bottom: 1rem;
-
-  img {
-    z-index: -1;
-    width: 100%;
-    min-height: 260px;
-    object-fit: cover;
-    mask: url("../../images/ui/header-mask.svg");
-    mask-position: bottom;
-    mask-repeat: no-repeat;
-    mask-size: cover;
-  }
-
-  .text-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    margin-top: 2rem;
-    margin-left: 0;
-
-    .title {
-      max-width: 500px;
-      font-family: $family-sans-serif;
-      font-weight: bold;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    }
-  }
-}
-
-.card-normal-wrapper {
-  padding: 15px 0;
-}
-
-.svg-inline--fa {
-  overflow: visible;
-  width: 0.5em;
-  font-size: 2em;
 }
