@@ -10,6 +10,7 @@ import SupportingLanguages from "@consts/supportingLanguages"
 import useLocalStorage from "@hooks/useLocalStorage"
 import { formatString, langCodeToName } from "@/common/utils/stringUtils"
 import LanguageItem from "./LanguageItem"
+import NextPrevButton from "./NextPrevButton"
 
 const { useState } = React
 const { Option } = Select
@@ -49,6 +50,7 @@ function ChooseLanguages() {
         </div>
 
         <div className="choose-languages--pages-list">
+          <NextPrevButton direction={"right"} onNext={() => {}} />
           <Row gutter={[16, 16]} className="choose-languages--selected-languages-wrapper">
             <Col span={12} offset={6}>
               {choseLanguages.map((code) => (

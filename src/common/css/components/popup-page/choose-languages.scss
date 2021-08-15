@@ -59,6 +59,8 @@
         background: transparent;
 
         .anticon-minus-circle {
+          @include box-shadow;
+  
           border-radius: 50%;
           background: $white;
         }
