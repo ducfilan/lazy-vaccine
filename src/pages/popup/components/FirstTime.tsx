@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { usePopupContext } from "../contexts/PopupContext"
 
-import { Typography, Button, Alert } from "antd"
+import { Typography, Button, Alert, Image } from "antd"
 import { GoogleOutlined } from "@ant-design/icons"
 import { signIn } from "@/common/facades/authFacade"
 import { LoginTypes } from "@consts/constants"
@@ -10,6 +10,8 @@ import RegisterSteps from "@consts/registerSteps"
 import useLocalStorage from "@hooks/useLocalStorage"
 import CacheKeys from "@consts/cacheKeys"
 import { User } from "@/common/types/types"
+
+import WanImg from "@img/emojis/shiba/wan.png"
 
 const { useState } = React
 
@@ -38,6 +40,7 @@ function FirstTime() {
   return (
     <>
       <div className="first-time-intro--wrapper is-relative">
+        <Image src={WanImg} preview={false} className="is-absolute first-time-intro--wan-img" />
         <div className="first-time-intro--header-info has-text-centered">
           <div className="first-time-intro--title-wrapper">
             <Typography.Title level={2} className="title">

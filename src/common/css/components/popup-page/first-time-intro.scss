@@ -31,6 +31,19 @@
     }
   }
 
+  & > .ant-image {
+    position: absolute !important;
+    bottom: 0;
+
+    .first-time-intro--wan-img {
+      width: 162px;
+      height: auto;
+      z-index: 1;
+      bottom: 15px;
+      left: 60px;
+    }
+  }
+
   .first-time-intro--login-button {
     position: absolute;
     bottom: -2em;
