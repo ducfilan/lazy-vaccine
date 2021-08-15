@@ -32,7 +32,9 @@ function ChooseLanguages() {
 
   const removeLanguage = (langCode: string) => {
     const removedLanguageCodes = choseLanguages.filter((language) => language !== langCode)
-    setChoseLanguages(removedLanguageCodes)
+
+    // Keep at least one language.
+    removedLanguageCodes.length > 0 && setChoseLanguages(removedLanguageCodes)
   }
 
   return (
