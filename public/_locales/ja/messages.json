@@ -10,6 +10,9 @@
   "error": {
     "message": "エラー"
   },
+  "unexpected_error_message": {
+    "message": "Unexpected error occurred 😢! Please try again later..."
+  },
   "login_google": {
     "message": "Googleでログイン"
   },

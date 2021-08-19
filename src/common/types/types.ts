@@ -21,6 +21,7 @@ export type User = {
   jwtToken: string
   pictureUrl: string
   finishedRegisterStep: number
+  langCodes?: string[]
 }
 
 export type KeyValuePair = {

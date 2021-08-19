@@ -2,24 +2,24 @@ import * as React from "react"
 
 import { usePopupContext } from "../contexts/PopupContext"
 
-import { Typography, Select, Row, Col } from "antd"
+import { Typography, Select, Row, Col, notification } from "antd"
 
 import { DefaultLangCode } from "@consts/constants"
-import CacheKeys from "@consts/cacheKeys"
 import SupportingLanguages from "@consts/supportingLanguages"
-import useLocalStorage from "@hooks/useLocalStorage"
 import { formatString, langCodeToName } from "@/common/utils/stringUtils"
 import LanguageItem from "./LanguageItem"
 import NextPrevButton from "./NextPrevButton"
+import { User } from "@/common/types/types"
+import RegisterSteps from "@/common/consts/registerSteps"
+import { updateUserInfo } from "@/common/api/user"
 
 const { useState } = React
 const { Option } = Select
 
 function ChooseLanguages() {
-  const { user } = usePopupContext()
+  const { user, setUser } = usePopupContext()
 
   const [choseLanguages, setChoseLanguages] = useState<string[]>([user?.locale || DefaultLangCode])
-  const [, setFinishedRegisterStep] = useLocalStorage(CacheKeys.finishedRegisterStep)
 
   const headerText = formatString(chrome.i18n.getMessage("popup_introduce_choose_lang_1"), [
     { key: "user_name", value: user?.name || "" },
@@ -38,6 +38,29 @@ function ChooseLanguages() {
     removedLanguageCodes.length > 0 && setChoseLanguages(removedLanguageCodes)
   }
 
+  const saveCurrentProgress = async () => {
+    try {
+      if (!user) return
+
+      const nextStep = RegisterSteps.next(user.finishedRegisterStep)
+      const updatedUserInfo: User = {
+        ...user,
+        finishedRegisterStep: nextStep,
+        langCodes: choseLanguages,
+      }
+
+      await updateUserInfo({ finishedRegisterStep: nextStep, langCodes: choseLanguages })
+
+      setUser(updatedUserInfo)
+    } catch (error) {
+      // TODO: Handle more types of error: Server/Timeout/Network etc..
+      notification["error"]({
+        message: chrome.i18n.getMessage("error"),
+        description: chrome.i18n.getMessage("unexpected_error_message"),
+      })
+    }
+  }
+
   return (
     <>
       <div className="choose-languages--wrapper">
@@ -50,11 +73,18 @@ function ChooseLanguages() {
         </div>
 
         <div className="choose-languages--pages-list">
-          <NextPrevButton direction={"right"} onNext={() => {}} />
+          <NextPrevButton direction={"right"} onNext={async () => await saveCurrentProgress()} />
+
           <Row gutter={[16, 16]} className="choose-languages--selected-languages-wrapper">
             <Col span={12} offset={6}>
-              {choseLanguages.map((code) => (
-                <LanguageItem key={code} code={code} name={langCodeToName(code)} onRemove={removeLanguage} />
+              {choseLanguages.map((code, i) => (
+                <LanguageItem
+                  isRemovable={i > 0}
+                  key={code}
+                  code={code}
+                  name={langCodeToName(code)}
+                  onRemove={removeLanguage}
+                />
               ))}
             </Col>
           </Row>

@@ -6,9 +6,6 @@ import { Typography, Button, Alert, Image } from "antd"
 import { GoogleOutlined } from "@ant-design/icons"
 import { signIn } from "@/common/facades/authFacade"
 import { LoginTypes } from "@consts/constants"
-import RegisterSteps from "@consts/registerSteps"
-import useLocalStorage from "@hooks/useLocalStorage"
-import CacheKeys from "@consts/cacheKeys"
 import { User } from "@/common/types/types"
 
 import WanImg from "@img/emojis/shiba/wan.png"
@@ -18,7 +15,6 @@ const { useState } = React
 function FirstTime() {
   const [isLoading, setIsLoading] = useState(false)
   const [isShowLoginError, setIsShowLoginError] = useState(false)
-  const [, setFinishedRegisterStep] = useLocalStorage(CacheKeys.finishedRegisterStep)
 
   const { setUser } = usePopupContext()
 
@@ -27,7 +23,6 @@ function FirstTime() {
 
     try {
       signIn.call({ setIsShowLoginError }, LoginTypes.google, (user: User) => {
-        setFinishedRegisterStep(RegisterSteps.Register)
         setUser(user)
       })
     } catch (error) {

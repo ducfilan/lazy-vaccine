@@ -7,12 +7,8 @@ import logo from "@img/ui/logo.png"
 
 import { signOut } from "@facades/authFacade"
 import { usePopupContext } from "@/pages/popup/contexts/PopupContext"
-import RegisterSteps from "@consts/registerSteps"
-import CacheKeys from "@consts/cacheKeys"
-import useLocalStorage from "@hooks/useLocalStorage"
 
 const DropdownMenu = (props: { isLoggedIn: boolean }) => {
-  const [, setFinishedRegisterStep] = useLocalStorage(CacheKeys.finishedRegisterStep)
   const { setUser } = usePopupContext()
 
   return (
@@ -25,9 +21,6 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
                 type="link"
                 onClick={() => {
                   signOut(() => {
-                    const finishedRegisterStep = RegisterSteps.Install
-
-                    setFinishedRegisterStep(finishedRegisterStep)
                     setUser(null)
                   })
                 }}

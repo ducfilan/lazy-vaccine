@@ -17,25 +17,23 @@ import RegisterSteps from "@consts/registerSteps"
 import { getUserInfo } from "@/common/api/user"
 import { Language, User } from "@/common/types/types"
 
-import useLocalStorage from "@hooks/useLocalStorage"
 
 const cookies = new Cookies()
 
 const PopupPage = () => {
   const [selectedLanguages, setSelectedLanguages] = useState<Language[]>([])
   const [user, setUser] = useState<User | null>(null)
-  const [finishedRegisterStep] = useLocalStorage(CacheKeys.finishedRegisterStep)
   const isLoggedIn = cookies.get(CacheKeys.jwtToken) !== undefined
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      let userInfo = await getUserInfo()
-
-      if (finishedRegisterStep > userInfo.finishedRegisterStep) {
-        userInfo = { ...userInfo, finishedRegisterStep }
+      try {
+        let userInfo = await getUserInfo()
+  
+        setUser(userInfo)
+      } catch (error) {
+        // Not able to login with current token, ignore to show the first page to login.
       }
-
-      setUser(userInfo)
     }
 
     isLoggedIn && fetchUserInfo()
