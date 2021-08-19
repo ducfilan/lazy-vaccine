@@ -75,6 +75,14 @@ class Http {
     return this.http.post<T, R>(url, data, config)
   }
 
+  patch<T = any, R = AxiosResponse<T>>(
+    url: string,
+    data?: T,
+    config?: AxiosRequestConfig
+  ): Promise<R> {
+    return this.http.patch<T, R>(url, data, config)
+  }
+
   put<T = any, R = AxiosResponse<T>>(
     url: string,
     data?: T,
