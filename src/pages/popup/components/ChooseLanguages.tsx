@@ -19,9 +19,9 @@ const { Option } = Select
 function ChooseLanguages() {
   const { user, setUser } = usePopupContext()
 
-  const [choseLanguages, setChoseLanguages] = useState<string[]>([user?.locale || DefaultLangCode])
+  const [choseLanguages, setChoseLanguages] = useState<string[]>(user?.langCodes || [user?.locale || DefaultLangCode])
 
-  const headerText = formatString(chrome.i18n.getMessage("popup_introduce_choose_lang_1"), [
+  const headerText = formatString(chrome.i18n.getMessage("popup_introduce_choose_lang_codes"), [
     { key: "user_name", value: user?.name || "" },
     { key: "first_language", value: langCodeToName(user?.locale) },
   ])
@@ -107,13 +107,6 @@ function ChooseLanguages() {
               </Select>
             </Col>
           </Row>
-          <div className="column is-6">
-            <div className="choose-languages--selected-languages-wrapper">
-              <div className="each-in-selectedLanguagesCurrentPage">
-                <div className="xxx-language-item"></div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </>
