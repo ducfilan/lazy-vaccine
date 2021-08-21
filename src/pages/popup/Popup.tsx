@@ -41,6 +41,8 @@ const PopupPage = () => {
   }, [])
 
   function renderPages() {
+    popupHeightScrollIssueWorkaround()
+
     const finishedRegisterStep = user?.finishedRegisterStep || RegisterSteps.Install
 
     switch (finishedRegisterStep) {
@@ -56,6 +58,14 @@ const PopupPage = () => {
       default:
         return <Loading />
     }
+  }
+
+  /**
+   * Popup has an issue of not showing scroll when the size of the popup is greater than 600px,
+   * this is an ugly workaround so far: Set the min-height to 601 (in css), then set it back to 600.
+   */
+  function popupHeightScrollIssueWorkaround() {
+    document.body.style.minHeight = "600px"
   }
 
   return (
