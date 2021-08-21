@@ -7,24 +7,20 @@ import shibaGoodMorningIcon from "@img/emojis/shiba/gm.png"
 function Loading() {
   return (
     <Spin
-      style={{
-        position: "absolute",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        height: "100%",
-        paddingBottom: "100px",
-      }}
+      style={{ position: "absolute", width: "100%", bottom: "50vh" }}
       indicator={
-        <img
-          src={shibaGoodMorningIcon}
-          style={{
-            width: "auto",
-            height: "auto",
-            fontSize: "169px",
-          }}
-        />
+        <>
+          <img
+            src={shibaGoodMorningIcon}
+            style={{
+              width: "auto",
+              height: "auto",
+              fontSize: "169px",
+            }}
+          />
+          <br />
+          <p>Loading...</p>
+        </>
       }
     />
   )
