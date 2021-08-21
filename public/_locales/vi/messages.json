@@ -25,8 +25,11 @@
   "popup_introduce_first": {
     "message": "We spend so much time on the Internet.\nYes, no excuse. But a day remains 24 hours since we have the clock. From now on, this extension will help you use Internet more efficient. Just try to see! 😊"
   },
-  "popup_introduce_choose_lang_1": {
+  "popup_introduce_choose_lang_codes": {
     "message": "Nice to meet you, {user_name}! 🎉 I know your first language is {first_language}, do you want to show content in other languages?"
+  },
+  "popup_introduce_choose_pages": {
+    "message": "Great! 🤩 One last step...\nYou can select your most visited websites to start. That's it!"
   },
   "popup_select_a_language": {
     "message": "Chọn ngôn ngữ"
@@ -87,5 +90,11 @@
   },
   "select": {
     "message": "Lựa chọn"
+  },
+  "select_all": {
+    "message": "Chọn hết"
+  },
+  "clear_all": {
+    "message": "Bỏ chọn hết"
   }
 }
