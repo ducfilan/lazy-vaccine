@@ -3,20 +3,21 @@ const { useState, useEffect } = React
 
 import { Cookies } from "react-cookie"
 
-import "./popup.scss"
+import "./css/popup.scss"
 
 import { PopupContext } from "./contexts/PopupContext"
 
 import Navbar from "@/common/components/Navbar"
+import Loading from "@/common/components/Loading"
 import FirstTime from "./components/FirstTime"
 import ChooseLanguages from "./components/ChooseLanguages"
+import ChoosePages from "./components/ChoosePages"
 
 import CacheKeys from "@consts/cacheKeys"
 import RegisterSteps from "@consts/registerSteps"
 
 import { getUserInfo } from "@/common/api/user"
 import { Language, User } from "@/common/types/types"
-
 
 const cookies = new Cookies()
 
@@ -29,7 +30,7 @@ const PopupPage = () => {
     const fetchUserInfo = async () => {
       try {
         let userInfo = await getUserInfo()
-  
+
         setUser(userInfo)
       } catch (error) {
         // Not able to login with current token, ignore to show the first page to login.
@@ -40,12 +41,20 @@ const PopupPage = () => {
   }, [])
 
   function renderPages() {
-    switch (user?.finishedRegisterStep) {
+    const finishedRegisterStep = user?.finishedRegisterStep || RegisterSteps.Install
+
+    switch (finishedRegisterStep) {
+      case RegisterSteps.Install:
+        return <FirstTime />
+
       case RegisterSteps.Register:
         return <ChooseLanguages />
 
+      case RegisterSteps.ChooseLanguages:
+        return <ChoosePages />
+
       default:
-        return <FirstTime />
+        return <Loading />
     }
   }
 

@@ -1,0 +1,126 @@
+.choose-pages--wrapper {
+  .choose-pages--header-info {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: auto;
+    margin-bottom: 2em;
+    border-radius: 0 0 85% 85% / 30%;
+    background-attachment: fixed;
+    background-size: cover;
+
+    .choose-pages--title-wrapper {
+      width: 100%;
+      height: 100%;
+      padding: 2em 5em 3em;
+      background-image: url("../../../../images/ui/clouds.svg"), url("../../../../images/ui/trees.svg"),
+        linear-gradient(to bottom, $primary, $primary-light);
+      background-repeat: no-repeat, repeat-x;
+      background-position: 0 0, 0 30px;
+      background-size: cover, contain;
+      color: $white;
+      text-shadow: 1px 1px 1px $text-shadow;
+
+      .title {
+        line-height: 1.5;
+        color: currentColor;
+        text-align: justify;
+        white-space: pre-line;
+        text-align: center;
+      }
+    }
+  }
+
+  .choose-pages--pages-list {
+    padding: 0 2em;
+
+    .ant-card {
+      background-color: transparent;
+
+      .ant-card-grid {
+        box-shadow: none;
+        padding: 16px;
+      }
+    }
+
+    .choose-pages--page-item {
+      position: relative;
+      padding: 1em;
+      border-radius: 20px;
+      background: $grey-light;
+
+      * {
+        pointer-events: none;
+      }
+
+      .choose-pages--icon {
+        height: 3em;
+
+        svg {
+          width: 40px;
+        }
+      }
+
+      &:hover {
+        cursor: pointer;
+        transition: transform 0.2s ease-in-out;
+        transform: scale(1.05);
+      }
+
+      .choose-pages--selected-icon {
+        position: absolute;
+        top: -8px;
+        right: -4px;
+        display: none;
+        color: $green;
+
+        svg {
+          border-radius: 50%;
+          font-size: 4em;
+          width: 24px;
+          height: auto;
+          background-color: $white;
+        }
+      }
+
+      &.selected,
+      &:hover {
+        .choose-pages--selected-icon {
+          display: block;
+        }
+
+        &.facebook {
+          background-image: linear-gradient(135deg, $facebook-color 10%, $facebook-color-light 100%);
+        }
+
+        &.youtube {
+          background-image: linear-gradient(135deg, $youtube-color 10%, $youtube-color-light 100%);
+        }
+
+        &.amazon {
+          background-image: linear-gradient(135deg, $amazon-color 10%, $amazon-color-light 100%);
+        }
+
+        &.ebay {
+          background-image: linear-gradient(135deg, $ebay-color 10%, $ebay-color-light 100%);
+        }
+
+        &.twitter {
+          background-image: linear-gradient(135deg, $twitter-color 10%, $twitter-color-light 100%);
+        }
+
+        &.reddit {
+          background-image: linear-gradient(135deg, $reddit-color 10%, $reddit-color-light 100%);
+        }
+
+        &.google {
+          background-image: linear-gradient(135deg, $google-color 10%, $google-color-light 100%);
+        }
+
+        &.pinterest {
+          background-image: linear-gradient(135deg, $pinterest-color 10%, $pinterest-color-light 100%);
+        }
+      }
+    }
+  }
+}

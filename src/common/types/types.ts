@@ -22,6 +22,7 @@ export type User = {
   pictureUrl: string
   finishedRegisterStep: number
   langCodes?: string[]
+  pages?: string[]
 }
 
 export type KeyValuePair = {

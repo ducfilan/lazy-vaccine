@@ -51,3 +51,8 @@ body {
 .has-text-white {
   color: $white !important;
 }
+
+.ant-space-align-end {
+  display: flex;
+  justify-content: flex-end;
+}
