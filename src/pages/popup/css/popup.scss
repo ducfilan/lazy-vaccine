@@ -1,0 +1,27 @@
+@import "../../../common/css/global/variables";
+@import "../../../common/css/global/keyframes";
+@import "../../../common/css/global/mixins";
+@import "../../../common/css/global/brand-colors";
+@import "../../../common/css/global/common";
+
+@import "../../../common/css/components/card-normal";
+@import "../../../common/css/components/_common/navbar";
+@import "../../../common/css/components/_common/next-prev-buttons";
+
+@import "./components/first-time-intro";
+@import "./components/choose-pages";
+@import "./components/choose-languages";
+@import "./components/logged-in";
+
+html {
+  height: unset;
+}
+
+body {
+  @include footer-background;
+  width: $popup-container-width;
+  background-color: $white-ter;
+  color: $text-black;
+  padding-bottom: 7em;
+  min-height: 600px;
+}
