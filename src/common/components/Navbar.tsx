@@ -1,7 +1,7 @@
 import * as React from "react"
 
 import { PageHeader, Menu, Dropdown, Button, Avatar, Image } from "antd"
-import { MenuOutlined } from "@ant-design/icons"
+import { MenuOutlined, RightCircleOutlined } from "@ant-design/icons"
 
 import logo from "@img/ui/logo.png"
 
@@ -9,31 +9,37 @@ import { signOut } from "@facades/authFacade"
 import { usePopupContext } from "@/pages/popup/contexts/PopupContext"
 
 const DropdownMenu = (props: { isLoggedIn: boolean }) => {
-  const { setUser } = usePopupContext()
+  const { user, setUser } = usePopupContext()
 
   return (
     <Dropdown
       overlay={
         <Menu>
           {props.isLoggedIn && (
-            <Menu.Item key="logout">
-              <Button
-                type="link"
-                onClick={() => {
-                  signOut(() => {
-                    setUser(null)
-                  })
-                }}
-              >
-                {chrome.i18n.getMessage("logout")}
-              </Button>
-            </Menu.Item>
+            <>
+              <Menu.Item key="name"><RightCircleOutlined /> {user?.name}</Menu.Item>
+              <Menu.Divider />
+              <Menu.Item key="logout">
+                <Button
+                  type="link"
+                  onClick={() => {
+                    signOut(() => {
+                      setUser(null)
+                    })
+                  }}
+                >
+                  {chrome.i18n.getMessage("logout")}
+                </Button>
+              </Menu.Item>
+            </>
           )}
         </Menu>
       }
       overlayStyle={{
         minWidth: 120,
       }}
+      arrow
+      placement="bottomRight"
     >
       <Button
         type="text"
