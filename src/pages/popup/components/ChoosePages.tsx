@@ -12,6 +12,7 @@ import RegisterSteps from "@/common/consts/registerSteps"
 import { updateUserInfo } from "@/common/api/user"
 
 import BrandIcon from "@/common/components/BrandIcon"
+import PopupHeader from "./Header"
 
 const { useState } = React
 
@@ -82,13 +83,7 @@ function ChoosePages() {
   return (
     <>
       <div className="choose-pages--wrapper">
-        <div className="choose-pages--header-info has-text-centered">
-          <div className="choose-pages--title-wrapper">
-            <Typography.Title level={2} className="title">
-              {headerText}
-            </Typography.Title>
-          </div>
-        </div>
+        <PopupHeader content={headerText} />
 
         <div className="choose-pages--pages-list">
           <NextPrevButton direction={"both"} onNext={saveCurrentProgress} onPrev={goBackPage} />

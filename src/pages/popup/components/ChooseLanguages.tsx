@@ -12,6 +12,7 @@ import NextPrevButton from "./NextPrevButton"
 import { User } from "@/common/types/types"
 import RegisterSteps from "@/common/consts/registerSteps"
 import { updateUserInfo } from "@/common/api/user"
+import PopupHeader from "./Header"
 
 const { useState } = React
 const { Option } = Select
@@ -64,13 +65,7 @@ function ChooseLanguages() {
   return (
     <>
       <div className="choose-languages--wrapper">
-        <div className="choose-languages--header-info has-text-centered">
-          <div className="choose-languages--title-wrapper">
-            <Typography.Title level={2} className="title">
-              {headerText}
-            </Typography.Title>
-          </div>
-        </div>
+        <PopupHeader content={headerText} />
 
         <div className="choose-languages--pages-list">
           <NextPrevButton direction={"right"} onNext={async () => await saveCurrentProgress()} />

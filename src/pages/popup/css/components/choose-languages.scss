@@ -1,36 +1,4 @@
 .choose-languages--wrapper {
-  .choose-languages--header-info {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    height: auto;
-    margin-bottom: 2em;
-    border-radius: 0 0 85% 85% / 30%;
-    background-attachment: fixed;
-    background-size: cover;
-
-    .choose-languages--title-wrapper {
-      width: 100%;
-      height: 100%;
-      padding: 2em 5em 3em;
-      background-image: url("../../../../images/ui/clouds.svg"), url("../../../../images/ui/trees.svg"),
-        linear-gradient(to bottom, $primary, $primary-light);
-      background-repeat: no-repeat, repeat-x;
-      background-position: 0 0, 0 30px;
-      background-size: cover, contain;
-      color: $white;
-      text-shadow: 1px 1px 1px $text-shadow;
-
-      .title {
-        line-height: 1.5;
-        color: currentColor;
-        text-align: justify;
-        white-space: pre-line;
-        text-align: center;
-      }
-    }
-  }
-
   .choose-languages--pages-list {
     padding: 0 2em;
 
@@ -60,7 +28,7 @@
 
         .anticon-minus-circle {
           @include box-shadow;
-  
+
           border-radius: 50%;
           background: $white;
         }

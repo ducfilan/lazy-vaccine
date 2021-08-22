@@ -12,6 +12,7 @@ import Loading from "@/common/components/Loading"
 import FirstTime from "./components/FirstTime"
 import ChooseLanguages from "./components/ChooseLanguages"
 import ChoosePages from "./components/ChoosePages"
+import CompletedInfo from "./components/CompletedInfo"
 
 import CacheKeys from "@consts/cacheKeys"
 import RegisterSteps from "@consts/registerSteps"
@@ -46,6 +47,9 @@ const PopupPage = () => {
     const finishedRegisterStep = user?.finishedRegisterStep || RegisterSteps.Install
 
     switch (finishedRegisterStep) {
+      case RegisterSteps.ChoosePages:
+        return <CompletedInfo />
+
       case RegisterSteps.Install:
         return <FirstTime />
 
@@ -65,7 +69,10 @@ const PopupPage = () => {
    * this is an ugly workaround so far: Set the min-height to 601 (in css), then set it back to 600.
    */
   function popupHeightScrollIssueWorkaround() {
-    document.body.style.minHeight = "600px"
+    document.body.style.minHeight = "601px"
+    setTimeout(() => {
+      document.body.style.minHeight = "600px"
+    }, 100)
   }
 
   return (

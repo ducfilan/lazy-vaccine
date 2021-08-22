@@ -9,6 +9,7 @@ import { LoginTypes } from "@consts/constants"
 import { User } from "@/common/types/types"
 
 import WanImg from "@img/emojis/shiba/wan.png"
+import PopupHeader from "./Header"
 
 const { useState } = React
 
@@ -35,14 +36,7 @@ function FirstTime() {
   return (
     <>
       <div className="first-time-intro--wrapper is-relative">
-        <Image src={WanImg} preview={false} className="is-absolute first-time-intro--wan-img" />
-        <div className="first-time-intro--header-info has-text-centered">
-          <div className="first-time-intro--title-wrapper">
-            <Typography.Title level={2} className="title">
-              {chrome.i18n.getMessage("popup_introduce_first")}
-            </Typography.Title>
-          </div>
-        </div>
+        <PopupHeader content={chrome.i18n.getMessage("popup_introduce_first")} iconUrl={WanImg} />
         <div className="first-time-intro--login-button has-text-centered">
           <Button shape="round" icon={<GoogleOutlined />} size={"large"} loading={isLoading} onClick={loginWithGoogle}>
             {chrome.i18n.getMessage("login_google")}
