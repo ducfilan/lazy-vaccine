@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { usePopupContext } from "../contexts/PopupContext"
 
-import { Typography, Button, Alert, Image } from "antd"
+import { Button, Alert } from "antd"
 import { GoogleOutlined } from "@ant-design/icons"
 import { signIn } from "@/common/facades/authFacade"
 import { LoginTypes } from "@consts/constants"

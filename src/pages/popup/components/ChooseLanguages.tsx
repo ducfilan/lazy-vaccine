@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { usePopupContext } from "../contexts/PopupContext"
 
-import { Typography, Select, Row, Col, notification } from "antd"
+import { Select, Row, Col, notification } from "antd"
 
 import { DefaultLangCode } from "@consts/constants"
 import SupportingLanguages from "@consts/supportingLanguages"
@@ -39,7 +39,7 @@ function ChooseLanguages() {
     removedLanguageCodes.length > 0 && setChoseLanguages(removedLanguageCodes)
   }
 
-  const saveCurrentProgress = async () => {
+  const goForward = async () => {
     try {
       if (!user) return
 
@@ -68,7 +68,7 @@ function ChooseLanguages() {
         <PopupHeader content={headerText} />
 
         <div className="choose-languages--pages-list">
-          <NextPrevButton direction={"right"} onNext={async () => await saveCurrentProgress()} />
+          <NextPrevButton direction={"right"} onNext={async () => await goForward()} />
 
           <Row gutter={[16, 16]} className="choose-languages--selected-languages-wrapper">
             <Col span={12} offset={6}>

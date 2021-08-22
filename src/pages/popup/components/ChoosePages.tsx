@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { usePopupContext } from "../contexts/PopupContext"
 
-import { Typography, Card, Space, Checkbox, notification } from "antd"
+import { Card, Space, Checkbox, notification } from "antd"
 import { CheckCircleFilled } from "@ant-design/icons"
 
 import { SupportingPages } from "@consts/constants"
@@ -23,41 +23,27 @@ function ChoosePages() {
 
   const headerText = chrome.i18n.getMessage("popup_introduce_choose_pages")
 
-  const saveCurrentProgress = async () => {
-    try {
-      if (!user) return
-
-      const nextStep = RegisterSteps.next(user.finishedRegisterStep)
-      const updatedUserInfo: User = {
-        ...user,
-        finishedRegisterStep: nextStep,
-        pages: chosePages,
-      }
-
-      await updateUserInfo({ finishedRegisterStep: nextStep, pages: chosePages })
-
-      setUser(updatedUserInfo)
-    } catch (error) {
-      // TODO: Handle more types of error: Server/Timeout/Network etc..
-      notification["error"]({
-        message: chrome.i18n.getMessage("error"),
-        description: chrome.i18n.getMessage("unexpected_error_message"),
-      })
-    }
+  const goForward = async () => {
+    const nextStep = user ? RegisterSteps.next(user.finishedRegisterStep) : null
+    nextStep && (await goToStep(nextStep))
   }
 
-  const goBackPage = async () => {
+  const goBack = async () => {
+    const prevStep = user ? RegisterSteps.prev(user.finishedRegisterStep) : null
+    prevStep && (await goToStep(prevStep))
+  }
+
+  const goToStep = async (step: number) => {
     try {
       if (!user) return
 
-      const prevStep = RegisterSteps.prev(user.finishedRegisterStep)
       const updatedUserInfo: User = {
         ...user,
-        finishedRegisterStep: prevStep,
+        finishedRegisterStep: step,
         pages: chosePages,
       }
 
-      await updateUserInfo({ finishedRegisterStep: prevStep, pages: chosePages })
+      await updateUserInfo({ finishedRegisterStep: step, pages: chosePages })
 
       setUser(updatedUserInfo)
     } catch (error) {
@@ -86,7 +72,7 @@ function ChoosePages() {
         <PopupHeader content={headerText} />
 
         <div className="choose-pages--pages-list">
-          <NextPrevButton direction={"both"} onNext={saveCurrentProgress} onPrev={goBackPage} />
+          <NextPrevButton direction={"both"} onNext={goForward} onPrev={goBack} />
 
           <Space align="end" style={{ marginRight: 18 }}>
             <Checkbox onChange={selectAllPages}>{chrome.i18n.getMessage("select_all")}</Checkbox>
