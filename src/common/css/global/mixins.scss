@@ -27,7 +27,7 @@
 }
 
 @mixin footer-background {
-  background-image: url("../../../images/ui/greenery.png");
+  background-image: url("~@img/ui/greenery.png");
   background-repeat: repeat-x;
   background-position: bottom;
   background-size: 60%;
