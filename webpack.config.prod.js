@@ -1,10 +1,11 @@
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const webpack = require("webpack");
 
-const path = require("path");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CopyPlugin = require("copy-webpack-plugin");
-
 const DotenvPlugin = require("dotenv-webpack");
+
+const path = require("path");
 
 module.exports = (_, { mode }) => {
   const isDevelopment = mode === "development";
@@ -100,6 +101,7 @@ module.exports = (_, { mode }) => {
       }),
       new webpack.HotModuleReplacementPlugin(),
       new ReactRefreshWebpackPlugin(),
+      //new BundleAnalyzerPlugin(),
     ],
   };
 }
