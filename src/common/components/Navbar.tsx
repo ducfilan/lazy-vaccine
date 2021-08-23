@@ -1,12 +1,13 @@
 import * as React from "react"
 
-import { PageHeader, Menu, Dropdown, Button, Avatar, Image } from "antd"
+import { PageHeader, Menu, Dropdown, Button } from "antd"
 import { MenuOutlined, RightCircleOutlined } from "@ant-design/icons"
 
-import logo from "@img/ui/logo.png"
+import AppLog from "@img/ui/logo.png"
 
 import { signOut } from "@facades/authFacade"
 import { usePopupContext } from "@/pages/popup/contexts/PopupContext"
+import AvatarImage from "./AvatarImage"
 
 const DropdownMenu = (props: { isLoggedIn: boolean }) => {
   const { user, setUser } = usePopupContext()
@@ -17,7 +18,9 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
         <Menu>
           {props.isLoggedIn && (
             <>
-              <Menu.Item key="name"><RightCircleOutlined /> {user?.name}</Menu.Item>
+              <Menu.Item key="name">
+                <RightCircleOutlined /> {user?.name}
+              </Menu.Item>
               <Menu.Divider />
               <Menu.Item key="logout">
                 <Button
@@ -58,25 +61,15 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
   )
 }
 
-function AvatarImage(props: { isLoggedIn: boolean }) {
-  if (!props.isLoggedIn) return <></>
-
+function Navbar(props: { isLoggedIn: boolean }) {
   const { user } = usePopupContext()
 
-  return user?.pictureUrl ? (
-    <Avatar src={<Image src={user?.pictureUrl} preview={false} />} />
-  ) : (
-    <Avatar>{(user?.name || "?")[0]}</Avatar>
-  )
-}
-
-function Navbar(props: { isLoggedIn: boolean }) {
   return (
     <PageHeader
       title={chrome.i18n.getMessage("appName")}
-      avatar={{ gap: 0, src: logo, size: 48 }}
+      avatar={{ gap: 0, src: AppLog, size: 48 }}
       extra={[
-        <AvatarImage key="avatar" isLoggedIn={props.isLoggedIn} />,
+        props.isLoggedIn ? <AvatarImage key="avatar" imageUrl={user?.pictureUrl} /> : <></>,
         <DropdownMenu key="menu" isLoggedIn={props.isLoggedIn} />,
       ]}
     />
