@@ -25,10 +25,13 @@ const cookies = new Cookies()
 const PopupPage = () => {
   const [selectedLanguages, setSelectedLanguages] = useState<Language[]>([])
   const [user, setUser] = useState<User | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const isLoggedIn = cookies.get(CacheKeys.jwtToken) !== undefined
 
   useEffect(() => {
     const fetchUserInfo = async () => {
+      setIsLoading(true)
+
       try {
         let userInfo = await getUserInfo()
 
@@ -36,6 +39,8 @@ const PopupPage = () => {
       } catch (error) {
         // Not able to login with current token, ignore to show the first page to login.
       }
+
+      setIsLoading(false)
     }
 
     isLoggedIn && fetchUserInfo()
@@ -44,7 +49,9 @@ const PopupPage = () => {
   function renderPages() {
     popupHeightScrollIssueWorkaround()
 
-    const finishedRegisterStep = user?.finishedRegisterStep || RegisterSteps.Install
+    if (isLoading) return <Loading />
+
+    const finishedRegisterStep = user?.finishedRegisterStep
 
     switch (finishedRegisterStep) {
       case RegisterSteps.ChoosePages:
@@ -60,7 +67,7 @@ const PopupPage = () => {
         return <ChoosePages />
 
       default:
-        return <Loading />
+        return <FirstTime />
     }
   }
 
@@ -70,8 +77,10 @@ const PopupPage = () => {
    */
   function popupHeightScrollIssueWorkaround() {
     document.body.style.minHeight = "601px"
+    document.body.style.overflow = "overlay"
     setTimeout(() => {
       document.body.style.minHeight = "600px"
+      document.body.style.overflow = "auto"
     }, 100)
   }
 
