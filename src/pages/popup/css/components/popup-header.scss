@@ -18,15 +18,14 @@
     background-repeat: no-repeat, repeat-x;
     background-position: 0 0, 0 30px;
     background-size: cover, contain;
-    color: $white;
-    text-shadow: 1px 1px 1px $text-shadow;
 
     .popup-header--title {
       line-height: 1.5;
-      color: currentColor;
+      color: $white;
       text-align: justify;
       white-space: pre-line;
       text-align: center;
+      text-shadow: 1px 1px 1px $text-shadow;
     }
   }
 }

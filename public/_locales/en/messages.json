@@ -34,6 +34,27 @@
   "popup_select_a_language": {
     "message": "Select a language"
   },
+  "popup_stats_sets": {
+    "message": "Sets"
+  },
+  "popup_stats_items": {
+    "message": "Items"
+  },
+  "popup_stats_trees_plant": {
+    "message": "Trees planted"
+  },
+  "popup_stats_settings": {
+    "message": "Settings"
+  },
+  "popup_stats_more_sets": {
+    "message": "More sets"
+  },
+  "popup_stats_full_stats": {
+    "message": "Full stats"
+  },
+  "popup_stats_my_profile": {
+    "message": "My profile"
+  },
   "pageCreateSetTitle": {
     "message": "Create a new set"
   },

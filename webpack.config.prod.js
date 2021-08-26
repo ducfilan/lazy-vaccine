@@ -54,7 +54,7 @@ module.exports = (_, { mode }) => {
           use: ["@svgr/webpack"],
           include: [
             path.join(__dirname, "src/images/ui/flags"),
-            path.join(__dirname, "src/images/ui/fa/brands")
+            path.join(__dirname, "src/images/ui/fa"),
           ]
         },
         {

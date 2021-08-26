@@ -34,6 +34,24 @@
   "popup_select_a_language": {
     "message": "言語選択"
   },
+  "popup_stats_sets": {
+    "message": "セット数"
+  },
+  "popup_stats_items": {
+    "message": "項目数"
+  },
+  "popup_stats_trees_plant": {
+    "message": "植えた木の数"
+  },
+  "popup_stats_settings": {
+    "message": "設定"
+  },
+  "popup_stats_more_sets": {
+    "message": "セット検索"
+  },
+  "popup_stats_my_profile": {
+    "message": "プロファイル"
+  },
   "pageCreateSetTitle": {
     "message": "セット作成"
   },

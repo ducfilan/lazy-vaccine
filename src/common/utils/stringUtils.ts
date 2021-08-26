@@ -14,3 +14,5 @@ export function formatString(template: string, values: KeyValuePair[]): string {
 
 export const langCodeToName = (code: string | undefined) =>
   SupportingLanguages.Set[code || DefaultLangCode].name
+
+export const formatNumber = (num: number): string => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")

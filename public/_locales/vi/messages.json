@@ -34,6 +34,24 @@
   "popup_select_a_language": {
     "message": "Chọn ngôn ngữ"
   },
+  "popup_stats_sets": {
+    "message": "Sets"
+  },
+  "popup_stats_items": {
+    "message": "Mục"
+  },
+  "popup_stats_trees_plant": {
+    "message": "Cây trồng được"
+  },
+  "popup_stats_settings": {
+    "message": "Cài đặt"
+  },
+  "popup_stats_more_sets": {
+    "message": "Thêm set"
+  },
+  "popup_stats_my_profile": {
+    "message": "Trang cá nhân"
+  },
   "pageCreateSetTitle": {
     "message": "Tạo bài học mới"
   },
