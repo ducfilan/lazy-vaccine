@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { Spin } from "antd"
 
-import shibaGoodMorningIcon from "@img/emojis/shiba/gm.png"
+import shibaRunningIcon from "@img/emojis/shiba/running.png"
 
 function Loading() {
   return (
@@ -11,7 +11,7 @@ function Loading() {
       indicator={
         <>
           <img
-            src={shibaGoodMorningIcon}
+            src={shibaRunningIcon}
             style={{
               width: "auto",
               height: "auto",
