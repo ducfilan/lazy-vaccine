@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { usePopupContext } from "../contexts/PopupContext"
+import { useGlobalContext } from "../contexts/GlobalContext"
 
 import { Select, Row, Col, notification } from "antd"
 
@@ -18,7 +18,7 @@ const { useState } = React
 const { Option } = Select
 
 function ChooseLanguages() {
-  const { user, setUser } = usePopupContext()
+  const { user, setUser, http } = useGlobalContext()
 
   const [choseLanguages, setChoseLanguages] = useState<string[]>(user?.langCodes || [user?.locale || DefaultLangCode])
 
@@ -50,7 +50,7 @@ function ChooseLanguages() {
         langCodes: choseLanguages,
       }
 
-      await updateUserInfo({ finishedRegisterStep: nextStep, langCodes: choseLanguages })
+      http && (await updateUserInfo(http, { finishedRegisterStep: nextStep, langCodes: choseLanguages }))
 
       setUser(updatedUserInfo)
     } catch (error) {

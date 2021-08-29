@@ -4,7 +4,7 @@ const Apis = {
   sets: "/sets",
   items: "/items",
   login: "/users/login",
-  me: "/users/me"
+  me: "/users/me",
 }
 
 export default Apis

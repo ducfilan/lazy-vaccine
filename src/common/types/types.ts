@@ -18,7 +18,6 @@ export type User = {
   name: string
   email: string
   locale: string
-  jwtToken: string
   pictureUrl: string
   finishedRegisterStep: number
   langCodes?: string[]

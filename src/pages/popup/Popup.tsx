@@ -1,11 +1,9 @@
 import * as React from "react"
 const { useState, useEffect } = React
 
-import { Cookies } from "react-cookie"
-
 import "./css/popup.scss"
 
-import { PopupContext } from "./contexts/PopupContext"
+import { GlobalContext } from "./contexts/GlobalContext"
 
 import Navbar from "@/common/components/Navbar"
 import Loading from "@/common/components/Loading"
@@ -14,37 +12,47 @@ import ChooseLanguages from "./components/ChooseLanguages"
 import ChoosePages from "./components/ChoosePages"
 import CompletedInfo from "./components/CompletedInfo"
 
-import CacheKeys from "@consts/cacheKeys"
 import RegisterSteps from "@consts/registerSteps"
 
 import { getUserInfo } from "@/common/api/user"
-import { Language, User } from "@/common/types/types"
-
-const cookies = new Cookies()
+import { User } from "@/common/types/types"
+import { getGoogleAuthToken } from "@/common/facades/authFacade"
+import { Http } from "@/common/facades/axiosFacade"
+import { LoginTypes } from "@/common/consts/constants"
 
 const PopupPage = () => {
-  const [selectedLanguages, setSelectedLanguages] = useState<Language[]>([])
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const isLoggedIn = cookies.get(CacheKeys.jwtToken) !== undefined
+  const [http, setHttp] = useState<Http>()
+
+  useEffect(() => {
+    try {
+      setIsLoading(true)
+
+      getGoogleAuthToken((token: string) => {
+        setHttp(new Http(token, LoginTypes.google))
+      }, {})
+    } catch (error) {
+      // Not able to login with current token, ignore to show the first page to login.
+    }
+  }, [])
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      setIsLoading(true)
-
-      try {
-        let userInfo = await getUserInfo()
-
+      if (http) {
+        const userInfo = await getUserInfo(http)
         setUser(userInfo)
-      } catch (error) {
-        // Not able to login with current token, ignore to show the first page to login.
       }
-
-      setIsLoading(false)
     }
 
-    isLoggedIn && fetchUserInfo()
-  }, [])
+    try {
+      fetchUserInfo()
+    } catch (error) {
+      // Not able to login with current token, ignore to show the first page to login.
+    }
+
+    setIsLoading(false)
+  }, [http])
 
   function renderPages() {
     popupHeightScrollIssueWorkaround()
@@ -85,12 +93,12 @@ const PopupPage = () => {
   }
 
   return (
-    <PopupContext.Provider value={{ selectedLanguages, setSelectedLanguages, user, setUser }}>
+    <GlobalContext.Provider value={{ user, setUser, http }}>
       <div className="App">
-        <Navbar isLoggedIn={isLoggedIn} />
+        {!isLoading && <Navbar />}
         {renderPages()}
       </div>
-    </PopupContext.Provider>
+    </GlobalContext.Provider>
   )
 }
 

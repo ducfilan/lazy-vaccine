@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { usePopupContext } from "../contexts/PopupContext"
+import { useGlobalContext } from "../contexts/GlobalContext"
 
 import { Button, Alert } from "antd"
 import { GoogleOutlined } from "@ant-design/icons"
@@ -17,13 +17,13 @@ function FirstTime() {
   const [isLoading, setIsLoading] = useState(false)
   const [isShowLoginError, setIsShowLoginError] = useState(false)
 
-  const { setUser } = usePopupContext()
+  const { setUser, http } = useGlobalContext()
 
   function loginWithGoogle() {
     setIsShowLoginError(false)
 
     try {
-      signIn.call({ setIsShowLoginError }, LoginTypes.google, (user: User) => {
+      signIn.call({ http, setIsShowLoginError }, LoginTypes.google, (user: User) => {
         setUser(user)
       })
     } catch (error) {

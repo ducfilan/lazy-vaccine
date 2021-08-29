@@ -1,11 +1,10 @@
 const CacheKeys = {
-  jwtToken: "jwt_token",
-
   user: "user",
+  isSignedOut: "is-user-signed-out",
   categories: "categories",
   selectedMasteredLanguages: "selected-mastered-languages",
   selectedLearningLanguages: "selected-learning-languages",
-  selectedPages: "selected-pages",
+  selectedPages: "selected-pages"
 }
 
 export default CacheKeys

@@ -1,21 +1,14 @@
-import { Cookies } from "react-cookie"
 import { AxiosResponse } from "axios"
 
-import { http } from "@facades/axiosFacade"
 import Apis from "@consts/apis"
 import GoogleApiUrls from "@consts/googleApiUrls"
 import { LoginTypes } from "@consts/constants"
 import CacheKeys from "@consts/cacheKeys"
 import { GoogleUserInfo, User } from "@/common/types/types"
 import registerSteps from "@consts/registerSteps"
+import { Http } from "./axiosFacade"
 
-const cookies = new Cookies()
-
-let _processGoogleAuthToken = (callback: Function, options?: any) => {
-  options = options || {
-    interactive: true
-  }
-
+export function getGoogleAuthToken(callback: Function, options?: any) {
   chrome.identity.getAuthToken(options, async serviceAccessToken => {
     if (chrome.runtime.lastError && !options?.interactive) {
       throw new Error("It was not possible to get a token programmatically.")
@@ -29,27 +22,35 @@ let _processGoogleAuthToken = (callback: Function, options?: any) => {
   })
 }
 
+let _getAuthOptions = (isSignedOut: boolean) => isSignedOut ? ({ interactive: true }) : ({})
+
 export function signIn(this: any, type: string, callback: Function) {
+  const http = <Http>this.http
+
   switch (type) {
     case LoginTypes.google:
-      _processGoogleAuthToken(async (serviceAccessToken: string) => {
-        try {
-          const { data: userInfo } = await http.get<any, AxiosResponse<GoogleUserInfo>>(
-            `${GoogleApiUrls.getUserInfo}${serviceAccessToken}`
-          )
+      chrome.storage.sync.get([CacheKeys.isSignedOut], isSignedOut => {
+        const options = _getAuthOptions(!!isSignedOut)
 
-          const { data: registeredUser } = await http.post<any, AxiosResponse<User>>(
-            `${process.env.API_BASE_URL}${Apis.users}`,
-            { type, serviceAccessToken, finishedRegisterStep: registerSteps.Register, ...userInfo }
-          )
+        getGoogleAuthToken(async (serviceAccessToken: string) => {
+          try {
+            const { data: userInfo } = await http.get<any, AxiosResponse<GoogleUserInfo>>(
+              `${GoogleApiUrls.getUserInfo}${serviceAccessToken}`
+            )
 
-          cookies.set(CacheKeys.jwtToken, registeredUser.jwtToken)
+            const { data: registeredUser } = await http.post<any, AxiosResponse<User>>(
+              `${process.env.API_BASE_URL}${Apis.users}`,
+              { type, serviceAccessToken, finishedRegisterStep: registerSteps.Register, ...userInfo }
+            )
 
-          callback(registeredUser)
-        } catch (e) {
-          signOut()
-          this.setIsShowLoginError(true)
-        }
+            chrome.storage.sync.set({ [CacheKeys.isSignedOut]: false })
+            callback(registeredUser)
+          } catch (e) {
+            // TODO: Try again.
+            signOut.call({ http })
+            this.setIsShowLoginError(true)
+          }
+        }, options)
       })
       break
 
@@ -58,11 +59,19 @@ export function signIn(this: any, type: string, callback: Function) {
   }
 }
 
-export function signOut(callback?: () => void) {
-  _processGoogleAuthToken((serviceAccessToken: string) => {
-    http.get(`${GoogleApiUrls.revokeToken}${serviceAccessToken}`)
-    chrome.identity.removeCachedAuthToken({ token: serviceAccessToken }, callback)
-  })
+export function signOut(this: any, callback?: () => void) {
+  try {
+    const http = <Http>this.http
 
-  cookies.remove(CacheKeys.jwtToken)
+    getGoogleAuthToken((serviceAccessToken: string) => {
+      http.get(`${GoogleApiUrls.revokeToken}${serviceAccessToken}`)
+      chrome.identity.removeCachedAuthToken({ token: serviceAccessToken }, callback)
+    }, ({}))
+
+    chrome.storage.sync.set({ [CacheKeys.isSignedOut]: true })
+  } catch (error) {
+    // TODO: Notice user.
+  }
 }
+
+// TODO: Handle onSignInChanged https://developer.chrome.com/docs/extensions/reference/identity/#event-onSignInChanged

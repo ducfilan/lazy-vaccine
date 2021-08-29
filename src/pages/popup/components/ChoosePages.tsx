@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { usePopupContext } from "../contexts/PopupContext"
+import { useGlobalContext } from "../contexts/GlobalContext"
 
 import { Card, Space, Checkbox, notification } from "antd"
 import { CheckCircleFilled } from "@ant-design/icons"
@@ -17,7 +17,7 @@ import PopupHeader from "./Header"
 const { useState } = React
 
 function ChoosePages() {
-  const { user, setUser } = usePopupContext()
+  const { user, setUser, http } = useGlobalContext()
 
   const [chosePages, setChosePages] = useState<string[]>(user?.pages || [SupportingPages.facebook.key])
 
@@ -43,7 +43,7 @@ function ChoosePages() {
         pages: chosePages,
       }
 
-      await updateUserInfo({ finishedRegisterStep: step, pages: chosePages })
+      http && (await updateUserInfo(http, { finishedRegisterStep: step, pages: chosePages }))
 
       setUser(updatedUserInfo)
     } catch (error) {

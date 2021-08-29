@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { usePopupContext } from "../contexts/PopupContext"
+import { useGlobalContext } from "../contexts/GlobalContext"
 
 import { Row, Col, Badge, Typography, Card, Statistic, Button, notification } from "antd"
 import Icon, {
@@ -27,7 +27,7 @@ const { Text } = Typography
 const { useState } = React
 
 function HeaderContent() {
-  const { user } = usePopupContext()
+  const { user } = useGlobalContext()
   const isLoading = !user
 
   return (
@@ -74,7 +74,7 @@ function HeaderContent() {
 }
 
 function CompletedInfo() {
-  const { user, setUser } = usePopupContext()
+  const { user, setUser, http } = useGlobalContext()
 
   const goBack = async () => {
     const prevStep = user ? RegisterSteps.prev(user.finishedRegisterStep) : null
@@ -90,7 +90,7 @@ function CompletedInfo() {
         finishedRegisterStep: step,
       }
 
-      await updateUserInfo({ finishedRegisterStep: step })
+      http && (await updateUserInfo(http, { finishedRegisterStep: step }))
 
       setUser(updatedUserInfo)
     } catch (error) {
@@ -112,32 +112,22 @@ function CompletedInfo() {
 
           <Row gutter={[32, 16]} className="completed-info--button-list">
             <Col span={12}>
-              <Button
-                className="completed-info--button-more-sets"
-                size="large"
-                icon={<FileSearchOutlined />}
-                block={true}
-              >
+              <Button className="completed-info--button-more-sets" size="large" icon={<FileSearchOutlined />} block>
                 {chrome.i18n.getMessage("popup_stats_more_sets")}
               </Button>
             </Col>
             <Col span={12}>
-              <Button
-                className="completed-info--button-full-stats"
-                size="large"
-                icon={<BarChartOutlined />}
-                block={true}
-              >
+              <Button className="completed-info--button-full-stats" size="large" icon={<BarChartOutlined />} block>
                 {chrome.i18n.getMessage("popup_stats_full_stats")}
               </Button>
             </Col>
             <Col span={12}>
-              <Button className="completed-info--button-my-profile" size="large" icon={<SmileOutlined />} block={true}>
+              <Button className="completed-info--button-my-profile" size="large" icon={<SmileOutlined />} block>
                 {chrome.i18n.getMessage("popup_stats_my_profile")}
               </Button>
             </Col>
             <Col span={12}>
-              <Button className="completed-info--button-settings" size="large" icon={<SettingOutlined />} block={true}>
+              <Button className="completed-info--button-settings" size="large" icon={<SettingOutlined />} block>
                 {chrome.i18n.getMessage("popup_stats_settings")}
               </Button>
             </Col>

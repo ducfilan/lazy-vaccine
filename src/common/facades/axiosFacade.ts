@@ -1,9 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
-import { Cookies } from "react-cookie"
 
 import StatusCode from "@consts/statusCodes"
 import { ApiTimeOut } from "@consts/constants"
-import CacheKeys from "@consts/cacheKeys"
 
 const headers: Readonly<Record<string, string | boolean>> = {
   Accept: "application/json",
@@ -12,26 +10,15 @@ const headers: Readonly<Record<string, string | boolean>> = {
   "X-Requested-With": "XMLHttpRequest",
 }
 
-const cookies = new Cookies()
-
-const getToken = () => cookies.get(CacheKeys.jwtToken)
-
-const injectToken = (config: AxiosRequestConfig): AxiosRequestConfig => {
-  try {
-    const token = getToken()
-
-    if (token != null) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-
-    return config
-  } catch (error) {
-    throw new Error(error)
-  }
-}
-
-class Http {
+export class Http {
   private instance: AxiosInstance | null = null
+  private token: string
+  private loginType: string
+
+  constructor(token: string, loginType: string) {
+    this.token = token
+    this.loginType = loginType
+  }
 
   private get http(): AxiosInstance {
     return this.instance != null ? this.instance : this.initHttp()
@@ -40,12 +27,14 @@ class Http {
   initHttp() {
     const http = axios.create({
       baseURL: process.env.API_BASE_URL,
-      headers,
+      headers: {
+        ...headers,
+        'Authorization': `Bearer ${this.token}`,
+        'X-Login-Type': this.loginType
+      },
       withCredentials: true,
       timeout: ApiTimeOut,
     })
-
-    http.interceptors.request.use(injectToken, (error) => Promise.reject(error))
 
     http.interceptors.response.use(
       (response) => response,
@@ -120,5 +109,3 @@ class Http {
     return Promise.reject(error)
   }
 }
-
-export const http = new Http()

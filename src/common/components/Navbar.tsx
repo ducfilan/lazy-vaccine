@@ -6,11 +6,11 @@ import { MenuOutlined, RightCircleOutlined } from "@ant-design/icons"
 import AppLog from "@img/ui/logo.png"
 
 import { signOut } from "@facades/authFacade"
-import { usePopupContext } from "@/pages/popup/contexts/PopupContext"
+import { useGlobalContext } from "@/pages/popup/contexts/GlobalContext"
 import AvatarImage from "./AvatarImage"
 
 const DropdownMenu = (props: { isLoggedIn: boolean }) => {
-  const { user, setUser } = usePopupContext()
+  const { user, setUser, http } = useGlobalContext()
 
   return (
     <Dropdown
@@ -26,7 +26,7 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
                 <Button
                   type="link"
                   onClick={() => {
-                    signOut(() => {
+                    signOut.call({ http }, () => {
                       setUser(null)
                     })
                   }}
@@ -61,16 +61,17 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
   )
 }
 
-function Navbar(props: { isLoggedIn: boolean }) {
-  const { user } = usePopupContext()
+function Navbar() {
+  const { user } = useGlobalContext()
+  const isLoggedIn = !!user
 
   return (
     <PageHeader
       title={chrome.i18n.getMessage("appName")}
       avatar={{ gap: 0, src: AppLog, size: 48 }}
       extra={[
-        props.isLoggedIn ? <AvatarImage key="avatar" imageUrl={user?.pictureUrl} /> : <></>,
-        <DropdownMenu key="menu" isLoggedIn={props.isLoggedIn} />,
+        isLoggedIn ? <AvatarImage key="avatar" imageUrl={user?.pictureUrl} /> : <div key="avatar"></div>,
+        <DropdownMenu key="menu" isLoggedIn={isLoggedIn} />,
       ]}
     />
   )
