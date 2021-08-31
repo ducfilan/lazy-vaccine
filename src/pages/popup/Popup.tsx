@@ -38,20 +38,17 @@ const PopupPage = () => {
   }, [])
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      if (http) {
-        const userInfo = await getUserInfo(http)
+    if (!http) return
+
+    getUserInfo(http)
+      .then((userInfo) => {
         setUser(userInfo)
-      }
-    }
-
-    try {
-      fetchUserInfo()
-    } catch (error) {
-      // Not able to login with current token, ignore to show the first page to login.
-    }
-
-    setIsLoading(false)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        setIsLoading(false)
+        // Not able to login with current token, ignore to show the first page to login.
+      })
   }, [http])
 
   function renderPages() {
