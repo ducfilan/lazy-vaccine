@@ -1,6 +1,7 @@
 import * as React from "react"
-import { Layout } from "antd"
+import { Layout, Button } from "antd"
 import Navbar from "@/common/components/Navbar"
+import { RocketOutlined } from "@ant-design/icons"
 
 const { useState, useEffect } = React
 
@@ -14,7 +15,13 @@ const { Content } = Layout
 const AppPage = () => {
   return (
     <Layout>
-      <Navbar />
+      <Navbar
+        extraComponents={[
+          <Button key="create-set" size="large" className="navbar-create-set--wrapper" icon={<RocketOutlined />}>
+            {chrome.i18n.getMessage("create_set_button")}
+          </Button>,
+        ]}
+      />
       <Layout className="body-content">
         <Sidebar width={250} />
         <Layout style={{ padding: "0 24px 24px" }}>

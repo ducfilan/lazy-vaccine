@@ -52,6 +52,9 @@
   "popup_stats_my_profile": {
     "message": "プロファイル"
   },
+  "create_set_button": {
+    "message": "セット作成"
+  },
   "pageCreateSetTitle": {
     "message": "セット作成"
   },

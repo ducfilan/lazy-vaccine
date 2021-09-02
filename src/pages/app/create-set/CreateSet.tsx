@@ -1,7 +1,4 @@
 import * as React from "react"
-import Navbar from "@/common/components/Navbar"
-
-const { useState, useEffect } = React
 
 import { Col, Row } from "antd"
 

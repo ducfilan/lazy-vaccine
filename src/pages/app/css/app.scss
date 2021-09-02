@@ -1,6 +1,8 @@
 @import "~@/common/css/global/variables";
 @import "~@/common/css/global/keyframes";
 @import "~@/common/css/global/common";
+@import "~@/common/css/global/functions";
+@import "~@/common/css/global/mixins";
 
 @import "~@/common/css/components/_common/navbar";
 @import "~@/common/css/components/_common/page-footer";
@@ -23,4 +25,56 @@ body {
 
 .ant-layout {
   height: 100%;
+}
+
+.navbar-create-set--wrapper {
+  @include box-shadow(0, 3px, 2px, 0, fade-out($black, 0.8));
+  background-color: $gold;
+  text-transform: uppercase;
+  border: none;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: bulmaLighten($gold, 10%);
+    color: unset;
+  }
+
+  svg {
+    animation: bounce ease-in-out 0.7s infinite alternate;
+  }
+}
+
+button {
+  position: relative;
+  overflow: hidden;
+
+  &:after {
+    background: #fff;
+    content: "";
+    height: 155px;
+    left: -75px;
+    opacity: 0.2;
+    position: absolute;
+    top: -50px;
+    transform: rotate(35deg);
+    transition: all 1000ms cubic-bezier(0.19, 1, 0.22, 1);
+    width: 50px;
+  }
+
+  &:hover {
+    &:after {
+      left: 120%;
+      transition: all 1000ms cubic-bezier(0.19, 1, 0.22, 1);
+    }
+  }
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(3px);
+  }
+  100% {
+    transform: translateY(-3px);
+  }
 }

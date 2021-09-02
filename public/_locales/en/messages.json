@@ -55,6 +55,9 @@
   "popup_stats_my_profile": {
     "message": "My profile"
   },
+  "create_set_button": {
+    "message": "Create set"
+  },
   "pageCreateSetTitle": {
     "message": "Create a new set"
   },

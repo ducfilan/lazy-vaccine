@@ -35,7 +35,7 @@
     "message": "Chọn ngôn ngữ"
   },
   "popup_stats_sets": {
-    "message": "Sets"
+    "message": "Bài"
   },
   "popup_stats_items": {
     "message": "Mục"
@@ -47,10 +47,13 @@
     "message": "Cài đặt"
   },
   "popup_stats_more_sets": {
-    "message": "Thêm set"
+    "message": "Thêm bài"
   },
   "popup_stats_my_profile": {
     "message": "Trang cá nhân"
+  },
+  "create_set_button": {
+    "message": "Tạo bài"
   },
   "pageCreateSetTitle": {
     "message": "Tạo bài học mới"
