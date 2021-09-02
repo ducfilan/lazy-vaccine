@@ -61,7 +61,7 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
   )
 }
 
-function Navbar() {
+function Navbar(props: { extraComponents?: React.ReactNode[] }) {
   const { user } = useGlobalContext()
   const isLoggedIn = !!user
 
@@ -70,6 +70,7 @@ function Navbar() {
       title={chrome.i18n.getMessage("appName")}
       avatar={{ gap: 0, src: AppLog, size: 48 }}
       extra={[
+        ...(props.extraComponents || []),
         isLoggedIn ? <AvatarImage key="avatar" imageUrl={user?.pictureUrl} /> : <div key="avatar"></div>,
         <DropdownMenu key="menu" isLoggedIn={isLoggedIn} />,
       ]}
