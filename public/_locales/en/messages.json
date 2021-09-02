@@ -58,6 +58,9 @@
   "create_set_button": {
     "message": "Create set"
   },
+  "create_set_search_place_holder": {
+    "message": "Search for anything you want to learn..."
+  },
   "pageCreateSetTitle": {
     "message": "Create a new set"
   },

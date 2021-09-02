@@ -1,7 +1,7 @@
 import * as React from "react"
-import { Layout, Button } from "antd"
+import { Layout, Button, Input } from "antd"
 import Navbar from "@/common/components/Navbar"
-import { RocketOutlined } from "@ant-design/icons"
+import { RocketOutlined, SearchOutlined } from "@ant-design/icons"
 
 const { useState, useEffect } = React
 
@@ -16,6 +16,14 @@ const AppPage = () => {
   return (
     <Layout>
       <Navbar
+        centerComponent={
+          <Input
+            placeholder={chrome.i18n.getMessage("create_set_search_place_holder")}
+            className="is-absolute"
+            size="large"
+            suffix={<SearchOutlined style={{ color: "rgba(0,0,0,.45)" }} />}
+          />
+        }
         extraComponents={[
           <Button key="create-set" size="large" className="navbar-create-set--wrapper" icon={<RocketOutlined />}>
             {chrome.i18n.getMessage("create_set_button")}

@@ -45,6 +45,20 @@ body {
   }
 }
 
+.ant-page-header-content {
+  position: absolute;
+  width: 500px;
+  top: -4px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+
+  & > span {
+    border: none;
+    @include box-shadow(0, 3px, 2px, 0, fade-out($black, 0.8));
+  }
+}
+
 button {
   position: relative;
   overflow: hidden;

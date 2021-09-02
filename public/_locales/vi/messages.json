@@ -55,6 +55,9 @@
   "create_set_button": {
     "message": "Tạo bài"
   },
+  "create_set_search_place_holder": {
+    "message": "Tìm bất cứ bài nào bạn muốn học..."
+  },
   "pageCreateSetTitle": {
     "message": "Tạo bài học mới"
   },
