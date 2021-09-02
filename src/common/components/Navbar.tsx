@@ -61,7 +61,7 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
   )
 }
 
-function Navbar(props: { extraComponents?: React.ReactNode[] }) {
+function Navbar(props: { extraComponents?: React.ReactNode[]; centerComponent?: React.ReactNode }) {
   const { user } = useGlobalContext()
   const isLoggedIn = !!user
 
@@ -74,7 +74,9 @@ function Navbar(props: { extraComponents?: React.ReactNode[] }) {
         isLoggedIn ? <AvatarImage key="avatar" imageUrl={user?.pictureUrl} /> : <div key="avatar"></div>,
         <DropdownMenu key="menu" isLoggedIn={isLoggedIn} />,
       ]}
-    />
+    >
+      {props.centerComponent}
+    </PageHeader>
   )
 }
 
