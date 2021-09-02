@@ -73,6 +73,8 @@ const PopupPage = () => {
 
       default:
         return <FirstTime />
+      // TODO: Network error/server error should be noticed.
+      // TODO: Different login header while token is expired.
     }
   }
 
