@@ -16,6 +16,10 @@ module.exports = (_, { mode }) => {
         import: "./src/pages/popup/index.tsx",
         filename: "pages/[name].js"
       },
+      app: {
+        import: "./src/pages/app/index.tsx",
+        filename: "pages/[name].js"
+      },
       content: path.join(__dirname, "src/content.ts"),
       background: path.join(__dirname, "src/background.ts"),
     },
@@ -68,7 +72,7 @@ module.exports = (_, { mode }) => {
             options: {
               lessOptions: {
                 modifyVars: {
-                  "primary-color": "#12b886",
+                  "primary-color": "#1dd1a1",
                   "border-radius-base": "4px",
                   "btn-border-radius-base": "8px",
                   "font-family": "'Source Sans Pro', 'Noto Sans JP', BlinkMacSystemFont, -apple-system, 'Segoe UI', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol','Noto Color Emoji'",

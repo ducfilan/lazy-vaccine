@@ -14,7 +14,7 @@
       "16": "icon16.png",
       "48": "icon48.png"
     },
-    "default_popup": "pages/popup.html"
+    "default_popup": "popup.html"
   },
   "permissions": [
     "activeTab",
@@ -29,7 +29,7 @@
   },
   "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://www.googleapis.com https://apis.google.com object-src 'self'",
   "oauth2": {
-    "client_id": "222626154082-rpr0uaj2pd8ft1po9180qes0dq48d5ef.apps.googleusercontent.com",
+    "client_id": "45752199260-mh4bu2geh3f7bi39fvrni7ajsb30ck59.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/userinfo.email",
       "https://www.googleapis.com/auth/userinfo.profile"
