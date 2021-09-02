@@ -1,15 +1,13 @@
-export const Pages = {
-  NewSet: {
-    fileName: "create-set.html"
+export const AppPages = {
+  Home: {
+    key: "side-home",
+    name: "Home",
+    path: "/home",
   },
-  NewSetItems: {
-    fileName: "create-set-items.html"
-  },
-  SetsList: {
-    fileName: "sets-list.html"
-  },
-  SetsDetail: {
-    fileName: "set-detail.html"
+  Sets: {
+    key: "side-find-sets",
+    name: "Find sets",
+    path: "/sets",
   }
 }
 

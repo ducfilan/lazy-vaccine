@@ -1,19 +1,8 @@
-@mixin box-shadow(
-  $h-shadow: 0,
-  $v-shadow: 1px,
-  $blur: 2px,
-  $spread: 0,
-  $color: fade-out($black, 0.85)
-) {
+@mixin box-shadow($h-shadow: 0, $v-shadow: 1px, $blur: 2px, $spread: 0, $color: fade-out($black, 0.85)) {
   box-shadow: $h-shadow $v-shadow $blur $spread $color;
 }
 
-@mixin transitions(
-  $property: all,
-  $duration: 0.3s,
-  $timing: linear,
-  $delay: 0s
-) {
+@mixin transitions($property: all, $duration: 0.3s, $timing: linear, $delay: 0s) {
   transition: $property $duration $timing $delay;
 }
 
@@ -30,7 +19,8 @@
   background-image: url("~@img/ui/greenery.png");
   background-repeat: repeat-x;
   background-position: bottom;
-  background-size: 60%;
+  background-size: 400px;
+  height: 100px;
 }
 
 @mixin horizontal-li {

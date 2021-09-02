@@ -63,48 +63,46 @@ function ChooseLanguages() {
   }
 
   return (
-    <>
-      <div className="choose-languages--wrapper">
-        <PopupHeader content={headerText} />
+    <div className="choose-languages--wrapper">
+      <PopupHeader content={headerText} />
 
-        <div className="choose-languages--pages-list">
-          <NextPrevButton direction={"right"} onNext={async () => await goForward()} />
+      <div className="choose-languages--pages-list">
+        <NextPrevButton direction={"right"} onNext={async () => await goForward()} />
 
-          <Row gutter={[16, 16]} className="choose-languages--selected-languages-wrapper">
-            <Col span={12} offset={6}>
-              {choseLanguages.map((code, i) => (
-                <LanguageItem
-                  isRemovable={i > 0}
-                  key={code}
-                  code={code}
-                  name={langCodeToName(code)}
-                  onRemove={removeLanguage}
-                />
+        <Row gutter={[16, 16]} className="choose-languages--selected-languages-wrapper">
+          <Col span={12} offset={6}>
+            {choseLanguages.map((code, i) => (
+              <LanguageItem
+                isRemovable={i > 0}
+                key={code}
+                code={code}
+                name={langCodeToName(code)}
+                onRemove={removeLanguage}
+              />
+            ))}
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]} className="choose-languages--selection-wrapper">
+          <Col span={12} offset={6}>
+            <Select
+              showSearch
+              className="choose-languages--dropdown-button"
+              placeholder={chrome.i18n.getMessage("popup_select_a_language")}
+              optionFilterProp="children"
+              filterOption={(input, option) => option?.value.toLowerCase().includes(input.toLowerCase())}
+              onChange={addLanguage}
+            >
+              {Object.values(SupportingLanguages.Set).map((language) => (
+                <Option key={language.code} value={language.code}>
+                  {language.name}
+                </Option>
               ))}
-            </Col>
-          </Row>
-
-          <Row gutter={[16, 16]} className="choose-languages--selection-wrapper">
-            <Col span={12} offset={6}>
-              <Select
-                showSearch
-                className="choose-languages--dropdown-button"
-                placeholder={chrome.i18n.getMessage("popup_select_a_language")}
-                optionFilterProp="children"
-                filterOption={(input, option) => option?.value.toLowerCase().includes(input.toLowerCase())}
-                onChange={addLanguage}
-              >
-                {Object.values(SupportingLanguages.Set).map((language) => (
-                  <Option key={language.code} value={language.code}>
-                    {language.name}
-                  </Option>
-                ))}
-              </Select>
-            </Col>
-          </Row>
-        </div>
+            </Select>
+          </Col>
+        </Row>
       </div>
-    </>
+    </div>
   )
 }
 

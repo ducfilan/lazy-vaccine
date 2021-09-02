@@ -67,35 +67,33 @@ function ChoosePages() {
   const isPageSelected = (page: string) => chosePages.includes(page)
 
   return (
-    <>
-      <div className="choose-pages--wrapper">
-        <PopupHeader content={headerText} />
+    <div className="choose-pages--wrapper">
+      <PopupHeader content={headerText} />
 
-        <div className="choose-pages--pages-list">
-          <NextPrevButton direction={"both"} onNext={goForward} onPrev={goBack} />
+      <div className="choose-pages--pages-list">
+        <NextPrevButton direction={"both"} onNext={goForward} onPrev={goBack} />
 
-          <Space align="end" style={{ marginRight: 18 }}>
-            <Checkbox onChange={selectAllPages}>{chrome.i18n.getMessage("select_all")}</Checkbox>
-          </Space>
+        <Space align="end" style={{ marginRight: 18 }}>
+          <Checkbox onChange={selectAllPages}>{chrome.i18n.getMessage("select_all")}</Checkbox>
+        </Space>
 
-          <Card bordered={false}>
-            {Object.entries(SupportingPages).map(([page, pageInfo]) => (
-              <Card.Grid key={page} hoverable={false}>
-                <div
-                  className={`choose-pages--page-item has-text-white has-text-centered ${page} 
+        <Card bordered={false}>
+          {Object.entries(SupportingPages).map(([page, pageInfo]) => (
+            <Card.Grid key={page} hoverable={false}>
+              <div
+                className={`choose-pages--page-item has-text-white has-text-centered ${page} 
                   ${isPageSelected(page) ? "selected" : ""}`}
-                  onClick={() => selectPage(page)}
-                >
-                  <CheckCircleFilled className="choose-pages--selected-icon" />
-                  <div className="choose-pages--icon">{<BrandIcon brandName={page} />}</div>
-                  {pageInfo.title}
-                </div>
-              </Card.Grid>
-            ))}
-          </Card>
-        </div>
+                onClick={() => selectPage(page)}
+              >
+                <CheckCircleFilled className="choose-pages--selected-icon" />
+                <div className="choose-pages--icon">{<BrandIcon brandName={page} />}</div>
+                {pageInfo.title}
+              </div>
+            </Card.Grid>
+          ))}
+        </Card>
       </div>
-    </>
+    </div>
   )
 }
 

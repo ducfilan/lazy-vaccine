@@ -103,38 +103,36 @@ function CompletedInfo() {
   }
 
   return (
-    <>
-      <div className="completed-info--wrapper">
-        <PopupHeader content={<HeaderContent />} />
+    <div className="completed-info--wrapper">
+      <PopupHeader content={<HeaderContent />} />
 
-        <div className="completed-info--pages-list">
-          <NextPrevButton direction={"left"} onPrev={goBack} />
+      <div className="completed-info--pages-list">
+        <NextPrevButton direction={"left"} onPrev={goBack} />
 
-          <Row gutter={[32, 16]} className="completed-info--button-list">
-            <Col span={12}>
-              <Button className="completed-info--button-more-sets" size="large" icon={<FileSearchOutlined />} block>
-                {chrome.i18n.getMessage("popup_stats_more_sets")}
-              </Button>
-            </Col>
-            <Col span={12}>
-              <Button className="completed-info--button-full-stats" size="large" icon={<BarChartOutlined />} block>
-                {chrome.i18n.getMessage("popup_stats_full_stats")}
-              </Button>
-            </Col>
-            <Col span={12}>
-              <Button className="completed-info--button-my-profile" size="large" icon={<SmileOutlined />} block>
-                {chrome.i18n.getMessage("popup_stats_my_profile")}
-              </Button>
-            </Col>
-            <Col span={12}>
-              <Button className="completed-info--button-settings" size="large" icon={<SettingOutlined />} block>
-                {chrome.i18n.getMessage("popup_stats_settings")}
-              </Button>
-            </Col>
-          </Row>
-        </div>
+        <Row gutter={[32, 16]} className="completed-info--button-list">
+          <Col span={12}>
+            <Button className="completed-info--button-more-sets" size="large" icon={<FileSearchOutlined />} block>
+              {chrome.i18n.getMessage("popup_stats_more_sets")}
+            </Button>
+          </Col>
+          <Col span={12}>
+            <Button className="completed-info--button-full-stats" size="large" icon={<BarChartOutlined />} block>
+              {chrome.i18n.getMessage("popup_stats_full_stats")}
+            </Button>
+          </Col>
+          <Col span={12}>
+            <Button className="completed-info--button-my-profile" size="large" icon={<SmileOutlined />} block>
+              {chrome.i18n.getMessage("popup_stats_my_profile")}
+            </Button>
+          </Col>
+          <Col span={12}>
+            <Button className="completed-info--button-settings" size="large" icon={<SettingOutlined />} block>
+              {chrome.i18n.getMessage("popup_stats_settings")}
+            </Button>
+          </Col>
+        </Row>
       </div>
-    </>
+    </div>
   )
 }
 
