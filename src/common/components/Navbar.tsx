@@ -6,7 +6,7 @@ import { MenuOutlined, RightCircleOutlined } from "@ant-design/icons"
 import AppLog from "@img/ui/logo.png"
 
 import { signOut } from "@facades/authFacade"
-import { useGlobalContext } from "@/pages/popup/contexts/GlobalContext"
+import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import AvatarImage from "./AvatarImage"
 
 const DropdownMenu = (props: { isLoggedIn: boolean }) => {

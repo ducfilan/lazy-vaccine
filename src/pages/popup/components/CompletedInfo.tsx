@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { useGlobalContext } from "../contexts/GlobalContext"
+import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
 import { Row, Col, Badge, Typography, Card, Statistic, Button, notification } from "antd"
 import Icon, {

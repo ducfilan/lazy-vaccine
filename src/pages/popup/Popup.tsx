@@ -3,8 +3,6 @@ const { useState, useEffect } = React
 
 import "./css/popup.scss"
 
-import { GlobalContext } from "./contexts/GlobalContext"
-
 import Navbar from "@/common/components/Navbar"
 import Loading from "@/common/components/Loading"
 import FirstTime from "./components/FirstTime"
@@ -16,9 +14,10 @@ import RegisterSteps from "@consts/registerSteps"
 
 import { getUserInfo } from "@/common/api/user"
 import { User } from "@/common/types/types"
-import { getGoogleAuthToken } from "@/common/facades/authFacade"
-import { Http } from "@/common/facades/axiosFacade"
+import { getGoogleAuthToken } from "@facades/authFacade"
+import { Http } from "@facades/axiosFacade"
 import { LoginTypes } from "@/common/consts/constants"
+import { GlobalContext } from "@/common/contexts/GlobalContext"
 
 const PopupPage = () => {
   const [user, setUser] = useState<User | null>(null)

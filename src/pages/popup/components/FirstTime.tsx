@@ -1,10 +1,10 @@
 import * as React from "react"
 
-import { useGlobalContext } from "../contexts/GlobalContext"
+import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
 import { Button, Alert } from "antd"
 import { GoogleOutlined } from "@ant-design/icons"
-import { signIn } from "@/common/facades/authFacade"
+import { signIn } from "@facades/authFacade"
 import { LoginTypes } from "@consts/constants"
 import { User } from "@/common/types/types"
 
