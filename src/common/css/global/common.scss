@@ -16,24 +16,9 @@
   height: 100%;
 }
 
-button.is-transparent {
-  border: 0;
-  background: no-repeat;
-}
-
 a *,
 button * {
   pointer-events: none;
-}
-
-body {
-  opacity: 1;
-  transition: 0.5s opacity;
-
-  &.fade {
-    opacity: 0;
-    transition: none;
-  }
 }
 
 .is-relative {
