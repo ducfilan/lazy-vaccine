@@ -63,3 +63,11 @@ export const SupportingPages: { [brandName: string]: { key: string, title: strin
     title: "Pinterest",
   },
 }
+
+export const CreateSetDescriptionMaxLength = 250
+
+export const RecaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY
+
+export const LocalStorageKeyPrefix = "duc.lazy-vaccine."
+
+export const LiteralDurationsExtractRegex = /^((?<days>\d+)d\w*?)* *((?<hours>\d+)h\w*)* *((?<minutes>\d+)m\w*)* *((?<seconds>\d+)s\w*)*$/gm
