@@ -74,7 +74,7 @@ module.exports = (_, { mode }) => {
                 modifyVars: {
                   "primary-color": "#12b886",
                   "border-radius-base": "5px",
-                  "btn-border-radius-base": "8px",
+                  "btn-border-radius-base": "6px",
                   "font-family": "'Source Sans Pro', 'Noto Sans JP', BlinkMacSystemFont, -apple-system, 'Segoe UI', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol','Noto Color Emoji'",
                 },
                 javascriptEnabled: true,

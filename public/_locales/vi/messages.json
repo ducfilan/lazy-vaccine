@@ -58,8 +58,11 @@
   "create_set_search_place_holder": {
     "message": "Tìm bất cứ bài nào bạn muốn học..."
   },
-  "pageCreateSetTitle": {
-    "message": "Tạo bài học mới"
+  "create_set_page_title": {
+    "message": "Tạo một bài mới"
+  },
+  "create_set_field_name": {
+    "message": "Name"
   },
   "pageSetsListTitle": {
     "message": "Danh sách các bài học"
@@ -70,41 +73,35 @@
   "pageCreateSetItemsTitle": {
     "message": "Thêm các mục cho bài học"
   },
-  "setTitle": {
-    "message": "Tiêu đề"
-  },
-  "setTitlePlaceholder": {
+  "create_set_field_name_placeholder": {
     "message": "Tên của bài học được tạo"
   },
-  "setDescription": {
+  "create_set_field_description": {
     "message": "Mô tả"
   },
-  "setDescriptionPlaceholder": {
+  "create_set_field_description_placeholder": {
     "message": "Mô tả thêm về bài học sẽ được tạo"
   },
-  "setVisibility": {
-    "message": "Chế độ"
-  },
-  "setVisibilityPublic": {
-    "message": "Công khai"
-  },
-  "setVisibilityOnlyMe": {
-    "message": "Chỉ mình tôi"
-  },
-  "setVisibilityNotFinished": {
-    "message": "Chưa hoàn thành"
-  },
-  "setCategory": {
+  "create_set_field_category": {
     "message": "Phân loại"
   },
-  "setTags": {
+  "create_set_field_tags": {
     "message": "Thẻ"
   },
-  "setTagsPlaceholder": {
-    "message": ""
-  },
-  "setTagsHelpText": {
+  "create_set_field_tags_extra": {
     "message": "Ví dụ: IELTS, ngữ pháp tiếng Nhật N3, AWS associate mock test"
+  },
+  "create_set_field_tags_placeholder": {
+    "message": "Input # to get tags"
+  },
+  "create_set_next_button": {
+    "message": "Next"
+  },
+  "create_set_help_text_1_title": {
+    "message": "What is a set?"
+  },
+  "create_set_help_text_1_content": {
+    "message": "- Một danh sách những điều cần nhớ\n- Chia sẻ nội dung quen thuộc với bạn học/đồng nghiệp\n- Chia sẻ tài liệu giảng dạy tuyệt vời với cộng đồng!"
   },
   "setCreateSetButton": {
     "message": "Tạo bài"

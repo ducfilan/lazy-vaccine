@@ -1,5 +1,5 @@
 const Apis = {
-  categories: "/categories",
+  categories: (langCode: string) => `/categories?lang=${langCode}`,
   users: "/users",
   sets: "/sets",
   items: "/items",

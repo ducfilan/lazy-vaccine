@@ -1,29 +1,49 @@
 import { useState } from "react"
+import { LocalStorageKeyPrefix } from "@consts/constants"
+import { addDuration } from "../utils/stringUtils"
 
-const useLocalStorage = (key: string, initialValue: any = undefined) => {
-  const __prefix__ = "duc.lazy-vaccine."
+/**
+ * Local storage hook
+ * @param key Cache key to store in localStorage
+ * @param expireIn Expire in literal string format, [number]d [number]h [number]m [number]s
+ * @returns
+ */
+function useLocalStorage<T>(key: string, initialValue: T, expireIn: string) {
+  const __prefix__ = LocalStorageKeyPrefix
 
-  const [storedValue, setStoredValue] = useState(() => {
+  const isExpired = (expireAtDateString: string) => new Date() > new Date(expireAtDateString)
+
+  const [storedValue, setStoredValue] = useState<{ value: T; expireAt: Date }>(() => {
     try {
-      const item = window.localStorage.getItem(`${__prefix__}${key}`)
-      return item ? JSON.parse(item) : initialValue
-    } catch (err) {
-      console.error(err)
+      const cachedObjectJson = window.localStorage.getItem(`${__prefix__}${key}`)
+      if (!cachedObjectJson) return null
+
+      const cachedObject = JSON.parse(cachedObjectJson)
+
+      return isExpired(cachedObject.expireAt) ? initialValue : cachedObject
+    } catch (error) {
+      console.log(error)
       return initialValue
     }
   })
 
-  const setValue = (value: any) => {
+  const setValue = (value: T | ((val: { value: T; expireAt: Date }) => { value: T; expireAt: Date })) => {
     try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value
+      const valueToStore =
+        value instanceof Function
+          ? value(storedValue)
+          : {
+              value,
+              expireAt: addDuration(new Date(), expireIn),
+            }
+
       setStoredValue(valueToStore)
       window.localStorage.setItem(`${__prefix__}${key}`, JSON.stringify(valueToStore))
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      console.log(error)
     }
   }
-
-  return [storedValue, setValue]
+  return [storedValue.value, setValue] as const
 }
 
 export default useLocalStorage

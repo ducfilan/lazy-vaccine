@@ -61,8 +61,50 @@
   "create_set_search_place_holder": {
     "message": "Search for anything you want to learn..."
   },
-  "pageCreateSetTitle": {
+  "create_set_page_title": {
     "message": "Create a new set"
+  },
+  "create_set_field_name": {
+    "message": "Name"
+  },
+  "create_set_field_name_placeholder": {
+    "message": "Title for the set"
+  },
+  "create_set_field_description": {
+    "message": "Description"
+  },
+  "create_set_field_category": {
+    "message": "Category"
+  },
+  "create_set_field_tags": {
+    "message": "Tags"
+  },
+  "create_set_field_tags_extra": {
+    "message": "E.g. IELTS, spanish grammar, AWS associate mock test"
+  },
+  "create_set_field_tags_placeholder": {
+    "message": "Input # to get tags"
+  },
+  "create_set_next_button": {
+    "message": "Next, add set items"
+  },
+  "create_set_help_text_1_title": {
+    "message": "What is a set?"
+  },
+  "create_set_help_text_1_content": {
+    "message": "- A quick list of personal facts to remember\n- Share common content with your classmates/colleagues\n- Share awesome teaching materials with the community!"
+  },
+  "create_set_help_text_2_title": {
+    "message": "Tips for a good set"
+  },
+  "create_set_help_text_2_content": {
+    "message": "- A short but descriptive title\n- Add related tags to help other find your set easier\n- Choose a correct category that best suit to your set content"
+  },
+  "create_set_help_text_3_title": {
+    "message": "Still confused?"
+  },
+  "create_set_help_text_3_content": {
+    "message": "- This short youtube will definitely help you!"
   },
   "pageSetsListTitle": {
     "message": "Set list"
@@ -73,41 +115,8 @@
   "pageCreateSetItemsTitle": {
     "message": "Add items to the set"
   },
-  "setTitle": {
-    "message": "Title"
-  },
-  "setTitlePlaceholder": {
-    "message": "Title for the set"
-  },
-  "setDescription": {
-    "message": "Description"
-  },
-  "setDescriptionPlaceholder": {
+  "create_set_field_description_placeholder": {
     "message": "Detail information for the set"
-  },
-  "setVisibility": {
-    "message": "Visibility"
-  },
-  "setVisibilityPublic": {
-    "message": "Public"
-  },
-  "setVisibilityOnlyMe": {
-    "message": "Only me (Private)"
-  },
-  "setVisibilityNotFinished": {
-    "message": "Not finished"
-  },
-  "setCategory": {
-    "message": "Category"
-  },
-  "setTags": {
-    "message": "Tags"
-  },
-  "setTagsPlaceholder": {
-    "message": ""
-  },
-  "setTagsHelpText": {
-    "message": "E.g. IELTS, spanish grammar, AWS associate mock test"
   },
   "setCreateSetButton": {
     "message": "Create set"

@@ -55,8 +55,11 @@
   "create_set_button": {
     "message": "セット作成"
   },
-  "pageCreateSetTitle": {
-    "message": "セット作成"
+  "create_set_search_place_holder": {
+    "message": "何でも検索できます..."
+  },
+  "create_set_page_title": {
+    "message": "セットを作成しましょう！"
   },
   "pageSetsListTitle": {
     "message": "セット一覧"
@@ -67,40 +70,22 @@
   "pageCreateSetItemsTitle": {
     "message": "セットの各アイテム追加"
   },
-  "setTitle": {
-    "message": "名前"
-  },
-  "setTitlePlaceholder": {
+  "create_set_field_name_placeholder": {
     "message": "セットの名前"
   },
-  "setDescription": {
+  "create_set_field_description": {
     "message": "説明"
   },
-  "setDescriptionPlaceholder": {
+  "create_set_field_description_placeholder": {
     "message": "セットの詳細内容"
   },
-  "setVisibility": {
-    "message": "可視"
-  },
-  "setVisibilityPublic": {
-    "message": "公開"
-  },
-  "setVisibilityOnlyMe": {
-    "message": "自分のみ"
-  },
-  "setVisibilityNotFinished": {
-    "message": "未完了"
-  },
-  "setCategory": {
+  "create_set_field_category": {
     "message": "カテゴリー"
   },
-  "setTags": {
+  "create_set_field_tags": {
     "message": "タグ"
   },
-  "setTagsPlaceholder": {
-    "message": ""
-  },
-  "setTagsHelpText": {
+  "create_set_field_tags_extra": {
     "message": "例えば： IELTS, 英語文法, AWS associate mock test"
   },
   "setCreateSetButton": {

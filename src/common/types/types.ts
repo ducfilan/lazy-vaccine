@@ -1,3 +1,8 @@
+export type KeyValuePair = {
+  key: string
+  value: string
+}
+
 export type Language = {
   name: string
   code: string
@@ -24,7 +29,31 @@ export type User = {
   pages?: string[]
 }
 
-export type KeyValuePair = {
-  key: string
+export type Category = {
+  title: string
   value: string
+  path?: string
+  children?: Category[]
+}
+
+export class CategoryResponse {
+  _id: string
+  name: any
+  description: any
+  path?: string
+
+  constructor(id: string, name: object, description: object, path?: string) {
+    this._id = id
+    this.name = name
+    this.description = description
+    this.path = path
+  }
+
+  toCategories(langCode: string) {
+    return {
+      title: this.name[langCode],
+      value: this._id,
+      path: this.path,
+    } as Category
+  }
 }

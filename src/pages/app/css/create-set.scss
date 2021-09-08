@@ -1,5 +1,6 @@
 .navbar-sides--wrapper {
   background: transparent;
+  padding-top: 24px;
 
   .ant-layout-sider-children {
     direction: rtl;
@@ -8,6 +9,7 @@
   ul {
     list-style-type: none;
     display: inline-block;
+    padding: 0;
 
     li {
       position: relative;
@@ -27,5 +29,30 @@
         display: block;
       }
     }
+  }
+}
+
+.create-set--right-card {
+  .ant-card-body {
+    padding-bottom: 0;
+  }
+
+  .ant-popover-arrow {
+    left: 50%;
+    transform: translate(-50%);
+    bottom: -8.7px;
+
+    .ant-popover-arrow-content {
+      box-shadow: 3px 3px 7px #00000012;
+      transform: translateY(-4.24264069px) rotate(45deg);
+    }
+  }
+
+  .slick-list {
+    padding-bottom: 16px;
+  }
+
+  .create-set--help-text-content {
+    white-space: pre-line;
   }
 }

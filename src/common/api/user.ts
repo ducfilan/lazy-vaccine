@@ -7,7 +7,7 @@ import { Http } from "../facades/axiosFacade";
 export async function getUserInfo(http: Http): Promise<User> {
   const { data: userInfo } = await http.get<any, AxiosResponse<User>>(Apis.me)
 
-  return userInfo;
+  return userInfo
 }
 
 export async function updateUserInfo(http: Http, data: Object): Promise<boolean> {

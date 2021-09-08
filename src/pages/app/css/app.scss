@@ -15,7 +15,7 @@ body {
   .body-content {
     width: 100%;
     margin: 0 auto;
-    max-width: 1200px;
+    max-width: 1280px;
   }
 }
 
@@ -57,6 +57,10 @@ body {
     border: none;
     @include box-shadow(0, 3px, 2px, 0, fade-out($black, 0.8));
   }
+}
+
+.page-header--title {
+  margin-bottom: 0 !important;
 }
 
 button {
