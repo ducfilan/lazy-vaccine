@@ -76,6 +76,9 @@
   "create_set_field_category": {
     "message": "Category"
   },
+  "create_set_request_category": {
+    "message": "Not found? Click here to request a new category"
+  },
   "create_set_field_tags": {
     "message": "Tags"
   },
