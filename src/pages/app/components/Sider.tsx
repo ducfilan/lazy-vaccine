@@ -7,17 +7,19 @@ const { Sider } = Layout
 import { AppPages } from "@/common/consts/constants"
 import { Link } from "react-router-dom"
 
-const Sidebar = (props: { width: number }) => {
+const Sidebar = (props: { width: number; path: string }) => {
   return (
     <Sider width={props.width} className="navbar-sides--wrapper">
       <ul>
-        {Object.values(AppPages).map((page) => (
-          <li key={page.key}>
-            <Link to={page.path}>
-              <Title level={4}>{page.name}</Title>
-            </Link>
-          </li>
-        ))}
+        {Object.values(AppPages)
+          .filter((page) => page.isSideNav)
+          .map((page) => (
+            <li key={page.key} className={page.path === props.path ? "is-active" : ""}>
+              <Link to={page.path}>
+                <Title level={4}>{page.name}</Title>
+              </Link>
+            </li>
+          ))}
       </ul>
     </Sider>
   )

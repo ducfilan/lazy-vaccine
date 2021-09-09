@@ -25,7 +25,8 @@
         top: 30px;
       }
 
-      &:hover:after {
+      &:hover:after,
+      &.is-active:after {
         display: block;
       }
     }
@@ -54,5 +55,16 @@
 
   .create-set--help-text-content {
     white-space: pre-line;
+  }
+
+  .ant-carousel .slick-dots-bottom {
+    bottom: 0;
+  }
+
+  .ant-carousel .slick-dots li {
+    &.slick-active,
+    button {
+      background: $primary;
+    }
   }
 }

@@ -2,12 +2,20 @@ export const AppPages = {
   Home: {
     key: "side-home",
     name: "Home",
-    path: "/home",
+    path: "/",
+    isSideNav: true,
   },
   Sets: {
     key: "side-find-sets",
     name: "Find sets",
     path: "/sets",
+    isSideNav: true,
+  },
+  CreateSet: {
+    key: "create-set",
+    name: "Create set",
+    path: "/create-set",
+    isSideNav: false,
   }
 }
 

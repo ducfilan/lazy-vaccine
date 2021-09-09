@@ -4,7 +4,7 @@ import ReCAPTCHA from "react-google-recaptcha"
 import { Col, Row, Form, Input, Button, Mentions, Card, TreeSelect, Carousel, Typography } from "antd"
 import { RightOutlined } from "@ant-design/icons"
 
-import PageHeader from "../components/PageHeader"
+import PageHeader from "./PageHeader"
 import { CreateSetDescriptionMaxLength, RecaptchaSiteKey, RequestToAddCategoryLink } from "@consts/constants"
 import { Category } from "@/common/types/types"
 import { useEffect } from "react"
@@ -51,7 +51,9 @@ const CreateSetForm = () => {
         </Form.Item>
         <Form.Item name="category" label={i18n("create_set_field_category")}>
           <TreeSelect treeData={categories} />
-          <Typography.Link href={RequestToAddCategoryLink} target="_blank">
+        </Form.Item>
+        <Form.Item style={{ marginBottom: -14 }}>
+          <Typography.Link href={RequestToAddCategoryLink} target="_blank" className="is-absolute" style={{ top: -20 }}>
             {i18n("create_set_request_category")}
           </Typography.Link>
         </Form.Item>
