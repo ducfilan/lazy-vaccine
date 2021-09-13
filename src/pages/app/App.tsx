@@ -6,8 +6,9 @@ import { RocketOutlined, SearchOutlined } from "@ant-design/icons"
 const { useState, useEffect } = React
 
 import "./css/app.scss"
-import CreateSetPage from "./components/CreateSet"
-import HomePage from "./components/Home"
+import CreateSetPage from "./Pages/CreateSet"
+import HomePage from "./Pages/Home"
+import SetsPage from "./Pages/Sets"
 import PageFooter from "@/common/components/PageFooter"
 import Sidebar from "./components/Sider"
 
@@ -18,7 +19,6 @@ import { getGoogleAuthToken } from "@facades/authFacade"
 import { Http } from "@facades/axiosFacade"
 import { GlobalContext } from "@/common/contexts/GlobalContext"
 import { Route, Switch, useHistory, useLocation } from "react-router-dom"
-import SetsPage from "./components/Sets"
 
 const { Content } = Layout
 
@@ -38,6 +38,7 @@ const AppPage = () => {
       }, {})
     } catch (error) {
       // Not able to login with current token, ignore to show the first page to login.
+      // TODO: Unauthorized resolution.
     }
   }, [])
 

@@ -77,7 +77,7 @@
     "message": "Category"
   },
   "create_set_request_category": {
-    "message": "Not found? Click here to request a new category"
+    "message": "Click here to request a new category"
   },
   "create_set_field_tags": {
     "message": "Tags"
@@ -109,6 +109,30 @@
   "create_set_help_text_3_content": {
     "message": "- This short youtube will definitely help you!"
   },
+  "create_set_add_item": {
+    "message": "Add item"
+  },
+  "create_set_term_placeholder": {
+    "message": "Term"
+  },
+  "create_set_definition_placeholder": {
+    "message": "Definition"
+  },
+  "create_set_question_placeholder": {
+    "message": "Question"
+  },
+  "create_set_answer_placeholder": {
+    "message": "Answer"
+  },
+  "create_set_content_label": {
+    "message": "Content"
+  },
+  "create_set_content_placeholder": {
+    "message": "Separate your text to multiple small content items"
+  },
+  "create_set_add_answer": {
+    "message": "Add answer"
+  },
   "pageSetsListTitle": {
     "message": "Set list"
   },
@@ -121,7 +145,7 @@
   "create_set_field_description_placeholder": {
     "message": "Detail information for the set"
   },
-  "setCreateSetButton": {
+  "create_set_create_button": {
     "message": "Create set"
   },
   "cancel": {
@@ -135,5 +159,11 @@
   },
   "clear_all": {
     "message": "Clear all"
+  },
+  "required_field": {
+    "message": "This is required"
+  },
+  "leave_warning_message": {
+    "message": "You have unsaved changes, if you leave, you will lost your data. Are you sure?"
   }
 }

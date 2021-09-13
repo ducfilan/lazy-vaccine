@@ -57,3 +57,10 @@ export class CategoryResponse {
     } as Category
   }
 }
+
+export type SetInfo = {
+  name: string
+  category: string
+  description?: string
+  tags?: string
+}

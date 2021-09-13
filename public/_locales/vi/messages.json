@@ -103,7 +103,7 @@
   "create_set_help_text_1_content": {
     "message": "- Một danh sách những điều cần nhớ\n- Chia sẻ nội dung quen thuộc với bạn học/đồng nghiệp\n- Chia sẻ tài liệu giảng dạy tuyệt vời với cộng đồng!"
   },
-  "setCreateSetButton": {
+  "create_set_create_button": {
     "message": "Tạo bài"
   },
   "cancel": {
@@ -117,5 +117,11 @@
   },
   "clear_all": {
     "message": "Bỏ chọn hết"
+  },
+  "required_field": {
+    "message": "Thông tin này là bắt buộc"
+  },
+  "leave_warning_message": {
+    "message": "Những thông tin bạn nhập chưa được lưu, bạn có chắc chắn muốn rời đi không?"
   }
 }

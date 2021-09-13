@@ -88,7 +88,7 @@
   "create_set_field_tags_extra": {
     "message": "例えば： IELTS, 英語文法, AWS associate mock test"
   },
-  "setCreateSetButton": {
+  "create_set_create_button": {
     "message": "セットの作成"
   },
   "cancel": {
@@ -102,5 +102,11 @@
   },
   "clear_all": {
     "message": "全て削除"
+  },
+  "required_field": {
+    "message": "これは必須情報"
+  },
+  "leave_warning_message": {
+    "message": "入力した情報はまだ保存されていません。大丈夫ですか?"
   }
 }
