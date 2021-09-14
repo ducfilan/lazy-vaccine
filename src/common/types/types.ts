@@ -63,4 +63,12 @@ export type SetInfo = {
   category: string
   description?: string
   tags?: string
+  items?: []
+  captchaToken?: string
 }
+
+export type EventMap<T> = T extends Window
+  ? WindowEventMap
+  : T extends Document
+  ? DocumentEventMap
+  : { [key: string]: Event };

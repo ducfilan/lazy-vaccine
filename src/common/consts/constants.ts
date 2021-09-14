@@ -87,3 +87,5 @@ export const ItemTypes = {
   QnA: { label: "Question - Answers", value: "question-answers" },
   Content: { label: "Content", value: "content" },
 }
+
+export const TabKeyCode = "Tab"

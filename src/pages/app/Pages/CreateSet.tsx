@@ -21,31 +21,21 @@ const CreateSetPage = () => {
   const [currentStep, setCurrentStep] = useState<number>(CreateSteps.SetInfo)
   const [setInfo, setSetInfo] = useState<SetInfo>()
 
-  const getHeaderContent = (currentStep: number) => {
-    switch (currentStep) {
-      case CreateSteps.SetInfo:
-        return chrome.i18n.getMessage("create_set_page_title")
-
-      case CreateSteps.SetItems:
-        return setInfo?.name || ""
-
-      default:
-        return ""
-    }
-  }
-
   const renderContent = (currentStep: number) => {
     switch (currentStep) {
       case CreateSteps.SetInfo:
         return (
-          <Row gutter={[16, 16]}>
-            <Col xs={{ span: 24 }} lg={{ span: 16 }}>
-              <CreateSetForm />
-            </Col>
-            <Col xs={{ span: 24 }} lg={{ span: 8 }}>
-              <CreateSetRightHelper />
-            </Col>
-          </Row>
+          <>
+            <PageHeader innerContent={chrome.i18n.getMessage("create_set_page_title")} />
+            <Row gutter={[16, 16]}>
+              <Col xs={{ span: 24 }} lg={{ span: 16 }}>
+                <CreateSetForm />
+              </Col>
+              <Col xs={{ span: 24 }} lg={{ span: 8 }}>
+                <CreateSetRightHelper />
+              </Col>
+            </Row>
+          </>
         )
 
       case CreateSteps.SetItems:
@@ -58,10 +48,7 @@ const CreateSetPage = () => {
 
   return (
     <CreateSetContext.Provider value={{ currentStep, setCurrentStep, setInfo, setSetInfo }}>
-      <div className="create-set--wrapper">
-        <PageHeader innerContent={getHeaderContent(currentStep)} />
-        {renderContent(currentStep)}
-      </div>
+      <div className="create-set--wrapper">{renderContent(currentStep)}</div>
     </CreateSetContext.Provider>
   )
 }

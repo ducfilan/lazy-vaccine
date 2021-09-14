@@ -110,7 +110,7 @@
     "message": "- This short youtube will definitely help you!"
   },
   "create_set_add_item": {
-    "message": "Add item"
+    "message": "Add item (Press TAB key)"
   },
   "create_set_term_placeholder": {
     "message": "Term"
@@ -123,6 +123,12 @@
   },
   "create_set_answer_placeholder": {
     "message": "Answer"
+  },
+  "create_set_answer_validation_warning": {
+    "message": "At least 2 answers!"
+  },
+  "create_set_answer_check_guide": {
+    "message": "Check on correct answer(s)!"
   },
   "create_set_content_label": {
     "message": "Content"
@@ -147,6 +153,12 @@
   },
   "create_set_create_button": {
     "message": "Create set"
+  },
+  "common_back": {
+    "message": "Back"
+  },
+  "common_create": {
+    "message": "Create"
   },
   "cancel": {
     "message": "Cancel"
