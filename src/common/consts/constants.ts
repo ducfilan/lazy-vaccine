@@ -89,3 +89,7 @@ export const ItemTypes = {
 }
 
 export const TabKeyCode = "Tab"
+
+export const RequiredRule = { required: true, message: chrome.i18n.getMessage("required_field") }
+
+export const MaxLengthSetTitle = 60

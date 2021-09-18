@@ -3,7 +3,12 @@ import { useState, useEffect } from "react"
 
 import { getCategories } from "@/common/api/category"
 import CacheKeys from "@/common/consts/cacheKeys"
-import { RequestToAddCategoryLink, CreateSetDescriptionMaxLength } from "@/common/consts/constants"
+import {
+  RequestToAddCategoryLink,
+  CreateSetDescriptionMaxLength,
+  RequiredRule,
+  MaxLengthSetTitle,
+} from "@/common/consts/constants"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { Category, SetInfo } from "@/common/types/types"
@@ -11,24 +16,23 @@ import { Form, Typography, Input, Mentions, Button, Card, TreeSelect } from "ant
 import { RightOutlined } from "@ant-design/icons"
 import { useCreateSetContext } from "../contexts/CreateSetContext"
 import { Prompt } from "react-router"
-import { preventReload } from "@/common/utils/utils"
+import { deepClone, preventReload } from "@/common/utils/utils"
 
 const i18n = chrome.i18n.getMessage
 
 export const CreateSetForm = () => {
   const { user, http } = useGlobalContext()
 
-  const { currentStep, setCurrentStep, setSetInfo } = useCreateSetContext()
+  const { currentStep, setCurrentStep, setInfo, setSetInfo } = useCreateSetContext()
 
   const [categories, setCategories] = useState<Category[]>([])
   const [tags, setTags] = useState<string[]>([])
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
   const [isDataSaved, setIsDataSaved] = useState<boolean>(true)
 
-  const requiredRule = { required: true, message: i18n("required_field") }
-
-  const onSetInfoFormFinished = (setInfo: SetInfo) => {
-    setSetInfo(setInfo)
+  const onSetInfoFormFinished = (newSetInfo: SetInfo) => {
+    const mergedSetInfo = { ...deepClone(setInfo || {}), ...newSetInfo }
+    setSetInfo(mergedSetInfo)
     setCurrentStep(currentStep + 1)
   }
 
@@ -65,9 +69,14 @@ export const CreateSetForm = () => {
     <>
       <Prompt when={!isDataSaved} message={i18n("leave_warning_message")} />
       <Card>
-        <Form layout="vertical" onFinish={onSetInfoFormFinished} onValuesChange={onSetInfoFormValuesChanged}>
-          <Form.Item name="name" label={i18n("create_set_field_name")} rules={[requiredRule]}>
-            <Input placeholder={i18n("create_set_field_name_placeholder")} />
+        <Form
+          layout="vertical"
+          onFinish={onSetInfoFormFinished}
+          onValuesChange={onSetInfoFormValuesChanged}
+          initialValues={setInfo}
+        >
+          <Form.Item name="name" label={i18n("create_set_field_name")} rules={[RequiredRule]}>
+            <Input placeholder={i18n("create_set_field_name_placeholder")} maxLength={MaxLengthSetTitle} />
           </Form.Item>
           <Form.Item
             name="category"
@@ -80,7 +89,7 @@ export const CreateSetForm = () => {
                 </Typography.Link>
               </>
             }
-            rules={[requiredRule]}
+            rules={[RequiredRule]}
           >
             <TreeSelect treeData={categories} />
           </Form.Item>

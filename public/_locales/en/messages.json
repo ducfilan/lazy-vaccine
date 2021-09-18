@@ -127,6 +127,9 @@
   "create_set_answer_validation_warning": {
     "message": "At least 2 answers!"
   },
+  "create_set_items_validation_warning": {
+    "message": "Sorry, we need to have at least 2 items to create a set! Please add more... 🥺"
+  },
   "create_set_answer_check_guide": {
     "message": "Check on correct answer(s)!"
   },
@@ -138,6 +141,9 @@
   },
   "create_set_add_answer": {
     "message": "Add answer"
+  },
+  "create_set_check_captcha_warning": {
+    "message": "Could you please check this?"
   },
   "pageSetsListTitle": {
     "message": "Set list"
