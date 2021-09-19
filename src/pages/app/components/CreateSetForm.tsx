@@ -12,7 +12,7 @@ import {
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { Category, SetInfo } from "@/common/types/types"
-import { Form, Typography, Input, Mentions, Button, Card, TreeSelect } from "antd"
+import { Form, Typography, Input, Mentions, Button, Card, TreeSelect, Select } from "antd"
 import { RightOutlined } from "@ant-design/icons"
 import { useCreateSetContext } from "../contexts/CreateSetContext"
 import { Prompt } from "react-router"
@@ -101,18 +101,13 @@ export const CreateSetForm = () => {
             />
           </Form.Item>
           <Form.Item name="tags" label={i18n("create_set_field_tags")} extra={i18n("create_set_field_tags_extra")}>
-            <Mentions
-              style={{ width: "100%" }}
-              placeholder={i18n("create_set_field_tags_placeholder")}
-              prefix="#"
-              split=", "
-            >
+            <Select mode="tags" style={{ width: "100%" }} placeholder={i18n("create_set_field_tags_placeholder")}>
               {tags.map((value) => (
-                <Mentions.Option key={value} value={value}>
+                <Select.Option key={value} value={value}>
                   {value}
-                </Mentions.Option>
+                </Select.Option>
               ))}
-            </Mentions>
+            </Select>
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<RightOutlined />}>
