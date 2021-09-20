@@ -21,3 +21,10 @@ export function deepClone(obj: any, hash = new WeakMap()) {
   }
   return cloneObj;
 }
+
+export function removeToNewArray<T>(a: T[], i: number) {
+  const newArray = [...a]
+  newArray.splice(i, 1)
+
+  return newArray
+}
