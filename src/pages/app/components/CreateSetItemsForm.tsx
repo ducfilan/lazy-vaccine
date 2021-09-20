@@ -9,6 +9,7 @@ import {
   Col,
   Form,
   Input,
+  notification,
   Popconfirm,
   Row,
   Select,
@@ -20,26 +21,38 @@ import { MinusCircleFilled, PlusOutlined, ArrowLeftOutlined } from "@ant-design/
 import { useRef, useState } from "react"
 import ReCAPTCHA from "react-google-recaptcha"
 import { useCreateSetContext } from "../contexts/CreateSetContext"
-import { SetInfo } from "@/common/types/types"
+import { LanguageCode, SetInfo } from "@/common/types/types"
 import { createSet } from "@/common/api/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useEventListener from "@/common/hooks/useEventListener"
 
 import ShibaBoxImg from "@img/emojis/shiba/box.png"
-import { deepClone } from "@/common/utils/utils"
+import { deepClone, removeToNewArray } from "@/common/utils/utils"
+import { ParamError } from "@/common/consts/errors"
+import useLocalStorage from "@/common/hooks/useLocalStorage"
+import CacheKeys from "@/common/consts/cacheKeys"
+import SupportingLanguages from "@/common/consts/supportingLanguages"
 
 const i18n = chrome.i18n.getMessage
 const DefaultInitAnswersCount = 4
+const DefaultInitItemCount = 5
+const { Option } = Select
 
 export const CreateSetItemsForm = () => {
   const { http } = useGlobalContext()
   const { currentStep, setCurrentStep, setInfo, setSetInfo } = useCreateSetContext()
 
-  const [itemCount, setItemCount] = useState<number>(setInfo?.items?.length || 5)
+  const [itemCount, setItemCount] = useState<number>(setInfo?.items?.length || DefaultInitItemCount)
+
+  const [termDefItemsCount, setTermDefItemsCount] = useState<number>(
+    setInfo?.items?.filter((item) => item.type === ItemTypes.TermDef.value).length || DefaultInitItemCount
+  )
   const [itemTypes, setItemTypes] = useState<string[]>(
     Array.from(Array(itemCount).keys()).map((i: number) => setInfo?.items?.at(i)?.type || ItemTypes.TermDef.value)
   )
   const [lastItemType, setLastItemType] = useState<string>(ItemTypes.TermDef.value)
+  const [, setCachedLastSetInfo] = useLocalStorage<SetInfo | null>(CacheKeys.lastSetInfo, null, "365d")
+
   const recaptchaRef = useRef<any>()
   const addItemButtonRef = useRef<any>()
   const [formRef] = Form.useForm()
@@ -59,16 +72,37 @@ export const CreateSetItemsForm = () => {
     setSetInfo(newSetInfo)
   }
 
-  const onSetItemsFormFinished = ({ items }: { items: [] }) => {
-    const newSetInfo = { ...setInfo, items } as SetInfo
+  const onSetItemsFormFinished = async (itemsInfo: {
+    items: []
+    fromLanguage: LanguageCode
+    toLanguage: LanguageCode
+  }) => {
+    const newSetInfo = { ...setInfo, ...itemsInfo } as SetInfo
     setSetInfo(newSetInfo)
-    createSet(http, newSetInfo)
+    try {
+      await createSet(http, newSetInfo)
+    } catch (error) {
+      setCachedLastSetInfo(setInfo || null)
+
+      if (error instanceof ParamError) {
+        notification["error"]({
+          message: i18n("error"),
+          description: `${i18n("unexpected_error_message")} ${i18n("data_saved_message")}`,
+        })
+      }
+    }
   }
 
-  function onItemTypeChanged(this: { itemIndex: number }, value: string) {
+  function onItemTypeChanged(this: { itemIndex: number }, itemType: string) {
+    if (itemType === ItemTypes.TermDef.value) {
+      setTermDefItemsCount(termDefItemsCount + 1)
+    } else {
+      setTermDefItemsCount(termDefItemsCount - 1)
+    }
+
     let newItemTypes = [...(itemTypes || [])]
-    newItemTypes[this.itemIndex] = value
-    setLastItemType(value)
+    newItemTypes[this.itemIndex] = itemType
+    setLastItemType(itemType)
 
     setItemTypes(newItemTypes)
   }
@@ -102,7 +136,7 @@ export const CreateSetItemsForm = () => {
                   icon={<ArrowLeftOutlined />}
                   onClick={() => {
                     const { items } = formRef.getFieldsValue(true)
-                    const newSetInfo = { ...setInfo, items: deepClone(items) } as SetInfo
+                    const newSetInfo = { ...setInfo, items: deepClone(items), captchaToken: null } as SetInfo
                     setSetInfo(newSetInfo)
                     setCurrentStep(currentStep - 1)
                   }}
@@ -146,6 +180,44 @@ export const CreateSetItemsForm = () => {
                   </Popconfirm>
                 </Space>
               </Col>
+            </Row>
+            <Row gutter={8}>
+              <Col flex="auto">
+                <Form.Item name="fromLanguage" fieldKey="fromLanguage" rules={[RequiredRule]}>
+                  <Select
+                    showSearch
+                    allowClear
+                    clearIcon
+                    placeholder={i18n("create_set_content_language")}
+                    filterOption={(input, option) =>
+                      (option?.label?.toString() || "").toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                  >
+                    {Object.values(SupportingLanguages.Set).map(({ code, name }) => (
+                      <Option key={code} value={code}>{`${name} (${code})`}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              {termDefItemsCount > 0 && (
+                <Col flex="auto">
+                  <Form.Item name="toLanguage" fieldKey="toLanguage" rules={[RequiredRule]}>
+                    <Select
+                      showSearch
+                      allowClear
+                      clearIcon
+                      placeholder={i18n("create_set_definition_language")}
+                      filterOption={(input, option) =>
+                        (option?.label?.toString() || "").toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {Object.values(SupportingLanguages.Set).map(({ code, name }) => (
+                        <Option key={code} value={code}>{`${name} (${code})`}</Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              )}
             </Row>
           </Card>
         </Affix>
@@ -202,6 +274,8 @@ export const CreateSetItemsForm = () => {
                   <button
                     className="button create-set-items--remove-button"
                     onClick={() => {
+                      itemTypes[itemIndex] === ItemTypes.TermDef.value && setTermDefItemsCount(termDefItemsCount - 1)
+                      setItemTypes(removeToNewArray(itemTypes, itemIndex))
                       removeItem(name)
                       setItemCount(itemCount - 1)
                     }}
@@ -357,10 +431,9 @@ export const CreateSetItemsForm = () => {
                   type="primary"
                   size="large"
                   onClick={() => {
+                    lastItemType === ItemTypes.TermDef.value && setTermDefItemsCount(termDefItemsCount + 1)
                     addItem({
                       type: lastItemType,
-                      term: "",
-                      definition: "",
                     })
                     setItemCount(itemCount + 1)
                     let newItemTypes = [...(itemTypes || [])]

@@ -12,7 +12,7 @@ import {
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { Category, SetInfo } from "@/common/types/types"
-import { Form, Typography, Input, Mentions, Button, Card, TreeSelect, Select } from "antd"
+import { Form, Typography, Input, Mentions, Button, Card, TreeSelect, Select, Alert, Space, Popconfirm } from "antd"
 import { RightOutlined } from "@ant-design/icons"
 import { useCreateSetContext } from "../contexts/CreateSetContext"
 import { Prompt } from "react-router"
@@ -28,6 +28,7 @@ export const CreateSetForm = () => {
   const [categories, setCategories] = useState<Category[]>([])
   const [tags, setTags] = useState<string[]>([])
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
+  const [cachedLastSetInfo, setCachedLastSetInfo] = useLocalStorage<SetInfo | null>(CacheKeys.lastSetInfo, null, "365d")
   const [isDataSaved, setIsDataSaved] = useState<boolean>(true)
 
   const onSetInfoFormFinished = (newSetInfo: SetInfo) => {
@@ -50,6 +51,15 @@ export const CreateSetForm = () => {
     setIsDataSaved(true)
   }
 
+  const removeCachedSetInfo = () => {
+    setCachedLastSetInfo(null)
+  }
+
+  const restoreSavedSetInfo = () => {
+    cachedLastSetInfo && setSetInfo(cachedLastSetInfo)
+    removeCachedSetInfo()
+  }
+
   useEffect(() => {
     if (!http || !user) return
 
@@ -68,6 +78,32 @@ export const CreateSetForm = () => {
   return (
     <>
       <Prompt when={!isDataSaved} message={i18n("leave_warning_message")} />
+
+      {cachedLastSetInfo && (
+        <Alert
+          message={i18n("create_set_having_unsaved_set_warning")}
+          type="warning"
+          action={
+            <Space>
+              <Popconfirm
+                title="Are you sure to delete this task?"
+                onConfirm={removeCachedSetInfo}
+                okText={i18n("common_yes")}
+                cancelText={i18n("common_no")}
+              >
+                <Button size="small" danger type="ghost">
+                  {i18n("common_remove")}
+                </Button>
+              </Popconfirm>
+              <Button size="small" type="primary" onClick={restoreSavedSetInfo}>
+                {i18n("common_restore")}
+              </Button>
+            </Space>
+          }
+          closable
+        />
+      )}
+
       <Card>
         <Form
           layout="vertical"
@@ -79,7 +115,7 @@ export const CreateSetForm = () => {
             <Input placeholder={i18n("create_set_field_name_placeholder")} maxLength={MaxLengthSetTitle} />
           </Form.Item>
           <Form.Item
-            name="category"
+            name="categoryId"
             label={
               <>
                 {i18n("create_set_field_category")}

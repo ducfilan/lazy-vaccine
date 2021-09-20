@@ -43,7 +43,7 @@ function useLocalStorage<T>(key: string, initialValue: T, expireIn: string) {
       console.log(error)
     }
   }
-  return [storedValue.value, setValue] as const
+  return [storedValue?.value, setValue] as const
 }
 
 export default useLocalStorage

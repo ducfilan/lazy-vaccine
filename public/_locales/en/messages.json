@@ -13,6 +13,9 @@
   "unexpected_error_message": {
     "message": "Unexpected error occurred 😢! Please try again later..."
   },
+  "data_saved_message": {
+    "message": "Don't worry, your data was saved and can be restored later easily!"
+  },
   "login_google": {
     "message": "Login with Google"
   },
@@ -160,11 +163,32 @@
   "create_set_create_button": {
     "message": "Create set"
   },
+  "create_set_having_unsaved_set_warning": {
+    "message": "You have unsaved set, do you want to restore it?"
+  },
+  "create_set_content_language": {
+    "message": "Content language"
+  },
+  "create_set_definition_language": {
+    "message": "Definition language"
+  },
   "common_back": {
     "message": "Back"
   },
   "common_create": {
     "message": "Create"
+  },
+  "common_restore": {
+    "message": "Restore"
+  },
+  "common_remove": {
+    "message": "Remove"
+  },
+  "common_yes": {
+    "message": "Yes"
+  },
+  "common_no": {
+    "message": "No"
   },
   "cancel": {
     "message": "Cancel"

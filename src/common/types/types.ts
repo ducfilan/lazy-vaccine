@@ -1,3 +1,5 @@
+import SupportingLanguages from "@consts/supportingLanguages"
+
 export type KeyValuePair = {
   key: string
   value: string
@@ -58,12 +60,16 @@ export class CategoryResponse {
   }
 }
 
+export type LanguageCode = keyof typeof SupportingLanguages.Set
+
 export type SetInfo = {
   name: string
-  category: string
+  categoryId: string
   description?: string
   tags?: string
   items?: { type: string }[]
+  fromLanguage: LanguageCode
+  toLanguage: LanguageCode
   captchaToken?: string | null
 }
 
