@@ -104,4 +104,4 @@ export const MaxLengthRule = (length: number) => (() => ({
 
 export const MaxTagsCountPerSet = 20
 
-export const MaxLengthSetTitle = 61
+export const MaxLengthSetTitle = 60
