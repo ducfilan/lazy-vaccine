@@ -8,6 +8,8 @@ import {
   CreateSetDescriptionMaxLength,
   RequiredRule,
   MaxLengthSetTitle,
+  MaxLengthRule,
+  MaxTagsCountPerSet,
 } from "@/common/consts/constants"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
@@ -140,7 +142,12 @@ export const CreateSetForm = () => {
               maxLength={CreateSetDescriptionMaxLength}
             />
           </Form.Item>
-          <Form.Item name="tags" label={i18n("create_set_field_tags")} extra={i18n("create_set_field_tags_extra")}>
+          <Form.Item
+            name="tags"
+            label={i18n("create_set_field_tags")}
+            extra={i18n("create_set_field_tags_extra")}
+            rules={[MaxLengthRule(MaxTagsCountPerSet)]}
+          >
             <Select mode="tags" style={{ width: "100%" }} placeholder={i18n("create_set_field_tags_placeholder")}>
               {tags.map((value) => (
                 <Select.Option key={value} value={value}>
