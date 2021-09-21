@@ -78,7 +78,7 @@ export const RecaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY || ""
 
 export const LocalStorageKeyPrefix = "duc.lazy-vaccine."
 
-export const LiteralDurationsExtractRegex = /^((?<days>\d+)d\w*?)* *((?<hours>\d+)h\w*)* *((?<minutes>\d+)m\w*)* *((?<seconds>\d+)s\w*)*$/gm
+export const LiteralDurationsExtractRegex = /^((?<days>\d+)d\w*?)* *((?<hours>\d+)h\w*)* *((?<minutes>\d+)m\w*)* *((?<seconds>\d+)s\w*)*$/
 
 export const RequestToAddCategoryLink = "https://forms.gle/D6wa49fG4aUg3fHg8"
 
@@ -92,4 +92,4 @@ export const TabKeyCode = "Tab"
 
 export const RequiredRule = { required: true, message: chrome.i18n.getMessage("required_field") }
 
-export const MaxLengthSetTitle = 60
+export const MaxLengthSetTitle = 61

@@ -82,7 +82,7 @@ export const CreateSetItemsForm = () => {
     try {
       await createSet(http, newSetInfo)
     } catch (error) {
-      setCachedLastSetInfo(setInfo || null)
+      setCachedLastSetInfo(newSetInfo || null)
 
       if (error instanceof ParamError) {
         notification["error"]({
@@ -124,7 +124,7 @@ export const CreateSetItemsForm = () => {
         onFinish={onSetItemsFormFinished}
         form={formRef}
         preserve={false}
-        initialValues={{ items: setInfo?.items }}
+        initialValues={{ items: setInfo?.items, fromLanguage: setInfo?.fromLanguage, toLanguage: setInfo?.toLanguage }}
       >
         <Affix offsetTop={16}>
           <Card className="create-set-items--head">
@@ -135,8 +135,14 @@ export const CreateSetItemsForm = () => {
                   shape="circle"
                   icon={<ArrowLeftOutlined />}
                   onClick={() => {
-                    const { items } = formRef.getFieldsValue(true)
-                    const newSetInfo = { ...setInfo, items: deepClone(items), captchaToken: null } as SetInfo
+                    const { fromLanguage, toLanguage, items } = formRef.getFieldsValue(true)
+                    const newSetInfo = {
+                      ...setInfo,
+                      fromLanguage,
+                      toLanguage,
+                      items: deepClone(items),
+                      captchaToken: null,
+                    } as SetInfo
                     setSetInfo(newSetInfo)
                     setCurrentStep(currentStep - 1)
                   }}
@@ -182,7 +188,7 @@ export const CreateSetItemsForm = () => {
               </Col>
             </Row>
             <Row gutter={8}>
-              <Col flex="auto">
+              <Col span={12}>
                 <Form.Item name="fromLanguage" fieldKey="fromLanguage" rules={[RequiredRule]}>
                   <Select
                     showSearch
@@ -194,13 +200,13 @@ export const CreateSetItemsForm = () => {
                     }
                   >
                     {Object.values(SupportingLanguages.Set).map(({ code, name }) => (
-                      <Option key={code} value={code}>{`${name} (${code})`}</Option>
+                      <Option key={code} value={code} label={`${name} (${code})`}>{`${name} (${code})`}</Option>
                     ))}
                   </Select>
                 </Form.Item>
               </Col>
               {termDefItemsCount > 0 && (
-                <Col flex="auto">
+                <Col span={12}>
                   <Form.Item name="toLanguage" fieldKey="toLanguage" rules={[RequiredRule]}>
                     <Select
                       showSearch
@@ -212,7 +218,7 @@ export const CreateSetItemsForm = () => {
                       }
                     >
                       {Object.values(SupportingLanguages.Set).map(({ code, name }) => (
-                        <Option key={code} value={code}>{`${name} (${code})`}</Option>
+                        <Option key={code} value={code} label={`${name} (${code})`}>{`${name} (${code})`}</Option>
                       ))}
                     </Select>
                   </Form.Item>

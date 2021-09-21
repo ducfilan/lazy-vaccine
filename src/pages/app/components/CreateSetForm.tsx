@@ -30,6 +30,7 @@ export const CreateSetForm = () => {
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
   const [cachedLastSetInfo, setCachedLastSetInfo] = useLocalStorage<SetInfo | null>(CacheKeys.lastSetInfo, null, "365d")
   const [isDataSaved, setIsDataSaved] = useState<boolean>(true)
+  const [formRef] = Form.useForm()
 
   const onSetInfoFormFinished = (newSetInfo: SetInfo) => {
     const mergedSetInfo = { ...deepClone(setInfo || {}), ...newSetInfo }
@@ -57,6 +58,7 @@ export const CreateSetForm = () => {
 
   const restoreSavedSetInfo = () => {
     cachedLastSetInfo && setSetInfo(cachedLastSetInfo)
+    cachedLastSetInfo && formRef.setFieldsValue(cachedLastSetInfo)
     removeCachedSetInfo()
   }
 
@@ -83,6 +85,7 @@ export const CreateSetForm = () => {
         <Alert
           message={i18n("create_set_having_unsaved_set_warning")}
           type="warning"
+          className="bot-16px"
           action={
             <Space>
               <Popconfirm
@@ -106,6 +109,7 @@ export const CreateSetForm = () => {
 
       <Card>
         <Form
+          form={formRef}
           layout="vertical"
           onFinish={onSetInfoFormFinished}
           onValuesChange={onSetInfoFormValuesChanged}
