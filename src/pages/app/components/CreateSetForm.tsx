@@ -14,7 +14,7 @@ import {
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { Category, SetInfo } from "@/common/types/types"
-import { Form, Typography, Input, Mentions, Button, Card, TreeSelect, Select, Alert, Space, Popconfirm } from "antd"
+import { Form, Typography, Input, Button, Card, TreeSelect, Select, Alert, Space, Popconfirm } from "antd"
 import { RightOutlined } from "@ant-design/icons"
 import { useCreateSetContext } from "../contexts/CreateSetContext"
 import { Prompt } from "react-router"

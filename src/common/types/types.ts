@@ -66,7 +66,7 @@ export type SetInfo = {
   name: string
   categoryId: string
   description?: string
-  tags?: string
+  tags?: string[]
   items?: { type: string }[]
   fromLanguage: LanguageCode
   toLanguage: LanguageCode

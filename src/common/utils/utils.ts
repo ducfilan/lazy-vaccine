@@ -28,3 +28,7 @@ export function removeToNewArray<T>(a: T[], i: number) {
 
   return newArray
 }
+
+export function removeDuplicatesFromArray<T>(a?: T[]) {
+  return Array.from(new Set(a || []))
+}
