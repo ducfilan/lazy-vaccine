@@ -2,13 +2,13 @@ import * as React from "react"
 
 import { Col, Row } from "antd"
 
-import PageHeader from "../components/PageHeader"
+import PageHeader from "../../components/PageHeader"
 import { SetInfo } from "@/common/types/types"
 
-import { CreateSetContext } from "../contexts/CreateSetContext"
-import { CreateSetForm } from "../components/CreateSetForm"
-import { CreateSetRightHelper } from "../components/CreateSetRightHelper"
-import { CreateSetItemsForm } from "../components/CreateSetItemsForm"
+import { CreateSetContext } from "./contexts/CreateSetContext"
+import { CreateSetForm } from "./components/CreateSetForm"
+import { CreateSetRightHelper } from "./components/CreateSetRightHelper"
+import { CreateSetItemsForm } from "./components/CreateSetItemsForm"
 
 const { useState } = React
 

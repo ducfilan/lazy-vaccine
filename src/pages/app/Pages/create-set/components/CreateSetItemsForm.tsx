@@ -155,7 +155,7 @@ export const CreateSetItemsForm = () => {
               </Col>
             </Row>
             <Row align="middle">
-              <Col span={6}>{`${i18n("popup_stats_items")}: ${itemCount}`}</Col>
+              <Col span={6}>{`${i18n("common_items")}: ${itemCount}`}</Col>
               <Col span={18}>
                 <Space className="float-right">
                   <Popconfirm
