@@ -14,7 +14,7 @@
       "16": "icon16.png",
       "48": "icon48.png"
     },
-    "default_popup": "popup.html"
+    "default_popup": "pages/popup.html"
   },
   "permissions": [
     "activeTab",
