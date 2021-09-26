@@ -7,7 +7,8 @@
 @import "~@/common/css/components/_common/navbar";
 @import "~@/common/css/components/_common/page-footer";
 
-@import "./create-set";
+@import "../Pages/create-set/css/create-set";
+@import "../Pages/set-detail/css/set-detail";
 
 body {
   min-height: 100vh;
@@ -33,6 +34,7 @@ body {
 
 .navbar-create-set--wrapper {
   @include box-shadow(0, 3px, 2px, 0, fade-out($black, 0.8));
+  font-weight: 700;
   background-color: $gold;
   text-transform: uppercase;
   border: none;

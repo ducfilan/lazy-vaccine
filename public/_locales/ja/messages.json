@@ -37,7 +37,7 @@
   "popup_stats_sets": {
     "message": "セット数"
   },
-  "popup_stats_items": {
+  "common_items": {
     "message": "項目数"
   },
   "popup_stats_trees_plant": {

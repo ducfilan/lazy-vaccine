@@ -65,11 +65,13 @@ export type LanguageCode = keyof typeof SupportingLanguages.Set
 export type SetInfo = {
   name: string
   categoryId: string
+  creatorId?: string
+  creatorName?: string
   description?: string
   tags?: string[]
-  items?: { type: string }[]
+  items?: { type: string, [key: string]: any }[]
   fromLanguage: LanguageCode
-  toLanguage: LanguageCode
+  toLanguage?: LanguageCode
   captchaToken?: string | null
 }
 

@@ -16,6 +16,12 @@ export const AppPages = {
     name: "Create set",
     path: "/create-set",
     isSideNav: false,
+  },
+  SetDetail: {
+    key: "set-detail",
+    name: "Set detail",
+    path: "/set-detail/:setId",
+    isSideNav: false,
   }
 }
 

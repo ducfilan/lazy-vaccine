@@ -1,0 +1,24 @@
+.set-detail--share-buttons {
+  svg {
+    font-size: 24px;
+  }
+
+  .facebook {
+    color: #3b5999;
+  }
+
+  .twitter {
+    color: #55acee;
+  }
+
+  .copy-text {
+    color: $grey;
+  }
+}
+
+.set-detail--item-question,
+.set-detail--item-answer {
+  border: 1px solid $grey-lightest;
+  padding: 8px;
+  border-radius: 5px;
+}

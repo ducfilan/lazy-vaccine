@@ -53,7 +53,7 @@ function HeaderContent() {
             </Col>
             <Col className="gutter-row" span={12}>
               <Statistic
-                title={chrome.i18n.getMessage("popup_stats_items")}
+                title={chrome.i18n.getMessage("common_items")}
                 value={2502}
                 prefix={<OrderedListOutlined />}
                 suffix={`/ ${formatNumber(13212)}`}
