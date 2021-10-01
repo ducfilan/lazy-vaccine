@@ -5,7 +5,10 @@ import StatusCode from "@consts/statusCodes";
 import { Http } from "../facades/axiosFacade";
 
 export async function getUserInfo(http: Http): Promise<User> {
-  const { data: userInfo } = await http.get<any, AxiosResponse<User>>(Apis.me)
+  const response = await http.get<any, AxiosResponse<User>>(Apis.me)
+
+  const userInfo = response?.data
+  if (!userInfo) throw new Error("cannot get user info")
 
   return userInfo
 }

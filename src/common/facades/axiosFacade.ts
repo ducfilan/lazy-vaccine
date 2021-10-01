@@ -1,7 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 
 import StatusCode from "@consts/statusCodes"
-import { ApiTimeOut } from "@consts/constants"
+import { ApiTimeOut, LoginTypes } from "@consts/constants"
+import { getGoogleAuthToken } from "./authFacade"
 
 const headers: Readonly<Record<string, string | boolean>> = {
   Accept: "application/json",
@@ -14,6 +15,8 @@ export class Http {
   private instance: AxiosInstance | null = null
   private token: string
   private loginType: string
+  private maxAllowedRetries: number = 3
+  private retryCount: number = 0
 
   constructor(token: string, loginType: string) {
     this.token = token
@@ -37,10 +40,12 @@ export class Http {
     })
 
     http.interceptors.response.use(
-      (response) => response,
+      (response) => {
+        this.retryCount = 0
+        return response
+      },
       (error) => {
-        const { response } = error
-        return this.handleError(response)
+        return this.handleError(error)
       }
     )
 
@@ -85,7 +90,7 @@ export class Http {
   }
 
   private handleError(error: any) {
-    const { status } = error
+    const { status } = error.response
 
     switch (status) {
       case StatusCode.InternalServerError: {
@@ -97,15 +102,26 @@ export class Http {
         break
       }
       case StatusCode.Unauthorized: {
-        // TODO: Handle Unauthorized
-        break
+        if (this.retryCount >= this.maxAllowedRetries) return
+
+        return new Promise((resolve) => {
+          getGoogleAuthToken((token: string) => {
+            this.token = token
+
+            error.config.headers.Authorization = `Bearer ${token}`
+            this.retryCount++
+
+            resolve(this.http.request(error.config))
+          }, {})
+        })
       }
+
       case StatusCode.TooManyRequests: {
         // TODO: Handle TooManyRequests
         break
       }
     }
 
-    return Promise.reject(error)
+    return Promise.reject(error.response)
   }
 }

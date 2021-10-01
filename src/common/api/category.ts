@@ -4,10 +4,11 @@ import Apis from "@consts/apis";
 import { Http } from "../facades/axiosFacade";
 
 export async function getCategories(http: Http, langCode: string): Promise<Category[]> {
-  const { data: categoriesResponses } = await http
-    .get<any, AxiosResponse<CategoryResponse[]>>(Apis.categories(langCode))
+  const response = await http.get<any, AxiosResponse<CategoryResponse[]>>(Apis.categories(langCode))
 
-  const categories = categoriesResponses
+  if (!response?.data) throw new Error("cannot get categories")
+
+  const categories = response?.data
     .map(({ _id, name, description, path }: CategoryResponse) =>
       new CategoryResponse(_id, name, description, path)
     )

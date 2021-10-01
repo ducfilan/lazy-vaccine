@@ -16,7 +16,10 @@ export async function createSet(http?: Http, setInfo?: SetInfo) {
 export async function getSetInfo(http: Http, setId: string): Promise<SetInfo> {
   if (!http || !setId) throw new ParamError();
 
-  const { data: setInfo } = await http.get<any, AxiosResponse<SetInfo>>(`${Apis.sets}/${setId}`);
+  const response = await http.get<any, AxiosResponse<SetInfo>>(`${Apis.sets}/${setId}`);
+
+  const setInfo = response?.data
+  if (!setInfo) throw new Error("cannot get set info")
 
   return setInfo
 }
