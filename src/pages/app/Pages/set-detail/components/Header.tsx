@@ -1,6 +1,8 @@
 import * as React from "react"
+import parse from "html-react-parser"
+
 import { Typography, Card, Affix, Col, Row, Space, Button } from "antd"
-import { EditOutlined } from "@ant-design/icons"
+import { EditOutlined, ArrowDownOutlined } from "@ant-design/icons"
 import { Link } from "react-router-dom"
 import { formatString, langCodeToName } from "@/common/utils/stringUtils"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
@@ -22,6 +24,13 @@ const Header = () => {
             </Typography.Title>
           </Col>
         </Row>
+        <Row>
+          <Col>
+            <Typography.Paragraph ellipsis={{ rows: 2, expandable: true, symbol: <ArrowDownOutlined /> }}>
+              {setInfo?.description}
+            </Typography.Paragraph>
+          </Col>
+        </Row>
         <Row gutter={8}>
           <Col flex="none">{i18n("common_creator")}:</Col>
           <Col flex="auto">
@@ -31,24 +40,28 @@ const Header = () => {
           </Col>
         </Row>
         <Row align="middle">
-          <Col span={18}>
-            {formatString(i18n("set_detail_sub_header_base_part"), [
-              {
-                key: "item_count",
-                value: `${setInfo?.items?.length}` || "-",
-              },
-              {
-                key: "from_language",
-                value: langCodeToName(setInfo?.fromLanguage as string),
-              },
-            ])}
-            {setInfo?.toLanguage &&
-              formatString(i18n("set_detail_sub_header_part_2"), [
+          <Col span={18} className="page-header--items-info">
+            {parse(
+              formatString(i18n("set_detail_sub_header_base_part"), [
                 {
-                  key: "to_language",
-                  value: langCodeToName(setInfo?.toLanguage as string),
+                  key: "item_count",
+                  value: `${setInfo?.items?.length}` || "-",
                 },
-              ])}
+                {
+                  key: "from_language",
+                  value: langCodeToName(setInfo?.fromLanguage as string),
+                },
+              ])
+            )}
+            {setInfo?.toLanguage &&
+              parse(
+                formatString(i18n("set_detail_sub_header_part_2"), [
+                  {
+                    key: "to_language",
+                    value: langCodeToName(setInfo?.toLanguage as string),
+                  },
+                ])
+              )}
           </Col>
           <Col span={6}>
             <Space className="float-right">

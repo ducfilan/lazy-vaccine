@@ -1,6 +1,13 @@
 import * as React from "react"
 import { Col, Row, Button, Space, Statistic, Tooltip } from "antd"
-import { LikeFilled, DislikeFilled, FacebookFilled, TwitterSquareFilled, CopyFilled } from "@ant-design/icons"
+import {
+  LikeFilled,
+  DislikeFilled,
+  FacebookFilled,
+  TwitterSquareFilled,
+  CopyFilled,
+  AimOutlined,
+} from "@ant-design/icons"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
 const i18n = chrome.i18n.getMessage
@@ -13,7 +20,7 @@ const Interactions = () => {
       <Row gutter={8} align="middle">
         <Col flex="auto">
           <Space size="large">
-            <Button type="primary" className="is-uppercase">
+            <Button type="primary" className="is-uppercase" icon={<AimOutlined />}>
               {i18n("common_subscribe")}
             </Button>
             <Statistic

@@ -170,7 +170,7 @@
     "message": "Definition language"
   },
   "set_detail_sub_header_base_part": {
-    "message": "We have {{item_count}} items, content is in {{from_language}}"
+    "message": "We have {{item_count}} items, content is in <span>{{from_language}}</span>"
   },
   "set_detail_share_me": {
     "message": "Share me"
@@ -179,7 +179,7 @@
     "message": "Copy link"
   },
   "set_detail_sub_header_part_2": {
-    "message": ", target to {{to_language}}"
+    "message": ", target to <span>{{to_language}}</span>"
   },
   "set_detail_edit_set": {
     "message": "Edit set"

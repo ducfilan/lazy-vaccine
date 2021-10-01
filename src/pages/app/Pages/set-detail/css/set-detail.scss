@@ -22,3 +22,11 @@
   padding: 8px;
   border-radius: 5px;
 }
+
+.page-header--items-info {
+  span {
+    @include highlight;
+    padding: 0 4px;
+    font-weight: 700;
+  }
+}

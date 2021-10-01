@@ -45,7 +45,7 @@ const Items = () => {
             break
 
           case ItemTypes.Content.value:
-            innerContent = <p>{item.content}</p>
+            innerContent = item.content
             break
 
           default:
