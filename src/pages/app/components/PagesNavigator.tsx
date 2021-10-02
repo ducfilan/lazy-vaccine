@@ -1,28 +1,28 @@
 import * as React from "react"
-import { Layout, Typography } from "antd"
+import { Layout, Menu, Typography } from "antd"
 
 const { Title } = Typography
-const { Sider } = Layout
+const { Header } = Layout
 
 import { AppPages } from "@/common/consts/constants"
 import { Link } from "react-router-dom"
 
-const Sidebar = (props: { width: number; path: string }) => {
+const PagesNavigator = (props: { path: string }) => {
   return (
-    <Sider width={props.width} className="navbar-sides--wrapper">
-      <ul>
+    <Header className="pages-navigator--wrapper">
+      <Menu mode="horizontal">
         {Object.values(AppPages)
           .filter((page) => page.isSideNav)
           .map((page) => (
-            <li key={page.key} className={page.path === props.path ? "is-active" : ""}>
+            <Menu.Item key={page.key} className={page.path === props.path ? "is-active" : ""}>
               <Link to={page.path}>
                 <Title level={4}>{page.name}</Title>
               </Link>
-            </li>
+            </Menu.Item>
           ))}
-      </ul>
-    </Sider>
+      </Menu>
+    </Header>
   )
 }
 
-export default Sidebar
+export default PagesNavigator

@@ -69,21 +69,19 @@ body {
   margin-bottom: 0 !important;
 }
 
-.navbar-sides--wrapper {
+.pages-navigator--wrapper {
   background: transparent;
-  padding-top: 24px;
-
-  .ant-layout-sider-children {
-    direction: rtl;
-  }
+  padding: 24px;
 
   ul {
-    list-style-type: none;
-    display: inline-block;
-    padding: 0;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    text-transform: uppercase;
 
     li {
       position: relative;
+      margin: 0 12px;
 
       &:after {
         position: absolute;
@@ -94,6 +92,7 @@ body {
         transform: rotate(-2deg);
         background-color: $primary;
         top: 30px;
+        left: 0 !important;
       }
 
       &:hover:after,

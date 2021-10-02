@@ -12,10 +12,10 @@ const { useState, useEffect } = React
 import "./css/app.scss"
 import CreateSetPage from "./Pages/create-set/CreateSet"
 import SetDetailPage from "./Pages/set-detail/SetDetail"
-import HomePage from "./Pages/Home"
+import HomePage from "./Pages/home/Home"
 import SetsPage from "./Pages/Sets"
 import PageFooter from "@/common/components/PageFooter"
-import Sidebar from "./components/Sider"
+import PagesNavigator from "./components/PagesNavigator"
 
 import { User } from "@/common/types/types"
 import { getUserInfo } from "@/common/api/user"
@@ -96,7 +96,7 @@ const AppPage = () => {
             ]}
           />
           <Layout className="body-content">
-            <Sidebar width={150} path={location.pathname} />
+            <PagesNavigator path={location.pathname} />
             <Layout style={{ padding: 24 }}>
               <Content>
                 <Switch>
