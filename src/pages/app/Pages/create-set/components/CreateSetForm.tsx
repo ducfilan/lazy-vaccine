@@ -62,6 +62,8 @@ export const CreateSetForm = () => {
     cachedLastSetInfo && setSetInfo(cachedLastSetInfo)
     cachedLastSetInfo && formRef.setFieldsValue(cachedLastSetInfo)
     removeCachedSetInfo()
+
+    setIsDataSaved(false)
   }
 
   useEffect(() => {
