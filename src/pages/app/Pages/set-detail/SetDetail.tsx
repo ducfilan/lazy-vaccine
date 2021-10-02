@@ -7,13 +7,14 @@ import Header from "./components/Header"
 import Interactions from "./components/Interactions"
 import Items from "./components/Items"
 import { SetDetailContext } from "./contexts/SetDetailContext"
-import { notification } from "antd"
+import { notification, Skeleton } from "antd"
 
 const { useState, useEffect } = React
 
 const SetDetailPage = (props: any) => {
   const { http } = useGlobalContext()
   const [setInfo, setSetInfo] = useState<SetInfo>()
+  const [loading, setLoading] = useState<boolean>(true)
 
   function onPageLoaded() {
     if (!http) return
@@ -30,12 +31,15 @@ const SetDetailPage = (props: any) => {
   }
 
   useEffect(onPageLoaded, [http])
+  useEffect(() => setInfo && setLoading(false), [setInfo])
 
   return (
     <SetDetailContext.Provider value={{ setInfo }}>
-      <Header />
-      <Interactions />
-      <Items />
+      <Skeleton active loading={loading}>
+        <Header />
+        <Interactions />
+        <Items />
+      </Skeleton>
     </SetDetailContext.Provider>
   )
 }
