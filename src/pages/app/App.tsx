@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Layout, Button, Input, ConfigProvider } from "antd"
+import { Layout, Button, Input, ConfigProvider, notification } from "antd"
 import enUS from "antd/lib/locale/en_US"
 import viVN from "antd/lib/locale/vi_VN"
 import zhCN from "antd/lib/locale/zh_CN"
@@ -60,7 +60,11 @@ const AppPage = () => {
       })
       .catch((error) => {
         setIsLoading(false)
-        // Not able to login with current token, ignore to show the first page to login.
+        notification["error"]({
+          message: chrome.i18n.getMessage("error"),
+          description: chrome.i18n.getMessage("unexpected_error_message"),
+          duration: null,
+        })
       })
   }, [http])
 

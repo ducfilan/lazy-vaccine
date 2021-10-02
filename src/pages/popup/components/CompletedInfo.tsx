@@ -98,6 +98,7 @@ function CompletedInfo() {
       notification["error"]({
         message: chrome.i18n.getMessage("error"),
         description: chrome.i18n.getMessage("unexpected_error_message"),
+        duration: null,
       })
     }
   }
