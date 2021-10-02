@@ -1,5 +1,9 @@
 import * as React from "react"
-import { ItemTypes, RecaptchaSiteKey, RequiredRule, TabKeyCode } from "@/common/consts/constants"
+
+import { useHistory } from "react-router-dom"
+import ReCAPTCHA from "react-google-recaptcha"
+
+import { AppPages, ItemTypes, RecaptchaSiteKey, RequiredRule, TabKeyCode } from "@/common/consts/constants"
 import {
   Affix,
   Alert,
@@ -18,8 +22,6 @@ import {
 } from "antd"
 import { MinusCircleFilled, PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons"
 
-import { useRef, useState } from "react"
-import ReCAPTCHA from "react-google-recaptcha"
 import { useCreateSetContext } from "../contexts/CreateSetContext"
 import { LanguageCode, SetInfo } from "@/common/types/types"
 import { createSet } from "@/common/api/set"
@@ -33,6 +35,8 @@ import useLocalStorage from "@/common/hooks/useLocalStorage"
 import CacheKeys from "@/common/consts/cacheKeys"
 import SupportingLanguages from "@/common/consts/supportingLanguages"
 
+const { useRef, useState } = React
+
 const i18n = chrome.i18n.getMessage
 const DefaultInitAnswersCount = 4
 const DefaultInitItemCount = 5
@@ -40,6 +44,8 @@ const { Option } = Select
 
 export const CreateSetItemsForm = () => {
   const { http } = useGlobalContext()
+  const history = useHistory()
+
   const { currentStep, setCurrentStep, setInfo, setSetInfo } = useCreateSetContext()
 
   const [itemCount, setItemCount] = useState<number>(setInfo?.items?.length || DefaultInitItemCount)
@@ -78,9 +84,11 @@ export const CreateSetItemsForm = () => {
     toLanguage: LanguageCode
   }) => {
     const newSetInfo = { ...setInfo, ...itemsInfo } as SetInfo
-    setSetInfo(newSetInfo)
+
     try {
-      await createSet(http, newSetInfo)
+      const insertedSetId = await createSet(http, newSetInfo)
+
+      history.push(AppPages.SetDetail.path.replace(":setId", insertedSetId))
     } catch (error) {
       setCachedLastSetInfo(newSetInfo || null)
 

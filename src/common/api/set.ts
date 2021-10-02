@@ -1,16 +1,15 @@
 import { Http } from "../facades/axiosFacade";
 import { SetInfo } from "@/common/types/types";
 import { AxiosResponse } from "axios";
-import StatusCode from "@consts/statusCodes";
 import Apis from "@consts/apis";
 import { ParamError } from "@consts/errors";
 
-export async function createSet(http?: Http, setInfo?: SetInfo) {
+export async function createSet(http?: Http, setInfo?: SetInfo): Promise<string> {
   if (!http || !setInfo) throw new ParamError();
 
-  const { status } = await http.post<any, AxiosResponse<boolean>>(Apis.sets, setInfo)
+  const { data: insertedSetId } = await http.post<any, AxiosResponse<string>>(Apis.sets, setInfo)
 
-  return status === StatusCode.Ok
+  return insertedSetId
 }
 
 export async function getSetInfo(http: Http, setId: string): Promise<SetInfo> {
