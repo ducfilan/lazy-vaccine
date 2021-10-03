@@ -82,9 +82,6 @@
   "create_set_field_description_placeholder": {
     "message": "Mô tả thêm về bài học sẽ được tạo"
   },
-  "create_set_field_category": {
-    "message": "Phân loại"
-  },
   "create_set_field_tags": {
     "message": "Thẻ"
   },
@@ -105,6 +102,9 @@
   },
   "create_set_create_button": {
     "message": "Tạo bài"
+  },
+  "common_category": {
+    "message": "Phân loại"
   },
   "cancel": {
     "message": "Hủy"

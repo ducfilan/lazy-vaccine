@@ -79,9 +79,6 @@
   "create_set_field_description_placeholder": {
     "message": "セットの詳細内容"
   },
-  "create_set_field_category": {
-    "message": "カテゴリー"
-  },
   "create_set_field_tags": {
     "message": "タグ"
   },
@@ -90,6 +87,9 @@
   },
   "create_set_create_button": {
     "message": "セットの作成"
+  },
+  "common_category": {
+    "message": "カテゴリー"
   },
   "cancel": {
     "message": "キャンセル"

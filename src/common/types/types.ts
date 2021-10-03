@@ -32,6 +32,7 @@ export type User = {
 }
 
 export type Category = {
+  key: string
   title: string
   value: string
   path?: string
@@ -53,6 +54,7 @@ export class CategoryResponse {
 
   toCategories(langCode: string) {
     return {
+      key: this._id,
       title: this.name[langCode],
       value: this._id,
       path: this.path,

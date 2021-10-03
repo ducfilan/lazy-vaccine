@@ -1,5 +1,4 @@
 import * as React from "react"
-import { useState, useEffect } from "react"
 
 import { getCategories } from "@/common/api/category"
 import CacheKeys from "@/common/consts/cacheKeys"
@@ -20,6 +19,7 @@ import { useCreateSetContext } from "../contexts/CreateSetContext"
 import { Prompt } from "react-router"
 import { deepClone, preventReload } from "@/common/utils/utils"
 
+const { useState, useEffect } = React
 const i18n = chrome.i18n.getMessage
 
 export const CreateSetForm = () => {
@@ -126,7 +126,7 @@ export const CreateSetForm = () => {
             name="categoryId"
             label={
               <>
-                {i18n("create_set_field_category")}
+                {i18n("common_category")}
                 {" - "}
                 <Typography.Link href={RequestToAddCategoryLink} target="_blank" style={{ marginLeft: 4 }}>
                   {i18n("create_set_request_category")}

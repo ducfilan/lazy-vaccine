@@ -1,0 +1,19 @@
+.categories-sider--wrapper {
+  background: $white;
+  border-radius: 5px;
+
+  .ant-divider-horizontal {
+    margin: 16px 0;
+  }
+
+  .ant-tree-switcher-noop,
+  .ant-tree-indent-unit,
+  .ant-tree-switcher {
+    width: 12px;
+  }
+
+  .ant-tree .ant-tree-node-content-wrapper,
+  .ant-tree .ant-tree-treenode {
+    width: 100%;
+  }
+}

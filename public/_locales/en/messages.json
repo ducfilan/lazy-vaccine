@@ -73,9 +73,6 @@
   "create_set_field_description": {
     "message": "Description"
   },
-  "create_set_field_category": {
-    "message": "Category"
-  },
   "create_set_request_category": {
     "message": "Click here to request a new category"
   },
@@ -187,6 +184,9 @@
   "set_detail_answers": {
     "message": "Answers"
   },
+  "home_category_lookup": {
+    "message": "Category lookup"
+  },
   "common_back": {
     "message": "Back"
   },
@@ -213,6 +213,9 @@
   },
   "common_subscribe": {
     "message": "Subscribe"
+  },
+  "common_category": {
+    "message": "Category"
   },
   "cancel": {
     "message": "Cancel"
