@@ -2,6 +2,13 @@
   background: $white;
   border-radius: 5px;
 
+  .ant-typography {
+    @include highlight;
+    padding: 0 8px;
+    display: inline;
+    text-transform: uppercase;
+  }
+
   .ant-divider-horizontal {
     margin: 16px 0;
   }
