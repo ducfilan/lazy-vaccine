@@ -28,9 +28,9 @@ const PopupPage = () => {
     try {
       setIsLoading(true)
 
-      getGoogleAuthToken((token: string) => {
+      getGoogleAuthToken().then((token: string) => {
         setHttp(new Http(token, LoginTypes.google))
-      }, {})
+      })
     } catch (error) {
       // Not able to login with current token, ignore to show the first page to login.
     }

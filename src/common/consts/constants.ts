@@ -113,3 +113,5 @@ export const MaxTagsCountPerSet = 20
 export const MaxLengthSetTitle = 60
 
 export const DebounceTimeout = 500
+
+export const MaxTryAgainSignInCount = 3

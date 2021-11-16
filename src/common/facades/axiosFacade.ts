@@ -105,14 +105,15 @@ export class Http {
         if (this.retryCount >= this.maxAllowedRetries) return
 
         return new Promise((resolve) => {
-          getGoogleAuthToken((token: string) => {
-            this.token = token
+          getGoogleAuthToken()
+            .then((token: string) => {
+              this.token = token
 
-            error.config.headers.Authorization = `Bearer ${token}`
-            this.retryCount++
+              error.config.headers.Authorization = `Bearer ${token}`
+              this.retryCount++
 
-            resolve(this.http.request(error.config))
-          }, {})
+              resolve(this.http.request(error.config))
+            })
         })
       }
 

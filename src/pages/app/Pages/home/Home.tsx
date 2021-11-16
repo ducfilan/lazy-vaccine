@@ -1,18 +1,18 @@
 import * as React from "react"
 
-import { getSetInfo } from "@/common/api/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
-import { SetInfo } from "@/common/types/types"
 import { HomeContext } from "./contexts/HomeContext"
-import { notification, Skeleton } from "antd"
+import { Layout, notification, Skeleton } from "antd"
 
 import TopSets from "./components/TopSets"
+import CategoriesSider from "./components/CategoriesSider"
+
+const { Content } = Layout
 
 const { useState, useEffect } = React
 
 const HomePage = (props: any) => {
   const { http } = useGlobalContext()
-  const [setInfo, setSetInfo] = useState<SetInfo>()
   const [loading, setLoading] = useState<boolean>(true)
 
   function onPageLoaded() {
@@ -20,12 +20,19 @@ const HomePage = (props: any) => {
   }
 
   useEffect(onPageLoaded, [http])
-  useEffect(() => setInfo && setLoading(false), [setInfo])
+  useEffect(() => setLoading(false), [])
 
   return (
-    <HomeContext.Provider value={{ setInfo }}>
+    <HomeContext.Provider value={{}}>
       <Skeleton active loading={loading}>
-        <TopSets innerContent={""} />
+        <Layout className="body-content">
+          <CategoriesSider width={250} path={""} />
+          <Layout style={{ padding: 24 }}>
+            <Content>
+              <TopSets />
+            </Content>
+          </Layout>
+        </Layout>
       </Skeleton>
     </HomeContext.Provider>
   )
