@@ -8,7 +8,7 @@ import AppLog from "@img/ui/logo.png"
 import { signOut } from "@facades/authFacade"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import AvatarImage from "./AvatarImage"
-import { Link } from "react-router-dom"
+import { HashRouter, Link } from "react-router-dom"
 
 const DropdownMenu = (props: { isLoggedIn: boolean }) => {
   const { user, setUser, http } = useGlobalContext()
@@ -67,21 +67,23 @@ function Navbar(props: { extraComponents?: React.ReactNode[]; centerComponent?: 
   const isLoggedIn = !!user
 
   return (
-    <PageHeader
-      title={
-        <Link to={"/"} style={{ color: "white" }}>
-          {chrome.i18n.getMessage("appName")}
-        </Link>
-      }
-      avatar={{ gap: 0, src: AppLog, size: 48 }}
-      extra={[
-        ...(props.extraComponents || []),
-        isLoggedIn ? <AvatarImage key="avatar" imageUrl={user?.pictureUrl} /> : <div key="avatar"></div>,
-        <DropdownMenu key="menu" isLoggedIn={isLoggedIn} />,
-      ]}
-    >
-      {props.centerComponent}
-    </PageHeader>
+    <HashRouter>
+      <PageHeader
+        title={
+          <Link to={"/"} style={{ color: "white" }}>
+            {chrome.i18n.getMessage("appName")}
+          </Link>
+        }
+        avatar={{ gap: 0, src: AppLog, size: 48 }}
+        extra={[
+          ...(props.extraComponents || []),
+          isLoggedIn ? <AvatarImage key="avatar" imageUrl={user?.pictureUrl} /> : <div key="avatar"></div>,
+          <DropdownMenu key="menu" isLoggedIn={isLoggedIn} />,
+        ]}
+      >
+        {props.centerComponent}
+      </PageHeader>
+    </HashRouter>
   )
 }
 
