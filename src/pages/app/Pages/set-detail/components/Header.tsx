@@ -26,7 +26,7 @@ const Header = () => {
         </Row>
         <Row>
           <Col>
-            <Typography.Paragraph ellipsis={{ rows: 2, expandable: true, symbol: <ArrowDownOutlined /> }}>
+            <Typography.Paragraph ellipsis={{ rows: 2, expandable: true, symbol: <ArrowDownOutlined /> }} className="page-header--description top-8px">
               {setInfo?.description}
             </Typography.Paragraph>
           </Col>
