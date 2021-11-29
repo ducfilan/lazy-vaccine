@@ -1,8 +1,9 @@
 import { Http } from "../facades/axiosFacade";
-import { SetInfo } from "@/common/types/types";
+import { SetInfo, TopSetsResponse } from "@/common/types/types";
 import { AxiosResponse } from "axios";
 import Apis from "@consts/apis";
 import { ParamError } from "@consts/errors";
+import { DefaultLangCode } from "@consts/constants";
 
 export async function createSet(http?: Http, setInfo?: SetInfo): Promise<string> {
   if (!http || !setInfo) throw new ParamError();
@@ -21,4 +22,12 @@ export async function getSetInfo(http: Http, setId: string): Promise<SetInfo> {
   if (!setInfo) throw new Error("cannot get set info")
 
   return setInfo
+}
+
+export async function getTopSets(http: Http, langCode: string = DefaultLangCode): Promise<SetInfo[]> {
+  const response = await http.get<any, AxiosResponse<TopSetsResponse>>(Apis.topSets(langCode))
+
+  if (!response?.data) throw new Error("cannot get top sets")
+
+  return response?.data.sets
 }

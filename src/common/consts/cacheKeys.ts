@@ -5,7 +5,8 @@ const CacheKeys = {
   lastSetInfo: "last-set-info",
   selectedMasteredLanguages: "selected-mastered-languages",
   selectedLearningLanguages: "selected-learning-languages",
-  selectedPages: "selected-pages"
+  selectedPages: "selected-pages",
+  topSets: "top-sets"
 }
 
 export default CacheKeys

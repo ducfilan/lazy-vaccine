@@ -62,11 +62,19 @@ export class CategoryResponse {
   }
 }
 
+export type TopSetsResponse = {
+  _id: string
+  langCode: LanguageCode
+  sets: SetInfo[]
+}
+
 export type LanguageCode = keyof typeof SupportingLanguages.Set
 
 export type SetInfo = {
   name: string
   categoryId: string
+  categoryName?: string
+  categoryNameEn?: string
   creatorId?: string
   creatorName?: string
   description?: string
