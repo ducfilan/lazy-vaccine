@@ -29,7 +29,7 @@
     "message": "WE SPEND SO MUCH TIME ON THE INTERNET.\nYes, no excuse. But a day remains 24 hours since we have the clock. From now on, I will help you use Internet more efficient.\nJust TRY to SEE! 😊"
   },
   "popup_introduce_choose_lang_codes": {
-    "message": "Nice to meet you, {{user_name}}! 🎉 I see your first language is {{first_language}}, do you want to show content in other languages?"
+    "message": "Nice to meet you, :user_name! 🎉 I see your first language is :first_language, do you want to show content in other languages?"
   },
   "popup_introduce_choose_pages": {
     "message": "Great! 🤩 One last step...\nYou can select your most visited websites to start. That's it!"
@@ -167,7 +167,10 @@
     "message": "Definition language"
   },
   "set_detail_sub_header_base_part": {
-    "message": "We have {{item_count}} items, content is in <span>{{from_language}}</span>"
+    "message": "We have :item_count items, "
+  },
+  "set_detail_sub_header_part_1": {
+    "message": "content is in <span>:from_language</span>"
   },
   "set_detail_share_me": {
     "message": "Share me"
@@ -176,13 +179,16 @@
     "message": "Copy link"
   },
   "set_detail_sub_header_part_2": {
-    "message": ", target to <span>{{to_language}}</span>"
+    "message": ", target to <span>:to_language</span>"
   },
   "set_detail_edit_set": {
     "message": "Edit set"
   },
   "set_detail_answers": {
     "message": "Answers"
+  },
+  "set_detail_no_desc": {
+    "message": "No description yet..."
   },
   "home_category_lookup": {
     "message": "Category lookup"

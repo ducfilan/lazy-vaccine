@@ -6,7 +6,7 @@ export function formatString(template: string, values: KeyValuePair[]): string {
   for (let i = 0; i < values.length; i++) {
     const pair = values[i];
 
-    template = template.replace(`{{${pair.key}}}`, pair.value)
+    template = template.replace(`:${pair.key}`, pair.value)
   }
 
   return template

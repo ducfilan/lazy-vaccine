@@ -25,9 +25,12 @@ const Header = () => {
           </Col>
         </Row>
         <Row>
-          <Col>
-            <Typography.Paragraph ellipsis={{ rows: 2, expandable: true, symbol: <ArrowDownOutlined /> }} className="page-header--description top-8px">
-              {setInfo?.description}
+          <Col span={24}>
+            <Typography.Paragraph
+              ellipsis={{ rows: 2, expandable: true, symbol: <ArrowDownOutlined /> }}
+              className="page-header--description top-8px"
+            >
+              {setInfo?.description || i18n("set_detail_no_desc")}
             </Typography.Paragraph>
           </Col>
         </Row>
@@ -41,12 +44,14 @@ const Header = () => {
         </Row>
         <Row align="middle">
           <Col span={18} className="page-header--items-info">
+            {formatString(i18n("set_detail_sub_header_base_part"), [
+              {
+                key: "item_count",
+                value: `${setInfo?.items?.length}` || "-",
+              },
+            ])}
             {parse(
-              formatString(i18n("set_detail_sub_header_base_part"), [
-                {
-                  key: "item_count",
-                  value: `${setInfo?.items?.length}` || "-",
-                },
+              formatString(i18n("set_detail_sub_header_part_1"), [
                 {
                   key: "from_language",
                   value: langCodeToName(setInfo?.fromLanguage as string),

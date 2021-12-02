@@ -71,6 +71,7 @@ export type TopSetsResponse = {
 export type LanguageCode = keyof typeof SupportingLanguages.Set
 
 export type SetInfo = {
+  _id: string
   name: string
   categoryId: string
   categoryName?: string
@@ -83,6 +84,7 @@ export type SetInfo = {
   fromLanguage: LanguageCode
   toLanguage?: LanguageCode
   captchaToken?: string | null
+  imgUrl?: string
 }
 
 export type EventMap<T> = T extends Window

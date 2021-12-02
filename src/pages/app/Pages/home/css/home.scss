@@ -24,3 +24,15 @@
     width: 100%;
   }
 }
+
+.top-set-items--item-language {
+  &:first-letter {
+    text-transform: uppercase;
+  }
+
+  span {
+    @include highlight;
+    padding: 0 4px;
+    font-weight: 700;
+  }
+}
