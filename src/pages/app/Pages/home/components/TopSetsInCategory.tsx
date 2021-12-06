@@ -7,7 +7,7 @@ import useLocalStorage from "@/common/hooks/useLocalStorage"
 import CacheKeys from "@/common/consts/cacheKeys"
 import { getTopSetsInCategory } from "@/common/api/set"
 import SetItemCardSmall from "./SetItemCardSmall"
-import { List, Typography } from "antd"
+import { List, Skeleton, Typography } from "antd"
 
 const { useEffect } = React
 
@@ -36,16 +36,19 @@ const TopSetsInCategory = (props: { categoryId: string; title: string }) => {
   return (
     <>
       <Typography.Title level={3}>{props.title}</Typography.Title>
-
-      <List
-        grid={{ gutter: 16, column: 3 }}
-        dataSource={topSets}
-        renderItem={(set) => (
-          <List.Item>
-            <SetItemCardSmall set={set} key={set._id} />
-          </List.Item>
-        )}
-      />
+      {topSets && topSets.length ? (
+        <List
+          grid={{ gutter: 16, column: 3 }}
+          dataSource={topSets}
+          renderItem={(set) => (
+            <List.Item>
+              <SetItemCardSmall set={set} key={set._id} />
+            </List.Item>
+          )}
+        />
+      ) : (
+        <Skeleton active />
+      )}
     </>
   )
 }

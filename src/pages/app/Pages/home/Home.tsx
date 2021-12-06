@@ -38,14 +38,16 @@ const HomePage = (props: any) => {
                 {i18n("home_everyone_favorite")}
               </Typography.Title>
               <TopSets />
-              <List
-                dataSource={categories}
-                renderItem={(category) => (
-                  <List.Item key={category.key} style={{ display: "block" }}>
-                    <TopSetsInCategory categoryId={category.key} title={category.title} />
-                  </List.Item>
-                )}
-              />
+              {categories && categories.length > 0 && (
+                <List
+                  dataSource={categories}
+                  renderItem={(category) => (
+                    <List.Item key={category.key} style={{ display: "block" }}>
+                      <TopSetsInCategory categoryId={category.key} title={category.title} />
+                    </List.Item>
+                  )}
+                />
+              )}
             </Content>
           </Layout>
         </Layout>
