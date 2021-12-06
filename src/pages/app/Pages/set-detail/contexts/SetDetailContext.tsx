@@ -1,7 +1,7 @@
 import { SetInfo } from "@/common/types/types"
 import { createContext, useContext } from "react"
 
-export type Context = {
+type Context = {
   setInfo?: SetInfo
 }
 

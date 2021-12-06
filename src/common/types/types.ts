@@ -75,6 +75,7 @@ export type SetInfo = {
   name: string
   categoryId: string
   categoryName?: string
+  creatorImageUrl?: string
   categoryNameEn?: string
   creatorId?: string
   creatorName?: string

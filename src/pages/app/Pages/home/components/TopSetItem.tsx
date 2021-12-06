@@ -9,14 +9,14 @@ import { formatString, langCodeToName } from "@/common/utils/stringUtils"
 import { Link } from "react-router-dom"
 
 const setImgStyle = {
-  clipPath: "polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%)",
+  borderRadius: "40% 70% 70% 40%",
 }
 
 const i18n = chrome.i18n.getMessage
 
 const TopSetItem = (props: { set: SetInfo }) => {
   return (
-    <Card>
+    <Card style={{ padding: "0 40px" }}>
       <Row justify="space-around" gutter={[16, 0]}>
         <Col flex="none">
           <Image
@@ -84,7 +84,7 @@ const TopSetItem = (props: { set: SetInfo }) => {
               {props.set.description || i18n("set_detail_no_desc")}
             </Typography.Paragraph>
           </Row>
-          <Row align="bottom" className="float-right">
+          <Row align="bottom">
             <Button type="primary" className="is-uppercase" icon={<AimOutlined />}>
               {i18n("common_subscribe")}
             </Button>

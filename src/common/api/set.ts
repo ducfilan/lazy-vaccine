@@ -31,3 +31,11 @@ export async function getTopSets(http: Http, langCode: string = DefaultLangCode)
 
   return response?.data.sets
 }
+
+export async function getTopSetsInCategory(http: Http, langCode: string = DefaultLangCode, categoryId: string): Promise<SetInfo[]> {
+  const response = await http.get<any, AxiosResponse<TopSetsResponse>>(Apis.topSetsInCategory(langCode, categoryId))
+
+  if (!response?.data) throw new Error(`cannot get top sets in category id: ${categoryId}, lang code: ${langCode}`)
+
+  return response?.data.sets
+}

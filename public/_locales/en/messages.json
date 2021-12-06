@@ -193,6 +193,9 @@
   "home_category_lookup": {
     "message": "Category lookup"
   },
+  "home_everyone_favorite": {
+    "message": "Everyone's Favorites"
+  },
   "common_back": {
     "message": "Back"
   },

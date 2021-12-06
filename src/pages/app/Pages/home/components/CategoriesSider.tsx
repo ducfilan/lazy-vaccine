@@ -6,6 +6,7 @@ import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { Category } from "@/common/types/types"
 import CacheKeys from "@/common/consts/cacheKeys"
 import { getCategories } from "@/common/api/category"
+import { useHomeContext } from "../contexts/HomeContext"
 
 const { Title } = Typography
 const { Sider } = Layout
@@ -45,9 +46,9 @@ const CategoriesSider = (props: { width: number; path: string }) => {
   const { user, http } = useGlobalContext()
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
 
-  const [categories, setCategories] = useState<Category[]>([])
+  const { categories, setCategories } = useHomeContext()
 
-  const categoriesKeys: any[] = useMemo(() => flattenCategories(categories, Infinity), [categories])
+  const categoriesKeys: any[] = useMemo(() => flattenCategories(categories || [], Infinity), [categories])
   const [expandedKeys, setExpandedKeys] = useState<any[]>()
 
   function lookupCategories(e: any) {
@@ -84,12 +85,8 @@ const CategoriesSider = (props: { width: number; path: string }) => {
       <Divider />
       <Input placeholder={i18n("home_category_lookup")} onChange={lookupCategories} className="bot-16px" />
       {/* The states in Ant design which are prefixed with default only work when they are rendered for the first time */}
-      {categories.length > 0 && (
-        <Tree
-          treeData={categories}
-          expandedKeys={expandedKeys}
-          onExpand={setExpandedKeys}
-        />
+      {categories && categories.length > 0 && (
+        <Tree treeData={categories} expandedKeys={expandedKeys} onExpand={setExpandedKeys} />
       )}
     </Sider>
   )
