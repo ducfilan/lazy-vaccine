@@ -17,11 +17,15 @@ const Items = () => {
           case ItemTypes.TermDef.value:
             innerContent = (
               <Row gutter={8}>
-                <Col flex="auto">{item.term}</Col>
+                <Col flex="auto" span={12}>
+                  {item.term}
+                </Col>
                 <Col flex="none">
                   <Divider type="vertical" />
                 </Col>
-                <Col flex="auto">{item.definition}</Col>
+                <Col flex="auto" span={12}>
+                  {item.definition}
+                </Col>
               </Row>
             )
             break
