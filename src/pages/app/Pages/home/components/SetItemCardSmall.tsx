@@ -3,6 +3,7 @@ import * as React from "react"
 import { Card, Avatar, Button, Space, Typography } from "antd"
 import { UserOutlined, AimOutlined, LikeFilled, DislikeFilled } from "@ant-design/icons"
 import { SetInfo } from "@/common/types/types"
+import { Link } from "react-router-dom"
 
 const i18n = chrome.i18n.getMessage
 
@@ -23,7 +24,11 @@ const SetItemCardSmall = (props: { set: SetInfo }) => {
     >
       <Card.Meta
         avatar={<Avatar src={props.set.creatorImageUrl} icon={<UserOutlined />} />}
-        title={props.set.name}
+        title={
+          <Link className="page-header--title" to={`/set-detail/${props.set._id}`}>
+            {props.set.name}
+          </Link>
+        }
         description={
           <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ minHeight: "3.143em" }}>
             {props.set.description || i18n("set_detail_no_desc")}
