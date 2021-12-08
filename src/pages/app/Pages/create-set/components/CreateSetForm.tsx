@@ -1,4 +1,5 @@
 import * as React from "react"
+import Resizer from "react-image-file-resizer"
 
 import { getCategories } from "@/common/api/category"
 import CacheKeys from "@/common/consts/cacheKeys"
@@ -26,6 +27,24 @@ import { getPreSignedUploadUrl, uploadImage } from "@/common/api/image"
 
 const { useState, useEffect } = React
 const i18n = chrome.i18n.getMessage
+const imageWidthInPx = 300
+const imageHeightInPx = 300
+
+const resizeAndCompressImage = (file: File) =>
+  new Promise((resolve) => {
+    Resizer.imageFileResizer(
+      file,
+      imageWidthInPx,
+      imageHeightInPx,
+      "JPEG",
+      80,
+      0,
+      (uri) => {
+        resolve(uri)
+      },
+      "file"
+    )
+  })
 
 export const CreateSetForm = () => {
   const { user, http } = useGlobalContext()
@@ -89,7 +108,9 @@ export const CreateSetForm = () => {
   }
 
   const onImageUpload = async (info: any) => {
-    const isUploadSuccess = await uploadImage(info.action, info.file, {
+    const file = await resizeAndCompressImage(info.file)
+
+    const isUploadSuccess = await uploadImage(info.action, file, {
       headers: {
         "x-amz-acl": "public-read",
         "Content-Type": uploadFileType,
