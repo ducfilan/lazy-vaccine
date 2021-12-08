@@ -7,6 +7,7 @@ const Apis = {
   items: "/items",
   login: "/users/login",
   me: "/users/me",
+  preSignedUrl: "/images/pre-signed-url"
 }
 
 export default Apis

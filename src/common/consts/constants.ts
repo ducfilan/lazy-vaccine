@@ -115,3 +115,5 @@ export const MaxLengthSetTitle = 60
 export const DebounceTimeout = 500
 
 export const MaxTryAgainSignInCount = 3
+
+export const StaticBaseUrl = "https://static.lazyvaccine.com"

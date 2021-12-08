@@ -9,15 +9,20 @@ import {
   MaxLengthSetTitle,
   MaxLengthRule,
   MaxTagsCountPerSet,
+  StaticBaseUrl,
 } from "@/common/consts/constants"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
-import { Category, SetInfo } from "@/common/types/types"
-import { Form, Typography, Input, Button, Card, TreeSelect, Select, Alert, Space, Popconfirm } from "antd"
-import { RightOutlined } from "@ant-design/icons"
+import { Category, SetInfo, UploadImageResponse } from "@/common/types/types"
+import { Form, Typography, Input, Button, Card, TreeSelect, Select, Alert, Space, Popconfirm, Upload } from "antd"
+import { RightOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons"
 import { useCreateSetContext } from "../contexts/CreateSetContext"
 import { Prompt } from "react-router"
 import { deepClone, preventReload } from "@/common/utils/utils"
+import ImgCrop from "antd-img-crop"
+import { RcFile, UploadChangeParam, UploadFile } from "antd/lib/upload/interface"
+import { getExtensionFromFileType, getHash } from "@/common/utils/stringUtils"
+import { getPreSignedUploadUrl, uploadImage } from "@/common/api/image"
 
 const { useState, useEffect } = React
 const i18n = chrome.i18n.getMessage
@@ -32,6 +37,12 @@ export const CreateSetForm = () => {
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
   const [cachedLastSetInfo, setCachedLastSetInfo] = useLocalStorage<SetInfo | null>(CacheKeys.lastSetInfo, null, "365d")
   const [isDataSaved, setIsDataSaved] = useState<boolean>(true)
+  const [imageFileName, setImageFileName] = useState<string>()
+  const [imageUrl, setImageUrl] = useState<string>()
+  const [uploadFileType, setUploadFileType] = useState<string>()
+  const [uploadingImage, setUploadingImage] = useState<boolean>(false)
+  const [preSignedUrl, setPreSignedUrl] = useState<string>()
+
   const [formRef] = Form.useForm()
 
   const onSetInfoFormFinished = (newSetInfo: SetInfo) => {
@@ -54,6 +65,45 @@ export const CreateSetForm = () => {
     setIsDataSaved(true)
   }
 
+  const onImageBeforeUpload = async (file: RcFile) => {
+    if (!http || !user) return
+
+    const ext = getExtensionFromFileType(file.type)
+    const uniqueFileName = `${getHash(user?.email)}_${getHash(file.name)}_${new Date().getTime()}.${ext}`
+
+    const url = await getPreSignedUploadUrl(http, uniqueFileName, file.type)
+    setPreSignedUrl(url)
+    setImageFileName(uniqueFileName)
+    setUploadFileType(file.type)
+  }
+
+  const onImageUploaderChange = (info: UploadChangeParam<UploadFile<UploadImageResponse>>) => {
+    if (info.file.status === "uploading") {
+      setUploadingImage(true)
+      return
+    }
+
+    if (info.file.status === "done") {
+      setUploadingImage(false)
+    }
+  }
+
+  const onImageUpload = async (info: any) => {
+    const isUploadSuccess = await uploadImage(info.action, info.file, {
+      headers: {
+        "x-amz-acl": "public-read",
+        "Content-Type": uploadFileType,
+      },
+    })
+
+    if (isUploadSuccess) {
+      setUploadingImage(false)
+      const imgUrl = `${StaticBaseUrl}/${imageFileName}`
+      setImageUrl(imgUrl)
+      formRef.setFieldsValue({ imgUrl })
+    }
+  }
+
   const removeCachedSetInfo = () => {
     setCachedLastSetInfo(null)
   }
@@ -65,6 +115,13 @@ export const CreateSetForm = () => {
 
     setIsDataSaved(false)
   }
+
+  const uploadButton = (
+    <div>
+      {uploadingImage ? <LoadingOutlined /> : <PlusOutlined />}
+      <div style={{ marginTop: 8 }}>{i18n("common_upload")}</div>
+    </div>
+  )
 
   useEffect(() => {
     if (!http || !user) return
@@ -119,6 +176,22 @@ export const CreateSetForm = () => {
           onValuesChange={onSetInfoFormValuesChanged}
           initialValues={setInfo}
         >
+          <Form.Item name="imgUrl" label={i18n("create_set_set_picture")}>
+            <ImgCrop rotate modalTitle={i18n("common_edit_image")} modalCancel={i18n("common_cancel")}>
+              <Upload
+                action={preSignedUrl}
+                listType="picture-card"
+                showUploadList={false}
+                accept="image/jpeg,image/png"
+                method="PUT"
+                beforeUpload={onImageBeforeUpload}
+                onChange={onImageUploaderChange}
+                customRequest={onImageUpload}
+              >
+                {imageUrl ? <img src={imageUrl} style={{ width: "100%" }} /> : uploadButton}
+              </Upload>
+            </ImgCrop>
+          </Form.Item>
           <Form.Item name="name" label={i18n("create_set_field_name")} rules={[RequiredRule]}>
             <Input placeholder={i18n("create_set_field_name_placeholder")} maxLength={MaxLengthSetTitle} />
           </Form.Item>

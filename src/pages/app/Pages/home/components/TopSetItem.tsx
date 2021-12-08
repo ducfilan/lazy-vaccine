@@ -19,13 +19,7 @@ const TopSetItem = (props: { set: SetInfo }) => {
     <Card style={{ padding: "0 40px" }}>
       <Row justify="space-around" gutter={[16, 0]}>
         <Col flex="none">
-          <Image
-            style={setImgStyle}
-            width={200}
-            height={200}
-            src={props.set.imgUrl || "https://picsum.photos/200"}
-            preview={false}
-          />
+          <Image style={setImgStyle} width={200} height={200} src={props.set.imgUrl} preview={false} />
         </Col>
         <Col flex="24">
           <Row>

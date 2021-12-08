@@ -46,11 +46,13 @@
   "dependencies": {
     "@types/react-router-dom": "^5.1.8",
     "antd": "^4.16.13",
+    "antd-img-crop": "^3.16.0",
     "axios": "^0.21.2",
     "html-react-parser": "^1.4.0",
     "react": "^17.0",
     "react-dom": "^17.0",
     "react-google-recaptcha": "^2.1.0",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-recaptcha": "^2.3.10",
     "react-router-dom": "^5.3.0"
   }

@@ -68,6 +68,10 @@ export type TopSetsResponse = {
   sets: SetInfo[]
 }
 
+export type PreSignedUrlResponse = {
+  url: string
+}
+
 export type LanguageCode = keyof typeof SupportingLanguages.Set
 
 export type SetInfo = {
@@ -93,3 +97,7 @@ export type EventMap<T> = T extends Window
   : T extends Document
   ? DocumentEventMap
   : { [key: string]: Event };
+
+export type UploadImageResponse = {
+  uploadedImgUrl: string
+}

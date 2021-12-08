@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 
 import StatusCode from "@consts/statusCodes"
-import { ApiTimeOut, LoginTypes } from "@consts/constants"
+import { ApiTimeOut } from "@consts/constants"
 import { getGoogleAuthToken } from "./authFacade"
 
 const headers: Readonly<Record<string, string | boolean>> = {
@@ -125,4 +125,12 @@ export class Http {
 
     return Promise.reject(error.response)
   }
+}
+
+export function put<T = any, R = AxiosResponse<T>>(
+  url: string,
+  data?: T,
+  config?: AxiosRequestConfig
+): Promise<R> {
+  return axios.put<T, R>(url, data, config)
 }

@@ -11,7 +11,7 @@ const SetItemCardSmall = (props: { set: SetInfo }) => {
   return (
     <Card
       style={{ width: 300 }}
-      cover={<img alt={props.set.name} src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />}
+      cover={<img alt={props.set.name} src={props.set.imgUrl} />}
       actions={[
         <Button key="subscribe" type="primary" className="is-uppercase" size="large" icon={<AimOutlined />}>
           {i18n("common_subscribe")}

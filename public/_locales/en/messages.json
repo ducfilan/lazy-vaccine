@@ -166,6 +166,9 @@
   "create_set_definition_language": {
     "message": "Definition language"
   },
+  "create_set_set_picture": {
+    "message": "Set's picture"
+  },
   "set_detail_sub_header_base_part": {
     "message": "We have :item_count items, "
   },
@@ -214,6 +217,9 @@
   "common_no": {
     "message": "No"
   },
+  "common_cancel": {
+    "message": "Cancel"
+  },
   "common_creator": {
     "message": "Creator"
   },
@@ -226,8 +232,11 @@
   "common_category": {
     "message": "Category"
   },
-  "cancel": {
-    "message": "Cancel"
+  "common_upload": {
+    "message": "Upload"
+  },
+  "common_edit_image": {
+    "message": "Edit image"
   },
   "select": {
     "message": "Select one"
