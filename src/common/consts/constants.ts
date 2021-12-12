@@ -1,3 +1,5 @@
+export const AppBasePath = "pages/lazy-vaccine.html#"
+
 export const AppPages = {
   Home: {
     key: "side-home",

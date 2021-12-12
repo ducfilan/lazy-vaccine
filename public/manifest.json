@@ -48,6 +48,7 @@
     }
   ],
   "web_accessible_resources": [
-    "static/*"
+    "static/*",
+    "pages/lazy-vaccine.html"
   ]
 }

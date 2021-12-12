@@ -21,10 +21,13 @@ import NextPrevButton from "./NextPrevButton"
 import PopupHeader from "./Header"
 import AvatarImage from "@/common/components/AvatarImage"
 import TreeIcon from "@img/ui/fa/tree-solid.svg"
+import { AppBasePath } from "@/common/consts/constants"
 
 const { Text } = Typography
 
 const { useState } = React
+
+const HomePageUrl = chrome.runtime.getURL(AppBasePath)
 
 function HeaderContent() {
   const { user } = useGlobalContext()
@@ -112,7 +115,14 @@ function CompletedInfo() {
 
         <Row gutter={[32, 16]} className="completed-info--button-list">
           <Col span={12}>
-            <Button className="completed-info--button-more-sets" size="large" icon={<FileSearchOutlined />} block>
+            <Button
+              className="completed-info--button-more-sets"
+              size="large"
+              icon={<FileSearchOutlined />}
+              block
+              href={HomePageUrl}
+              target="_blank"
+            >
               {chrome.i18n.getMessage("popup_stats_more_sets")}
             </Button>
           </Col>
