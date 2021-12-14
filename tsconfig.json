@@ -26,6 +26,9 @@
             ],
             "@facades/*": [
                 "./src/common/facades/*"
+            ],
+            "@bg/*": [
+                "./src/background/*"
             ]
         },
     },

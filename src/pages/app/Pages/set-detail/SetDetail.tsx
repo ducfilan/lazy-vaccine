@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { getSetInfo } from "@/common/api/set"
+import { getSetInfo } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { SetInfo } from "@/common/types/types"
 import Header from "./components/Header"

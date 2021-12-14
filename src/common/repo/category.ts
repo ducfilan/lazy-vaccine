@@ -1,7 +1,7 @@
-import { AxiosResponse } from "axios";
-import { Category, CategoryResponse } from "@/common/types/types";
-import Apis from "@consts/apis";
-import { Http } from "../facades/axiosFacade";
+import { AxiosResponse } from "axios"
+import { Category, CategoryResponse } from "@/common/types/types"
+import Apis from "@consts/apis"
+import { Http } from "../facades/axiosFacade"
 
 export async function getCategories(http: Http, langCode: string): Promise<Category[]> {
   const response = await http.get<any, AxiosResponse<CategoryResponse[]>>(Apis.categories(langCode))

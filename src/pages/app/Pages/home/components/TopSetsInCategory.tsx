@@ -5,7 +5,7 @@ import { useState } from "react"
 import { SetInfo } from "@/common/types/types"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import CacheKeys from "@/common/consts/cacheKeys"
-import { getTopSetsInCategory } from "@/common/api/set"
+import { getTopSetsInCategory } from "@/common/repo/set"
 import SetItemCardSmall from "./SetItemCardSmall"
 import { List, Skeleton, Typography } from "antd"
 

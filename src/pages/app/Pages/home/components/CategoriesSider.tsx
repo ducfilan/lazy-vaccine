@@ -5,7 +5,7 @@ import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { Category } from "@/common/types/types"
 import CacheKeys from "@/common/consts/cacheKeys"
-import { getCategories } from "@/common/api/category"
+import { getCategories } from "@/common/repo/category"
 import { useHomeContext } from "../contexts/HomeContext"
 
 const { Title } = Typography

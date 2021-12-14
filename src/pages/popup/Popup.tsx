@@ -12,7 +12,7 @@ import CompletedInfo from "./components/CompletedInfo"
 
 import RegisterSteps from "@consts/registerSteps"
 
-import { getUserInfo } from "@/common/api/user"
+import { getUserInfo } from "@/common/repo/user"
 import { User } from "@/common/types/types"
 import { getGoogleAuthToken } from "@facades/authFacade"
 import { Http } from "@facades/axiosFacade"

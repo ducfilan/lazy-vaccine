@@ -27,16 +27,6 @@ export const AppPages = {
   }
 }
 
-export const Inject = {
-  Type: {
-    FixedPosition: 1,
-    DynamicGenerated: 2
-  },
-  Rate: {
-
-  }
-}
-
 export const LoginTypes = {
   google: "google"
 }
@@ -97,18 +87,6 @@ export const ItemTypes = {
 }
 
 export const TabKeyCode = "Tab"
-
-export const RequiredRule = { required: true, message: chrome.i18n.getMessage("required_field") }
-
-export const MaxLengthRule = (length: number) => (() => ({
-  validator(_: any, value: any) {
-    if (!value || value.length <= length) {
-      return Promise.resolve();
-    }
-
-    return Promise.reject(new Error(`${chrome.i18n.getMessage("max_length_field")} ${length}`));
-  },
-}))
 
 export const MaxTagsCountPerSet = 20
 

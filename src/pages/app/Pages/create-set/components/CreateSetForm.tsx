@@ -1,17 +1,16 @@
 import * as React from "react"
 import Resizer from "react-image-file-resizer"
 
-import { getCategories } from "@/common/api/category"
+import { getCategories } from "@/common/repo/category"
 import CacheKeys from "@/common/consts/cacheKeys"
 import {
   RequestToAddCategoryLink,
   CreateSetDescriptionMaxLength,
-  RequiredRule,
   MaxLengthSetTitle,
-  MaxLengthRule,
   MaxTagsCountPerSet,
   StaticBaseUrl,
 } from "@/common/consts/constants"
+import { RequiredRule, MaxLengthRule } from "@/common/consts/validationRules"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { Category, SetInfo, UploadImageResponse } from "@/common/types/types"
@@ -23,7 +22,7 @@ import { deepClone, preventReload } from "@/common/utils/utils"
 import ImgCrop from "antd-img-crop"
 import { RcFile, UploadChangeParam, UploadFile } from "antd/lib/upload/interface"
 import { getExtensionFromFileType, getHash } from "@/common/utils/stringUtils"
-import { getPreSignedUploadUrl, uploadImage } from "@/common/api/image"
+import { getPreSignedUploadUrl, uploadImage } from "@/common/repo/image"
 
 const { useState, useEffect } = React
 const i18n = chrome.i18n.getMessage

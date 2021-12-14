@@ -7,7 +7,7 @@ import { useState } from "react"
 import { SetInfo } from "@/common/types/types"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import CacheKeys from "@/common/consts/cacheKeys"
-import { getTopSets } from "@/common/api/set"
+import { getTopSets } from "@/common/repo/set"
 import TopSetItem from "./TopSetItem"
 
 const i18n = chrome.i18n.getMessage

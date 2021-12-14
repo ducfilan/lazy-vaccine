@@ -9,7 +9,7 @@ import { SupportingPages } from "@consts/constants"
 import NextPrevButton from "./NextPrevButton"
 import { User } from "@/common/types/types"
 import RegisterSteps from "@/common/consts/registerSteps"
-import { updateUserInfo } from "@/common/api/user"
+import { updateUserInfo } from "@/common/repo/user"
 
 import BrandIcon from "@/common/components/BrandIcon"
 import PopupHeader from "./Header"

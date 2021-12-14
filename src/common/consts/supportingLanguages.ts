@@ -1,12 +1,12 @@
 type _ = {
   UI: {
-    code: string;
-    name: string;
+    code: string
+    name: string
   }[]
   Set: {
     [key: string]: {
-      code: string;
-      name: string;
+      code: string
+      name: string
     }
   }
 }

@@ -92,6 +92,7 @@ module.exports = (_, { mode }) => {
         "@hooks": path.join(__dirname, "src/common/hooks"),
         "@consts": path.join(__dirname, "src/common/consts"),
         "@facades": path.join(__dirname, "src/common/facades"),
+        "@bg": path.join(__dirname, "src/background"),
       },
     },
     devServer: {

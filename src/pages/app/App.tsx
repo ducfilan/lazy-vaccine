@@ -18,7 +18,7 @@ import PageFooter from "@/common/components/PageFooter"
 import PagesNavigator from "./components/PagesNavigator"
 
 import { User } from "@/common/types/types"
-import { getUserInfo } from "@/common/api/user"
+import { getUserInfo } from "@/common/repo/user"
 import { AppPages, LoginTypes } from "@/common/consts/constants"
 import { getGoogleAuthToken } from "@facades/authFacade"
 import { Http } from "@facades/axiosFacade"

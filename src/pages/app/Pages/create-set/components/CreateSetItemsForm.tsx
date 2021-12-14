@@ -3,7 +3,7 @@ import * as React from "react"
 import { useHistory } from "react-router-dom"
 import ReCAPTCHA from "react-google-recaptcha"
 
-import { AppPages, ItemTypes, RecaptchaSiteKey, RequiredRule, TabKeyCode } from "@/common/consts/constants"
+import { AppPages, ItemTypes, RecaptchaSiteKey, TabKeyCode } from "@/common/consts/constants"
 import {
   Affix,
   Alert,
@@ -20,11 +20,12 @@ import {
   Space,
   Typography,
 } from "antd"
+import { RequiredRule } from "@/common/consts/validationRules"
 import { MinusCircleFilled, PlusOutlined, ArrowLeftOutlined } from "@ant-design/icons"
 
 import { useCreateSetContext } from "../contexts/CreateSetContext"
 import { LanguageCode, SetInfo } from "@/common/types/types"
-import { createSet } from "@/common/api/set"
+import { createSet } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useEventListener from "@/common/hooks/useEventListener"
 

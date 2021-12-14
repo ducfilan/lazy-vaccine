@@ -96,8 +96,15 @@ export type EventMap<T> = T extends Window
   ? WindowEventMap
   : T extends Document
   ? DocumentEventMap
-  : { [key: string]: Event };
+  : { [key: string]: Event }
 
 export type UploadImageResponse = {
   uploadedImgUrl: string
+}
+
+export type PageInjectorSiblingSelectorParts = {
+  tags: string[],
+  classes: string[],
+  ids: string[],
+  attrs: string[]
 }

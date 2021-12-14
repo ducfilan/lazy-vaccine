@@ -38,8 +38,8 @@ function useEventCallback<T extends Function>(callback: T): (...args: unknown[])
  * @example
  * function Component() {
  *   useEventListener(window, 'error', () => {
- *     console.log('A resource failed to load.');
- *   });
+ *     console.log('A resource failed to load.')
+ *   })
  *   // ...
  * }
  */

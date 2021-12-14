@@ -11,7 +11,7 @@ import LanguageItem from "./LanguageItem"
 import NextPrevButton from "./NextPrevButton"
 import { User } from "@/common/types/types"
 import RegisterSteps from "@/common/consts/registerSteps"
-import { updateUserInfo } from "@/common/api/user"
+import { updateUserInfo } from "@/common/repo/user"
 import PopupHeader from "./Header"
 
 const { useState } = React
