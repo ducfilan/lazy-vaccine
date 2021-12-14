@@ -82,6 +82,10 @@ export default class PageInjector {
 
       document.querySelector(this.parentSelector)?.prepend(node);
     } else if (this.type == InjectTypes.DynamicGenerated) {
+      if (!this.siblingSelectorParts) {
+        throw new Error("siblingSelectorParts is required when injecting dynamic generated content")
+      }
+
       const observer = new MutationObserverFacade(
         this.parentSelector,
         null,
