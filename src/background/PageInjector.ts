@@ -59,14 +59,14 @@ export default class PageInjector {
           return false;
         }
 
-        let classList = Array.prototype.slice.call(node.classList);
+        let classList = Array.prototype.slice.call(node.classList)
         // TODO: Add filtering by ID.
-        return this.siblingSelectorParts.classes.every(c => classList.includes(c));
+        return this.siblingSelectorParts.classes.every(c => classList.includes(c))
       }
     );
 
     // TODO: Add rate processing logic.
-    nodes.forEach(node => insertBefore(htmlStringToHtmlNode(this.htmlContent), node));
+    nodes.forEach(node => insertBefore(htmlStringToHtmlNode(this.htmlContent), node))
   }
 
   inject(htmlContent: string) {
