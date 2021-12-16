@@ -35,7 +35,7 @@ export class Http {
         'Authorization': `Bearer ${this.token}`,
         'X-Login-Type': this.loginType
       },
-      withCredentials: true,
+      withCredentials: false,
       timeout: ApiTimeOut,
     })
 
