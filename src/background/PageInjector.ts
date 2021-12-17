@@ -1,6 +1,6 @@
+import { InjectTypes } from "@/common/consts/constants"
 import { PageInjectorSiblingSelectorParts } from "@/common/types/types"
 import { MutationObserverFacade } from "@facades/mutationObserverFacade"
-import { InjectTypes } from "./constants"
 import { htmlStringToHtmlNode, insertBefore } from "./DomManipulator"
 
 
@@ -10,6 +10,9 @@ export default class PageInjector {
   private parentSelector: string
   private siblingSelectorParts: PageInjectorSiblingSelectorParts | null
 
+  private waitTimeOutInMs: number
+  private waitCount = 0
+
   /**
    * 
    * @param rate 
@@ -17,11 +20,12 @@ export default class PageInjector {
    * @param parentSelector 
    * @param siblingSelector 
    */
-  constructor(rate: number, type: number, parentSelector: string, siblingSelector?: string) {
+  constructor(rate: number, type: number, parentSelector: string, siblingSelector?: string, waitTimeOutInMs: number = 15000) {
     this.rate = rate
     this.type = type
     this.parentSelector = parentSelector
     this.siblingSelectorParts = siblingSelector ? this.parseSelector(siblingSelector) : null
+    this.waitTimeOutInMs = waitTimeOutInMs
   }
 
   private parseSelector(selectorString: string) {
@@ -69,7 +73,7 @@ export default class PageInjector {
     nodes.forEach(node => insertBefore(htmlStringToHtmlNode(this.htmlContent), node))
   }
 
-  inject(htmlContent: string) {
+  private inject(htmlContent: string) {
     if (this.type == InjectTypes.FixedPosition) {
       if (!this.parentSelector) {
         throw new Error("parentSelector is not set")
@@ -96,5 +100,21 @@ export default class PageInjector {
     } else {
       throw new Error("invalid inject type");
     }
+  }
+
+  waitInject(htmlContent: string, intervalInMs: number = 500) {
+    const id = setInterval(() => {
+      const isSelectorRendered = document.querySelector(this.parentSelector)
+
+      if (isSelectorRendered) {
+        this.inject(htmlContent)
+
+        clearInterval(id)
+      }
+
+      if (intervalInMs * ++this.waitCount > this.waitTimeOutInMs) {
+        clearInterval(id)
+      }
+    }, intervalInMs);
   }
 }
