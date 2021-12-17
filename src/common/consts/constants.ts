@@ -1,3 +1,5 @@
+import { InjectionTarget } from "@/common/types/types"
+
 export const AppBasePath = "pages/lazy-vaccine.html#"
 
 export const AppPages = {
@@ -97,3 +99,26 @@ export const DebounceTimeout = 500
 export const MaxTryAgainSignInCount = 3
 
 export const StaticBaseUrl = "https://static.lazyvaccine.com"
+
+export const InjectTypes = {
+  FixedPosition: 1,
+  DynamicGenerated: 2
+}
+
+export const ChromeMessageTypeToken = "get-chrome-token"
+export const ChromeMessageTypeGetRandomItem = "get-random-item"
+
+export const InjectionTargets = {
+  YoutubeHome: [
+    {
+      selector: "",
+      type: InjectTypes.DynamicGenerated
+    } as InjectionTarget
+  ],
+  YoutubeVideoView: [
+    {
+      selector: "#secondary",
+      type: InjectTypes.FixedPosition
+    } as InjectionTarget
+  ],
+}

@@ -30,11 +30,12 @@ import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useEventListener from "@/common/hooks/useEventListener"
 
 import ShibaBoxImg from "@img/emojis/shiba/box.png"
-import { deepClone, removeToNewArray } from "@/common/utils/utils"
+import { deepClone } from "@/common/utils/utils"
 import { ParamError } from "@/common/consts/errors"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import CacheKeys from "@/common/consts/cacheKeys"
 import SupportingLanguages from "@/common/consts/supportingLanguages"
+import { removeToNewArrayAtIndex } from "@/common/utils/arrayUtils"
 
 const { useRef, useState } = React
 
@@ -290,7 +291,7 @@ export const CreateSetItemsForm = () => {
                     className="button create-set-items--remove-button"
                     onClick={() => {
                       itemTypes[itemIndex] === ItemTypes.TermDef.value && setTermDefItemsCount(termDefItemsCount - 1)
-                      setItemTypes(removeToNewArray(itemTypes, itemIndex))
+                      setItemTypes(removeToNewArrayAtIndex(itemTypes, itemIndex))
                       removeItem(name)
                       setItemCount(itemCount - 1)
                     }}

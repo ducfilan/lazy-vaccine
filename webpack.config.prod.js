@@ -20,7 +20,7 @@ module.exports = (_, { mode }) => {
         import: "./src/pages/app/index.tsx",
         filename: "pages/[name].js"
       },
-      content: path.join(__dirname, "src/content.ts"),
+      content: path.join(__dirname, "src/content.tsx"),
       background: path.join(__dirname, "src/background.ts"),
     },
     output: { path: path.join(__dirname, "dist"), filename: "[name].js", publicPath: '/' },

@@ -108,3 +108,8 @@ export type PageInjectorSiblingSelectorParts = {
   ids: string[],
   attrs: string[]
 }
+
+export type InjectionTarget = {
+  selector: string,
+  type: number
+}

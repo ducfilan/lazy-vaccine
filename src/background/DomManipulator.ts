@@ -6,7 +6,7 @@ let _getConditionalCallback = function (selector: string, callback: Function) {
   };
 }
 
-export function addDynamicEventListener(rootElement: Element, eventType: any, selector: string, callback: Function, options: boolean | AddEventListenerOptions) {
+export function addDynamicEventListener(rootElement: Element, eventType: any, selector: string, callback: Function, options?: boolean | AddEventListenerOptions) {
   rootElement.addEventListener(eventType, _getConditionalCallback(selector, callback), options)
 }
 
