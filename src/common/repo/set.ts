@@ -39,3 +39,7 @@ export async function getTopSetsInCategory(http: Http, langCode: string = Defaul
 
   return response?.data.sets
 }
+
+export async function subscribeToSet(http: Http, setId: string): Promise<void> {
+  await http.post<any, AxiosResponse<any>>(Apis.subscription(setId))
+}

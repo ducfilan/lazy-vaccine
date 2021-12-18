@@ -229,6 +229,9 @@
   "common_subscribe": {
     "message": "Subscribe"
   },
+  "common_unsubscribe": {
+    "message": "Unsubscribe"
+  },
   "common_category": {
     "message": "Category"
   },

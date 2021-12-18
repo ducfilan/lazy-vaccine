@@ -7,6 +7,9 @@ import { SetInfo } from "@/common/types/types"
 import { AppPages } from "@/common/consts/constants"
 import { formatString, langCodeToName } from "@/common/utils/stringUtils"
 import { Link } from "react-router-dom"
+import { subscribeToSet } from "@/common/repo/set"
+import { useGlobalContext } from "@/common/contexts/GlobalContext"
+import { useState } from "react"
 
 const setImgStyle = {
   borderRadius: "40% 70% 70% 40%",
@@ -15,6 +18,10 @@ const setImgStyle = {
 const i18n = chrome.i18n.getMessage
 
 const TopSetItem = (props: { set: SetInfo }) => {
+  const { http } = useGlobalContext()
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(props.set.isSubscribed || false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
   return (
     <Card style={{ padding: "0 40px" }}>
       <Row justify="space-around" gutter={[16, 0]}>
@@ -79,8 +86,20 @@ const TopSetItem = (props: { set: SetInfo }) => {
             </Typography.Paragraph>
           </Row>
           <Row align="bottom">
-            <Button type="primary" className="is-uppercase" icon={<AimOutlined />}>
-              {i18n("common_subscribe")}
+            <Button
+              type="primary"
+              className="is-uppercase"
+              icon={<AimOutlined />}
+              loading={isLoading}
+              onClick={() => {
+                if (!http) return
+                setIsLoading(true)
+                subscribeToSet(http, props.set._id)
+                  .then(() => setIsSubscribed(!isSubscribed))
+                  .finally(() => setIsLoading(false))
+              }}
+            >
+              {i18n(isSubscribed ? "common_unsubscribe" : "common_subscribe")}
             </Button>
           </Row>
         </Col>
