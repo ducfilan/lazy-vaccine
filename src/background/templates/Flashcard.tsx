@@ -9,10 +9,10 @@ import "./css/flashcard.scss"
 export const FlashCardTemplate = () => {
   return (
     <div className="lazy-vaccine">
-      <DisclaimerInfo website="test" />
+      <DisclaimerInfo />
       <div className="flash-card flash-card-wrapper">
         <div className="card--face card--face--front">
-          {":term"}
+          <div className="card--face--front-content">{":term"}</div>
           <div className="card--interactions">
             <Button
               ghost

@@ -4,6 +4,17 @@
   box-shadow: $h-shadow $v-shadow $blur $spread $color;
 }
 
+@keyframes animate-right {
+  from {
+    right: -300px;
+    opacity: 0;
+  }
+  to {
+    right: 0;
+    opacity: 1;
+  }
+}
+
 $primary: #12b886;
 $white: #fff;
 
@@ -82,6 +93,9 @@ $white: #fff;
     }
 
     .card--face--front {
+      .card--face--front-content {
+        animation: animate-right 0.5s;
+      }
     }
 
     .card--face--back {

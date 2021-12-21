@@ -1,3 +1,5 @@
+import { RegexYoutubeHomePage, RegexYoutubeVideoView, RegexFacebookHomePage, SupportingPages } from "@/common/consts/constants";
+
 let _getConditionalCallback = function (selector: string, callback: Function) {
   return function (this: Element, e: any) {
     if (!e.target) return;
@@ -48,4 +50,20 @@ export function htmlStringToHtmlNodes(htmlString: string): NodeList {
 
 export function insertBefore(newNode: Node, referenceNode: Node) {
   referenceNode.parentNode?.insertBefore(newNode, referenceNode.nextSibling);
+}
+
+export function hrefToSiteName(href: string): string {
+  if (RegExp(RegexYoutubeHomePage).test(href)) {
+    return SupportingPages.youtube.title
+  }
+
+  if (RegExp(RegexYoutubeVideoView).test(href)) {
+    return SupportingPages.youtube.title
+  }
+
+  if (RegExp(RegexFacebookHomePage).test(href)) {
+    return SupportingPages.facebook.title
+  }
+
+  throw new Error("not supporting site")
 }

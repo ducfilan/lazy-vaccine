@@ -130,3 +130,8 @@ export const InjectionTargets = {
     } as InjectionTarget
   ],
 }
+
+export const RegexYoutubeHomePage = /^https:\/\/(www\.)*youtube\.com\/{0,1}$/
+export const RegexYoutubeVideoView = /^https:\/\/(www\.)*youtube\.com\/watch\?v=.*$/
+export const RegexYoutubeSearchResults = /^https:\/\/(www\.)*youtube\.com\/results\?search_query=(.*)$/
+export const RegexFacebookHomePage = /^https:\/\/(www\.)*facebook\.com\/{0,1}$/
