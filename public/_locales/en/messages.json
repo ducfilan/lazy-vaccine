@@ -241,6 +241,9 @@
   "common_edit_image": {
     "message": "Edit image"
   },
+  "common_inject_card_disclaimer": {
+    "message": "⚠ This content is not part of :website, this belongs to Lazy Vaccine"
+  },
   "select": {
     "message": "Select one"
   },

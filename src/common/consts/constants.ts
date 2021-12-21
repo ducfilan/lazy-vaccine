@@ -111,14 +111,22 @@ export const ChromeMessageTypeGetRandomItem = "get-random-item"
 export const InjectionTargets = {
   YoutubeHome: [
     {
-      selector: "",
-      type: InjectTypes.DynamicGenerated
+      selector: "#contents",
+      type: InjectTypes.DynamicGenerated,
+      siblingSelector: ".style-scope.ytd-rich-grid-row"
     } as InjectionTarget
   ],
   YoutubeVideoView: [
     {
       selector: "#secondary",
       type: InjectTypes.FixedPosition
+    } as InjectionTarget
+  ],
+  FacebookHomePage: [
+    {
+      selector: "[role='feed']",
+      type: InjectTypes.DynamicGenerated,
+      siblingSelector: "[data-pagelet='FeedUnit_{n}']"
     } as InjectionTarget
   ],
 }

@@ -1,8 +1,8 @@
 import { InjectTypes } from "@/common/consts/constants"
-import { PageInjectorSiblingSelectorParts } from "@/common/types/types"
+import { KeyValuePair, PageInjectorSiblingSelectorParts, SetInfoItem } from "@/common/types/types"
+import { formatString, trimQuotes } from "@/common/utils/stringUtils"
 import { MutationObserverFacade } from "@facades/mutationObserverFacade"
 import { htmlStringToHtmlNode, insertBefore } from "./DomManipulator"
-
 
 export default class PageInjector {
   private rate: number
@@ -32,82 +32,114 @@ export default class PageInjector {
     let selectorParts: PageInjectorSiblingSelectorParts = {
       tags: [],
       classes: [],
-      ids: [],
+      id: "",
       attrs: []
     };
 
     selectorString.split(/(?=\.)|(?=#)|(?=\[)/).forEach(function (token: string) {
       switch (token[0]) {
         case '#':
-          selectorParts.ids.push(token.slice(1));
-          break;
+          selectorParts.id = token.slice(1)
+          break
         case '.':
-          selectorParts.classes.push(token.slice(1));
-          break;
+          selectorParts.classes.push(token.slice(1))
+          break
         case '[':
-          selectorParts.attrs.push(...token.slice(1, -1).split('='));
-          break;
+          selectorParts.attrs.push([...token.slice(1, -1).split('=').map(part => trimQuotes(part))])
+          break
         default:
-          selectorParts.tags.push(token);
-          break;
+          selectorParts.tags.push(token)
+          break
       }
     });
 
     return selectorParts;
   }
 
-  private processAddedNodes(this: { htmlContent: string, siblingSelectorParts: PageInjectorSiblingSelectorParts }, nodes: Node[]) {
+  private isSiblingSelectorPartsEmpty(): boolean {
+    return this.siblingSelectorParts?.attrs.length == 0 &&
+      this.siblingSelectorParts.tags.length == 0 &&
+      this.siblingSelectorParts.classes.length == 0 &&
+      this.siblingSelectorParts.id === ""
+  }
+
+  private processAddedNodes(this: { htmlTemplate: string, siblingSelectorParts: PageInjectorSiblingSelectorParts, templateValueGetter: () => PromiseLike<SetInfoItem | null> }, nodes: Element[]) {
     nodes = Array.prototype.slice.call(nodes).filter(
-      node => {
-        if (node.classList == undefined || node.classList.length == 0) {
+      (node: Element) => {
+        if ((!node.classList || node.classList.length == 0) && !node.id && (!node.attributes || node.attributes.length == 0)) {
           return false;
         }
 
-        let classList = Array.prototype.slice.call(node.classList)
-        // TODO: Add filtering by ID.
-        return this.siblingSelectorParts.classes.every(c => classList.includes(c))
+        const classList = Array.prototype.slice.call(node.classList)
+        const attrs: NamedNodeMap = node.attributes
+
+        const isIdsMatch = this.siblingSelectorParts.id === "" || this.siblingSelectorParts.id == node.id
+        const isClassesMatch = this.siblingSelectorParts.classes.length === 0 || this.siblingSelectorParts.classes.every(c => classList.includes(c))
+        const isAttrsMatch = this.siblingSelectorParts.attrs.length == 0 || this.siblingSelectorParts.attrs.every(([attrKey, attrVal]) => attrs.getNamedItem(attrKey)?.value === attrVal)
+
+        return isIdsMatch && isClassesMatch && isAttrsMatch
       }
     );
 
     // TODO: Add rate processing logic.
-    nodes.forEach(node => insertBefore(htmlStringToHtmlNode(this.htmlContent), node))
+    nodes.length > 0 && nodes.forEach(async node => {
+      const item: SetInfoItem | null = await this.templateValueGetter()
+      if (!item) return
+
+      const htmlString = formatString(this.htmlTemplate, Object.entries(item).map(([key, value]) => ({ key, value } as KeyValuePair)))
+
+      insertBefore(htmlStringToHtmlNode(htmlString), node)
+    })
   }
 
-  private inject(htmlContent: string) {
+  private inject(htmlTemplate: string, templateValueGetter: () => Promise<SetInfoItem | null>) {
     if (this.type == InjectTypes.FixedPosition) {
-      if (!this.parentSelector) {
-        throw new Error("parentSelector is not set")
-      }
-
-      const node = htmlStringToHtmlNode(htmlContent)
-      if (!node) {
-        throw new Error("invalid htmlContent")
-      }
-
-      document.querySelector(this.parentSelector)?.prepend(node);
+      this.injectFixedPosition(htmlTemplate, templateValueGetter)
     } else if (this.type == InjectTypes.DynamicGenerated) {
-      if (!this.siblingSelectorParts) {
-        throw new Error("siblingSelectorParts is required when injecting dynamic generated content")
-      }
-
-      const observer = new MutationObserverFacade(
-        this.parentSelector,
-        null,
-        this.processAddedNodes.bind({ siblingSelectorParts: this.siblingSelectorParts, htmlContent })
-      )
-
-      observer.observe();
+      this.injectDynamicPosition(htmlTemplate, templateValueGetter)
     } else {
       throw new Error("invalid inject type");
     }
   }
 
-  waitInject(htmlContent: string, intervalInMs: number = 500) {
+  private async injectFixedPosition(htmlTemplate: string, templateValueGetter: () => Promise<SetInfoItem | null>) {
+    if (!this.parentSelector) {
+      throw new Error("parentSelector is not set")
+    }
+
+    const item: SetInfoItem | null = await templateValueGetter()
+    if (!item) return
+
+    const htmlString = formatString(htmlTemplate, Object.entries(item).map(([key, value]) => ({ key, value } as KeyValuePair)))
+
+    const node = htmlStringToHtmlNode(htmlTemplate)
+    if (!node) {
+      throw new Error("invalid htmlTemplate")
+    }
+
+    document.querySelector(this.parentSelector)?.prepend(node)
+  }
+
+  private injectDynamicPosition(htmlTemplate: string, templateValueGetter: () => Promise<SetInfoItem | null>) {
+    if (!this.siblingSelectorParts || this.isSiblingSelectorPartsEmpty()) {
+      throw new Error("siblingSelectorParts is required when injecting dynamic generated content")
+    }
+
+    const observer = new MutationObserverFacade(
+      this.parentSelector,
+      null,
+      this.processAddedNodes.bind({ siblingSelectorParts: this.siblingSelectorParts, htmlTemplate, templateValueGetter })
+    )
+
+    observer.observe()
+  }
+
+  waitInject(htmlContent: string, templateValueGetter: () => Promise<SetInfoItem | null>, intervalInMs: number = 500) {
     const id = setInterval(() => {
       const isSelectorRendered = document.querySelector(this.parentSelector)
 
       if (isSelectorRendered) {
-        this.inject(htmlContent)
+        this.inject(htmlContent, templateValueGetter)
 
         clearInterval(id)
       }

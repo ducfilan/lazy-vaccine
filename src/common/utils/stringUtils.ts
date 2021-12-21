@@ -59,3 +59,5 @@ export const getExtensionFromFileType = (fileType: string): string => {
       return "jpg"
   }
 }
+
+export const trimQuotes = (s: string) => s.replace(/^["'](.+(?=["']$))["']$/, '$1')

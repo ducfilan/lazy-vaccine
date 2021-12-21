@@ -2,6 +2,7 @@ import { ChromeMessageTypeGetRandomItem, ChromeMessageTypeToken, LoginTypes } fr
 import { getGoogleAuthToken } from "./common/facades/authFacade";
 import { Http } from "./common/facades/axiosFacade";
 import { getSetInfo } from "./common/repo/set";
+import { SetInfoItem } from "./common/types/types";
 import { randomIntFromInterval } from "./common/utils/numberUtils";
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -34,7 +35,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true
 })
 
-export async function getRandomSubscribedItem(http: Http): Promise<{ type: string;[key: string]: any } | null> {
+export async function getRandomSubscribedItem(http: Http): Promise<SetInfoItem | null> {
   // TODO: Dummy, need to update.
   const setInfo = await getSetInfo(http, "619e6cef8cfa8400a94f8e1d")
 

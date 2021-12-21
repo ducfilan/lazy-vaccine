@@ -1,0 +1,12 @@
+$primary: #12b886;
+$white: #fff;
+
+.lazy-vaccine {
+  .disclaimer-info {
+    background: $primary;
+    padding: 8px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: $white;
+  }
+}

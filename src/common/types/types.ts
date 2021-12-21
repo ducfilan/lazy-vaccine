@@ -85,11 +85,17 @@ export type SetInfo = {
   creatorName?: string
   description?: string
   tags?: string[]
-  items?: { type: string, [key: string]: any }[]
+  items?: SetInfoItem[]
   fromLanguage: LanguageCode
   toLanguage?: LanguageCode
   captchaToken?: string | null
   imgUrl?: string
+  isSubscribed?: boolean
+}
+
+export type SetInfoItem = {
+  type: string,
+  [key: string]: any
 }
 
 export type EventMap<T> = T extends Window
@@ -105,11 +111,12 @@ export type UploadImageResponse = {
 export type PageInjectorSiblingSelectorParts = {
   tags: string[],
   classes: string[],
-  ids: string[],
-  attrs: string[]
+  id: string,
+  attrs: string[][]
 }
 
 export type InjectionTarget = {
   selector: string,
-  type: number
+  type: number,
+  siblingSelector: string
 }
