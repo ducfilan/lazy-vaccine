@@ -8,11 +8,11 @@ import "./css/flashcard.scss"
 
 export const FlashCardTemplate = () => {
   return (
-    <div className="lazy-vaccine">
+    <div className="lazy-vaccine" data-first-stack-id=":firstStackId">
       <DisclaimerInfo />
       <div className="flash-card flash-card-wrapper">
         <div className="card--face card--face--front">
-          <div className="card--face--front-content">{":term"}</div>
+          <p>{":term"}</p>
           <div className="card--interactions">
             <Button
               ghost
@@ -34,7 +34,9 @@ export const FlashCardTemplate = () => {
             </Button>
           </div>
         </div>
-        <div className="card--face card--face--back">{":definition"}</div>
+        <div className="card--face card--face--back">
+          <p>{":definition"}</p>
+        </div>
       </div>
       <NextPrevButton direction="both" />
     </div>

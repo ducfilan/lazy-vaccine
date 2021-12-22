@@ -95,6 +95,7 @@ export type SetInfo = {
 
 export type SetInfoItem = {
   type: string,
+  _id: string,
   [key: string]: any
 }
 

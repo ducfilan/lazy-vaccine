@@ -1,4 +1,5 @@
 import { ChromeMessageTypeGetRandomItem, ChromeMessageTypeToken } from "@/common/consts/constants"
+import { SetInfoItem } from "@/common/types/types"
 
 function sendMessage(type: string, arg: any, resolve: Function, reject: Function) {
   chrome.runtime.sendMessage({ type, arg }, async function ({ success, result, error }) {
@@ -17,7 +18,7 @@ export async function requestGoogleToken() {
 }
 
 export async function getRandomSubscribedItem() {
-  return new Promise<{ type: string;[key: string]: any } | null>((resolve, reject) => {
+  return new Promise<SetInfoItem | null>((resolve, reject) => {
     sendMessage(ChromeMessageTypeGetRandomItem, null, resolve, reject)
   })
 }

@@ -6,17 +6,31 @@ import { FlashCardTemplate } from "./background/templates/Flashcard"
 import { addDynamicEventListener, hrefToSiteName, htmlStringToHtmlNode } from "./background/DomManipulator"
 import InjectionTargetFactory from "./background/InjectionTargetFactory"
 import { getRandomSubscribedItem } from "./background/MessagingFacade"
-import { KeyValuePair, SetInfoItem } from "./common/types/types"
+import { KeyValuePair, SetInfo, SetInfoItem } from "./common/types/types"
 import { formatString } from "./common/utils/stringUtils"
 
 const href = window.location.href
+const prevItemsStacks: { [key: string]: SetInfoItem[] } = {}
 
 const randomTemplateValues = async () => {
-  const item: SetInfoItem | null = await getRandomSubscribedItem()
+  const item = await randomSetInfoItem()
+  if (!item) return []
+
+  prevItemsStacks[item._id] = [item]
+
+  return toTemplateValues(item, { firstStackId: item._id })
+}
+
+const randomSetInfoItem = async (): Promise<SetInfoItem | null> => {
+  return await getRandomSubscribedItem()
+}
+
+const toTemplateValues = (item: SetInfoItem | null | undefined, otherKeyValueItems: { [key: string]: string } = {}) => {
   if (!item) return []
 
   const itemKeyValue = Object.entries(item).map(([key, value]) => ({ key, value } as KeyValuePair))
-  const otherKeyValue = [{ key: "website", value: hrefToSiteName(href) }]
+  let otherKeyValue = Object.entries(otherKeyValueItems).map(([key, value]) => ({ key, value } as KeyValuePair))
+  otherKeyValue = [...otherKeyValue, { key: "website", value: hrefToSiteName(href) }]
 
   return [...itemKeyValue, ...otherKeyValue]
 }
@@ -48,10 +62,40 @@ function registerFlashcardEvents() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--next-button", async (e: Event) => {
     e.stopPropagation()
 
+    const randomItem = await randomSetInfoItem()
+    if (!randomItem) return // TODO: Notice problem.
+
+    const nextButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement | null = nextButton.closest(".lazy-vaccine")
+    const firstStackId = wrapperElement?.dataset["firstStackId"]
+
+    if (!firstStackId) return // TODO: Notice problem.
+
+    prevItemsStacks[firstStackId].push(randomItem)
+
     const newItemNode = htmlStringToHtmlNode(
-      formatString(renderToString(<FlashCardTemplate />), await randomTemplateValues())
+      formatString(renderToString(<FlashCardTemplate />), toTemplateValues(randomItem, { firstStackId }))
     )
-    const nextButton = e.target as Element
-    nextButton.closest(".lazy-vaccine")?.replaceWith(newItemNode)
+
+    wrapperElement?.replaceWith(newItemNode)
+  })
+
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--prev-button", async (e: Event) => {
+    e.stopPropagation()
+
+    const prevButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement | null = prevButton.closest(".lazy-vaccine")
+    const firstStackId = wrapperElement?.dataset["firstStackId"]
+
+    if (!firstStackId || prevItemsStacks[firstStackId].length < 2) return // TODO: Notice problem.
+
+    prevItemsStacks[firstStackId].pop()
+    const prevItem = prevItemsStacks[firstStackId].slice(-1)[0]
+    if (!prevItem) return
+
+    const newItemNode = htmlStringToHtmlNode(
+      formatString(renderToString(<FlashCardTemplate />), toTemplateValues(prevItem, { firstStackId }))
+    )
+    wrapperElement?.replaceWith(newItemNode)
   })
 }
