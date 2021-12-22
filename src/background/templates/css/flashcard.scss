@@ -4,13 +4,13 @@
   box-shadow: $h-shadow $v-shadow $blur $spread $color;
 }
 
-@keyframes animate-right {
+@keyframes animate-fade {
   from {
-    right: -300px;
+    transform: scale(.8);
     opacity: 0;
   }
   to {
-    right: 0;
+    transform: scale(1);
     opacity: 1;
   }
 }
@@ -94,7 +94,7 @@ $white: #fff;
 
       p {
         padding: 0 44px;
-        animation: animate-right 0.5s;
+        animation: animate-fade 0.5s;
         width: 100%;
       }
     }
