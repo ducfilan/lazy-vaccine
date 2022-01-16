@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
-import { Button, Alert } from "antd"
+import { Button, Alert, Carousel } from "antd"
 import { GoogleOutlined } from "@ant-design/icons"
 import { signIn } from "@facades/authFacade"
 import { LoginTypes } from "@consts/constants"
@@ -10,6 +10,8 @@ import { User } from "@/common/types/types"
 
 import WanImg from "@img/emojis/shiba/wan.png"
 import PopupHeader from "./Header"
+import BlockQuote from "@/common/components/BlockQuote"
+import { quotes } from "@/common/consts/quotes"
 
 const { useState } = React
 
@@ -53,6 +55,11 @@ function FirstTime() {
           closable
           style={{ display: isShowLoginError ? "flex" : "none" }}
         />
+        <Carousel autoplay>
+          {quotes.map(({ quote, author }, i) => (
+            <BlockQuote key={i} quote={quote} author={`- ${author}`} />
+          ))}
+        </Carousel>
       </div>
     </>
   )

@@ -27,7 +27,7 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
                 <Button
                   type="link"
                   onClick={() => {
-                    signOut.call({ http }, () => {
+                    signOut(() => {
                       setUser(null)
                     })
                   }}

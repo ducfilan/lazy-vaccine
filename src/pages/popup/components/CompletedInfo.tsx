@@ -52,20 +52,20 @@ function HeaderContent() {
         <Card hoverable loading={isLoading} className="completed-info--stats">
           <Row gutter={[16, 0]}>
             <Col className="gutter-row" span={6}>
-              <Statistic title={chrome.i18n.getMessage("popup_stats_sets")} value={1128} prefix={<BookOutlined />} />
+              <Statistic title={chrome.i18n.getMessage("popup_stats_sets")} value={0} prefix={<BookOutlined />} />
             </Col>
             <Col className="gutter-row" span={12}>
               <Statistic
                 title={chrome.i18n.getMessage("common_items")}
-                value={2502}
+                value={0}
                 prefix={<OrderedListOutlined />}
-                suffix={`/ ${formatNumber(13212)}`}
+                suffix={`/ ${formatNumber(0)}`}
               />
             </Col>
             <Col className="gutter-row" span={6}>
               <Statistic
                 title={chrome.i18n.getMessage("popup_stats_trees_plant")}
-                value={32}
+                value={0}
                 prefix={<Icon component={TreeIcon} />}
               />
             </Col>

@@ -94,12 +94,16 @@ export default class PageInjector {
   }
 
   private inject(htmlTemplate: string, templateValueGetter: () => Promise<KeyValuePair[]>) {
-    if (this.type == InjectTypes.FixedPosition) {
-      this.injectFixedPosition(htmlTemplate, templateValueGetter)
-    } else if (this.type == InjectTypes.DynamicGenerated) {
-      this.injectDynamicPosition(htmlTemplate, templateValueGetter)
-    } else {
-      throw new Error("invalid inject type");
+    try {
+      if (this.type == InjectTypes.FixedPosition) {
+        this.injectFixedPosition(htmlTemplate, templateValueGetter)
+      } else if (this.type == InjectTypes.DynamicGenerated) {
+        this.injectDynamicPosition(htmlTemplate, templateValueGetter)
+      } else {
+        throw new Error("invalid inject type");
+      }
+    } catch (error) {
+      console.log("Lazy Vaccine: Unexpected error when injecting.")
     }
   }
 

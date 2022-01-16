@@ -127,6 +127,18 @@ export class Http {
   }
 }
 
+export function get<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
+  return axios.get<T, R>(url, config)
+}
+
+export function post<T = any, R = AxiosResponse<T>>(
+  url: string,
+  data?: T,
+  config?: AxiosRequestConfig
+): Promise<R> {
+  return axios.post<T, R>(url, data, config)
+}
+
 export function put<T = any, R = AxiosResponse<T>>(
   url: string,
   data?: T,

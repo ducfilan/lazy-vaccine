@@ -6,7 +6,7 @@ import { LoginTypes, MaxTryAgainSignInCount } from "@consts/constants"
 import CacheKeys from "@consts/cacheKeys"
 import { GoogleUserInfo, User } from "@/common/types/types"
 import registerSteps from "@consts/registerSteps"
-import { Http } from "./axiosFacade"
+import { get, Http } from "./axiosFacade"
 
 export function getGoogleAuthToken(options: any = {}, tryAgainCount: number = 0) {
   return new Promise<any>((resolve, reject) => {
@@ -38,7 +38,7 @@ export function signIn(this: any, type: string, callback: Function) {
 
         getGoogleAuthToken(options)
           .then(async (serviceAccessToken: string) => {
-            const { data: userInfo } = await http.get<any, AxiosResponse<GoogleUserInfo>>(
+            const { data: userInfo } = await get<any, AxiosResponse<GoogleUserInfo>>(
               `${GoogleApiUrls.getUserInfo}${serviceAccessToken}`
             )
 
@@ -50,7 +50,7 @@ export function signIn(this: any, type: string, callback: Function) {
             chrome.storage.sync.set({ [CacheKeys.isSignedOut]: false })
             callback(registeredUser)
           })
-          .catch(err => {
+          .catch(() => {
             signOut.call({ http })
             this.setIsShowLoginError(true)
           })
@@ -62,13 +62,11 @@ export function signIn(this: any, type: string, callback: Function) {
   }
 }
 
-export function signOut(this: any, callback?: () => void) {
+export function signOut(callback?: () => void) {
   try {
-    const http = <Http>this.http
-
     getGoogleAuthToken()
       .then((serviceAccessToken: string) => {
-        http.get(`${GoogleApiUrls.revokeToken}${serviceAccessToken}`)
+        fetch(`${GoogleApiUrls.revokeToken}${serviceAccessToken}`).then(callback)
         chrome.identity.removeCachedAuthToken({ token: serviceAccessToken }, callback)
       })
 
