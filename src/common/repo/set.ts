@@ -3,7 +3,7 @@ import { SetInfo, TopSetsResponse } from "@/common/types/types"
 import { AxiosResponse } from "axios"
 import Apis from "@consts/apis"
 import { ParamError } from "@consts/errors"
-import { DefaultLangCode } from "@consts/constants"
+import { DefaultLangCode, InteractionLike, InteractionSubscribe } from "@consts/constants"
 
 export async function createSet(http?: Http, setInfo?: SetInfo): Promise<string> {
   if (!http || !setInfo) throw new ParamError()
@@ -29,7 +29,17 @@ export async function getTopSets(http: Http, langCode: string = DefaultLangCode)
 
   if (!response?.data) throw new Error("cannot get top sets")
 
-  return response?.data.sets
+  let { topSets, interactions } = response?.data
+
+  topSets.forEach((topSet) => {
+    if (interactions) {
+      const actions = interactions.find(interaction => interaction.setId === topSet._id)?.actions
+      topSet.isSubscribed = actions?.includes(InteractionSubscribe)
+      topSet.isLiked = actions?.includes(InteractionLike)
+    }
+  })
+
+  return topSets
 }
 
 export async function getTopSetsInCategory(http: Http, langCode: string = DefaultLangCode, categoryId: string): Promise<SetInfo[]> {
@@ -37,7 +47,17 @@ export async function getTopSetsInCategory(http: Http, langCode: string = Defaul
 
   if (!response?.data) throw new Error(`cannot get top sets in category id: ${categoryId}, lang code: ${langCode}`)
 
-  return response?.data.sets
+  let { topSets, interactions } = response?.data
+
+  topSets.forEach((topSet) => {
+    if (interactions) {
+      const actions = interactions.find(interaction => interaction.setId === topSet._id)?.actions
+      topSet.isSubscribed = actions?.includes(InteractionSubscribe)
+      topSet.isLiked = actions?.includes(InteractionLike)
+    }
+  })
+
+  return topSets
 }
 
 export async function subscribeToSet(http: Http, setId: string): Promise<void> {

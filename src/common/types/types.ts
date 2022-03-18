@@ -63,9 +63,13 @@ export class CategoryResponse {
 }
 
 export type TopSetsResponse = {
-  _id: string
-  langCode: LanguageCode
-  sets: SetInfo[]
+  topSets: SetInfo[]
+  interactions: Interaction[] | null
+}
+
+export type Interaction = {
+  setId: string
+  actions: string[]
 }
 
 export type PreSignedUrlResponse = {
@@ -91,6 +95,7 @@ export type SetInfo = {
   captchaToken?: string | null
   imgUrl?: string
   isSubscribed?: boolean
+  isLiked?: boolean
 }
 
 export type SetInfoItem = {

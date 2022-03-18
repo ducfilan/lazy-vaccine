@@ -22,6 +22,7 @@ function FirstTime() {
   const { setUser, http } = useGlobalContext()
 
   function loginWithGoogle() {
+    setIsLoading(true)
     setIsShowLoginError(false)
 
     try {

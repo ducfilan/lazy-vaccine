@@ -4,7 +4,7 @@ import parse from "html-react-parser"
 import { Col, Row, Typography, Image, Card, Button, Space, Statistic } from "antd"
 import { AimOutlined, LikeFilled, DislikeFilled } from "@ant-design/icons"
 import { SetInfo } from "@/common/types/types"
-import { AppPages } from "@/common/consts/constants"
+import { AppPages, ColorPrimary } from "@/common/consts/constants"
 import { formatString, langCodeToName } from "@/common/utils/stringUtils"
 import { Link } from "react-router-dom"
 import { subscribeToSet } from "@/common/repo/set"
@@ -20,6 +20,7 @@ const i18n = chrome.i18n.getMessage
 const TopSetItem = (props: { set: SetInfo }) => {
   const { http } = useGlobalContext()
   const [isSubscribed, setIsSubscribed] = useState<boolean>(props.set.isSubscribed || false)
+  const [isLiked, setIsLiked] = useState<boolean>(props.set.isLiked || false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   return (
@@ -47,7 +48,12 @@ const TopSetItem = (props: { set: SetInfo }) => {
                 value={1128}
                 valueStyle={{ fontSize: 18 }}
                 prefix={
-                  <Button type="text" shape="circle" size="large" icon={<LikeFilled style={{ color: "grey" }} />} />
+                  <Button
+                    type="text"
+                    shape="circle"
+                    size="large"
+                    icon={<LikeFilled style={{ color: isLiked ? ColorPrimary : "grey" }} />}
+                  />
                 }
               />
               <Statistic
