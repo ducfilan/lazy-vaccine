@@ -96,6 +96,7 @@ export type SetInfo = {
   imgUrl?: string
   isSubscribed?: boolean
   isLiked?: boolean
+  isDisliked?: boolean
 }
 
 export type SetInfoItem = {

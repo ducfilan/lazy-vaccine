@@ -61,3 +61,13 @@
   background: $primary;
   color: $white;
 }
+
+.card-set-item-small {
+  .ant-card-actions > li:nth-child(1) {
+    width: 60% !important;
+  }
+
+  .ant-card-actions > li:nth-child(2) {
+    width: 40% !important;
+  }
+}

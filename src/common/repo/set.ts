@@ -60,6 +60,10 @@ export async function getTopSetsInCategory(http: Http, langCode: string = Defaul
   return topSets
 }
 
-export async function subscribeToSet(http: Http, setId: string): Promise<void> {
-  await http.post<any, AxiosResponse<any>>(Apis.subscription(setId))
+export async function interactToSet(http: Http, setId: string, action: string): Promise<void> {
+  await http.post<any, AxiosResponse<any>>(Apis.interaction(setId, action))
+}
+
+export async function undoInteractToSet(http: Http, setId: string, action: string): Promise<void> {
+  await http.delete<any, AxiosResponse<any>>(Apis.interaction(setId, action))
 }

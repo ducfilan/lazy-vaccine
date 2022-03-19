@@ -4,10 +4,16 @@ import parse from "html-react-parser"
 import { Col, Row, Typography, Image, Card, Button, Space, Statistic } from "antd"
 import { AimOutlined, LikeFilled, DislikeFilled } from "@ant-design/icons"
 import { SetInfo } from "@/common/types/types"
-import { AppPages, ColorPrimary } from "@/common/consts/constants"
+import {
+  AppPages,
+  ColorPrimary,
+  InteractionDislike,
+  InteractionLike,
+  InteractionSubscribe,
+} from "@/common/consts/constants"
 import { formatString, langCodeToName } from "@/common/utils/stringUtils"
 import { Link } from "react-router-dom"
-import { subscribeToSet } from "@/common/repo/set"
+import { interactToSet, undoInteractToSet } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { useState } from "react"
 
@@ -21,7 +27,32 @@ const TopSetItem = (props: { set: SetInfo }) => {
   const { http } = useGlobalContext()
   const [isSubscribed, setIsSubscribed] = useState<boolean>(props.set.isSubscribed || false)
   const [isLiked, setIsLiked] = useState<boolean>(props.set.isLiked || false)
+  const [isDisliked, setIsDisliked] = useState<boolean>(props.set.isDisliked || false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const handleInteract = async (
+    statusDeterminer: boolean,
+    statusDeterminerSetter: React.Dispatch<React.SetStateAction<boolean>>,
+    action: string
+  ) => {
+    if (!http) return
+    setIsLoading(true)
+
+    const caller = !statusDeterminer ? interactToSet : undoInteractToSet
+
+    caller(http, props.set._id, action)
+      .then(() => statusDeterminerSetter(!statusDeterminer))
+      .finally(() => setIsLoading(false))
+  }
+
+  const undoInteract = async (
+    statusDeterminerSetter: React.Dispatch<React.SetStateAction<boolean>>,
+    action: string
+  ) => {
+    if (!http) return
+
+    undoInteractToSet(http, props.set._id, action).then(() => statusDeterminerSetter(false))
+  }
 
   return (
     <Card style={{ padding: "0 40px" }}>
@@ -52,6 +83,10 @@ const TopSetItem = (props: { set: SetInfo }) => {
                     type="text"
                     shape="circle"
                     size="large"
+                    onClick={() => {
+                      handleInteract(isLiked, setIsLiked, InteractionLike)
+                      !isLiked && isDisliked && undoInteract(setIsDisliked, InteractionDislike)
+                    }}
                     icon={<LikeFilled style={{ color: isLiked ? ColorPrimary : "grey" }} />}
                   />
                 }
@@ -60,7 +95,16 @@ const TopSetItem = (props: { set: SetInfo }) => {
                 value={13}
                 valueStyle={{ fontSize: 18 }}
                 prefix={
-                  <Button type="text" shape="circle" size="large" icon={<DislikeFilled style={{ color: "grey" }} />} />
+                  <Button
+                    type="text"
+                    shape="circle"
+                    size="large"
+                    onClick={() => {
+                      handleInteract(isDisliked, setIsDisliked, InteractionDislike)
+                      !isDisliked && isLiked && undoInteract(setIsLiked, InteractionLike)
+                    }}
+                    icon={<DislikeFilled style={{ color: isDisliked ? ColorPrimary : "grey" }} />}
+                  />
                 }
               />
             </Space>
@@ -98,11 +142,7 @@ const TopSetItem = (props: { set: SetInfo }) => {
               icon={<AimOutlined />}
               loading={isLoading}
               onClick={() => {
-                if (!http) return
-                setIsLoading(true)
-                subscribeToSet(http, props.set._id)
-                  .then(() => setIsSubscribed(!isSubscribed))
-                  .finally(() => setIsLoading(false))
+                handleInteract(isSubscribed, setIsSubscribed, InteractionSubscribe)
               }}
             >
               {i18n(isSubscribed ? "common_unsubscribe" : "common_subscribe")}

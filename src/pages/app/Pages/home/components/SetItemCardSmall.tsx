@@ -5,9 +5,9 @@ import { UserOutlined, AimOutlined, LikeFilled, DislikeFilled } from "@ant-desig
 import { SetInfo } from "@/common/types/types"
 import { Link } from "react-router-dom"
 import { useState } from "react"
-import { subscribeToSet } from "@/common/repo/set"
+import { interactToSet, undoInteractToSet } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
-import { ColorPrimary } from "@/common/consts/constants"
+import { ColorPrimary, InteractionDislike, InteractionLike, InteractionSubscribe } from "@/common/consts/constants"
 
 const i18n = chrome.i18n.getMessage
 
@@ -16,9 +16,35 @@ const SetItemCardSmall = (props: { set: SetInfo }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isSubscribed, setIsSubscribed] = useState<boolean>(props.set.isSubscribed || false)
   const [isLiked, setIsLiked] = useState<boolean>(props.set.isLiked || false)
+  const [isDisliked, setIsDisliked] = useState<boolean>(props.set.isDisliked || false)
+
+  const handleInteract = async (
+    statusDeterminer: boolean,
+    statusDeterminerSetter: React.Dispatch<React.SetStateAction<boolean>>,
+    action: string
+  ) => {
+    if (!http) return
+    setIsLoading(true)
+
+    const caller = !statusDeterminer ? interactToSet : undoInteractToSet
+
+    caller(http, props.set._id, action)
+      .then(() => statusDeterminerSetter(!statusDeterminer))
+      .finally(() => setIsLoading(false))
+  }
+
+  const undoInteract = async (
+    statusDeterminerSetter: React.Dispatch<React.SetStateAction<boolean>>,
+    action: string
+  ) => {
+    if (!http) return
+
+    undoInteractToSet(http, props.set._id, action).then(() => statusDeterminerSetter(false))
+  }
 
   return (
     <Card
+      className="card-set-item-small"
       style={{ width: 300 }}
       cover={<img alt={props.set.name} src={props.set.imgUrl} />}
       actions={[
@@ -30,11 +56,7 @@ const SetItemCardSmall = (props: { set: SetInfo }) => {
           icon={<AimOutlined />}
           loading={isLoading}
           onClick={() => {
-            if (!http) return
-            setIsLoading(true)
-            subscribeToSet(http, props.set._id)
-              .then(() => setIsSubscribed(!isSubscribed))
-              .finally(() => setIsLoading(false))
+            handleInteract(isSubscribed, setIsSubscribed, InteractionSubscribe)
           }}
         >
           {i18n(isSubscribed ? "common_unsubscribe" : "common_subscribe")}
@@ -44,16 +66,29 @@ const SetItemCardSmall = (props: { set: SetInfo }) => {
             type="text"
             shape="circle"
             size="large"
+            onClick={() => {
+              handleInteract(isLiked, setIsLiked, InteractionLike)
+              !isLiked && isDisliked && undoInteract(setIsDisliked, InteractionDislike)
+            }}
             icon={<LikeFilled style={{ color: isLiked ? ColorPrimary : "grey" }} />}
           />
-          <Button type="text" shape="circle" size="large" icon={<DislikeFilled style={{ color: "grey" }} />} />
+          <Button
+            type="text"
+            shape="circle"
+            size="large"
+            onClick={() => {
+              handleInteract(isDisliked, setIsDisliked, InteractionDislike)
+              !isDisliked && isLiked && undoInteract(setIsLiked, InteractionLike)
+            }}
+            icon={<DislikeFilled style={{ color: isDisliked ? ColorPrimary : "grey" }} />}
+          />
         </Space>,
       ]}
     >
       <Card.Meta
         avatar={<Avatar src={props.set.creatorImageUrl} icon={<UserOutlined />} />}
         title={
-          <Link className="page-header--title" to={`/set-detail/${props.set._id}`}>
+          <Link className="page-header--title" to={`/set-detail/${props.set._id}`} title={props.set.name}>
             {props.set.name}
           </Link>
         }
