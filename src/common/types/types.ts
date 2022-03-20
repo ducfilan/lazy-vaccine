@@ -97,6 +97,9 @@ export type SetInfo = {
   isSubscribed?: boolean
   isLiked?: boolean
   isDisliked?: boolean
+  interactionCount?: {
+    [key: string]: number
+  }
 }
 
 export type SetInfoItem = {

@@ -29,29 +29,42 @@ const TopSetItem = (props: { set: SetInfo }) => {
   const [isLiked, setIsLiked] = useState<boolean>(props.set.isLiked || false)
   const [isDisliked, setIsDisliked] = useState<boolean>(props.set.isDisliked || false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [likeCount, setLikeCount] = useState<number>(props.set.interactionCount?.like || 0)
+  const [dislikeCount, setDislikeCount] = useState<number>(props.set.interactionCount?.dislike || 0)
 
   const handleInteract = async (
     statusDeterminer: boolean,
     statusDeterminerSetter: React.Dispatch<React.SetStateAction<boolean>>,
+    currentCount: number | null,
+    counterSetter: React.Dispatch<React.SetStateAction<number>> | null,
     action: string
   ) => {
     if (!http) return
     setIsLoading(true)
 
     const caller = !statusDeterminer ? interactToSet : undoInteractToSet
+    const counterChangeNumber = !statusDeterminer ? 1 : -1
 
     caller(http, props.set._id, action)
-      .then(() => statusDeterminerSetter(!statusDeterminer))
+      .then(() => {
+        statusDeterminerSetter(!statusDeterminer)
+        counterSetter && currentCount !== null && counterSetter(currentCount + counterChangeNumber)
+      })
       .finally(() => setIsLoading(false))
   }
 
   const undoInteract = async (
     statusDeterminerSetter: React.Dispatch<React.SetStateAction<boolean>>,
+    currentCount: number | null,
+    counterSetter: React.Dispatch<React.SetStateAction<number>> | null,
     action: string
   ) => {
     if (!http) return
 
-    undoInteractToSet(http, props.set._id, action).then(() => statusDeterminerSetter(false))
+    undoInteractToSet(http, props.set._id, action).then(() => {
+      counterSetter && currentCount !== null && counterSetter(currentCount - 1)
+      statusDeterminerSetter(false)
+    })
   }
 
   return (
@@ -76,7 +89,7 @@ const TopSetItem = (props: { set: SetInfo }) => {
           <Row>
             <Space size="large">
               <Statistic
-                value={1128}
+                value={likeCount}
                 valueStyle={{ fontSize: 18 }}
                 prefix={
                   <Button
@@ -84,15 +97,17 @@ const TopSetItem = (props: { set: SetInfo }) => {
                     shape="circle"
                     size="large"
                     onClick={() => {
-                      handleInteract(isLiked, setIsLiked, InteractionLike)
-                      !isLiked && isDisliked && undoInteract(setIsDisliked, InteractionDislike)
+                      handleInteract(isLiked, setIsLiked, likeCount, setLikeCount, InteractionLike)
+                      !isLiked &&
+                        isDisliked &&
+                        undoInteract(setIsDisliked, dislikeCount, setDislikeCount, InteractionDislike)
                     }}
                     icon={<LikeFilled style={{ color: isLiked ? ColorPrimary : "grey" }} />}
                   />
                 }
               />
               <Statistic
-                value={13}
+                value={dislikeCount}
                 valueStyle={{ fontSize: 18 }}
                 prefix={
                   <Button
@@ -100,8 +115,8 @@ const TopSetItem = (props: { set: SetInfo }) => {
                     shape="circle"
                     size="large"
                     onClick={() => {
-                      handleInteract(isDisliked, setIsDisliked, InteractionDislike)
-                      !isDisliked && isLiked && undoInteract(setIsLiked, InteractionLike)
+                      handleInteract(isDisliked, setIsDisliked, dislikeCount, setDislikeCount, InteractionDislike)
+                      !isDisliked && isLiked && undoInteract(setIsLiked, likeCount, setLikeCount, InteractionLike)
                     }}
                     icon={<DislikeFilled style={{ color: isDisliked ? ColorPrimary : "grey" }} />}
                   />
@@ -142,7 +157,7 @@ const TopSetItem = (props: { set: SetInfo }) => {
               icon={<AimOutlined />}
               loading={isLoading}
               onClick={() => {
-                handleInteract(isSubscribed, setIsSubscribed, InteractionSubscribe)
+                handleInteract(isSubscribed, setIsSubscribed, null, null, InteractionSubscribe)
               }}
             >
               {i18n(isSubscribed ? "common_unsubscribe" : "common_subscribe")}
