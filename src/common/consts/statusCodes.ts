@@ -6,4 +6,4 @@ enum StatusCode {
   InternalServerError = 500,
 }
 
-export default StatusCode;
+export default StatusCode

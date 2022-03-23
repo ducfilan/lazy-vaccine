@@ -1,11 +1,11 @@
-import { RegexYoutubeHomePage, RegexYoutubeVideoView, RegexFacebookHomePage, SupportingPages } from "@/common/consts/constants";
+import { RegexYoutubeHomePage, RegexYoutubeVideoView, RegexFacebookHomePage, SupportingPages } from "@/common/consts/constants"
 
 let _getConditionalCallback = function (selector: string, callback: Function) {
   return function (this: Element, e: any) {
-    if (!e.target) return;
-    if (!e.target.matches(selector) && !e.target.closest(selector)) return;
-    callback.apply(this, arguments);
-  };
+    if (!e.target) return
+    if (!e.target.matches(selector) && !e.target.closest(selector)) return
+    callback.apply(this, arguments)
+  }
 }
 
 export function addDynamicEventListener(rootElement: Element, eventType: any, selector: string, callback: Function, options?: boolean | AddEventListenerOptions) {
@@ -15,7 +15,7 @@ export function addDynamicEventListener(rootElement: Element, eventType: any, se
 export function openPage(pageName: string) {
   chrome.tabs.create({
     url: chrome.runtime.getURL(`pages/${pageName}`)
-  });
+  })
 }
 
 export function updatePageTitle(i18nKey: string) {
@@ -43,13 +43,13 @@ export function htmlStringToHtmlNode(htmlString: string): Node {
  * @return {NodeList}
  */
 export function htmlStringToHtmlNodes(htmlString: string): NodeList {
-  let template = document.createElement('template');
-  template.innerHTML = htmlString;
-  return template.content.childNodes;
+  let template = document.createElement('template')
+  template.innerHTML = htmlString
+  return template.content.childNodes
 }
 
 export function insertBefore(newNode: Node, referenceNode: Node) {
-  referenceNode.parentNode?.insertBefore(newNode, referenceNode.nextSibling);
+  referenceNode.parentNode?.insertBefore(newNode, referenceNode.nextSibling)
 }
 
 export function hrefToSiteName(href: string): string {

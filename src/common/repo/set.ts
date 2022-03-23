@@ -3,7 +3,7 @@ import { SetInfo, TopSetsResponse } from "@/common/types/types"
 import { AxiosResponse } from "axios"
 import Apis from "@consts/apis"
 import { ParamError } from "@consts/errors"
-import { DefaultLangCode, InteractionLike, InteractionSubscribe } from "@consts/constants"
+import { DefaultLangCode, InteractionDislike, InteractionLike, InteractionSubscribe } from "@consts/constants"
 
 export async function createSet(http?: Http, setInfo?: SetInfo): Promise<string> {
   if (!http || !setInfo) throw new ParamError()
@@ -36,6 +36,7 @@ export async function getTopSets(http: Http, langCode: string = DefaultLangCode)
       const actions = interactions.find(interaction => interaction.setId === topSet._id)?.actions
       topSet.isSubscribed = actions?.includes(InteractionSubscribe)
       topSet.isLiked = actions?.includes(InteractionLike)
+      topSet.isDisliked = !topSet.isLiked && actions?.includes(InteractionDislike)
     }
   })
 

@@ -1,9 +1,9 @@
-import { ChromeMessageTypeGetRandomItem, ChromeMessageTypeToken, LoginTypes } from "./common/consts/constants";
-import { getGoogleAuthToken } from "./common/facades/authFacade";
-import { Http } from "./common/facades/axiosFacade";
-import { getSetInfo } from "./common/repo/set";
-import { SetInfoItem } from "./common/types/types";
-import { randomIntFromInterval } from "./common/utils/numberUtils";
+import { ChromeMessageTypeGetRandomItem, ChromeMessageTypeToken, LoginTypes } from "./common/consts/constants"
+import { getGoogleAuthToken } from "./common/facades/authFacade"
+import { Http } from "./common/facades/axiosFacade"
+import { getSetInfo } from "./common/repo/set"
+import { SetInfoItem } from "./common/types/types"
+import { randomIntFromInterval } from "./common/utils/numberUtils"
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.type) {

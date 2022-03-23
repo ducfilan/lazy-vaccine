@@ -34,7 +34,7 @@ export default class PageInjector {
       classes: [],
       id: "",
       attrs: []
-    };
+    }
 
     selectorString.split(/(?=\.)|(?=#)|(?=\[)/).forEach(function (token: string) {
       switch (token[0]) {
@@ -51,9 +51,9 @@ export default class PageInjector {
           selectorParts.tags.push(token)
           break
       }
-    });
+    })
 
-    return selectorParts;
+    return selectorParts
   }
 
   private isSiblingSelectorPartsEmpty(): boolean {
@@ -71,7 +71,7 @@ export default class PageInjector {
     nodes = Array.prototype.slice.call(nodes).filter(
       (node: Element) => {
         if ((!node.classList || node.classList.length == 0) && !node.id && (!node.attributes || node.attributes.length == 0)) {
-          return false;
+          return false
         }
 
         const classList = Array.prototype.slice.call(node.classList)
@@ -83,7 +83,7 @@ export default class PageInjector {
 
         return isIdsMatch && isClassesMatch && isAttrsMatch
       }
-    );
+    )
 
     // TODO: Add rate processing logic.
     nodes.length > 0 && nodes.forEach(async node => {
@@ -100,7 +100,7 @@ export default class PageInjector {
       } else if (this.type == InjectTypes.DynamicGenerated) {
         this.injectDynamicPosition(htmlTemplate, templateValueGetter)
       } else {
-        throw new Error("invalid inject type");
+        throw new Error("invalid inject type")
       }
     } catch (error) {
       console.log("Lazy Vaccine: Unexpected error when injecting.")
@@ -152,6 +152,6 @@ export default class PageInjector {
       if (intervalInMs * ++this.waitCount > this.waitTimeOutInMs) {
         clearInterval(id)
       }
-    }, intervalInMs);
+    }, intervalInMs)
   }
 }
