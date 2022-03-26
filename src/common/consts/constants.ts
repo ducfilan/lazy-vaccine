@@ -118,7 +118,7 @@ export const InjectionTargets = {
   ],
   YoutubeVideoView: [
     {
-      selector: "#secondary",
+      selector: "#secondary.ytd-watch-flexy",
       type: InjectTypes.FixedPosition
     } as InjectionTarget
   ],

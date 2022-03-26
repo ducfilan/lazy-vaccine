@@ -8,8 +8,9 @@ import InjectionTargetFactory from "./background/InjectionTargetFactory"
 import { getRandomSubscribedItem } from "./background/MessagingFacade"
 import { KeyValuePair, SetInfo, SetInfoItem } from "./common/types/types"
 import { formatString } from "./common/utils/stringUtils"
+import { detectPageChanged } from "./common/utils/domUtils"
 
-const href = window.location.href
+const getHref = () => document.location.href
 const prevItemsStacks: { [key: string]: SetInfoItem[] } = {}
 
 const randomTemplateValues = async () => {
@@ -30,32 +31,41 @@ const toTemplateValues = (item: SetInfoItem | null | undefined, otherKeyValueIte
 
   const itemKeyValue = Object.entries(item).map(([key, value]) => ({ key, value } as KeyValuePair))
   let otherKeyValue = Object.entries(otherKeyValueItems).map(([key, value]) => ({ key, value } as KeyValuePair))
-  otherKeyValue = [...otherKeyValue, { key: "website", value: hrefToSiteName(href) }]
+  otherKeyValue = [...otherKeyValue, { key: "website", value: hrefToSiteName(getHref()) }]
 
   return [...itemKeyValue, ...otherKeyValue]
 }
 
-;(async () => {
+injectCards()
+detectPageChanged(injectCards)
+registerFlashcardEvents()
+
+async function injectCards() {
   try {
-    const injectionTargets = new InjectionTargetFactory(href).getTargets()
+    removeOldCards()
+
+    const injectionTargets = new InjectionTargetFactory(getHref()).getTargets()
 
     injectionTargets.forEach(async ({ type, selector, siblingSelector }) => {
       const injector = new PageInjector(1, type, selector, siblingSelector)
 
       injector.waitInject(renderToString(<FlashCardTemplate />), randomTemplateValues)
     })
-
-    registerFlashcardEvents()
   } catch (error) {
     console.log(`unexpected error: ${JSON.stringify(error)}`)
   }
-})()
+}
+
+function removeOldCards() {
+  document.querySelectorAll(".lazy-vaccine").forEach((el) => el.remove())
+}
 
 function registerFlashcardEvents() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card-wrapper", (e: Event) => {
     e.stopPropagation()
 
     const cardElement = e.target as Element
+    console.log(cardElement)
     cardElement.closest(".flash-card-wrapper")?.classList.toggle("is-flipped")
   })
 
