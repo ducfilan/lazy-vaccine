@@ -21,6 +21,12 @@ export async function getSetInfo(http: Http, setId: string): Promise<SetInfo> {
   const setInfo = response?.data
   if (!setInfo) throw new Error("cannot get set info")
 
+  if ((setInfo.actions?.length || 0) > 0) {
+    setInfo.isSubscribed = setInfo.actions?.includes(InteractionSubscribe)
+    setInfo.isLiked = setInfo.actions?.includes(InteractionLike)
+    setInfo.isDisliked = !setInfo.isLiked && setInfo.actions?.includes(InteractionDislike)
+  }
+
   return setInfo
 }
 

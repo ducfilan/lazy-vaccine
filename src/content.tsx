@@ -6,7 +6,7 @@ import { FlashCardTemplate } from "./background/templates/Flashcard"
 import { addDynamicEventListener, hrefToSiteName, htmlStringToHtmlNode } from "./background/DomManipulator"
 import InjectionTargetFactory from "./background/InjectionTargetFactory"
 import { getRandomSubscribedItem } from "./background/MessagingFacade"
-import { KeyValuePair, SetInfo, SetInfoItem } from "./common/types/types"
+import { KeyValuePair, SetInfoItem } from "./common/types/types"
 import { formatString } from "./common/utils/stringUtils"
 import { detectPageChanged } from "./common/utils/domUtils"
 

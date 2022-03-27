@@ -99,7 +99,8 @@ export type SetInfo = {
   isDisliked?: boolean
   interactionCount?: {
     [key: string]: number
-  }
+  },
+  actions?: string[]
 }
 
 export type SetInfoItem = {

@@ -37,7 +37,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 export async function getRandomSubscribedItem(http: Http): Promise<SetInfoItem | null> {
   // TODO: Dummy, need to update.
-  const setInfo = await getSetInfo(http, "61c2a8df22eb4edb22de208d")
+  const setInfo = await getSetInfo(http, "623e6aa4216621014c0b6f92")
 
   if (!setInfo || !setInfo.items || setInfo.items.length === 0) return null
   const randomPosition = randomIntFromInterval(0, setInfo.items.length - 1)

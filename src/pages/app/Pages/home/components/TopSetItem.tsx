@@ -26,9 +26,9 @@ const i18n = chrome.i18n.getMessage
 const TopSetItem = (props: { set: SetInfo }) => {
   const { http } = useGlobalContext()
   const [isSubscribed, setIsSubscribed] = useState<boolean>(props.set.isSubscribed || false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isLiked, setIsLiked] = useState<boolean>(props.set.isLiked || false)
   const [isDisliked, setIsDisliked] = useState<boolean>(props.set.isDisliked || false)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [likeCount, setLikeCount] = useState<number>(props.set.interactionCount?.like || 0)
   const [dislikeCount, setDislikeCount] = useState<number>(props.set.interactionCount?.dislike || 0)
 
