@@ -13,6 +13,17 @@ export async function createSet(http?: Http, setInfo?: SetInfo): Promise<string>
   return insertedSetId
 }
 
+export async function editSet(http?: Http, setInfo?: SetInfo): Promise<string> {
+  if (!http || !setInfo) throw new ParamError()
+
+  // Remove unnecessary info.
+  const { actions, creatorId, creatorName, interactionCount, isDisliked, isLiked, lastUpdated, isSubscribed, ...setInfoMinimized } = setInfo
+
+  await http.patch<any, AxiosResponse<string>>(Apis.sets, setInfoMinimized)
+
+  return setInfoMinimized._id
+}
+
 export async function getSetInfo(http: Http, setId: string): Promise<SetInfo> {
   if (!http || !setId) throw new ParamError()
 

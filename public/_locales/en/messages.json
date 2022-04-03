@@ -64,6 +64,9 @@
   "create_set_page_title": {
     "message": "Create a new set"
   },
+  "edit_set_page_title": {
+    "message": "Edit set"
+  },
   "create_set_field_name": {
     "message": "Name"
   },
@@ -243,6 +246,9 @@
   },
   "common_inject_card_disclaimer": {
     "message": "⚠ This content is not part of :website, this belongs to Lazy Vaccine"
+  },
+  "common_save_changes": {
+    "message": "Save changes"
   },
   "select": {
     "message": "Select one"

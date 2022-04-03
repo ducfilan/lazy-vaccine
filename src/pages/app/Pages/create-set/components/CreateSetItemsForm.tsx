@@ -25,7 +25,7 @@ import { MinusCircleFilled, PlusOutlined, ArrowLeftOutlined } from "@ant-design/
 
 import { useCreateSetContext } from "../contexts/CreateSetContext"
 import { LanguageCode, SetInfo } from "@/common/types/types"
-import { createSet } from "@/common/repo/set"
+import { createSet, editSet } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useEventListener from "@/common/hooks/useEventListener"
 
@@ -48,7 +48,7 @@ export const CreateSetItemsForm = () => {
   const { http } = useGlobalContext()
   const history = useHistory()
 
-  const { currentStep, setCurrentStep, setInfo, setSetInfo } = useCreateSetContext()
+  const { currentStep, setCurrentStep, setInfo, setSetInfo, isEdit } = useCreateSetContext()
 
   const [itemCount, setItemCount] = useState<number>(setInfo?.items?.length || DefaultInitItemCount)
 
@@ -88,7 +88,7 @@ export const CreateSetItemsForm = () => {
     const newSetInfo = { ...setInfo, ...itemsInfo } as SetInfo
 
     try {
-      const insertedSetId = await createSet(http, newSetInfo)
+      const insertedSetId = isEdit ? await editSet(http, newSetInfo) : await createSet(http, newSetInfo)
 
       history.push(AppPages.SetDetail.path.replace(":setId", insertedSetId))
     } catch (error) {
@@ -187,11 +187,11 @@ export const CreateSetItemsForm = () => {
                     placement="bottom"
                     onConfirm={() => formRef.submit()}
                     okButtonProps={{ disabled: !setInfo?.captchaToken }}
-                    okText={i18n("common_create")}
+                    okText={isEdit ? i18n("common_save_changes") : i18n("common_create")}
                     cancelText={i18n("common_back")}
                   >
                     <Button size="large" type="primary" className="is-uppercase">
-                      {i18n("create_set_create_button")}
+                      {isEdit ? i18n("common_save_changes") : i18n("create_set_create_button")}
                     </Button>
                   </Popconfirm>
                 </Space>

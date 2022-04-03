@@ -48,12 +48,12 @@ const resizeAndCompressImage = (file: File) =>
 export const CreateSetForm = () => {
   const { user, http } = useGlobalContext()
 
-  const { currentStep, setCurrentStep, setInfo, setSetInfo } = useCreateSetContext()
+  const { currentStep, setCurrentStep, setInfo, setSetInfo, isEdit } = useCreateSetContext()
 
   const [categories, setCategories] = useState<Category[]>([])
   const [tags, setTags] = useState<string[]>([])
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
-  const [cachedLastSetInfo, setCachedLastSetInfo] = useLocalStorage<SetInfo | null>(CacheKeys.lastSetInfo, null, "365d")
+  const [cachedLastSetInfo, setCachedLastSetInfo] = useLocalStorage<SetInfo | null>(CacheKeys.lastSetInfo, null, "7d")
   const [isDataSaved, setIsDataSaved] = useState<boolean>(true)
   const [imageFileName, setImageFileName] = useState<string>()
   const [imageUrl, setImageUrl] = useState<string>()
@@ -87,6 +87,8 @@ export const CreateSetForm = () => {
     if (!http || !user) return
 
     const ext = getExtensionFromFileType(file.type)
+
+    // TODO: Hash on server side.
     const uniqueFileName = `${getHash(user?.email)}_${getHash(file.name)}_${new Date().getTime()}.${ext}`
 
     const url = await getPreSignedUploadUrl(http, uniqueFileName, file.type)
@@ -156,13 +158,23 @@ export const CreateSetForm = () => {
     }
   }, [http, user])
 
+  useEffect(() => {
+    if (!setInfo) {
+      return
+    }
+
+    formRef.setFieldsValue(setInfo)
+    setImageUrl(setInfo.imgUrl)
+    formRef.setFieldsValue({ imgUrl: setInfo.imgUrl })
+  }, [setInfo])
+
   useEffect(() => preventReload(!isDataSaved), [isDataSaved])
 
   return (
     <>
       <Prompt when={!isDataSaved} message={i18n("leave_warning_message")} />
 
-      {cachedLastSetInfo && (
+      {cachedLastSetInfo && !isEdit && (
         <Alert
           message={i18n("create_set_having_unsaved_set_warning")}
           type="warning"

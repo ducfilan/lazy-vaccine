@@ -1,32 +1,56 @@
 import * as React from "react"
 
-import { Col, Row } from "antd"
+import { Col, notification, Row } from "antd"
 
 import PageHeader from "../../components/PageHeader"
 import { SetInfo } from "@/common/types/types"
+import { getSetInfo } from "@/common/repo/set"
+import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
 import { CreateSetContext } from "./contexts/CreateSetContext"
 import { CreateSetForm } from "./components/CreateSetForm"
 import { CreateSetRightHelper } from "./components/CreateSetRightHelper"
 import { CreateSetItemsForm } from "./components/CreateSetItemsForm"
 
-const { useState } = React
+const { useEffect, useState } = React
 
 const CreateSteps = {
   SetInfo: 0,
   SetItems: 1,
 }
 
-const CreateSetPage = () => {
+const CreateSetPage = (props: any) => {
+  const { http } = useGlobalContext()
   const [currentStep, setCurrentStep] = useState<number>(CreateSteps.SetInfo)
   const [setInfo, setSetInfo] = useState<SetInfo>()
+
+  const setId = props.match.params.setId
+  const isEdit = !!setId
+
+  const i18n = chrome.i18n.getMessage
+
+  function onPageLoaded() {
+    if (!http || !setId) return
+
+    getSetInfo(http, setId)
+      .then(setSetInfo)
+      .catch(() => {
+        notification["error"]({
+          message: i18n("error"),
+          description: i18n("unexpected_error_message"),
+          duration: null,
+        })
+      })
+  }
+
+  useEffect(onPageLoaded, [http])
 
   const renderContent = (currentStep: number) => {
     switch (currentStep) {
       case CreateSteps.SetInfo:
         return (
           <>
-            <PageHeader innerContent={chrome.i18n.getMessage("create_set_page_title")} />
+            <PageHeader innerContent={isEdit ? i18n("edit_set_page_title") : i18n("create_set_page_title")} />
             <Row gutter={[16, 16]}>
               <Col xs={{ span: 24 }} lg={{ span: 16 }}>
                 <CreateSetForm />
@@ -47,7 +71,7 @@ const CreateSetPage = () => {
   }
 
   return (
-    <CreateSetContext.Provider value={{ currentStep, setCurrentStep, setInfo, setSetInfo }}>
+    <CreateSetContext.Provider value={{ currentStep, setCurrentStep, setInfo, setSetInfo, isEdit }}>
       <div className="create-set--wrapper">{renderContent(currentStep)}</div>
     </CreateSetContext.Provider>
   )

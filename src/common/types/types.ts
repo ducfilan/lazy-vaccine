@@ -100,7 +100,8 @@ export type SetInfo = {
   interactionCount?: {
     [key: string]: number
   },
-  actions?: string[]
+  actions?: string[],
+  lastUpdated?: string,
 }
 
 export type SetInfoItem = {

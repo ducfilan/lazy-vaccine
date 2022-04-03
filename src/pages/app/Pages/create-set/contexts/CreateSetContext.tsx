@@ -6,6 +6,7 @@ export type Context = {
   setCurrentStep: (currentStep: number) => void
   setInfo?: SetInfo
   setSetInfo: (setInfo: SetInfo) => void
+  isEdit: boolean
 }
 
 export const CreateSetContext = createContext<Context>({
@@ -13,6 +14,7 @@ export const CreateSetContext = createContext<Context>({
   setCurrentStep: () => {},
   setInfo: undefined,
   setSetInfo: () => {},
+  isEdit: false,
 })
 
 export const useCreateSetContext = () => useContext(CreateSetContext)

@@ -65,7 +65,6 @@ function registerFlashcardEvents() {
     e.stopPropagation()
 
     const cardElement = e.target as Element
-    console.log(cardElement)
     cardElement.closest(".flash-card-wrapper")?.classList.toggle("is-flipped")
   })
 

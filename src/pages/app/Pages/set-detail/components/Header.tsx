@@ -7,6 +7,7 @@ import { Link } from "react-router-dom"
 import { formatString, langCodeToName } from "@/common/utils/stringUtils"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { useSetDetailContext } from "../contexts/SetDetailContext"
+import { AppPages } from "@/common/consts/constants"
 
 const i18n = chrome.i18n.getMessage
 
@@ -71,9 +72,11 @@ const Header = () => {
           <Col span={6}>
             <Space className="float-right">
               {user?._id === setInfo?.creatorId && (
-                <Button type="primary" className="is-uppercase" icon={<EditOutlined />}>
-                  {i18n("set_detail_edit_set")}
-                </Button>
+                <Link to={`${AppPages.EditSet.path.replace(":setId", setInfo?._id || "")}`}>
+                  <Button type="primary" className="is-uppercase" icon={<EditOutlined />}>
+                    {i18n("set_detail_edit_set")}
+                  </Button>
+                </Link>
               )}
             </Space>
           </Col>

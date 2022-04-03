@@ -102,6 +102,7 @@ const AppPage = () => {
                 <Switch>
                   <Route exact path={AppPages.Home.path} component={HomePage} />
                   <Route path={AppPages.CreateSet.path} component={CreateSetPage} />
+                  <Route path={AppPages.EditSet.path} component={CreateSetPage} />
                   <Route path={AppPages.Sets.path} component={SetsPage} />
                   <Route path={AppPages.SetDetail.path} component={SetDetailPage} />
                 </Switch>
