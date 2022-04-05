@@ -67,6 +67,11 @@ export type TopSetsResponse = {
   interactions: Interaction[] | null
 }
 
+export type SearchSetsResponse = {
+  sets: SetInfo[]
+  interactions: Interaction[] | null
+}
+
 export type Interaction = {
   setId: string
   actions: string[]

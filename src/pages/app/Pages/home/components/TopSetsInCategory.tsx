@@ -4,8 +4,8 @@ import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { useState } from "react"
 import { SetInfo } from "@/common/types/types"
 import { getTopSetsInCategory } from "@/common/repo/set"
-import SetItemCardSmall from "./SetItemCardSmall"
 import { List, Skeleton, Typography } from "antd"
+import SetItemCardSmall from "@/pages/app/components/SetItemCardSmall"
 
 const { useEffect } = React
 

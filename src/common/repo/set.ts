@@ -1,5 +1,5 @@
 import { Http } from "../facades/axiosFacade"
-import { SetInfo, TopSetsResponse } from "@/common/types/types"
+import { SearchSetsResponse, SetInfo, TopSetsResponse } from "@/common/types/types"
 import { AxiosResponse } from "axios"
 import Apis from "@consts/apis"
 import { ParamError } from "@consts/errors"
@@ -84,4 +84,22 @@ export async function interactToSet(http: Http, setId: string, action: string): 
 
 export async function undoInteractToSet(http: Http, setId: string, action: string): Promise<void> {
   await http.delete<any, AxiosResponse<any>>(Apis.interaction(setId, action))
+}
+
+export async function searchSets(http: Http, keyword: string) {
+  const response = await http.get<any, AxiosResponse<SearchSetsResponse>>(`${Apis.sets}?keyword=${keyword}`)
+
+  if (!response?.data) throw new Error(`cannot search sets with keyword: ${keyword}`)
+
+  let { sets, interactions } = response?.data
+
+  sets.forEach((set) => {
+    if (interactions) {
+      const actions = interactions.find(interaction => interaction.setId === set._id)?.actions
+      set.isSubscribed = actions?.includes(InteractionSubscribe)
+      set.isLiked = actions?.includes(InteractionLike)
+    }
+  })
+
+  return sets
 }

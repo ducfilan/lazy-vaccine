@@ -250,6 +250,9 @@
   "common_save_changes": {
     "message": "Save changes"
   },
+  "common_search_result": {
+    "message": "Search result"
+  },
   "select": {
     "message": "Select one"
   },

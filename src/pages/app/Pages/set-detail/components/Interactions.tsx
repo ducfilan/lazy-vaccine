@@ -17,7 +17,7 @@ import { interactToSet, undoInteractToSet } from "@/common/repo/set"
 const i18n = chrome.i18n.getMessage
 
 const Interactions = () => {
-  const { user, http } = useGlobalContext()
+  const { http } = useGlobalContext()
   const { setInfo } = useSetDetailContext()
 
   if (!setInfo) {

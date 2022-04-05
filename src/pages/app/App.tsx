@@ -25,6 +25,7 @@ import { Http } from "@facades/axiosFacade"
 import { GlobalContext } from "@/common/contexts/GlobalContext"
 import { Route, Switch, useHistory, useLocation } from "react-router-dom"
 import { Locale } from "antd/lib/locale-provider"
+import SearchResultPage from "./Pages/search-result/SearchResult"
 
 const { Content } = Layout
 
@@ -79,6 +80,9 @@ const AppPage = () => {
                 className="is-absolute"
                 size="large"
                 suffix={<SearchOutlined style={{ color: "rgba(0,0,0,.45)" }} />}
+                onPressEnter={({ target }) => {
+                  history.push(`${AppPages.Sets.path}?keyword=${(target as HTMLInputElement).value}`)
+                }}
               />
             }
             extraComponents={[
@@ -103,7 +107,7 @@ const AppPage = () => {
                   <Route exact path={AppPages.Home.path} component={HomePage} />
                   <Route path={AppPages.CreateSet.path} component={CreateSetPage} />
                   <Route path={AppPages.EditSet.path} component={CreateSetPage} />
-                  <Route path={AppPages.Sets.path} component={SetsPage} />
+                  <Route path={AppPages.Sets.path} component={SearchResultPage} />
                   <Route path={AppPages.SetDetail.path} component={SetDetailPage} />
                 </Switch>
               </Content>
