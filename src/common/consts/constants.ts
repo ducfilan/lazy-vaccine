@@ -32,7 +32,7 @@ export const AppPages = {
     name: "Set detail",
     path: "/set-detail/:setId",
     isSideNav: false,
-  }
+  },
 }
 
 export const LoginTypes = {

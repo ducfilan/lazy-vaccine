@@ -6,7 +6,7 @@ import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { Category } from "@/common/types/types"
 import CacheKeys from "@/common/consts/cacheKeys"
 import { getCategories } from "@/common/repo/category"
-import { useHomeContext } from "../contexts/HomeContext"
+import { useHomeContext } from "../Pages/home/contexts/HomeContext"
 
 const { Title } = Typography
 const { Sider } = Layout
@@ -42,13 +42,8 @@ const getParentKey = (key: string, tree: any): string => {
   return parentKey
 }
 
-const CategoriesSider = (props: { width: number; path: string }) => {
-  const { user, http } = useGlobalContext()
-  const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
-
-  const { categories, setCategories } = useHomeContext()
-
-  const categoriesKeys: any[] = useMemo(() => flattenCategories(categories || [], Infinity), [categories])
+const CategoriesSider = (props: { width: number; path: string, categories: Category[] | undefined }) => {
+  const categoriesKeys: any[] = useMemo(() => flattenCategories(props.categories || [], Infinity), [props.categories])
   const [expandedKeys, setExpandedKeys] = useState<any[]>()
 
   function lookupCategories(e: any) {
@@ -57,7 +52,7 @@ const CategoriesSider = (props: { width: number; path: string }) => {
     const keysToExpand = categoriesKeys
       .map((item) => {
         if (item.title.toLowerCase().indexOf(value.toLowerCase()) > -1) {
-          return getParentKey(item.key, categories)
+          return getParentKey(item.key, props.categories)
         }
         return null
       })
@@ -66,27 +61,14 @@ const CategoriesSider = (props: { width: number; path: string }) => {
     setExpandedKeys(keysToExpand)
   }
 
-  useEffect(() => {
-    if (!http || !user) return
-
-    if (cachedCategories) {
-      setCategories(cachedCategories)
-    } else {
-      getCategories(http, user.locale).then((categories: Category[]) => {
-        setCategories(categories)
-        setCachedCategories(categories)
-      })
-    }
-  }, [http, user])
-
   return (
     <Sider width={props.width} className="categories-sider--wrapper pad-16px">
       <Title level={4}>{i18n("common_category")}</Title>
       <Divider />
       <Input placeholder={i18n("home_category_lookup")} onChange={lookupCategories} className="bot-16px" />
       {/* The states in Ant design which are prefixed with default only work when they are rendered for the first time */}
-      {categories && categories.length > 0 && (
-        <Tree treeData={categories} expandedKeys={expandedKeys} onExpand={setExpandedKeys} />
+      {props.categories && props.categories.length > 0 && (
+        <Tree treeData={props.categories} expandedKeys={expandedKeys} onExpand={setExpandedKeys} />
       )}
     </Sider>
   )

@@ -10,6 +10,10 @@ import { Layout, Skeleton, Typography } from "antd"
 import { Category, SetInfo } from "@/common/types/types"
 import SearchResultItems from "./components/SearchResultItems"
 import { AppPages } from "@/common/consts/constants"
+import CategoriesSider from "@/pages/app/components/CategoriesSider"
+import CacheKeys from "@/common/consts/cacheKeys"
+import useLocalStorage from "@/common/hooks/useLocalStorage"
+import { getCategories } from "@/common/repo/category"
 
 const { Content } = Layout
 
@@ -30,6 +34,7 @@ const SearchResultPage = (props: any) => {
   const [searchedSets, setSearchedSets] = useState<SetInfo[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [categories, setCategories] = useState<Category[]>()
+  const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
 
   useEffect(() => {
     if (!http || !user) return
@@ -46,20 +51,36 @@ const SearchResultPage = (props: any) => {
   useEffect(onPageLoaded, [http])
   useEffect(() => setLoading(false), [])
 
+  useEffect(() => {
+    if (!http || !user) return
+
+    if (cachedCategories) {
+      setCategories(cachedCategories)
+    } else {
+      getCategories(http, user.locale).then((categories: Category[]) => {
+        setCategories(categories)
+        setCachedCategories(categories)
+      })
+    }
+  }, [http, user])
+
   return (
     <SearchResultContext.Provider value={{ categories, setCategories }}>
-      <Skeleton active loading={loading}>
-        <Layout className="body-content">
-          <Layout style={{ padding: 24 }}>
-            <Content>
-              <Typography.Title level={3} className="top--25px">
-                {i18n("common_search_result")}
-              </Typography.Title>
-              <SearchResultItems sets={searchedSets} />
-            </Content>
-          </Layout>
+      <Layout className="body-content">
+        <CategoriesSider width={250} path={""} categories={categories} />
+        <Layout style={{ padding: 24 }}>
+          <Content>
+            <Skeleton active loading={loading}>
+              <Content>
+                <Typography.Title level={3} className="top--25px">
+                  {i18n("common_search_result")}
+                </Typography.Title>
+                <SearchResultItems sets={searchedSets} />
+              </Content>
+            </Skeleton>
+          </Content>
         </Layout>
-      </Skeleton>
+      </Layout>
     </SearchResultContext.Provider>
   )
 }
