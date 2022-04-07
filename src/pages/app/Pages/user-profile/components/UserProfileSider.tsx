@@ -3,7 +3,7 @@ import { Divider, Layout, Typography, Menu } from "antd"
 import { AimOutlined, LikeFilled, FormOutlined } from "@ant-design/icons"
 
 import { useUserProfileContext } from "../contexts/UserProfileContext"
-import Avatar from "react-avatar"
+import AvatarImage from "@/common/components/AvatarImage"
 
 const { Title } = Typography
 const { Sider } = Layout
@@ -19,7 +19,7 @@ const UserProfileSider = (props: { width: number; path: string }) => {
   return (
     <Sider width={props.width} className="user-profile-sider--wrapper pad-16px">
       <div className="has-text-centered">
-        <Avatar src={user.pictureUrl} size={`${props.width / 2}`} round={true} name={user.name} textSizeRatio={1.75} />
+        <AvatarImage imageUrl={user.pictureUrl} size={props.width / 2} fallbackCharacter={`${user.name}?`[0]} />
         <Title level={4}>{user.name}</Title>
       </div>
       <Divider />

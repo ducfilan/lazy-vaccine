@@ -9,6 +9,7 @@ import { signOut } from "@facades/authFacade"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import AvatarImage from "./AvatarImage"
 import { HashRouter, Link } from "react-router-dom"
+import { AppPages } from "@consts/constants"
 
 const DropdownMenu = (props: { isLoggedIn: boolean }) => {
   const { user, setUser, http } = useGlobalContext()
@@ -20,7 +21,7 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
           {props.isLoggedIn && (
             <>
               <Menu.Item key="name">
-                <RightCircleOutlined /> {user?.name}
+                <RightCircleOutlined /> <Link to={AppPages.MySpace.path}>{user?.name}</Link>
               </Menu.Item>
               <Menu.Divider />
               <Menu.Item key="logout">
@@ -77,7 +78,11 @@ function Navbar(props: { extraComponents?: React.ReactNode[]; centerComponent?: 
         avatar={{ gap: 0, src: AppLog, size: 48 }}
         extra={[
           ...(props.extraComponents || []),
-          isLoggedIn ? <AvatarImage key="avatar" imageUrl={user?.pictureUrl} /> : <div key="avatar"></div>,
+          isLoggedIn ? (
+            <AvatarImage key="avatar" imageUrl={user?.pictureUrl} link={AppPages.MySpace.path} />
+          ) : (
+            <div key="avatar"></div>
+          ),
           <DropdownMenu key="menu" isLoggedIn={isLoggedIn} />,
         ]}
       >
