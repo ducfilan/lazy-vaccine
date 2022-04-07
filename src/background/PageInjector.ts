@@ -87,7 +87,10 @@ export default class PageInjector {
 
     // TODO: Add rate processing logic.
     nodes.length > 0 && nodes.forEach(async node => {
-      const htmlString = formatString(this.htmlTemplate, await this.templateValueGetter())
+      const templateValue = await this.templateValueGetter()
+      if (!templateValue || templateValue.length === 0) return
+
+      const htmlString = formatString(this.htmlTemplate, templateValue)
 
       insertBefore(htmlStringToHtmlNode(htmlString), node)
     })
@@ -112,7 +115,10 @@ export default class PageInjector {
       throw new Error("parentSelector is not set")
     }
 
-    const htmlString = formatString(htmlTemplate, await templateValueGetter())
+    const templateValue = await templateValueGetter()
+    if (!templateValue || templateValue.length === 0) return
+
+    const htmlString = formatString(htmlTemplate, templateValue)
 
     const node = htmlStringToHtmlNode(htmlString)
     if (!node) {

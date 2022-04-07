@@ -23,7 +23,12 @@ const randomTemplateValues = async () => {
 }
 
 const randomSetInfoItem = async (): Promise<SetInfoItem | null> => {
-  return await getRandomSubscribedItem()
+  try {
+    return await getRandomSubscribedItem()
+  } catch (error) {
+    console.error(error)
+    return null
+  }
 }
 
 const toTemplateValues = (item: SetInfoItem | null | undefined, otherKeyValueItems: { [key: string]: string } = {}) => {
