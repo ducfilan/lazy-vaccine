@@ -38,7 +38,10 @@ const Header = () => {
         <Row gutter={8}>
           <Col flex="none">{i18n("common_creator")}:</Col>
           <Col flex="auto">
-            <Link className="page-header--title" to={`/users/${setInfo?.creatorId}`}>
+            <Link
+              className="page-header--title"
+              to={`${AppPages.UserProfile.path.replace(":userId", setInfo?.creatorId || "")}`}
+            >
               {setInfo?.creatorName}
             </Link>
           </Col>
