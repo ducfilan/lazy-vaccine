@@ -1,0 +1,8 @@
+.user-profile-sider--wrapper {
+  background: $white;
+  border-radius: 5px;
+
+  .ant-menu-vertical {
+    border-right: none !important;
+  }
+}

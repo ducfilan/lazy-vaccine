@@ -1,12 +1,7 @@
 import * as React from "react"
 import { Divider, Input, Layout, Tree, Typography } from "antd"
 
-import { useGlobalContext } from "@/common/contexts/GlobalContext"
-import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { Category } from "@/common/types/types"
-import CacheKeys from "@/common/consts/cacheKeys"
-import { getCategories } from "@/common/repo/category"
-import { useHomeContext } from "../Pages/home/contexts/HomeContext"
 
 const { Title } = Typography
 const { Sider } = Layout

@@ -12,7 +12,7 @@ import CompletedInfo from "./components/CompletedInfo"
 
 import RegisterSteps from "@consts/registerSteps"
 
-import { getUserInfo } from "@/common/repo/user"
+import { getMyInfo } from "@/common/repo/user"
 import { User } from "@/common/types/types"
 import { getGoogleAuthToken } from "@facades/authFacade"
 import { Http } from "@facades/axiosFacade"
@@ -39,7 +39,7 @@ const PopupPage = () => {
   useEffect(() => {
     if (!http) return
 
-    getUserInfo(http)
+    getMyInfo(http)
       .then((userInfo) => {
         setUser(userInfo)
         setIsLoading(false)

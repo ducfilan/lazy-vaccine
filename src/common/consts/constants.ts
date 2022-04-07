@@ -13,7 +13,7 @@ export const AppPages = {
     key: "side-find-sets",
     name: "Find sets",
     path: "/sets",
-    isSideNav: true,
+    isSideNav: false,
   },
   CreateSet: {
     key: "create-set",
@@ -32,6 +32,18 @@ export const AppPages = {
     name: "Set detail",
     path: "/set-detail/:setId",
     isSideNav: false,
+  },
+  UserProfile: {
+    key: "user-profile",
+    name: "User profile",
+    path: "/user-profile/:userId",
+    isSideNav: false,
+  },
+  MySpace: {
+    key: "my-space",
+    name: "My space",
+    path: "/me",
+    isSideNav: true,
   },
 }
 
@@ -145,5 +157,6 @@ export const RegexFacebookHomePage = /^https:\/\/(www\.)*facebook\.com\/{0,1}$/
 export const InteractionSubscribe = "subscribe"
 export const InteractionLike = "like"
 export const InteractionDislike = "dislike"
+export const InteractionCreate = "create"
 
 export const ColorPrimary = "#12b886"

@@ -23,7 +23,7 @@ const setImgStyle = {
 
 const i18n = chrome.i18n.getMessage
 
-const TopSetItem = (props: { set: SetInfo }) => {
+const SetItemCardLong = (props: { set: SetInfo }) => {
   const { http } = useGlobalContext()
   const [isSubscribed, setIsSubscribed] = useState<boolean>(props.set.isSubscribed || false)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -68,7 +68,7 @@ const TopSetItem = (props: { set: SetInfo }) => {
   }
 
   return (
-    <Card style={{ padding: "0 40px" }}>
+    <Card style={{ padding: "0 40px", width: "100%" }}>
       <Row justify="space-around" gutter={[16, 0]}>
         <Col flex="none">
           <Image style={setImgStyle} width={200} height={200} src={props.set.imgUrl} preview={false} />
@@ -169,4 +169,4 @@ const TopSetItem = (props: { set: SetInfo }) => {
   )
 }
 
-export default TopSetItem
+export default SetItemCardLong

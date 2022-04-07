@@ -232,6 +232,15 @@
   "common_subscribe": {
     "message": "Subscribe"
   },
+  "common_subscribed": {
+    "message": "Subscribed"
+  },
+  "common_liked": {
+    "message": "Liked"
+  },
+  "common_created": {
+    "message": "Created"
+  },
   "common_unsubscribe": {
     "message": "Unsubscribe"
   },

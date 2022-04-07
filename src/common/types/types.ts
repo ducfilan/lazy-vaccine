@@ -81,6 +81,11 @@ export type PreSignedUrlResponse = {
   url: string
 }
 
+export type UserInteractionSetsResponse = {
+  actions: string[]
+  set: SetInfo
+}
+
 export type LanguageCode = keyof typeof SupportingLanguages.Set
 
 export type SetInfo = {

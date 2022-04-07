@@ -1,8 +1,6 @@
 import * as React from "react"
 import { Layout, Button, Input, ConfigProvider, notification } from "antd"
 import enUS from "antd/lib/locale/en_US"
-import viVN from "antd/lib/locale/vi_VN"
-import zhCN from "antd/lib/locale/zh_CN"
 
 import Navbar from "@/common/components/Navbar"
 import { RocketOutlined, SearchOutlined } from "@ant-design/icons"
@@ -13,12 +11,11 @@ import "./css/app.scss"
 import CreateSetPage from "./Pages/create-set/CreateSet"
 import SetDetailPage from "./Pages/set-detail/SetDetail"
 import HomePage from "./Pages/home/Home"
-import SetsPage from "./Pages/Sets"
 import PageFooter from "@/common/components/PageFooter"
 import PagesNavigator from "./components/PagesNavigator"
 
 import { User } from "@/common/types/types"
-import { getUserInfo } from "@/common/repo/user"
+import { getMyInfo } from "@/common/repo/user"
 import { AppPages, LoginTypes } from "@/common/consts/constants"
 import { getGoogleAuthToken } from "@facades/authFacade"
 import { Http } from "@facades/axiosFacade"
@@ -26,6 +23,7 @@ import { GlobalContext } from "@/common/contexts/GlobalContext"
 import { Route, Switch, useHistory, useLocation } from "react-router-dom"
 import { Locale } from "antd/lib/locale-provider"
 import SearchResultPage from "./Pages/search-result/SearchResult"
+import UserProfilePage from "./Pages/user-profile/UserProfile"
 
 const { Content } = Layout
 
@@ -54,7 +52,7 @@ const AppPage = () => {
   useEffect(() => {
     if (!http) return
 
-    getUserInfo(http)
+    getMyInfo(http)
       .then((userInfo) => {
         setUser(userInfo)
         setIsLoading(false)
@@ -109,6 +107,8 @@ const AppPage = () => {
                   <Route path={AppPages.EditSet.path} component={CreateSetPage} />
                   <Route path={AppPages.Sets.path} component={SearchResultPage} />
                   <Route path={AppPages.SetDetail.path} component={SetDetailPage} />
+                  <Route path={AppPages.UserProfile.path} component={UserProfilePage} />
+                  <Route path={AppPages.MySpace.path} component={UserProfilePage} />
                 </Switch>
               </Content>
             </Layout>

@@ -6,7 +6,7 @@ import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { useState } from "react"
 import { SetInfo } from "@/common/types/types"
 import { getTopSets } from "@/common/repo/set"
-import TopSetItem from "./TopSetItem"
+import SetItemCardLong from "@/pages/app/components/SetItemCardLong"
 
 const i18n = chrome.i18n.getMessage
 
@@ -45,7 +45,7 @@ const TopSets = () => {
       prevArrow={<Button type="primary" size="large" icon={<LeftOutlined />} style={prevButtonStyle} />}
       nextArrow={<Button type="primary" size="large" icon={<RightOutlined />} style={nextButtonStyle} />}
     >
-      {topSets && topSets.map((set, index) => <TopSetItem set={set} key={index}></TopSetItem>)}
+      {topSets && topSets.map((set, index) => <SetItemCardLong set={set} key={index} />)}
     </Carousel>
   ) : (
     <Skeleton active />
