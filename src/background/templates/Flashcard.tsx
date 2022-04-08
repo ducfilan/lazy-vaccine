@@ -6,7 +6,7 @@ import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
 import "./css/flashcard.scss"
 import { Popover } from "./common/Popover"
-import { AppPages } from "@/common/consts/constants"
+import { AppBasePath, AppPages } from "@/common/consts/constants"
 import { toTitleCase } from "@/common/utils/stringUtils"
 
 const i18n = chrome.i18n.getMessage
@@ -23,7 +23,11 @@ export const FlashCardTemplate = () => {
         content={
           <>
             <p>
-              <a href={AppPages.SetDetail.path} title=":setTitle" target={"_blank"}>
+              <a
+                href={`${chrome.runtime.getURL(AppBasePath)}${AppPages.SetDetail.path}`}
+                title=":setTitle"
+                target={"_blank"}
+              >
                 {i18n("flashcard_go_to_set")}
               </a>
             </p>

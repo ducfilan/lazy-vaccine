@@ -25,8 +25,6 @@ import { AppBasePath } from "@/common/consts/constants"
 
 const { Text } = Typography
 
-const { useState } = React
-
 const HomePageUrl = chrome.runtime.getURL(AppBasePath)
 
 function HeaderContent() {
