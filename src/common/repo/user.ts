@@ -3,7 +3,7 @@ import { SetInfo, User, UserInteractionSetsResponse } from "@/common/types/types
 import Apis from "@consts/apis"
 import StatusCode from "@consts/statusCodes"
 import { Http } from "../facades/axiosFacade"
-import { InteractionSubscribe, InteractionLike } from "../consts/constants"
+import { InteractionSubscribe, InteractionLike, InteractionDislike } from "../consts/constants"
 
 export async function getMyInfo(http: Http): Promise<User> {
   const response = await http.get<any, AxiosResponse<User>>(Apis.me)
@@ -33,9 +33,23 @@ export async function getUserInteractionSets(http: Http, userId: string, interac
   return sets.map(({ actions, set }) => {
     set.isSubscribed = actions?.includes(InteractionSubscribe)
     set.isLiked = actions?.includes(InteractionLike)
+    set.isDisliked = actions?.includes(InteractionDislike)
 
     return set
   })
+}
+
+export async function getUserInteractionRandomSet(http: Http, interaction: string): Promise<SetInfo> {
+  const response = await http.get<any, AxiosResponse<UserInteractionSetsResponse>>(`${Apis.me}/random-set?interaction=${interaction}`)
+
+  const { actions, set } = response?.data
+  if (!set) throw new Error("cannot get user interaction sets")
+
+  set.isSubscribed = actions?.includes(InteractionSubscribe)
+  set.isLiked = actions?.includes(InteractionLike)
+  set.isDisliked = actions?.includes(InteractionDislike)
+
+  return set
 }
 
 export async function updateUserInfo(http: Http, data: Object): Promise<boolean> {

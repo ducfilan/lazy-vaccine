@@ -6,6 +6,7 @@ const CacheKeys = {
   selectedMasteredLanguages: "selected-mastered-languages",
   selectedLearningLanguages: "selected-learning-languages",
   selectedPages: "selected-pages",
+  randomSet: "random-set",
 }
 
 export default CacheKeys

@@ -1,8 +1,9 @@
-import { ChromeMessageTypeGetRandomItem, ChromeMessageTypeToken, LoginTypes } from "./common/consts/constants"
+import CacheKeys from "./common/consts/cacheKeys"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetRandomItem, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
 import { getGoogleAuthToken } from "./common/facades/authFacade"
 import { Http } from "./common/facades/axiosFacade"
-import { getSetInfo } from "./common/repo/set"
-import { SetInfoItem } from "./common/types/types"
+import { getUserInteractionRandomSet } from "./common/repo/user"
+import { SetInfo, SetInfoItem } from "./common/types/types"
 import { randomIntFromInterval } from "./common/utils/numberUtils"
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -28,6 +29,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       })
       break
 
+    case ChromeMessageClearRandomSetCache:
+      clearCachedRandomSet()
+      sendResponse({ success: true })
+      break
+
     default:
       break
   }
@@ -36,12 +42,30 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 })
 
 export async function getRandomSubscribedItem(http: Http): Promise<SetInfoItem | null> {
-  // TODO: Dummy, need to update.
-  const setInfo = await getSetInfo(http, "623e6aa4216621014c0b6f92")
+  let randomSetInfo = getCachedSet()
 
-  if (!setInfo || !setInfo.items || setInfo.items.length === 0) return null
-  const randomPosition = randomIntFromInterval(0, setInfo.items.length - 1)
-  const item = setInfo.items[randomPosition]
+  if (!randomSetInfo) {
+    randomSetInfo = await getUserInteractionRandomSet(http, InteractionSubscribe)
+    setCachedSet(randomSetInfo)
+  }
+
+  if (!randomSetInfo || !randomSetInfo.items || randomSetInfo.items.length === 0) return null
+  const randomPosition = randomIntFromInterval(0, randomSetInfo.items.length - 1)
+  const item = randomSetInfo.items[randomPosition]
 
   return item
+}
+
+function getCachedSet(): SetInfo {
+  console.log("cache hit")
+  const cachedRandomSetInfo = localStorage.getItem(LocalStorageKeyPrefix + CacheKeys.randomSet)
+  return cachedRandomSetInfo ? JSON.parse(cachedRandomSetInfo) : null
+}
+
+function setCachedSet(set: SetInfo) {
+  const cachedRandomSetInfo = localStorage.setItem(LocalStorageKeyPrefix + CacheKeys.randomSet, JSON.stringify(set))
+}
+
+function clearCachedRandomSet() {
+  localStorage.setItem(LocalStorageKeyPrefix + CacheKeys.randomSet, "")
 }

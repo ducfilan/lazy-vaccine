@@ -1,4 +1,4 @@
-export const detectPageChanged = (callback: () => {}) => {
+export const detectPageChanged = (callback: () => any) => {
   var oldHref = document.location.href
 
   window.onload = function () {

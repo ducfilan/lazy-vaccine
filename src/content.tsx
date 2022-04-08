@@ -5,10 +5,11 @@ import PageInjector from "./background/PageInjector"
 import { FlashCardTemplate } from "./background/templates/Flashcard"
 import { addDynamicEventListener, hrefToSiteName, htmlStringToHtmlNode } from "./background/DomManipulator"
 import InjectionTargetFactory from "./background/InjectionTargetFactory"
-import { getRandomSubscribedItem } from "./background/MessagingFacade"
 import { KeyValuePair, SetInfoItem } from "./common/types/types"
 import { formatString } from "./common/utils/stringUtils"
 import { detectPageChanged } from "./common/utils/domUtils"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetRandomItem } from "./common/consts/constants"
+import { sendMessage } from "./background/MessagingFacade"
 
 const getHref = () => document.location.href
 const prevItemsStacks: { [key: string]: SetInfoItem[] } = {}
@@ -24,11 +25,22 @@ const randomTemplateValues = async () => {
 
 const randomSetInfoItem = async (): Promise<SetInfoItem | null> => {
   try {
-    return await getRandomSubscribedItem()
+    return await sendGetRandomSubscribedItemMessage()
   } catch (error) {
     console.error(error)
     return null
   }
+}
+function sendClearCachedRandomSetMessage() {
+  return new Promise<string>((resolve, reject) => {
+    sendMessage(ChromeMessageClearRandomSetCache, null, resolve, reject)
+  })
+}
+
+function sendGetRandomSubscribedItemMessage() {
+  return new Promise<SetInfoItem | null>((resolve, reject) => {
+    sendMessage(ChromeMessageTypeGetRandomItem, null, resolve, reject)
+  })
 }
 
 const toTemplateValues = (item: SetInfoItem | null | undefined, otherKeyValueItems: { [key: string]: string } = {}) => {
@@ -42,7 +54,10 @@ const toTemplateValues = (item: SetInfoItem | null | undefined, otherKeyValueIte
 }
 
 injectCards()
-detectPageChanged(injectCards)
+detectPageChanged(() => {
+  sendClearCachedRandomSetMessage()
+  injectCards()
+})
 registerFlashcardEvents()
 
 async function injectCards() {
