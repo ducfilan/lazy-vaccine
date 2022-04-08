@@ -20,7 +20,7 @@ const randomTemplateValues = async () => {
 
   prevItemsStacks[item._id] = [item]
 
-  return toTemplateValues(item, { firstStackId: item._id })
+  return toTemplateValues(item, { firstStackId: item._id, setId: item.setId, setTitle: item.setTitle })
 }
 
 const randomSetInfoItem = async (): Promise<SetInfoItem | null> => {
@@ -31,6 +31,7 @@ const randomSetInfoItem = async (): Promise<SetInfoItem | null> => {
     return null
   }
 }
+
 function sendClearCachedRandomSetMessage() {
   return new Promise<string>((resolve, reject) => {
     sendMessage(ChromeMessageClearRandomSetCache, null, resolve, reject)
@@ -55,6 +56,7 @@ const toTemplateValues = (item: SetInfoItem | null | undefined, otherKeyValueIte
 
 injectCards()
 detectPageChanged(() => {
+  // Remove cache from background page (app's scope).
   sendClearCachedRandomSetMessage()
   injectCards()
 })
@@ -126,5 +128,14 @@ function registerFlashcardEvents() {
       formatString(renderToString(<FlashCardTemplate />), toTemplateValues(prevItem, { firstStackId }))
     )
     wrapperElement?.replaceWith(newItemNode)
+  })
+
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card-more-button", (e: Event) => {
+    e.stopPropagation()
+
+    const moreButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement | null = moreButton.closest(".lazy-vaccine")
+
+    wrapperElement?.querySelector(".ant-popover")?.classList.toggle("ant-popover-hidden")
   })
 }

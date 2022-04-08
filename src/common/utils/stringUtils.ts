@@ -61,3 +61,5 @@ export const getExtensionFromFileType = (fileType: string): string => {
 }
 
 export const trimQuotes = (s: string) => s.replace(/^["'](.+(?=["']$))["']$/, '$1')
+
+export const toTitleCase = (s: string) => s[0].toUpperCase() + s.slice(1)

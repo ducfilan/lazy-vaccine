@@ -5,11 +5,27 @@ import * as React from "react"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
 import "./css/flashcard.scss"
+import { Popover } from "./common/Popover"
+import { AppPages } from "@/common/consts/constants"
+import { toTitleCase } from "@/common/utils/stringUtils"
+
+const i18n = chrome.i18n.getMessage
 
 export const FlashCardTemplate = () => {
   return (
     <div className="lazy-vaccine" data-first-stack-id=":firstStackId">
       <DisclaimerInfo />
+      <Popover
+        top={20}
+        right={-4.4}
+        paddingLeft={20}
+        title={toTitleCase(i18n("common_more"))}
+        content={
+          <a href={AppPages.SetDetail.path} title=":setTitle" target={"_blank"}>
+            {i18n("flashcard_go_to_set")}
+          </a>
+        }
+      />
       <div className="flash-card flash-card-wrapper">
         <div className="card--face card--face--front">
           <p>{":term"}</p>

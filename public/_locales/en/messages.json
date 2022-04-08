@@ -202,6 +202,9 @@
   "home_everyone_favorite": {
     "message": "Everyone's Favorites"
   },
+  "flashcard_go_to_set": {
+    "message": "Go to set detail"
+  },
   "common_back": {
     "message": "Back"
   },
@@ -261,6 +264,9 @@
   },
   "common_search_result": {
     "message": "Search result"
+  },
+  "common_more": {
+    "message": "more"
   },
   "select": {
     "message": "Select one"

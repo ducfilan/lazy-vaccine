@@ -53,7 +53,7 @@ export async function getRandomSubscribedItem(http: Http): Promise<SetInfoItem |
   const randomPosition = randomIntFromInterval(0, randomSetInfo.items.length - 1)
   const item = randomSetInfo.items[randomPosition]
 
-  return item
+  return { ...item, setId: randomSetInfo._id, setTitle: randomSetInfo.name }
 }
 
 function getCachedSet(): SetInfo {

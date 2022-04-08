@@ -21,9 +21,19 @@ $white: #fff;
 .lazy-vaccine {
   @include meta.load-css("./antd-icon.scss");
   @include meta.load-css("./antd-btn.scss");
+  @include meta.load-css("./antd-popover.scss");
 
   position: relative;
   min-width: 300px;
+
+  a {
+    color: $primary;
+    text-decoration: none;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
 
   .next-prev-buttons--wrapper {
     height: 300px;
