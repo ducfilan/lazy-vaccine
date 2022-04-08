@@ -12,7 +12,7 @@ import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetRandomItem } from
 import { sendMessage } from "./background/MessagingFacade"
 
 const getHref = () => document.location.href
-const prevItemsStacks: { [key: string]: SetInfoItem[] } = {}
+let prevItemsStacks: { [key: string]: SetInfoItem[] } = {}
 
 const randomTemplateValues = async () => {
   const item = await randomSetInfoItem()
@@ -55,9 +55,9 @@ const toTemplateValues = (item: SetInfoItem | null | undefined, otherKeyValueIte
 }
 
 injectCards()
-detectPageChanged(() => {
+detectPageChanged(async () => {
   // Remove cache from background page (app's scope).
-  sendClearCachedRandomSetMessage()
+  await sendClearCachedRandomSetMessage()
   injectCards()
 })
 registerFlashcardEvents()
@@ -137,5 +137,22 @@ function registerFlashcardEvents() {
     const wrapperElement: HTMLElement | null = moreButton.closest(".lazy-vaccine")
 
     wrapperElement?.querySelector(".ant-popover")?.classList.toggle("ant-popover-hidden")
+  })
+
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card-next-set-link", async (e: Event) => {
+    e.stopPropagation()
+
+    const moreButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement | null = moreButton.closest(".lazy-vaccine")
+
+    wrapperElement?.querySelector(".ant-popover")?.classList.toggle("ant-popover-hidden")
+
+    await sendClearCachedRandomSetMessage()
+    prevItemsStacks = {}
+
+    const newItemNode = htmlStringToHtmlNode(
+      formatString(renderToString(<FlashCardTemplate />), await randomTemplateValues())
+    )
+    wrapperElement?.replaceWith(newItemNode)
   })
 }

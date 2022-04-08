@@ -29,7 +29,7 @@ export const Popover = ({
         <div>
           <div
             className="ant-popover ant-popover-placement-bottomRight ant-popover-hidden"
-            style={{ top: top, right: right, paddingLeft: paddingLeft }}
+            style={{ top, right, paddingLeft }}
           >
             <div className="ant-popover-content">
               <div className="ant-popover-arrow">

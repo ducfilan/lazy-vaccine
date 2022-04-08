@@ -205,6 +205,9 @@
   "flashcard_go_to_set": {
     "message": "Go to set detail"
   },
+  "flashcard_next_set": {
+    "message": "Next set"
+  },
   "common_back": {
     "message": "Back"
   },

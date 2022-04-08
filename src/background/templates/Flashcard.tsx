@@ -21,9 +21,18 @@ export const FlashCardTemplate = () => {
         paddingLeft={20}
         title={toTitleCase(i18n("common_more"))}
         content={
-          <a href={AppPages.SetDetail.path} title=":setTitle" target={"_blank"}>
-            {i18n("flashcard_go_to_set")}
-          </a>
+          <>
+            <p>
+              <a href={AppPages.SetDetail.path} title=":setTitle" target={"_blank"}>
+                {i18n("flashcard_go_to_set")}
+              </a>
+            </p>
+            <p>
+              <a href="javascript:void()" className="flash-card-next-set-link">
+                {i18n("flashcard_next_set")}
+              </a>
+            </p>
+          </>
         }
       />
       <div className="flash-card flash-card-wrapper">
