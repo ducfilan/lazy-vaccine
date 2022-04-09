@@ -19,7 +19,7 @@ export const FlashCardTemplate = () => {
         top={20}
         right={-4.4}
         paddingLeft={20}
-        title={toTitleCase(i18n("common_more"))}
+        title={":setTitle"}
         content={
           <>
             <p>
