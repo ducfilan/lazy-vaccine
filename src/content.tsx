@@ -80,7 +80,7 @@ function registerFlashcardEvents() {
   registerFlipCardEvent()
 
   registerNextItemEvent(async () => {
-    const isDisplayedAllItemsInSet = currentItemPointer === setInfo?.items?.length
+    const isDisplayedAllItemsInSet = currentItemPointer + 1 === setInfo?.items?.length
     if (isDisplayedAllItemsInSet) {
       await sendClearCachedRandomSetMessage()
       await initValues()

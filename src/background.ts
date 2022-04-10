@@ -65,6 +65,7 @@ export async function getRandomSubscribedItem(http: Http): Promise<SetInfoItem |
 }
 
 export async function getRandomSubscribedSet(http: Http): Promise<SetInfo | null> {
+  // TODO: Handle situation when set has edited, item ids got changed.
   let randomSetInfo = getCachedSet()
 
   if (!randomSetInfo) {
