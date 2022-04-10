@@ -21,7 +21,7 @@ import NextPrevButton from "./NextPrevButton"
 import PopupHeader from "./Header"
 import AvatarImage from "@/common/components/AvatarImage"
 import TreeIcon from "@img/ui/fa/tree-solid.svg"
-import { AppBasePath } from "@/common/consts/constants"
+import { AppBasePath, AppPages } from "@/common/consts/constants"
 
 const { Text } = Typography
 
@@ -130,7 +130,14 @@ function CompletedInfo() {
             </Button>
           </Col>
           <Col span={12}>
-            <Button className="completed-info--button-my-profile" size="large" icon={<SmileOutlined />} block>
+            <Button
+              className="completed-info--button-my-profile"
+              size="large"
+              icon={<SmileOutlined />}
+              block
+              href={`${HomePageUrl}${AppPages.MySpace.path}`}
+              target="_blank"
+            >
               {chrome.i18n.getMessage("popup_stats_my_profile")}
             </Button>
           </Col>
