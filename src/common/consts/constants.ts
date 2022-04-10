@@ -126,6 +126,7 @@ export const InjectTypes = {
 export const ChromeMessageTypeToken = "get-chrome-token"
 export const ChromeMessageClearRandomSetCache = "clear-random-set-cache"
 export const ChromeMessageTypeGetRandomItem = "get-random-item"
+export const ChromeMessageTypeGetRandomSet = "get-random-set"
 
 export const InjectionTargets = {
   YoutubeHome: [

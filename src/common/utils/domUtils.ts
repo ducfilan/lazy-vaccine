@@ -1,7 +1,9 @@
-export const detectPageChanged = (callback: () => any) => {
+export const detectPageChanged = (callback: () => any, initialCall?: boolean) => {
   var oldHref = document.location.href
 
   window.onload = function () {
+    initialCall && callback()
+
     const bodyList = document.querySelector("body")
     if (bodyList === null) {
       return

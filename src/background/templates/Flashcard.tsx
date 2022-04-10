@@ -7,13 +7,12 @@ import { DisclaimerInfo } from "./common/DisclaimerInfo"
 import "./css/flashcard.scss"
 import { Popover } from "./common/Popover"
 import { AppBasePath, AppPages } from "@/common/consts/constants"
-import { toTitleCase } from "@/common/utils/stringUtils"
 
 const i18n = chrome.i18n.getMessage
 
 export const FlashCardTemplate = () => {
   return (
-    <div className="lazy-vaccine" data-first-stack-id=":firstStackId">
+    <div className="lazy-vaccine">
       <DisclaimerInfo />
       <Popover
         top={20}

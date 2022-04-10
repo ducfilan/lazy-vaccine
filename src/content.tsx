@@ -2,70 +2,63 @@ import * as React from "react"
 import { renderToString } from "react-dom/server"
 
 import PageInjector from "./background/PageInjector"
-import { FlashCardTemplate } from "./background/templates/Flashcard"
-import { addDynamicEventListener, hrefToSiteName, htmlStringToHtmlNode } from "./background/DomManipulator"
 import InjectionTargetFactory from "./background/InjectionTargetFactory"
-import { KeyValuePair, SetInfoItem } from "./common/types/types"
-import { formatString } from "./common/utils/stringUtils"
+import { SetInfo } from "./common/types/types"
 import { detectPageChanged } from "./common/utils/domUtils"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetRandomItem } from "./common/consts/constants"
-import { sendMessage } from "./background/MessagingFacade"
+import {
+  sendClearCachedRandomSetMessage,
+  sendGetRandomSubscribedSetMessage,
+} from "./pages/content-script/messageSenders"
+import {
+  registerFlipCardEvent,
+  registerMorePopoverEvent,
+  registerNextItemEvent,
+  registerNextSetEvent,
+  registerPrevItemEvent,
+} from "./pages/content-script/eventRegisters"
+import { FlashCardTemplate } from "./background/templates/Flashcard"
+import { getHref } from "./pages/content-script/domHelpers"
+import { shuffleArray } from "./common/utils/arrayUtils"
+import { toTemplateValues } from "./pages/content-script/templateHelpers"
 
-const getHref = () => document.location.href
-let prevItemsStacks: { [key: string]: SetInfoItem[] } = {}
+let randomItemIndexVisitMap: number[] = []
+let setInfo: SetInfo | null
+let currentItemPointer = 0
 
-const randomTemplateValues = async () => {
-  const item = await randomSetInfoItem()
-  if (!item) return []
-
-  prevItemsStacks[item._id] = [item]
-
-  return toTemplateValues(item, { firstStackId: item._id, setId: item.setId, setTitle: item.setTitle })
-}
-
-const randomSetInfoItem = async (): Promise<SetInfoItem | null> => {
+detectPageChanged(async () => {
   try {
-    return await sendGetRandomSubscribedItemMessage()
+    // Remove cache from background page (app's scope).
+    await sendClearCachedRandomSetMessage()
+
+    await initValues()
+    removeOldCards()
+    await injectCards()
   } catch (error) {
     console.error(error)
-    return null
+    console.error("error when injecting set item")
+  }
+}, true)
+
+registerFlashcardEvents()
+
+async function initValues() {
+  try {
+    setInfo = await sendGetRandomSubscribedSetMessage()
+    if (setInfo) {
+      randomItemIndexVisitMap = shuffleArray(Array.from(Array(setInfo.items?.length || 0).keys()))
+      currentItemPointer = 0
+    }
+  } catch (error) {
+    console.error(error)
   }
 }
 
-function sendClearCachedRandomSetMessage() {
-  return new Promise<string>((resolve, reject) => {
-    sendMessage(ChromeMessageClearRandomSetCache, null, resolve, reject)
-  })
+function removeOldCards() {
+  document.querySelectorAll(".lazy-vaccine").forEach((el) => el.remove())
 }
-
-function sendGetRandomSubscribedItemMessage() {
-  return new Promise<SetInfoItem | null>((resolve, reject) => {
-    sendMessage(ChromeMessageTypeGetRandomItem, null, resolve, reject)
-  })
-}
-
-const toTemplateValues = (item: SetInfoItem | null | undefined, otherKeyValueItems: { [key: string]: string } = {}) => {
-  if (!item) return []
-
-  const itemKeyValue = Object.entries(item).map(([key, value]) => ({ key, value } as KeyValuePair))
-  let otherKeyValue = Object.entries(otherKeyValueItems).map(([key, value]) => ({ key, value } as KeyValuePair))
-  otherKeyValue = [...otherKeyValue, { key: "website", value: hrefToSiteName(getHref()) }]
-
-  return [...itemKeyValue, ...otherKeyValue]
-}
-
-injectCards()
-detectPageChanged(async () => {
-  // Remove cache from background page (app's scope).
-  await sendClearCachedRandomSetMessage()
-  injectCards()
-})
-registerFlashcardEvents()
 
 async function injectCards() {
   try {
-    removeOldCards()
-
     const injectionTargets = new InjectionTargetFactory(getHref()).getTargets()
 
     injectionTargets.forEach(async ({ type, selector, siblingSelector }) => {
@@ -78,81 +71,51 @@ async function injectCards() {
   }
 }
 
-function removeOldCards() {
-  document.querySelectorAll(".lazy-vaccine").forEach((el) => el.remove())
+const randomTemplateValues = async () => {
+  const item = getItemAtPointer(currentItemPointer++)
+  return item ? toTemplateValues(item, { setId: setInfo?._id || "", setTitle: setInfo?.name || "" }) : []
 }
 
 function registerFlashcardEvents() {
-  addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card-wrapper", (e: Event) => {
-    e.stopPropagation()
+  registerFlipCardEvent()
 
-    const cardElement = e.target as Element
-    cardElement.closest(".flash-card-wrapper")?.classList.toggle("is-flipped")
+  registerNextItemEvent(async () => {
+    const isDisplayedAllItemsInSet = currentItemPointer === setInfo?.items?.length
+    if (isDisplayedAllItemsInSet) {
+      await sendClearCachedRandomSetMessage()
+      await initValues()
+      return getItemAtPointer(currentItemPointer++)
+    }
+
+    return getItemAtPointer(++currentItemPointer)
   })
 
-  addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--next-button", async (e: Event) => {
-    e.stopPropagation()
+  registerPrevItemEvent(() => {
+    if (currentItemPointer === 0) {
+      return null
+    }
 
-    const randomItem = await randomSetInfoItem()
-    if (!randomItem) return // TODO: Notice problem.
-
-    const nextButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = nextButton.closest(".lazy-vaccine")
-    const firstStackId = wrapperElement?.dataset["firstStackId"]
-
-    if (!firstStackId) return // TODO: Notice problem.
-
-    prevItemsStacks[firstStackId].push(randomItem)
-
-    const newItemNode = htmlStringToHtmlNode(
-      formatString(renderToString(<FlashCardTemplate />), toTemplateValues(randomItem, { firstStackId }))
-    )
-
-    wrapperElement?.replaceWith(newItemNode)
+    return getItemAtPointer(--currentItemPointer)
   })
 
-  addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--prev-button", async (e: Event) => {
-    e.stopPropagation()
+  registerMorePopoverEvent()
 
-    const prevButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = prevButton.closest(".lazy-vaccine")
-    const firstStackId = wrapperElement?.dataset["firstStackId"]
-
-    if (!firstStackId || prevItemsStacks[firstStackId].length < 2) return // TODO: Notice problem.
-
-    prevItemsStacks[firstStackId].pop()
-    const prevItem = prevItemsStacks[firstStackId].slice(-1)[0]
-    if (!prevItem) return
-
-    const newItemNode = htmlStringToHtmlNode(
-      formatString(renderToString(<FlashCardTemplate />), toTemplateValues(prevItem, { firstStackId }))
-    )
-    wrapperElement?.replaceWith(newItemNode)
-  })
-
-  addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card-more-button", (e: Event) => {
-    e.stopPropagation()
-
-    const moreButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = moreButton.closest(".lazy-vaccine")
-
-    wrapperElement?.querySelector(".ant-popover")?.classList.toggle("ant-popover-hidden")
-  })
-
-  addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card-next-set-link", async (e: Event) => {
-    e.stopPropagation()
-
-    const moreButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = moreButton.closest(".lazy-vaccine")
-
-    wrapperElement?.querySelector(".ant-popover")?.classList.toggle("ant-popover-hidden")
-
+  registerNextSetEvent(async () => {
     await sendClearCachedRandomSetMessage()
-    prevItemsStacks = {}
+    await initValues()
 
-    const newItemNode = htmlStringToHtmlNode(
-      formatString(renderToString(<FlashCardTemplate />), await randomTemplateValues())
-    )
-    wrapperElement?.replaceWith(newItemNode)
+    return getItemAtPointer(currentItemPointer++)
   })
+}
+
+const getItemAtPointer = (pointerPosition: number) => {
+  const rawItem = setInfo?.items && setInfo?.items[randomItemIndexVisitMap[pointerPosition]]
+
+  return rawItem
+    ? {
+        ...rawItem,
+        setId: setInfo?._id || "",
+        setTitle: setInfo?.name || "",
+      }
+    : null
 }
