@@ -29,7 +29,7 @@ const SearchResultItems = (props: { keyword: string }) => {
         if (!newSets || newSets.length === 0) return
 
         setTotalSetsCount(newSets[0].total)
-        setSkip(newSets.length)
+        setSkip(sets.length + newSets.length)
         setSets([...sets, ...newSets])
         setIsSearching(false)
       })
