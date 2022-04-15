@@ -17,7 +17,7 @@ export async function editSet(http?: Http, setInfo?: SetInfo): Promise<string> {
   if (!http || !setInfo) throw new ParamError()
 
   // Remove unnecessary info.
-  const { actions, creatorId, creatorName, interactionCount, isDisliked, isLiked, lastUpdated, isSubscribed, ...setInfoMinimized } = setInfo
+  const { creatorId, creatorName, lastUpdated, ...setInfoMinimized } = setInfo
 
   await http.patch<any, AxiosResponse<string>>(Apis.sets, setInfoMinimized)
 
@@ -86,8 +86,8 @@ export async function undoInteractToSet(http: Http, setId: string, action: strin
   await http.delete<any, AxiosResponse<any>>(Apis.interaction(setId, action))
 }
 
-export async function searchSets(http: Http, keyword: string) {
-  const response = await http.get<any, AxiosResponse<SearchSetsResponse>>(`${Apis.sets}?keyword=${keyword}`)
+export async function searchSets(http: Http, keyword: string, skip: number, limit: number) {
+  const response = await http.get<any, AxiosResponse<SearchSetsResponse>>(`${Apis.sets}?keyword=${keyword}&skip=${skip}&limit=${limit}`)
 
   if (!response?.data) throw new Error(`cannot search sets with keyword: ${keyword}`)
 

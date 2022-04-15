@@ -2,12 +2,11 @@ import * as React from "react"
 
 import { useHistory } from "react-router-dom"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
-import { searchSets } from "@/common/repo/set"
 
 import { SearchResultContext } from "./contexts/SearchResultContext"
-import { Layout, Skeleton, Typography } from "antd"
+import { Layout, Typography } from "antd"
 
-import { Category, SetInfo } from "@/common/types/types"
+import { Category } from "@/common/types/types"
 import SearchResultItems from "./components/SearchResultItems"
 import { AppPages } from "@/common/consts/constants"
 import CategoriesSider from "@/pages/app/components/CategoriesSider"
@@ -31,25 +30,14 @@ const SearchResultPage = (props: any) => {
   }
 
   const { user, http } = useGlobalContext()
-  const [searchedSets, setSearchedSets] = useState<SetInfo[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
   const [categories, setCategories] = useState<Category[]>()
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
-
-  useEffect(() => {
-    if (!http || !user) return
-
-    searchSets(http, keyword).then((sets: SetInfo[]) => {
-      setSearchedSets(sets)
-    })
-  }, [http, user])
 
   function onPageLoaded() {
     if (!http) return
   }
 
   useEffect(onPageLoaded, [http])
-  useEffect(() => setLoading(false), [])
 
   useEffect(() => {
     if (!http || !user) return
@@ -70,14 +58,12 @@ const SearchResultPage = (props: any) => {
         <CategoriesSider width={250} path={""} categories={categories} />
         <Layout style={{ padding: 24 }}>
           <Content>
-            <Skeleton active loading={loading}>
-              <Content>
-                <Typography.Title level={3} className="top--25px">
-                  {i18n("common_search_result")}
-                </Typography.Title>
-                <SearchResultItems sets={searchedSets} />
-              </Content>
-            </Skeleton>
+            <Content>
+              <Typography.Title level={3} className="top--25px">
+                {i18n("common_search_result")}
+              </Typography.Title>
+              <SearchResultItems keyword={keyword} />
+            </Content>
           </Content>
         </Layout>
       </Layout>

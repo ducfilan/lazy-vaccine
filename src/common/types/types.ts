@@ -104,6 +104,8 @@ export type SetInfo = {
   toLanguage?: LanguageCode
   captchaToken?: string | null
   imgUrl?: string
+  lastUpdated?: string,
+  
   isSubscribed?: boolean
   isLiked?: boolean
   isDisliked?: boolean
@@ -111,7 +113,7 @@ export type SetInfo = {
     [key: string]: number
   },
   actions?: string[],
-  lastUpdated?: string,
+  total?: number,
 }
 
 export type SetInfoItem = {
