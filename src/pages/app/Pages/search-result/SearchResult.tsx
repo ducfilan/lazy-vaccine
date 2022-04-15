@@ -23,21 +23,10 @@ const i18n = chrome.i18n.getMessage
 const SearchResultPage = (props: any) => {
   const history = useHistory()
 
-  const keyword = new URLSearchParams(props.location.search).get("keyword")
-  if (!keyword) {
-    history.push(AppPages.Home.path)
-    return <></>
-  }
-
   const { user, http } = useGlobalContext()
   const [categories, setCategories] = useState<Category[]>()
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
-
-  function onPageLoaded() {
-    if (!http) return
-  }
-
-  useEffect(onPageLoaded, [http])
+  const [keyword, setKeyword] = useState<string>()
 
   useEffect(() => {
     if (!http || !user) return
@@ -52,6 +41,17 @@ const SearchResultPage = (props: any) => {
     }
   }, [http, user])
 
+  const keywordParam = new URLSearchParams(props.location.search).get("keyword") || ""
+
+  if (!keywordParam) {
+    history.push(AppPages.Home.path)
+    return <></>
+  }
+
+  useEffect(() => {
+    setKeyword(keywordParam)
+  }, [keywordParam])
+
   return (
     <SearchResultContext.Provider value={{ categories, setCategories }}>
       <Layout className="body-content">
@@ -62,7 +62,7 @@ const SearchResultPage = (props: any) => {
               <Typography.Title level={3} className="top--25px">
                 {i18n("common_search_result")}
               </Typography.Title>
-              <SearchResultItems keyword={keyword} />
+              {keyword && <SearchResultItems keyword={keyword} />}
             </Content>
           </Content>
         </Layout>

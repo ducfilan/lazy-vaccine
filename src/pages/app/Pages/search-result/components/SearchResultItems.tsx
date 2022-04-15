@@ -36,7 +36,20 @@ const SearchResultItems = (props: { keyword: string }) => {
       .catch((error) => console.error(error))
   }
 
-  useEffect(handleLoadData, [http])
+  const resetItemsState = () => {
+    setSkip(0)
+    setIsSearching(false)
+    setTotalSetsCount(0)
+    setSets([])
+  }
+
+  useEffect(() => {
+    resetItemsState()
+  }, [http, props.keyword])
+
+  useEffect(() => {
+    sets?.length === 0 && handleLoadData()
+  }, [sets])
 
   return totalSetsCount ? (
     <InfiniteScroll
