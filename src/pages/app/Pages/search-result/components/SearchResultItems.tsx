@@ -1,12 +1,14 @@
 import React from "react"
 
-import { SetInfo } from "@/common/types/types"
-import { Divider, List, Skeleton } from "antd"
+import { SearchSetsResponse, SetInfo } from "@/common/types/types"
+import { Divider, List, Result, Skeleton, Typography } from "antd"
 import { useEffect, useState } from "react"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { searchSets } from "@/common/repo/set"
 import SetItemCardLong from "@/pages/app/components/SetItemCardLong"
 import InfiniteScroll from "react-infinite-scroll-component"
+import shibaEmptyBoxIcon from "@img/emojis/shiba/box.png"
+import { formatString } from "@/common/utils/stringUtils"
 
 const i18n = chrome.i18n.getMessage
 
@@ -25,13 +27,14 @@ const SearchResultItems = (props: { keyword: string }) => {
     setIsSearching(true)
 
     searchSets(http, props.keyword, skip || 0, limitItemsPerGet)
-      .then((newSets: SetInfo[]) => {
-        if (!newSets || newSets.length === 0) return
-
-        setTotalSetsCount(newSets[0].total)
-        setSkip(sets.length + newSets.length)
-        setSets([...sets, ...newSets])
+      .then((resp: SearchSetsResponse) => {
         setIsSearching(false)
+
+        if (!resp || resp.sets.length === 0) return
+
+        setTotalSetsCount(resp.total)
+        setSkip(sets.length + resp.sets.length)
+        setSets([...sets, ...resp.sets])
       })
       .catch((error) => console.error(error))
   }
@@ -69,8 +72,19 @@ const SearchResultItems = (props: { keyword: string }) => {
         )}
       />
     </InfiniteScroll>
-  ) : (
+  ) : isSearching ? (
     <Skeleton avatar paragraph={{ rows: 3 }} active />
+  ) : (
+    <Result icon={<img src={shibaEmptyBoxIcon} />} title={i18n("common_not_found")}>
+      <Typography.Paragraph>
+        {formatString(i18n("search_result_not_found"), [
+          {
+            key: "keyword",
+            value: props.keyword,
+          },
+        ])}
+      </Typography.Paragraph>
+    </Result>
   )
 }
 

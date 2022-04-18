@@ -68,6 +68,7 @@ export type TopSetsResponse = {
 }
 
 export type SearchSetsResponse = {
+  total: number
   sets: SetInfo[]
   interactions: Interaction[] | null
 }
@@ -82,6 +83,14 @@ export type PreSignedUrlResponse = {
 }
 
 export type UserInteractionSetsResponse = {
+  total: number,
+  sets: {
+    actions: string[],
+    set: SetInfo
+  }[]
+}
+
+export type UserInteractionSetResponse = {
   actions: string[]
   set: SetInfo
 }
@@ -105,7 +114,7 @@ export type SetInfo = {
   captchaToken?: string | null
   imgUrl?: string
   lastUpdated?: string,
-  
+
   isSubscribed?: boolean
   isLiked?: boolean
   isDisliked?: boolean

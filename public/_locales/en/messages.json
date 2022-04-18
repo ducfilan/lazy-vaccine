@@ -196,6 +196,9 @@
   "set_detail_no_desc": {
     "message": "No description yet..."
   },
+  "search_result_not_found": {
+    "message": "Your search - :keyword - did not match any documents.\nSuggestions:\n - Make sure that all words are spelled correctly.\n- Try different keywords."
+  },
   "home_category_lookup": {
     "message": "Category lookup"
   },
@@ -273,6 +276,9 @@
   },
   "common_end_list_result": {
     "message": "That's all that matches :)"
+  },
+  "common_not_found": {
+    "message": "Not found"
   },
   "select": {
     "message": "Select one"

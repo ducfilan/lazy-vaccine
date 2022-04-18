@@ -3,12 +3,12 @@ import { User } from "@/common/types/types"
 
 type Context = {
   user?: User
-  setSelectedTab: (selectedTab: string) => void
+  onTabChanged: (selectedTab: string) => void
 }
 
 export const UserProfileContext = createContext<Context>({
   user: undefined,
-  setSelectedTab: () => {},
+  onTabChanged: () => {},
 })
 
 export const useUserProfileContext = () => useContext(UserProfileContext)

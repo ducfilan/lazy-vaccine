@@ -10,7 +10,7 @@ const { Sider } = Layout
 const i18n = chrome.i18n.getMessage
 
 const UserProfileSider = (props: { width: number; path: string }) => {
-  const { user, setSelectedTab } = useUserProfileContext()
+  const { user, onTabChanged } = useUserProfileContext()
 
   if (!user) {
     return <></>
@@ -26,7 +26,7 @@ const UserProfileSider = (props: { width: number; path: string }) => {
       <Menu
         defaultSelectedKeys={["subscribed"]}
         onClick={({ key }) => {
-          setSelectedTab(key)
+          onTabChanged(key)
         }}
       >
         <Menu.Item key="subscribed" icon={<AimOutlined />}>

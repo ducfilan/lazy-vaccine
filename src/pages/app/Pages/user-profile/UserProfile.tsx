@@ -4,13 +4,16 @@ import { useHistory } from "react-router-dom"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
 import { UserProfileContext } from "./contexts/UserProfileContext"
-import { Layout, List, notification, Skeleton } from "antd"
+import { Divider, Layout, List, notification, Result, Skeleton, Typography } from "antd"
 
 import { AppPages, InteractionCreate, InteractionLike, InteractionSubscribe } from "@/common/consts/constants"
 import UserProfileSider from "./components/UserProfileSider"
 import { SetInfo, User } from "@/common/types/types"
 import { getUserInfo, getUserInteractionSets } from "@/common/repo/user"
 import SetItemCardLong from "@/pages/app/components/SetItemCardLong"
+import { formatString } from "@/common/utils/stringUtils"
+import InfiniteScroll from "react-infinite-scroll-component"
+import shibaEmptyBoxIcon from "@img/emojis/shiba/box.png"
 
 const { Content } = Layout
 
@@ -24,6 +27,11 @@ const UserProfilePage = (props: any) => {
   const [profileUser, setProfileUser] = useState<User>()
   const [sets, setSets] = useState<SetInfo[]>([])
   const [selectedTab, setSelectedTab] = useState<string>("subscribed")
+  const [skip, setSkip] = useState<number>()
+  const [isSearching, setIsSearching] = useState<boolean>(true)
+  const [totalSetsCount, setTotalSetsCount] = useState<number>()
+
+  const limitItemsPerGet = 5
 
   const tabToInteractionMap: { [interaction: string]: string } = {
     subscribed: InteractionSubscribe,
@@ -33,12 +41,22 @@ const UserProfilePage = (props: any) => {
 
   let userId = props.match?.params?.userId
 
-  const [loading, setLoading] = useState<boolean>(true)
-
   function onPageLoaded() {
     if (!http) return
 
     setUserInfo()
+  }
+
+  function onTabChanged(selectedTab: string) {
+    setSelectedTab(selectedTab)
+    resetStates()
+  }
+
+  function resetStates() {
+    setSkip(0)
+    setTotalSetsCount(0)
+    setIsSearching(false)
+    setSets([])
   }
 
   function setUserInfo() {
@@ -67,10 +85,17 @@ const UserProfilePage = (props: any) => {
   function setSetsInfo() {
     if (!http || !profileUser || !selectedTab) return
 
+    setIsSearching(true)
+
     const interaction = tabToInteractionMap[selectedTab]
-    setSets([])
-    getUserInteractionSets(http, profileUser._id, interaction)
-      .then(setSets)
+    getUserInteractionSets(http, profileUser._id, interaction, skip || 0, limitItemsPerGet)
+      .then((resp) => {
+        setIsSearching(false)
+
+        !totalSetsCount && setTotalSetsCount(resp.total)
+        setSkip(sets.length + resp.sets.length)
+        setSets([...sets, ...resp.sets.map((s) => s.set)])
+      })
       .catch(() => {
         notification["error"]({
           message: chrome.i18n.getMessage("error"),
@@ -80,38 +105,69 @@ const UserProfilePage = (props: any) => {
       })
   }
 
+  const isElementAtBottom = (target: HTMLElement, threshold: number = 0.8) => {
+    if (target.nodeName === "#document") target = document.documentElement
+
+    const clientHeight =
+      target === document.body || target === document.documentElement ? window.screen.availHeight : target.clientHeight
+
+    return target.scrollTop + clientHeight >= threshold * target.scrollHeight
+  }
+
+  const hasMore = () => !!totalSetsCount && sets.length < totalSetsCount
+
+  function onSetsListScroll(e: MouseEvent) {
+    if (hasMore() && isElementAtBottom(e.target as HTMLElement) && !isSearching) {
+      setSetsInfo()
+    }
+  }
+
   useEffect(() => {
     user && onPageLoaded()
   }, [http, user])
-  useEffect(() => profileUser && setLoading(false), [profileUser])
   useEffect(() => profileUser && setSetsInfo(), [selectedTab, profileUser])
 
   return (
-    <UserProfileContext.Provider value={{ user: profileUser, setSelectedTab }}>
-      <Skeleton active loading={loading}>
-        <Layout className="body-content">
-          <UserProfileSider width={250} path={""} />
-          <Layout style={{ paddingLeft: 24, marginTop: -12 }}>
-            <Content>
-              <Content>
-                {sets && sets.length ? (
-                  <List
-                    itemLayout="horizontal"
-                    dataSource={sets}
-                    renderItem={(set) => (
-                      <List.Item>
-                        <SetItemCardLong set={set} key={set._id} />
-                      </List.Item>
-                    )}
-                  />
-                ) : (
-                  <Skeleton active />
-                )}
-              </Content>
-            </Content>
-          </Layout>
+    <UserProfileContext.Provider value={{ user: profileUser, onTabChanged }}>
+      <Layout className="body-content">
+        <UserProfileSider width={250} path={""} />
+        <Layout style={{ paddingLeft: 24, marginTop: -12 }}>
+          <Content>
+            {totalSetsCount ? (
+              <InfiniteScroll
+                next={() => {}}
+                dataLength={totalSetsCount}
+                hasMore={hasMore()}
+                loader={<Skeleton avatar paragraph={{ rows: 3 }} active />}
+                endMessage={<Divider plain>{i18n("common_end_list_result")}</Divider>}
+                onScroll={onSetsListScroll}
+              >
+                <List
+                  dataSource={sets}
+                  renderItem={(set) => (
+                    <List.Item key={set._id}>
+                      <SetItemCardLong set={set} />
+                    </List.Item>
+                  )}
+                />
+              </InfiniteScroll>
+            ) : isSearching ? (
+              <Skeleton avatar paragraph={{ rows: 3 }} active />
+            ) : (
+              <Result icon={<img src={shibaEmptyBoxIcon} />} title={i18n("common_not_found")}>
+                <Typography.Paragraph>
+                  {formatString(i18n("search_result_not_found"), [
+                    {
+                      key: "keyword",
+                      value: props.keyword,
+                    },
+                  ])}
+                </Typography.Paragraph>
+              </Result>
+            )}
+          </Content>
         </Layout>
-      </Skeleton>
+      </Layout>
     </UserProfileContext.Provider>
   )
 }

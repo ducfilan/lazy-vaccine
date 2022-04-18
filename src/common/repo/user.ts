@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios"
-import { SetInfo, User, UserInteractionSetsResponse } from "@/common/types/types"
+import { SetInfo, User, UserInteractionSetResponse, UserInteractionSetsResponse } from "@/common/types/types"
 import Apis from "@consts/apis"
 import StatusCode from "@consts/statusCodes"
 import { Http } from "../facades/axiosFacade"
@@ -23,24 +23,25 @@ export async function getUserInfo(http: Http, userId: string): Promise<User> {
   return userInfo
 }
 
-// TODO: Add pagination limit.
-export async function getUserInteractionSets(http: Http, userId: string, interaction: string): Promise<SetInfo[]> {
-  const response = await http.get<any, AxiosResponse<UserInteractionSetsResponse[]>>(`${Apis.users}/${userId}/sets?interaction=${interaction}`)
+export async function getUserInteractionSets(http: Http, userId: string, interaction: string, skip: number, limit: number): Promise<UserInteractionSetsResponse> {
+  const response = await http.get<any, AxiosResponse<UserInteractionSetsResponse>>(`${Apis.users}/${userId}/sets?interaction=${interaction}&skip=${skip}&limit=${limit}`);
 
   const sets = response?.data
   if (!sets) throw new Error("cannot get user interaction sets")
 
-  return sets.map(({ actions, set }) => {
+  sets.sets.forEach(({ set, actions }) => {
     set.isSubscribed = actions?.includes(InteractionSubscribe)
     set.isLiked = actions?.includes(InteractionLike)
     set.isDisliked = actions?.includes(InteractionDislike)
 
     return set
   })
+
+  return sets
 }
 
 export async function getUserInteractionRandomSet(http: Http, interaction: string): Promise<SetInfo> {
-  const response = await http.get<any, AxiosResponse<UserInteractionSetsResponse>>(`${Apis.me}/random-set?interaction=${interaction}`)
+  const response = await http.get<any, AxiosResponse<UserInteractionSetResponse>>(`${Apis.me}/random-set?interaction=${interaction}`)
 
   const { actions, set } = response?.data
   if (!set) throw new Error("cannot get user interaction sets")

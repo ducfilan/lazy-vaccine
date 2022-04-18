@@ -91,15 +91,16 @@ export async function searchSets(http: Http, keyword: string, skip: number, limi
 
   if (!response?.data) throw new Error(`cannot search sets with keyword: ${keyword}`)
 
-  let { sets, interactions } = response?.data
+  let resp = response?.data
 
-  sets.forEach((set) => {
-    if (interactions) {
-      const actions = interactions.find(interaction => interaction.setId === set._id)?.actions
+  resp.sets.forEach((set) => {
+    if (resp.interactions) {
+      const actions = resp.interactions.find(interaction => interaction.setId === set._id)?.actions
       set.isSubscribed = actions?.includes(InteractionSubscribe)
       set.isLiked = actions?.includes(InteractionLike)
+      set.isDisliked = actions?.includes(InteractionDislike)
     }
   })
 
-  return sets
+  return resp
 }
