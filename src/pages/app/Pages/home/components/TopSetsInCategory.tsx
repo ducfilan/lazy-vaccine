@@ -16,9 +16,13 @@ const TopSetsInCategory = (props: { categoryId: string; title: string }) => {
   useEffect(() => {
     if (!http || !user) return
 
-    getTopSetsInCategory(http, user.locale, props.categoryId).then((sets: SetInfo[]) => {
-      setTopSetsInCategory(sets)
-    })
+    getTopSetsInCategory(http, user.locale, props.categoryId)
+      .then((sets: SetInfo[]) => {
+        setTopSetsInCategory(sets)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   }, [http, user])
 
   return (
