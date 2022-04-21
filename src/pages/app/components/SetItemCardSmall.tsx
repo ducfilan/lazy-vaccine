@@ -1,4 +1,4 @@
-import * as React from "react"
+import React from "react"
 
 import { Card, Avatar, Button, Space, Typography } from "antd"
 import { UserOutlined, AimOutlined, LikeFilled, DislikeFilled } from "@ant-design/icons"
@@ -9,6 +9,8 @@ import { interactToSet, undoInteractToSet } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { ColorPrimary, InteractionDislike, InteractionLike, InteractionSubscribe } from "@/common/consts/constants"
 
+const { useCallback } = React
+
 const i18n = chrome.i18n.getMessage
 
 const SetItemCardSmall = (props: { set: SetInfo }) => {
@@ -18,29 +20,32 @@ const SetItemCardSmall = (props: { set: SetInfo }) => {
   const [isLiked, setIsLiked] = useState<boolean>(props.set.isLiked || false)
   const [isDisliked, setIsDisliked] = useState<boolean>(props.set.isDisliked || false)
 
-  const handleInteract = async (
-    statusDeterminer: boolean,
-    statusDeterminerSetter: React.Dispatch<React.SetStateAction<boolean>>,
-    action: string
-  ) => {
-    if (!http) return
-    setIsLoading(true)
+  const handleInteract = useCallback(
+    async (
+      statusDeterminer: boolean,
+      statusDeterminerSetter: React.Dispatch<React.SetStateAction<boolean>>,
+      action: string
+    ) => {
+      if (!http) return
+      setIsLoading(true)
 
-    const caller = !statusDeterminer ? interactToSet : undoInteractToSet
+      const caller = !statusDeterminer ? interactToSet : undoInteractToSet
 
-    caller(http, props.set._id, action)
-      .then(() => statusDeterminerSetter(!statusDeterminer))
-      .finally(() => setIsLoading(false))
-  }
+      caller(http, props.set._id, action)
+        .then(() => statusDeterminerSetter(!statusDeterminer))
+        .finally(() => setIsLoading(false))
+    },
+    [props.set]
+  )
 
-  const undoInteract = async (
-    statusDeterminerSetter: React.Dispatch<React.SetStateAction<boolean>>,
-    action: string
-  ) => {
-    if (!http) return
+  const undoInteract = useCallback(
+    async (statusDeterminerSetter: React.Dispatch<React.SetStateAction<boolean>>, action: string) => {
+      if (!http) return
 
-    undoInteractToSet(http, props.set._id, action).then(() => statusDeterminerSetter(false))
-  }
+      undoInteractToSet(http, props.set._id, action).then(() => statusDeterminerSetter(false))
+    },
+    [props.set]
+  )
 
   return (
     <Card

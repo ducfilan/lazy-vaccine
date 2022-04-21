@@ -1,4 +1,4 @@
-import * as React from "react"
+import React from "react"
 import parse from "html-react-parser"
 
 import { Col, Row, Typography, Image, Card, Button, Space, Statistic } from "antd"
@@ -15,7 +15,7 @@ import { formatString, langCodeToName } from "@/common/utils/stringUtils"
 import { Link } from "react-router-dom"
 import { interactToSet, undoInteractToSet } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
-import { useState } from "react"
+import { useState, useCallback } from "react"
 
 const setImgStyle = {
   borderRadius: "40% 70% 70% 40%",
@@ -32,40 +32,46 @@ const SetItemCardLong = (props: { set: SetInfo }) => {
   const [likeCount, setLikeCount] = useState<number>(props.set.interactionCount?.like || 0)
   const [dislikeCount, setDislikeCount] = useState<number>(props.set.interactionCount?.dislike || 0)
 
-  const handleInteract = async (
-    statusDeterminer: boolean,
-    statusDeterminerSetter: React.Dispatch<React.SetStateAction<boolean>>,
-    currentCount: number | null,
-    counterSetter: React.Dispatch<React.SetStateAction<number>> | null,
-    action: string
-  ) => {
-    if (!http) return
-    setIsLoading(true)
+  const handleInteract = useCallback(
+    async (
+      statusDeterminer: boolean,
+      statusDeterminerSetter: React.Dispatch<React.SetStateAction<boolean>>,
+      currentCount: number | null,
+      counterSetter: React.Dispatch<React.SetStateAction<number>> | null,
+      action: string
+    ) => {
+      if (!http) return
+      setIsLoading(true)
 
-    const caller = !statusDeterminer ? interactToSet : undoInteractToSet
-    const counterChangeNumber = !statusDeterminer ? 1 : -1
+      const caller = !statusDeterminer ? interactToSet : undoInteractToSet
+      const counterChangeNumber = !statusDeterminer ? 1 : -1
 
-    caller(http, props.set._id, action)
-      .then(() => {
-        statusDeterminerSetter(!statusDeterminer)
-        counterSetter && currentCount !== null && counterSetter(currentCount + counterChangeNumber)
+      caller(http, props.set._id, action)
+        .then(() => {
+          statusDeterminerSetter(!statusDeterminer)
+          counterSetter && currentCount !== null && counterSetter(currentCount + counterChangeNumber)
+        })
+        .finally(() => setIsLoading(false))
+    },
+    [props.set]
+  )
+
+  const undoInteract = useCallback(
+    async (
+      statusDeterminerSetter: React.Dispatch<React.SetStateAction<boolean>>,
+      currentCount: number | null,
+      counterSetter: React.Dispatch<React.SetStateAction<number>> | null,
+      action: string
+    ) => {
+      if (!http) return
+
+      undoInteractToSet(http, props.set._id, action).then(() => {
+        counterSetter && currentCount !== null && counterSetter(currentCount - 1)
+        statusDeterminerSetter(false)
       })
-      .finally(() => setIsLoading(false))
-  }
-
-  const undoInteract = async (
-    statusDeterminerSetter: React.Dispatch<React.SetStateAction<boolean>>,
-    currentCount: number | null,
-    counterSetter: React.Dispatch<React.SetStateAction<number>> | null,
-    action: string
-  ) => {
-    if (!http) return
-
-    undoInteractToSet(http, props.set._id, action).then(() => {
-      counterSetter && currentCount !== null && counterSetter(currentCount - 1)
-      statusDeterminerSetter(false)
-    })
-  }
+    },
+    [props.set]
+  )
 
   return (
     <Card style={{ padding: "0 40px", width: "100%" }}>
