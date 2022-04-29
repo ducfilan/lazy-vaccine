@@ -2,15 +2,18 @@ import * as React from "react"
 
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { HomeContext } from "./contexts/HomeContext"
-import { Col, Layout, List, Skeleton, Typography } from "antd"
+import { Col, Divider, Layout, List, notification, Skeleton, Typography,} from "antd";
 
 import TopSets from "./components/TopSets"
 import CategoriesSider from "@/pages/app/components/CategoriesSider"
 import TopSetsInCategory from "./components/TopSetsInCategory"
-import { Category } from "@/common/types/types"
+import { Category, SetInfo, SetsInCategory } from "@/common/types/types"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import CacheKeys from "@/common/consts/cacheKeys"
 import { getCategories } from "@/common/repo/category"
+import InfiniteScroll from "react-infinite-scroll-component"
+import SetItemCardLong from "../../components/SetItemCardLong"
+import { getSetsInCategory } from "@/common/repo/set"
 
 const { Content } = Layout
 
@@ -23,15 +26,50 @@ const HomePage = (props: any) => {
   const [loading, setLoading] = useState<boolean>(true)
   const [categories, setCategories] = useState<Category[]>()
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
+  const [sets, setSets] = useState<SetInfo[]>([])
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("")
+  const [totalSetsCount, setTotalSetsCount] = useState<number>()
+  const [skip, setSkip] = useState<number>()
+  const [isSearching, setIsSearching] = useState<boolean>(true)
 
+  const limitItemsPerGet = 2
+  const hasMore = () => !!totalSetsCount && sets.length < totalSetsCount
 
   function onPageLoaded() {
     if (!http) return
   }
 
-  useEffect(onPageLoaded, [http])
-  useEffect(() => setLoading(false), [])
+  function onSetsListScroll(e: MouseEvent) {
+    if (hasMore() && isElementAtBottom(e.target as HTMLElement)) {
+      setSetsInfo()
+    }
+  }
 
+  const isElementAtBottom = (target: HTMLElement, threshold: number = 0.8) => {
+    if (target.nodeName === "#document") target = document.documentElement;
+
+    const clientHeight =
+      target === document.body || target === document.documentElement
+        ? window.screen.availHeight
+        : target.clientHeight;
+
+    return target.scrollTop + clientHeight >= threshold * target.scrollHeight;
+  };
+
+  function onCategoryChanged(categoryId: string) {
+    setSelectedCategoryId(categoryId)
+    resetStates()
+  }
+
+  function resetStates() {
+    setSkip(0)
+    setTotalSetsCount(0)
+    setIsSearching(false)
+    setSets([])
+  }
+
+  useEffect(onPageLoaded, [http]);
+  useEffect(() => setLoading(false), []);
   useEffect(() => {
     if (!http || !user) return
 
@@ -44,9 +82,44 @@ const HomePage = (props: any) => {
       })
     }
   }, [http, user])
+  useEffect(() => {
+    setSetsInfo()
+  },
+  [selectedCategoryId]);
+
+  function setSetsInfo() {
+    if (!http || !selectedCategoryId) return
+
+    setIsSearching(true)
+
+    getSetsInCategory(http, selectedCategoryId, skip || 0, limitItemsPerGet)
+      .then((resp: SetsInCategory) => {
+        if(Object.keys(resp).length) {
+          setIsSearching(false)
+
+          !totalSetsCount && setTotalSetsCount(resp.total)
+          setSkip(sets.length + resp.sets.length)
+          setSets([...sets, ...resp.sets])
+        }
+      })
+      .catch(() => {
+        notification["error"]({
+          message: chrome.i18n.getMessage("error"),
+          description: chrome.i18n.getMessage("unexpected_error_message"),
+          duration: null,
+        })
+      })
+  }
 
   return (
-    <HomeContext.Provider value={{ categories, setCategories }}>
+    <HomeContext.Provider
+      value={{
+        categories,
+        setCategories,
+        selectedCategoryId,
+        onCategoryChanged
+      }}
+    >
       <Skeleton active loading={loading}>
         <Layout className="body-content">
           <CategoriesSider width={250} path={""} categories={categories} />
@@ -66,6 +139,30 @@ const HomePage = (props: any) => {
                   )}
                 />
               )}
+              {totalSetsCount ? (
+                <InfiniteScroll
+                  next={() => { }}
+                  dataLength={totalSetsCount}
+                  hasMore={hasMore()}
+                  loader={<Skeleton avatar paragraph={{ rows: 3 }} active />}
+                  endMessage={
+                    <Divider plain>{i18n("common_end_list_result")}</Divider>
+                  }
+                  onScroll={onSetsListScroll}
+                >
+                  <List
+                    dataSource={sets}
+                    renderItem={(set) => (
+                      <List.Item key={set._id}>
+                        <SetItemCardLong set={set} />
+                      </List.Item>
+                    )}
+                  />
+                </InfiniteScroll>
+              ) : isSearching && (
+                <Skeleton avatar paragraph={{ rows: 3 }} active />
+              )
+              }
             </Content>
           </Layout>
         </Layout>

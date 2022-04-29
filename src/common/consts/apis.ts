@@ -1,5 +1,6 @@
 const Apis = {
   categories: (langCode: string) => `/categories?lang=${langCode}`,
+  getSetsInCategory: (categoryId: string, skip: number, limit: number) => `/categories/${categoryId}/sets?skip=${skip}&limit=${limit}`,
   topSetsInCategory: (langCode: string, categoryId: string) => `/categories/${categoryId}/top-sets?lang=${langCode}`,
   interaction: (setId: string, action: string) => `/interactions/${setId}/interactions?action=${action}`,
   users: "/users",
