@@ -7,7 +7,7 @@ import { Col, Divider, Layout, List, notification, Skeleton, Typography,} from "
 import TopSets from "./components/TopSets"
 import CategoriesSider from "@/pages/app/components/CategoriesSider"
 import TopSetsInCategory from "./components/TopSetsInCategory"
-import { Category, SetInfo, SetsInCategory } from "@/common/types/types"
+import { Category, SetInfo, SetsInCategoryResponse } from "@/common/types/types"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import CacheKeys from "@/common/consts/cacheKeys"
 import { getCategories } from "@/common/repo/category"
@@ -32,7 +32,7 @@ const HomePage = (props: any) => {
   const [skip, setSkip] = useState<number>()
   const [isSearching, setIsSearching] = useState<boolean>(true)
 
-  const limitItemsPerGet = 2
+  const limitItemsPerGet = 9
   const hasMore = () => !!totalSetsCount && sets.length < totalSetsCount
 
   function onPageLoaded() {
@@ -93,7 +93,7 @@ const HomePage = (props: any) => {
     setIsSearching(true)
 
     getSetsInCategory(http, selectedCategoryId, skip || 0, limitItemsPerGet)
-      .then((resp: SetsInCategory) => {
+      .then((resp: SetsInCategoryResponse) => {
         if(Object.keys(resp).length) {
           setIsSearching(false)
 

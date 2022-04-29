@@ -39,7 +39,7 @@ export type Category = {
   children?: Category[]
 }
 
-export type SetsInCategory = {
+export type SetsInCategoryResponse = {
   total: number
   sets: SetInfo[]
 }

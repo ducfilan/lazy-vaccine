@@ -71,8 +71,9 @@ const CategoriesSider = (props: { width: number; path: string; categories: Categ
       node: EventDataNode;
     }
   ) => {
-    if (!http || info.node?.key === selectedCategoryId) return;
-    onCategoryChanged(info.node?.key.toString());
+    const isCategoryPreSelected = info.node?.key === selectedCategoryId
+    if (!http || isCategoryPreSelected) return
+    onCategoryChanged(info.node?.key.toString())
   };
 
   return (

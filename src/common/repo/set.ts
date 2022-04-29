@@ -1,5 +1,5 @@
 import { Http } from "../facades/axiosFacade"
-import { SearchSetsResponse, SetInfo, SetsInCategory, TopSetsResponse } from "@/common/types/types"
+import { SearchSetsResponse, SetInfo, SetsInCategoryResponse, TopSetsResponse } from "@/common/types/types"
 import { AxiosResponse } from "axios"
 import Apis from "@consts/apis"
 import { ParamError } from "@consts/errors"
@@ -105,11 +105,11 @@ export async function searchSets(http: Http, keyword: string, skip: number, limi
   return resp
 }
 
-export async function getSetsInCategory(http: Http,categoryId: string,skip: number,limit: number): Promise<SetsInCategory> {
-  const response = await http.get<any, AxiosResponse<SetsInCategory>>(
+export async function getSetsInCategory(http: Http,categoryId: string,skip: number,limit: number): Promise<SetsInCategoryResponse> {
+  const response = await http.get<any, AxiosResponse<SetsInCategoryResponse>>(
     Apis.getSetsInCategory(categoryId, skip, limit)
-  );
+  )
   if (!response?.data)
-    throw new Error(`cannot get sets in category id: ${categoryId}`);
-  return response?.data;
+    throw new Error(`cannot get sets in category id: ${categoryId}`)
+  return response?.data
 }
