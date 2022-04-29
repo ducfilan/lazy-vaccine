@@ -39,6 +39,11 @@ export type Category = {
   children?: Category[]
 }
 
+export type SetsInCategoryResponse = {
+  total: number
+  sets: SetInfo[]
+}
+
 export class CategoryResponse {
   _id: string
   name: any
