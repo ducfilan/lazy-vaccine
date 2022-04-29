@@ -102,7 +102,7 @@ const AppPage = () => {
             <Layout style={{ padding: 24 }}>
               <Content>
                 <Switch>
-                  <Route exact path={AppPages.Home.path} component={HomePage} />
+                  <Route path={AppPages.Home.path} component={HomePage} />
                   <Route path={AppPages.CreateSet.path} component={CreateSetPage} />
                   <Route path={AppPages.EditSet.path} component={CreateSetPage} />
                   <Route path={AppPages.Sets.path} component={SearchResultPage} />

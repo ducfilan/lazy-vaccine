@@ -2,6 +2,11 @@ import * as React from "react"
 import { Divider, Input, Layout, Tree, Typography } from "antd"
 
 import { Category } from "@/common/types/types"
+import { useGlobalContext } from "@/common/contexts/GlobalContext"
+import { Key } from "antd/lib/table/interface"
+import { EventDataNode } from "antd/lib/tree"
+import { useHomeContext } from "../Pages/home/contexts/HomeContext"
+import { Link } from "react-router-dom"
 
 const { Title } = Typography
 const { Sider } = Layout
@@ -37,9 +42,14 @@ const getParentKey = (key: string, tree: any): string => {
   return parentKey
 }
 
-const CategoriesSider = (props: { width: number; path: string, categories: Category[] | undefined }) => {
-  const categoriesKeys: any[] = useMemo(() => flattenCategories(props.categories || [], Infinity), [props.categories])
+const CategoriesSider = (props: { width: number; path: string; categories: Category[] | undefined}) => {
+  const { http } = useGlobalContext()
+  const categoriesKeys: any[] = useMemo(
+    () => flattenCategories(props.categories || [], Infinity),
+    [props.categories]
+  );
   const [expandedKeys, setExpandedKeys] = useState<any[]>()
+  const { selectedCategoryId, onCategoryChanged } = useHomeContext()
 
   function lookupCategories(e: any) {
     const { value } = e.target
@@ -56,6 +66,17 @@ const CategoriesSider = (props: { width: number; path: string, categories: Categ
     setExpandedKeys(keysToExpand)
   }
 
+  const onSelect = (
+    selectedKeys: Key[],
+    info: {
+      node: EventDataNode;
+    }
+  ) => {
+    const isCategoryPreSelected = info.node?.key === selectedCategoryId
+    if (!http || isCategoryPreSelected) return
+    onCategoryChanged(info.node?.key.toString())
+  };
+
   return (
     <Sider width={props.width} className="categories-sider--wrapper pad-16px">
       <Title level={4}>{i18n("common_category")}</Title>
@@ -63,7 +84,13 @@ const CategoriesSider = (props: { width: number; path: string, categories: Categ
       <Input placeholder={i18n("home_category_lookup")} onChange={lookupCategories} className="bot-16px" />
       {/* The states in Ant design which are prefixed with default only work when they are rendered for the first time */}
       {props.categories && props.categories.length > 0 && (
-        <Tree treeData={props.categories} expandedKeys={expandedKeys} onExpand={setExpandedKeys} />
+        <Tree
+          treeData={props.categories}
+          expandedKeys={expandedKeys}
+          onExpand={setExpandedKeys}
+          onSelect={onSelect}
+          titleRender={(node) => {return <Link to={`/home/category/${node.key}`}>{node?.title || '---' }</Link>}}
+        />
       )}
     </Sider>
   )
