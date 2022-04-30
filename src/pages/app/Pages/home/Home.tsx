@@ -75,6 +75,8 @@ const HomePage = (props: any) => {
     setSets([])
   }
 
+  useEffect(onPageLoaded, [http]);
+  useEffect(() => setLoading(false), []);
   useEffect(() => {
     const { pathname } = props.location
     if(!pathname.includes('category')) {
