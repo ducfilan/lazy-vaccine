@@ -6,7 +6,7 @@ export const AppPages = {
   Home: {
     key: "side-home",
     name: "Home",
-    path: "/",
+    path: "/home",
     isSideNav: true,
   },
   Sets: {

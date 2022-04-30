@@ -6,6 +6,7 @@ import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { Key } from "antd/lib/table/interface"
 import { EventDataNode } from "antd/lib/tree"
 import { useHomeContext } from "../Pages/home/contexts/HomeContext"
+import { Link } from "react-router-dom"
 
 const { Title } = Typography
 const { Sider } = Layout
@@ -88,6 +89,7 @@ const CategoriesSider = (props: { width: number; path: string; categories: Categ
           expandedKeys={expandedKeys}
           onExpand={setExpandedKeys}
           onSelect={onSelect}
+          titleRender={(node) => {return <Link to={`/home/category/${node.key}`}>{node?.title || '---' }</Link>}}
         />
       )}
     </Sider>
