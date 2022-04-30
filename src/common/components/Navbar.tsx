@@ -71,7 +71,7 @@ function Navbar(props: { extraComponents?: React.ReactNode[]; centerComponent?: 
     <HashRouter>
       <PageHeader
         title={
-          <Link to={"/"} style={{ color: "white" }}>
+          <Link to={"/home"} style={{ color: "white" }}>
             {chrome.i18n.getMessage("appName")}
           </Link>
         }
