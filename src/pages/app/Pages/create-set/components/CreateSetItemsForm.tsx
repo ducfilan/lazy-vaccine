@@ -270,14 +270,9 @@ export const CreateSetItemsForm = () => {
                   />
                 ))}
 
-              {fields.map(({ key, name, fieldKey, ...restField }, itemIndex: number) => (
+              {fields.map(({ key, name, ...restField }, itemIndex: number) => (
                 <Card key={key} className="create-set-items--item is-relative">
-                  <Form.Item
-                    {...restField}
-                    name={[name, "type"]}
-                    fieldKey={[fieldKey, "type"]}
-                    className="create-set-items--item-type-select"
-                  >
+                  <Form.Item {...restField} name={[name, "type"]} className="create-set-items--item-type-select">
                     <Select
                       options={Object.values(ItemTypes)}
                       value={
@@ -307,22 +302,12 @@ export const CreateSetItemsForm = () => {
                         return (
                           <Row gutter={8}>
                             <Col span={12}>
-                              <Form.Item
-                                {...restField}
-                                name={[name, "term"]}
-                                fieldKey={[fieldKey, "term"]}
-                                rules={[RequiredRule]}
-                              >
+                              <Form.Item {...restField} name={[name, "term"]} rules={[RequiredRule]}>
                                 <Input placeholder={i18n("create_set_term_placeholder")} />
                               </Form.Item>
                             </Col>
                             <Col span={12}>
-                              <Form.Item
-                                {...restField}
-                                name={[name, "definition"]}
-                                fieldKey={[fieldKey, "definition"]}
-                                rules={[RequiredRule]}
-                              >
+                              <Form.Item {...restField} name={[name, "definition"]} rules={[RequiredRule]}>
                                 <Input placeholder={i18n("create_set_definition_placeholder")} />
                               </Form.Item>
                             </Col>
@@ -335,7 +320,6 @@ export const CreateSetItemsForm = () => {
                             <Form.Item
                               {...restField}
                               name={[name, "question"]}
-                              fieldKey={[fieldKey, "question"]}
                               label={i18n("create_set_question_placeholder")}
                               rules={[RequiredRule]}
                             >
@@ -364,25 +348,15 @@ export const CreateSetItemsForm = () => {
                                   <div className="create-set-items--check-guide">
                                     {i18n("create_set_answer_check_guide")}
                                   </div>
-                                  {answers.map(({ key, name, fieldKey, ...restField }) => (
+                                  {answers.map(({ key, name, ...restField }) => (
                                     <Row key={key} gutter={8} align="middle" className="create-set-items--item-answer">
                                       <Col flex="none">
-                                        <Form.Item
-                                          {...restField}
-                                          name={[name, "isCorrect"]}
-                                          fieldKey={[fieldKey, "isCorrect"]}
-                                          valuePropName="checked"
-                                        >
+                                        <Form.Item {...restField} name={[name, "isCorrect"]} valuePropName="checked">
                                           <Checkbox />
                                         </Form.Item>
                                       </Col>
                                       <Col flex="auto">
-                                        <Form.Item
-                                          {...restField}
-                                          name={[name, "answer"]}
-                                          fieldKey={[fieldKey, "answer"]}
-                                          rules={[RequiredRule]}
-                                        >
+                                        <Form.Item {...restField} name={[name, "answer"]} rules={[RequiredRule]}>
                                           <Input.TextArea
                                             autoSize
                                             placeholder={i18n("create_set_answer_placeholder")}
@@ -426,7 +400,6 @@ export const CreateSetItemsForm = () => {
                           <Form.Item
                             {...restField}
                             name={[name, "content"]}
-                            fieldKey={[fieldKey, "content"]}
                             label={i18n("create_set_content_label")}
                             rules={[RequiredRule]}
                           >
