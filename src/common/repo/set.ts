@@ -17,7 +17,7 @@ export async function editSet(http?: Http, setInfo?: SetInfo): Promise<string> {
   if (!http || !setInfo) throw new ParamError()
 
   // Remove unnecessary info.
-  const { creatorId, creatorName, lastUpdated, ...setInfoMinimized } = setInfo
+  const { creatorId, creatorName, lastUpdated, actions, isLiked, isDisliked, isSubscribed, ...setInfoMinimized } = setInfo
 
   await http.patch<any, AxiosResponse<string>>(Apis.sets, setInfoMinimized)
 
@@ -105,7 +105,7 @@ export async function searchSets(http: Http, keyword: string, skip: number, limi
   return resp
 }
 
-export async function getSetsInCategory(http: Http,categoryId: string,skip: number,limit: number): Promise<SetsInCategoryResponse> {
+export async function getSetsInCategory(http: Http, categoryId: string, skip: number, limit: number): Promise<SetsInCategoryResponse> {
   const response = await http.get<any, AxiosResponse<SetsInCategoryResponse>>(
     Apis.getSetsInCategory(categoryId, skip, limit)
   )
