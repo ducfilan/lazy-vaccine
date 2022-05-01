@@ -8,11 +8,12 @@ import { Divider, Layout, List, notification, Skeleton, Typography } from "antd"
 import * as React from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
 import { useParams } from "react-router-dom"
-import CategoriesSider from "../../components/CategoriesSider"
-import SetItemCardSmall from "../../components/SetItemCardSmall"
+import CategoriesSider from "@/pages/app/components/CategoriesSider"
+import SetItemCardSmall from "@/pages/app/components/SetItemCardSmall"
 import { CategorySetsContext } from "./contexts/CategorySetsContext"
 import parse from "html-react-parser"
-import { formatString, langCodeToName } from "@/common/utils/stringUtils"
+import { formatString } from "@/common/utils/stringUtils"
+import { isElementAtBottom } from "@/pages/content-script/domHelpers"
 
 const { Content } = Layout
 const { useState, useEffect } = React
@@ -30,8 +31,6 @@ const CategorySetsPage = (props: any) => {
   const [skip, setSkip] = useState<number>()
   const [sets, setSets] = useState<SetInfo[]>([])
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("")
-  // const [selectedCategoryName, setSelectedCategoryName] = useState<string>("")
-
 
   const limitItemsPerGet = 9
   const hasMore = () => !!totalSetsCount && sets.length < totalSetsCount
@@ -47,17 +46,6 @@ const CategorySetsPage = (props: any) => {
       setSetsInfo()
     }
   }
-
-  const isElementAtBottom = (target: HTMLElement, threshold: number = 0.8) => {
-    if (target.nodeName === "#document") target = document.documentElement;
-
-    const clientHeight =
-      target === document.body || target === document.documentElement
-        ? window.screen.availHeight
-        : target.clientHeight;
-
-    return target.scrollTop + clientHeight >= threshold * target.scrollHeight;
-  };
 
   function onChangeCategoryId(categoryId: string) {
     setSelectedCategoryId(categoryId)
@@ -117,7 +105,7 @@ const CategorySetsPage = (props: any) => {
 
   function getCategoryName(): string {
     const category = categories?.find(category => category.key === selectedCategoryId)
-    return category?.title || '---'
+    return category?.title || "---"
   }
 
 

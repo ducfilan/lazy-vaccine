@@ -104,7 +104,7 @@
     "message": "Tạo bài"
   },
   "category_sets_total": {
-    "message": "Có :total bộ trong :category_name"
+    "message": "Có :total bài học trong :category_name"
   },
   "common_category": {
     "message": "Phân loại"

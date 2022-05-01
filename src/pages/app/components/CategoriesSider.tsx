@@ -71,15 +71,16 @@ const CategoriesSider = (props: any) => {
       node: EventDataNode;
     }
   ) => {
-    const isCategoryPreSelected = info.node?.key === selectedCategoryId
+    const categoryId = info.node?.key
+    const isCategoryPreSelected = categoryId === selectedCategoryId
     if (!http || isCategoryPreSelected) return
     const { pathname } = props.location
     if(pathname.includes('category')) {
-      onChangeCategoryId(info.node?.key.toString())
+      onChangeCategoryId(categoryId.toString())
       return
     }
     history.push({
-      pathname: `/category/${info.node?.key.toString()}`,
+      pathname: `/category/${categoryId.toString()}`,
     })
   };
 
