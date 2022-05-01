@@ -1,12 +1,10 @@
 import * as React from "react"
 import { Divider, Input, Layout, Tree, Typography } from "antd"
-
-import { Category } from "@/common/types/types"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { Key } from "antd/lib/table/interface"
 import { EventDataNode } from "antd/lib/tree"
-import { useHomeContext } from "../Pages/home/contexts/HomeContext"
-import { Link } from "react-router-dom"
+import { useHistory } from "react-router-dom"
+import { useCategorySetsContext } from "../Pages/category-sets/contexts/CategorySetsContext"
 
 const { Title } = Typography
 const { Sider } = Layout
@@ -42,14 +40,15 @@ const getParentKey = (key: string, tree: any): string => {
   return parentKey
 }
 
-const CategoriesSider = (props: { width: number; path: string; categories: Category[] | undefined}) => {
+const CategoriesSider = (props: any) => {
   const { http } = useGlobalContext()
+  const history = useHistory()
   const categoriesKeys: any[] = useMemo(
     () => flattenCategories(props.categories || [], Infinity),
     [props.categories]
   );
   const [expandedKeys, setExpandedKeys] = useState<any[]>()
-  const { selectedCategoryId, onCategoryChanged } = useHomeContext()
+  const { onChangeCategoryId, selectedCategoryId } = useCategorySetsContext()
 
   function lookupCategories(e: any) {
     const { value } = e.target
@@ -74,7 +73,14 @@ const CategoriesSider = (props: { width: number; path: string; categories: Categ
   ) => {
     const isCategoryPreSelected = info.node?.key === selectedCategoryId
     if (!http || isCategoryPreSelected) return
-    onCategoryChanged(info.node?.key.toString())
+    const { pathname } = props.location
+    if(pathname.includes('category')) {
+      onChangeCategoryId(info.node?.key.toString())
+      return
+    }
+    history.push({
+      pathname: `/category/${info.node?.key.toString()}`,
+    })
   };
 
   return (
@@ -89,7 +95,6 @@ const CategoriesSider = (props: { width: number; path: string; categories: Categ
           expandedKeys={expandedKeys}
           onExpand={setExpandedKeys}
           onSelect={onSelect}
-          titleRender={(node) => {return <Link to={`/home/category/${node.key}`}>{node?.title || '---' }</Link>}}
         />
       )}
     </Sider>

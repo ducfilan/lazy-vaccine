@@ -103,6 +103,9 @@
   "create_set_create_button": {
     "message": "Tạo bài"
   },
+  "category_sets_total": {
+    "message": "Có :total bộ trong :category_name"
+  },
   "common_category": {
     "message": "Phân loại"
   },

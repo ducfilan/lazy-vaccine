@@ -88,6 +88,10 @@
   "create_set_create_button": {
     "message": "セットの作成"
   },
+  "category_sets_total": {
+    "message": ":total sets in :category_name"
+
+  },
   "common_category": {
     "message": "カテゴリー"
   },
