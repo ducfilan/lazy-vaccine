@@ -14,6 +14,7 @@ import SetItemCardLong from "@/pages/app/components/SetItemCardLong"
 import { formatString } from "@/common/utils/stringUtils"
 import InfiniteScroll from "react-infinite-scroll-component"
 import shibaEmptyBoxIcon from "@img/emojis/shiba/box.png"
+import { isElementAtBottom } from "@/pages/content-script/domHelpers"
 
 const { Content } = Layout
 
@@ -103,15 +104,6 @@ const UserProfilePage = (props: any) => {
           duration: null,
         })
       })
-  }
-
-  const isElementAtBottom = (target: HTMLElement, threshold: number = 0.8) => {
-    if (target.nodeName === "#document") target = document.documentElement
-
-    const clientHeight =
-      target === document.body || target === document.documentElement ? window.screen.availHeight : target.clientHeight
-
-    return target.scrollTop + clientHeight >= threshold * target.scrollHeight
   }
 
   const hasMore = () => !!totalSetsCount && sets.length < totalSetsCount

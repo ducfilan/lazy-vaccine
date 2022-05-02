@@ -24,6 +24,7 @@ import { Route, Switch, useHistory, useLocation } from "react-router-dom"
 import { Locale } from "antd/lib/locale-provider"
 import SearchResultPage from "./Pages/search-result/SearchResult"
 import UserProfilePage from "./Pages/user-profile/UserProfile"
+import CategorySetsPage from "./Pages/category-sets/CategorySets"
 
 const { Content } = Layout
 
@@ -109,6 +110,7 @@ const AppPage = () => {
                   <Route path={AppPages.SetDetail.path} component={SetDetailPage} />
                   <Route path={AppPages.UserProfile.path} component={UserProfilePage} />
                   <Route path={AppPages.MySpace.path} component={UserProfilePage} />
+                  <Route path={AppPages.CategorySets.path} component={CategorySetsPage} />
                 </Switch>
               </Content>
             </Layout>

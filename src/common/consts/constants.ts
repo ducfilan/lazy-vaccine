@@ -45,6 +45,12 @@ export const AppPages = {
     path: "/me",
     isSideNav: true,
   },
+  CategorySets: {
+    key: "category-sets",
+    name: "Category Sets",
+    path: "/category/:categoryId",
+    isSideNav: false,
+  },
 }
 
 export const LoginTypes = {
