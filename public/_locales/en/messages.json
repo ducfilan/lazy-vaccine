@@ -196,6 +196,9 @@
   "set_detail_no_desc": {
     "message": "No description yet..."
   },
+  "category_sets_total": {
+    "message": ":total sets in :category_name"
+  },
   "search_result_not_found": {
     "message": "Your search - :keyword - did not match any documents.\nSuggestions:\n - Make sure that all words are spelled correctly.\n- Try different keywords."
   },
