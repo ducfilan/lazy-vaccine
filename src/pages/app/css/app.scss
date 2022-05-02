@@ -6,6 +6,7 @@
 
 @import "~@/common/css/components/_common/navbar";
 @import "~@/common/css/components/_common/page-footer";
+@import "~@/common/css/components/_common/categories-sider";
 
 @import "../Pages/create-set/css/create-set";
 @import "../Pages/set-detail/css/set-detail";
@@ -147,31 +148,4 @@ button {
 
 .ant-typography {
   white-space: pre-line;
-}
-
-.categories-sider--wrapper {
-  background: $white;
-  border-radius: 5px;
-
-  .ant-typography {
-      @include highlight;
-      padding: 0 8px;
-      display: inline;
-      text-transform: uppercase;
-  }
-
-  .ant-divider-horizontal {
-      margin: 16px 0;
-  }
-
-  .ant-tree-switcher-noop,
-  .ant-tree-indent-unit,
-  .ant-tree-switcher {
-      width: 12px;
-  }
-
-  .ant-tree .ant-tree-node-content-wrapper,
-  .ant-tree .ant-tree-treenode {
-      width: 100%;
-  }
 }
