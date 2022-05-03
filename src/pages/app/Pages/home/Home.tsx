@@ -1,14 +1,14 @@
-import CacheKeys from "@/common/consts/cacheKeys";
-import { useGlobalContext } from "@/common/contexts/GlobalContext";
-import useLocalStorage from "@/common/hooks/useLocalStorage";
-import { getCategories } from "@/common/repo/category";
-import { Category } from "@/common/types/types";
-import CategoriesSider from "@/pages/app/components/CategoriesSider";
-import { Layout, List, Skeleton, Typography } from "antd";
-import * as React from "react";
-import TopSets from "./components/TopSets";
-import TopSetsInCategory from "./components/TopSetsInCategory";
-import { HomeContext } from "./contexts/HomeContext";
+import CacheKeys from "@/common/consts/cacheKeys"
+import { useGlobalContext } from "@/common/contexts/GlobalContext"
+import useLocalStorage from "@/common/hooks/useLocalStorage"
+import { getCategories } from "@/common/repo/category"
+import { Category } from "@/common/types/types"
+import CategoriesSider from "@/pages/app/components/CategoriesSider"
+import { Layout, List, Skeleton, Typography } from "antd"
+import * as React from "react"
+import TopSets from "./components/TopSets"
+import TopSetsInCategory from "./components/TopSetsInCategory"
+import { HomeContext } from "./contexts/HomeContext"
 
 const { Content } = Layout
 const { useState, useEffect } = React
@@ -24,8 +24,8 @@ const HomePage = (props: any) => {
     if (!http) return
   }
 
-  useEffect(onPageLoaded, [http]);
-  useEffect(() => setLoading(false), []);
+  useEffect(onPageLoaded, [http])
+  useEffect(() => setLoading(false), [])
   useEffect(() => {
     if (!http || !user) return
 
@@ -58,7 +58,7 @@ const HomePage = (props: any) => {
                   </Typography.Title>
                   <TopSets />
                   <List
-                    dataSource={categories}
+                    dataSource={categories.filter((c) => c.isTopCategory)}
                     renderItem={(category) => (
                       <List.Item key={category.key} style={{ display: "block" }}>
                         <TopSetsInCategory categoryId={category.key} title={category.title} />

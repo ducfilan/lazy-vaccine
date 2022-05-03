@@ -36,6 +36,7 @@ export type Category = {
   title: string
   value: string
   path?: string
+  isTopCategory: boolean
   children?: Category[]
 }
 
@@ -49,11 +50,13 @@ export class CategoryResponse {
   name: any
   description: any
   path?: string
+  isTopCategory: boolean
 
-  constructor(id: string, name: object, description: object, path?: string) {
+  constructor(id: string, name: object, description: object, isTopCategory: boolean, path?: string) {
     this._id = id
     this.name = name
     this.description = description
+    this.isTopCategory = isTopCategory
     this.path = path
   }
 
@@ -63,6 +66,7 @@ export class CategoryResponse {
       title: this.name[langCode],
       value: this._id,
       path: this.path,
+      isTopCategory: this.isTopCategory,
     } as Category
   }
 }
