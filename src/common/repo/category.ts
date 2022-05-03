@@ -18,28 +18,24 @@ export async function getCategories(http: Http, langCode: string): Promise<Categ
 }
 
 let _buildCategoriesTree = (rawCategories: Category[], locale: string): Category[] => {
-  let rootCategories = rawCategories
-    .filter(c => c.path === null)
+  _buildSubCategories(rawCategories)
 
-  const rootCategoriesIds = rootCategories.map(c => c.value)
-
-  rawCategories = _removeFilteredCategories(rawCategories, rootCategoriesIds)
-
-  rootCategories.forEach((rootCategory: Category) => _buildSubCategories(rawCategories, rootCategory))
-
-  return rootCategories
+  return rawCategories.filter(c => c.path === null)
 }
 
-let _removeFilteredCategories = (categoriesBeforeRemove: Category[], categoriesToBeRemovedIds: string[]) =>
-  categoriesBeforeRemove.filter(c => !categoriesToBeRemovedIds.includes(c.value))
+let _buildSubCategories = (rawCategories: Category[], parentPath: string | null = null) => {
+  const currentLevelCategories = rawCategories.filter(c => c.path === parentPath)
 
-let _buildSubCategories = (rawCategories: Category[], parentCategory: Category) => {
-  if (rawCategories.length == 0) {
+  if (currentLevelCategories.length == 0) {
     return
   }
 
-  parentCategory.children = rawCategories
-    .filter(c => c.path == `${parentCategory.path || ','}${parentCategory.value},`)
+  currentLevelCategories.forEach(currentCategory => {
+    const nextLevelPath = `${parentPath || ','}${currentCategory.value},`
 
-  rawCategories = _removeFilteredCategories(rawCategories, parentCategory.children.map(c => c.value))
+    const children = rawCategories.filter(child => child.path === nextLevelPath)
+    currentCategory.children = children
+
+    _buildSubCategories(rawCategories, nextLevelPath)
+  })
 }
