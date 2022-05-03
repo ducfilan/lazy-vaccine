@@ -9,8 +9,8 @@ export async function getCategories(http: Http, langCode: string): Promise<Categ
   if (!response?.data) throw new Error("cannot get categories")
 
   const categories = response?.data
-    .map(({ _id, name, description, path }: CategoryResponse) =>
-      new CategoryResponse(_id, name, description, path)
+    .map(({ _id, name, description, isTopCategory, path }: CategoryResponse) =>
+      new CategoryResponse(_id, name, description, isTopCategory, path)
     )
     .map((c: CategoryResponse) => c.toCategories(langCode))
 

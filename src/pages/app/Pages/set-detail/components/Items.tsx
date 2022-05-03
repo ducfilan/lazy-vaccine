@@ -17,7 +17,7 @@ const Items = () => {
           case ItemTypes.TermDef.value:
             innerContent = (
               <Row gutter={8}>
-                <Col flex="auto" span={12}>
+                <Col flex="auto" span={11}>
                   <p style={{ whiteSpace: "pre-line" }}>{item.term}</p>
                 </Col>
                 <Col flex="none">
