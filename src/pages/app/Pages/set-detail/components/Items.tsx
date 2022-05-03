@@ -18,13 +18,13 @@ const Items = () => {
             innerContent = (
               <Row gutter={8}>
                 <Col flex="auto" span={12}>
-                  {item.term}
+                  <p style={{ whiteSpace: "pre-line" }}>{item.term}</p>
                 </Col>
                 <Col flex="none">
                   <Divider type="vertical" />
                 </Col>
                 <Col flex="auto" span={12}>
-                  {item.definition}
+                  <p style={{ whiteSpace: "pre-line" }}>{item.definition}</p>
                 </Col>
               </Row>
             )
