@@ -22,7 +22,7 @@ const i18n = chrome.i18n.getMessage
 
 const CategorySetsPage = (props: any) => {
   const { user, http } = useGlobalContext()
-  const { categoryId }: any = useParams();
+  const { categoryId }: any = useParams()
   const [loading, setLoading] = useState<boolean>(true)
   const [categories, setCategories] = useState<Category[]>()
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
@@ -60,7 +60,7 @@ const CategorySetsPage = (props: any) => {
   }
 
   useEffect(onPageLoaded, [http])
-  useEffect(() => setLoading(false), []);
+  useEffect(() => setLoading(false), [])
   useEffect(() => {
     if (!http || !user) return
 
@@ -76,8 +76,7 @@ const CategorySetsPage = (props: any) => {
 
   useEffect(() => {
     setSetsInfo()
-  },
-    [selectedCategoryId]);
+  }, [selectedCategoryId])
 
   function setSetsInfo() {
     if (!http || !selectedCategoryId) return
@@ -104,10 +103,9 @@ const CategorySetsPage = (props: any) => {
   }
 
   function getCategoryName(): string {
-    const category = categories?.find(category => category.key === selectedCategoryId)
+    const category = categories?.find((category) => category.key === selectedCategoryId)
     return category?.title || "---"
   }
-
 
   return (
     <CategorySetsContext.Provider value={{ selectedCategoryId, onChangeCategoryId }}>
@@ -116,49 +114,44 @@ const CategorySetsPage = (props: any) => {
           <CategoriesSider {...props} width={250} path={""} categories={categories} />
           <Layout style={{ padding: 24 }}>
             <Content>
-              {
-                totalSetsCount ? (
-                  <>
-                    <Typography.Title level={3} className="top--25px">
-
-                      {parse(
-                        formatString(i18n("category_sets_total"), [
-                          {
-                            key: "total",
-                            value: totalSetsCount.toString(),
-                          },
-                          {
-                            key: "category_name",
-                            value: getCategoryName(),
-                          },
-                        ])
+              {totalSetsCount ? (
+                <>
+                  <Typography.Title level={3} className="top--25px">
+                    {parse(
+                      formatString(i18n("category_sets_total"), [
+                        {
+                          key: "total",
+                          value: totalSetsCount.toString(),
+                        },
+                        {
+                          key: "category_name",
+                          value: getCategoryName(),
+                        },
+                      ])
+                    )}
+                  </Typography.Title>
+                  <InfiniteScroll
+                    next={() => {}}
+                    dataLength={totalSetsCount}
+                    hasMore={hasMore()}
+                    loader={<Skeleton avatar paragraph={{ rows: 3 }} active />}
+                    endMessage={<Divider plain>{i18n("common_end_list_result")}</Divider>}
+                    onScroll={onSetsListScroll}
+                  >
+                    <List
+                      dataSource={sets}
+                      grid={{ gutter: 16, column: 3 }}
+                      renderItem={(set) => (
+                        <List.Item>
+                          <SetItemCardSmall set={set} key={set._id} />
+                        </List.Item>
                       )}
-                    </Typography.Title>
-                    <InfiniteScroll
-                      next={() => { }}
-                      dataLength={totalSetsCount}
-                      hasMore={hasMore()}
-                      loader={<Skeleton avatar paragraph={{ rows: 3 }} active />}
-                      endMessage={
-                        <Divider plain>{i18n("common_end_list_result")}</Divider>
-                      }
-                      onScroll={onSetsListScroll}
-                    >
-                      <List
-                        dataSource={sets}
-                        grid={{ gutter: 16, column: 3 }}
-                        renderItem={(set) => (
-                          <List.Item>
-                            <SetItemCardSmall set={set} key={set._id} />
-                          </List.Item>
-                        )}
-                      />
-                    </InfiniteScroll>
-                  </>
-                ) : isSearching && (
-                  <Skeleton avatar paragraph={{ rows: 3 }} active />
-                )
-              }
+                    />
+                  </InfiniteScroll>
+                </>
+              ) : (
+                isSearching && <Skeleton avatar paragraph={{ rows: 3 }} active />
+              )}
             </Content>
           </Layout>
         </Layout>

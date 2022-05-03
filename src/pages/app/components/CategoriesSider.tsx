@@ -10,7 +10,7 @@ const { Title } = Typography
 const { Sider } = Layout
 const i18n = chrome.i18n.getMessage
 
-const { useState, useEffect, useMemo } = React
+const { useState, useMemo } = React
 
 const flattenCategories = (categories: any[], depth: number): any[] => {
   return depth > 0
@@ -43,10 +43,7 @@ const getParentKey = (key: string, tree: any): string => {
 const CategoriesSider = (props: any) => {
   const { http } = useGlobalContext()
   const history = useHistory()
-  const categoriesKeys: any[] = useMemo(
-    () => flattenCategories(props.categories || [], Infinity),
-    [props.categories]
-  );
+  const categoriesKeys: any[] = useMemo(() => flattenCategories(props.categories || [], Infinity), [props.categories])
   const [expandedKeys, setExpandedKeys] = useState<any[]>()
   const { onChangeCategoryId, selectedCategoryId } = useCategorySetsContext()
 
@@ -68,21 +65,21 @@ const CategoriesSider = (props: any) => {
   const onSelect = (
     selectedKeys: Key[],
     info: {
-      node: EventDataNode;
+      node: EventDataNode
     }
   ) => {
-    const categoryId = info.node?.key
+    const categoryId = `${info.node?.key}`
     const isCategoryPreSelected = categoryId === selectedCategoryId
     if (!http || isCategoryPreSelected) return
     const { pathname } = props.location
-    if(pathname.includes('category')) {
-      onChangeCategoryId(categoryId.toString())
+    if (pathname.includes("category")) {
+      onChangeCategoryId(categoryId)
       return
     }
     history.push({
-      pathname: `/category/${categoryId.toString()}`,
+      pathname: `/category/${categoryId}`,
     })
-  };
+  }
 
   return (
     <Sider width={props.width} className="categories-sider--wrapper pad-16px">
@@ -91,12 +88,7 @@ const CategoriesSider = (props: any) => {
       <Input placeholder={i18n("home_category_lookup")} onChange={lookupCategories} className="bot-16px" />
       {/* The states in Ant design which are prefixed with default only work when they are rendered for the first time */}
       {props.categories && props.categories.length > 0 && (
-        <Tree
-          treeData={props.categories}
-          expandedKeys={expandedKeys}
-          onExpand={setExpandedKeys}
-          onSelect={onSelect}
-        />
+        <Tree treeData={props.categories} expandedKeys={expandedKeys} onExpand={setExpandedKeys} onSelect={onSelect} />
       )}
     </Sider>
   )
