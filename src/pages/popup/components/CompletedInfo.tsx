@@ -25,7 +25,7 @@ import { AppBasePath, AppPages } from "@/common/consts/constants"
 
 const { Text } = Typography
 
-const HomePageUrl = chrome.runtime.getURL(AppBasePath)
+const HomePageUrl = `${chrome.runtime.getURL(AppBasePath)}home`
 
 function HeaderContent() {
   const { user } = useGlobalContext()
