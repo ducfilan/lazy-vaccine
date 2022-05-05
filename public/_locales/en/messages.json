@@ -1,10 +1,10 @@
 {
   "appName": {
-    "message": "Lazy vaccine",
+    "message": "Lazy Vaccine",
     "description": "The name of the application"
   },
   "appDescription": {
-    "message": "Gain more knowledge with less pain",
+    "message": "A revolutionary learning platform on blockchain that helps people learn effortlessly while browsing the Internet",
     "description": "The description of the application"
   },
   "error": {
