@@ -1,4 +1,4 @@
-import * as React from "react"
+import React from "react"
 
 import { useHistory } from "react-router-dom"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
@@ -34,9 +34,9 @@ const SearchResultPage = (props: any) => {
     if (cachedCategories) {
       setCategories(cachedCategories)
     } else {
-      getCategories(http, user.locale).then((categories: Category[]) => {
-        setCategories(categories)
-        setCachedCategories(categories)
+      getCategories(http, user.locale).then((newCategories: Category[]) => {
+        setCategories(newCategories)
+        setCachedCategories(newCategories)
       })
     }
   }, [http, user])

@@ -32,9 +32,9 @@ const HomePage = (props: any) => {
     if (cachedCategories) {
       setCategories(cachedCategories)
     } else {
-      getCategories(http, user.locale).then((categories: Category[]) => {
-        setCategories(categories)
-        setCachedCategories(categories)
+      getCategories(http, user.locale).then((newCategories: Category[]) => {
+        setCategories(newCategories)
+        setCachedCategories(newCategories)
       })
     }
   }, [http, user])
