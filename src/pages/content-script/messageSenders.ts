@@ -20,7 +20,7 @@ export function sendGetRandomSubscribedSetMessage() {
   })
 }
 
-export function sendItemInteractionsMessage(setId: string, itemId: string, action: string) {
+export function sendInteractItemMessage(setId: string, itemId: string, action: string) {
   return new Promise<{success: boolean}>((resolve, reject) => {
     sendMessage(ChromeMessageTypeInteractItem, {setId, itemId, action}, resolve, reject)
   })

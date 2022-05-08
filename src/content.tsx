@@ -98,7 +98,7 @@ function registerFlashcardEvents() {
 
   registerFlipCardEvent()
 
-  registerIgnoreEvent(itemGetter, nextItemGetter)
+  registerIgnoreEvent(itemGetter)
 
   registerNextItemEvent(nextItemGetter)
 

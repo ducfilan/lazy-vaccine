@@ -5,7 +5,7 @@ import { renderToString } from "react-dom/server"
 import { toTemplateValues } from "./templateHelpers"
 import { FlashCardTemplate } from "@/background/templates/Flashcard"
 import { SetInfoItem } from "@/common/types/types"
-import { sendItemInteractionsMessage } from "./messageSenders"
+import { sendInteractItemMessage } from "./messageSenders"
 import { ItemsInteractionIgnore } from "@/common/consts/constants"
 
 export function registerFlipCardEvent() {
@@ -96,33 +96,21 @@ function toggleHiddenPopover(wrapperElement: HTMLElement | null) {
   wrapperElement?.querySelector(".ant-popover")?.classList.toggle("ant-popover-hidden")
 }
 
-export function registerIgnoreEvent(itemGetter: () => Promise<SetInfoItem | null>, nextItemGetter: () => Promise<SetInfoItem | null>) {
+export function registerIgnoreEvent(itemGetter: () => Promise<SetInfoItem | null>) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--ignore", async (e: Event) => {
     e.stopPropagation()
 
     const item = await itemGetter()
     if (!item) return // TODO: Notice problem.
 
-    try {
-      await sendItemInteractionsMessage(item.setId, item._id, ItemsInteractionIgnore)
-    } catch (error) {
+    sendInteractItemMessage(item.setId, item._id, ItemsInteractionIgnore)
+    .then(() => {})
+    .catch(error => {
       // TODO: handle error case.
       console.error(error)
-    }
+    })
 
-    const nextItem = await nextItemGetter()
-    if (!nextItem) return // TODO: Notice problem.
-
-    const ignoreButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = ignoreButton.closest(".lazy-vaccine")
-
-    const newItemNode = htmlStringToHtmlNode(
-      formatString(
-        renderToString(<FlashCardTemplate />),
-        toTemplateValues(nextItem, { setId: nextItem.setId, setTitle: nextItem.setTitle })
-      )
-    )
-
-    wrapperElement?.replaceWith(newItemNode)
+    const nextBtn: HTMLElement = document.querySelector('.next-prev-buttons--next-button') as HTMLElement;
+    nextBtn.click();
   })
 }
