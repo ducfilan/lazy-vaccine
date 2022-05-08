@@ -8,6 +8,7 @@ import { detectPageChanged } from "./common/utils/domUtils"
 import {
   sendClearCachedRandomSetMessage,
   sendGetRandomSubscribedSetMessage,
+  sendInteractItemMessage,
 } from "./pages/content-script/messageSenders"
 import {
   registerFlipCardEvent,
@@ -15,12 +16,15 @@ import {
   registerNextItemEvent,
   registerNextSetEvent,
   registerPrevItemEvent,
-  registerIgnoreEvent
+  registerIgnoreEvent,
+  registerGotItemEvent,
+  registerStarEvent
 } from "./pages/content-script/eventRegisters"
 import { FlashCardTemplate } from "./background/templates/Flashcard"
 import { getHref } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
 import { toTemplateValues } from "./pages/content-script/templateHelpers"
+import { ItemsInteractionShow } from "./common/consts/constants"
 
 let randomItemIndexVisitMap: number[] = []
 let setInfo: SetInfo | null
@@ -74,6 +78,12 @@ async function injectCards() {
 
 const randomTemplateValues = async () => {
   const item = getItemAtPointer(currentItemPointer++)
+  sendInteractItemMessage(setInfo?._id || "", item?._id || "", ItemsInteractionShow)
+  .then(() => {})
+  .catch(error => {
+    // TODO: handle error case.
+    console.error(error)
+  })
   return item ? toTemplateValues(item, { setId: setInfo?._id || "", setTitle: setInfo?.name || "" }) : []
 }
 
@@ -100,7 +110,11 @@ function registerFlashcardEvents() {
 
   registerIgnoreEvent(itemGetter)
 
-  registerNextItemEvent(nextItemGetter)
+  registerGotItemEvent(itemGetter)
+
+  registerStarEvent(itemGetter)
+
+  registerNextItemEvent(nextItemGetter, itemGetter)
 
   registerPrevItemEvent(() => {
     if (currentItemPointer === 0) {
@@ -108,7 +122,7 @@ function registerFlashcardEvents() {
     }
 
     return getItemAtPointer(--currentItemPointer)
-  })
+  }, itemGetter)
 
   registerMorePopoverEvent()
 

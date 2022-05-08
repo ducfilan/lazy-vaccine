@@ -6,7 +6,7 @@ import { toTemplateValues } from "./templateHelpers"
 import { FlashCardTemplate } from "@/background/templates/Flashcard"
 import { SetInfoItem } from "@/common/types/types"
 import { sendInteractItemMessage } from "./messageSenders"
-import { ItemsInteractionIgnore } from "@/common/consts/constants"
+import { ItemsInteractionForcedDone, ItemsInteractionIgnore, ItemsInteractionNext, ItemsInteractionStar } from "@/common/consts/constants"
 
 export function registerFlipCardEvent() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--content", (e: Event) => {
@@ -17,9 +17,21 @@ export function registerFlipCardEvent() {
   })
 }
 
-export function registerNextItemEvent(nextItemGetter: () => Promise<SetInfoItem | null>) {
+export function registerNextItemEvent(nextItemGetter: () => Promise<SetInfoItem | null>, itemGetter: () => Promise<SetInfoItem | null>) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--next-button", async (e: Event) => {
     e.stopPropagation()
+
+    if(e.isTrusted) {
+      const currentItem = await itemGetter()
+      if (!currentItem) return // TODO: Notice problem.
+
+      sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext)
+      .then(() => {})
+      .catch(error => {
+        // TODO: handle error case.
+        console.error(error)
+      })
+    }
 
     const nextItem = await nextItemGetter()
     if (!nextItem) return // TODO: Notice problem.
@@ -38,9 +50,21 @@ export function registerNextItemEvent(nextItemGetter: () => Promise<SetInfoItem 
   })
 }
 
-export function registerPrevItemEvent(prevItemGetter: () => SetInfoItem | null) {
+export function registerPrevItemEvent(prevItemGetter: () => SetInfoItem | null, itemGetter: () => Promise<SetInfoItem | null>) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--prev-button", async (e: Event) => {
     e.stopPropagation()
+
+    if(e.isTrusted) {
+      const currentItem = await itemGetter()
+      if (!currentItem) return // TODO: Notice problem.
+
+      sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext)
+      .then(() => {})
+      .catch(error => {
+        // TODO: handle error case.
+        console.error(error)
+      })
+    }
 
     const prevButton = e.target as HTMLElement
     const wrapperElement: HTMLElement | null = prevButton.closest(".lazy-vaccine")
@@ -112,5 +136,40 @@ export function registerIgnoreEvent(itemGetter: () => Promise<SetInfoItem | null
 
     const nextBtn: HTMLElement = document.querySelector('.next-prev-buttons--next-button') as HTMLElement;
     nextBtn.click();
+  })
+}
+
+export function registerGotItemEvent(itemGetter: () => Promise<SetInfoItem | null>) {
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--got-it", async (e: Event) => {
+    e.stopPropagation()
+
+    const item = await itemGetter()
+    if (!item) return // TODO: Notice problem.
+
+    sendInteractItemMessage(item.setId, item._id, ItemsInteractionForcedDone)
+    .then(() => {})
+    .catch(error => {
+      // TODO: handle error case.
+      console.error(error)
+    })
+
+    const nextBtn: HTMLElement = document.querySelector('.next-prev-buttons--next-button') as HTMLElement;
+    nextBtn.click();
+  })
+}
+
+export function registerStarEvent(itemGetter: () => Promise<SetInfoItem | null>) {
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--star", async (e: Event) => {
+    e.stopPropagation()
+
+    const item = await itemGetter()
+    if (!item) return // TODO: Notice problem.
+
+    sendInteractItemMessage(item.setId, item._id, ItemsInteractionStar)
+    .then(() => {})
+    .catch(error => {
+      // TODO: handle error case.
+      console.error(error)
+    })
   })
 }

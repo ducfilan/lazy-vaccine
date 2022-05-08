@@ -1,6 +1,6 @@
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
 import { Button } from "antd"
-import { ThunderboltFilled, MinusCircleOutlined } from "@ant-design/icons"
+import { ThunderboltFilled, MinusCircleOutlined, StarFilled } from "@ant-design/icons"
 import * as React from "react"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
@@ -51,6 +51,16 @@ export const FlashCardTemplate = () => {
             >
               Ignore
             </Button>
+
+            <Button
+              ghost
+              type="primary"
+              className="card--interactions--star"
+              size="large"
+              icon={<StarFilled />}
+            >
+            </Button>
+
             <Button
               ghost
               type="primary"
