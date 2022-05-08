@@ -86,6 +86,10 @@ export async function undoInteractToSet(http: Http, setId: string, action: strin
   await http.delete<any, AxiosResponse<any>>(Apis.interaction(setId, action))
 }
 
+export async function interactToSetItem(http: Http, setId: string, itemId: string, action: string): Promise<void> {
+  await http.post<any, AxiosResponse<any>>(Apis.itemInteraction(setId, itemId, action))
+}
+
 export async function searchSets(http: Http, keyword: string, skip: number, limit: number) {
   const response = await http.get<any, AxiosResponse<SearchSetsResponse>>(`${Apis.sets}?keyword=${keyword}&skip=${skip}&limit=${limit}`)
 
