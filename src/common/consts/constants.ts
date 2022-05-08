@@ -108,7 +108,7 @@ export const RequestToAddCategoryLink = "https://forms.gle/D6wa49fG4aUg3fHg8"
 
 export const ItemTypes = {
   TermDef: { label: "Term - Definition", value: "term-def" },
-  QnA: { label: "Question - Answers", value: "question-answers" },
+  QnA: { label: "Question - Answers", value: "q&a" },
   Content: { label: "Content", value: "content" },
 }
 
