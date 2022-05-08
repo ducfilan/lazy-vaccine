@@ -1,7 +1,8 @@
 import CacheKeys from "./common/consts/cacheKeys"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetRandomItem, ChromeMessageTypeGetRandomSet, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetRandomItem, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
 import { getGoogleAuthToken } from "./common/facades/authFacade"
 import { Http } from "./common/facades/axiosFacade"
+import { interactToSetItem } from "./common/repo/set"
 import { getUserInteractionRandomSet } from "./common/repo/user"
 import { SetInfo, SetInfoItem } from "./common/types/types"
 import { randomIntFromInterval } from "./common/utils/numberUtils"
@@ -46,6 +47,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       clearCachedRandomSet()
       sendResponse({ success: true })
       break
+    case ChromeMessageTypeInteractItem:
+      getGoogleAuthToken().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        interactItem(http, request.arg.setId, request.arg.itemId, request.arg.action).then(() => {
+          sendResponse({ success: true })
+        }).catch(error => {
+          sendResponse({ success: false, error })
+        })
+      }).catch(error => {
+        sendResponse({ success: false, error })
+      })
+      sendResponse({ success: true })
+      break
 
     default:
       break
@@ -74,6 +88,11 @@ export async function getRandomSubscribedSet(http: Http): Promise<SetInfo | null
   }
 
   return randomSetInfo
+}
+
+export async function interactItem(http: Http, setId: string, itemId: string, action: string): Promise<any> {
+  const res = await interactToSetItem(http, setId, itemId, action)
+  return res
 }
 
 function getCachedSet(): SetInfo {

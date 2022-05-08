@@ -133,6 +133,7 @@ export const ChromeMessageTypeToken = "get-chrome-token"
 export const ChromeMessageClearRandomSetCache = "clear-random-set-cache"
 export const ChromeMessageTypeGetRandomItem = "get-random-item"
 export const ChromeMessageTypeGetRandomSet = "get-random-set"
+export const ChromeMessageTypeInteractItem = "interact-item"
 
 export const InjectionTargets = {
   YoutubeHome: [
@@ -168,3 +169,11 @@ export const InteractionDislike = "dislike"
 export const InteractionCreate = "create"
 
 export const ColorPrimary = "#12b886"
+
+export const ItemsInteractionShow = 'show'
+export const ItemsInteractionNext = 'next'
+export const ItemsInteractionIgnore = 'ignore'
+export const ItemsInteractionForcedDone = 'forced-done'
+export const ItemsInteractionAnswerCorrect = 'answer-correct'
+export const ItemsInteractionAnswerIncorrect = 'answer-incorrect'
+export const ItemsInteractionStar = 'star'

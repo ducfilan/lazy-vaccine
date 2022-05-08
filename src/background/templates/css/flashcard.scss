@@ -141,5 +141,21 @@ $white: #fff;
       right: 16px;
       bottom: 16px;
     }
+
+    .card--interactions--star {
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin-left: auto;
+      margin-right: auto;
+      bottom: 16px;
+      color: #FFDF50 !important;
+      border-color: #FFDF50 !important;
+
+      &:hover {
+        color: #FFDF50 ;
+        border-color: #FFDF50;
+      }
+    }
   }
 }
