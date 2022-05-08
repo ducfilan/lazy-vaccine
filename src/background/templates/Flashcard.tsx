@@ -40,7 +40,7 @@ export const FlashCardTemplate = () => {
       />
       <div className="flash-card flash-card-wrapper">
         <div className="card--face card--face--front">
-          <p>{":term"}</p>
+          <p className="card--content">{":term"}</p>
           <div className="card--interactions">
             <Button
               ghost
@@ -63,7 +63,7 @@ export const FlashCardTemplate = () => {
           </div>
         </div>
         <div className="card--face card--face--back">
-          <p>{":definition"}</p>
+          <p className="card--content">{":definition"}</p>
         </div>
       </div>
       <NextPrevButton direction="both" />

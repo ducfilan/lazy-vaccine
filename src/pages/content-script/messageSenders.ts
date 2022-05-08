@@ -1,5 +1,5 @@
 import { sendMessage } from "@/background/MessagingFacade"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetRandomItem, ChromeMessageTypeGetRandomSet } from "@/common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetRandomItem, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem } from "@/common/consts/constants"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
 
 export function sendClearCachedRandomSetMessage() {
@@ -17,5 +17,11 @@ export function sendGetRandomSubscribedItemMessage() {
 export function sendGetRandomSubscribedSetMessage() {
   return new Promise<SetInfo | null>((resolve, reject) => {
     sendMessage(ChromeMessageTypeGetRandomSet, null, resolve, reject)
+  })
+}
+
+export function sendItemInteractionsMessage(setId: string, itemId: string, action: string) {
+  return new Promise<{success: boolean}>((resolve, reject) => {
+    sendMessage(ChromeMessageTypeInteractItem, {setId, itemId, action}, resolve, reject)
   })
 }

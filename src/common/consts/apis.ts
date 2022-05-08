@@ -3,6 +3,7 @@ const Apis = {
   getSetsInCategory: (categoryId: string, skip: number, limit: number) => `/categories/${categoryId}/sets?skip=${skip}&limit=${limit}`,
   topSetsInCategory: (langCode: string, categoryId: string) => `/categories/${categoryId}/top-sets?lang=${langCode}`,
   interaction: (setId: string, action: string) => `/interactions/${setId}/interactions?action=${action}`,
+  itemInteraction: (setId: string, itemId: string, action: string) => `/items-interactions/${setId}/items-interactions/${itemId}/?action=${action}`,
   users: "/users",
   sets: "/sets",
   topSets: (langCode: string) => `/top-sets?lang=${langCode}`,

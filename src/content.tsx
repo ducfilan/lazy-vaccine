@@ -15,6 +15,7 @@ import {
   registerNextItemEvent,
   registerNextSetEvent,
   registerPrevItemEvent,
+  registerIgnoreEvent
 } from "./pages/content-script/eventRegisters"
 import { FlashCardTemplate } from "./background/templates/Flashcard"
 import { getHref } from "./pages/content-script/domHelpers"
@@ -77,9 +78,7 @@ const randomTemplateValues = async () => {
 }
 
 function registerFlashcardEvents() {
-  registerFlipCardEvent()
-
-  registerNextItemEvent(async () => {
+  const nextItemGetter = async () => {
     const isDisplayedAllItemsInSet = currentItemPointer + 1 === setInfo?.items?.length
     if (isDisplayedAllItemsInSet) {
       await sendClearCachedRandomSetMessage()
@@ -88,7 +87,20 @@ function registerFlashcardEvents() {
     }
 
     return getItemAtPointer(++currentItemPointer)
-  })
+  }
+
+  const itemGetter = async () => {
+    await sendClearCachedRandomSetMessage()
+    await initValues()
+
+    return getItemAtPointer(currentItemPointer++)
+  }
+
+  registerFlipCardEvent()
+
+  registerIgnoreEvent(itemGetter, nextItemGetter)
+
+  registerNextItemEvent(nextItemGetter)
 
   registerPrevItemEvent(() => {
     if (currentItemPointer === 0) {
