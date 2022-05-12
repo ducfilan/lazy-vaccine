@@ -63,3 +63,7 @@ export const getExtensionFromFileType = (fileType: string): string => {
 export const trimQuotes = (s: string) => s.replace(/^["'](.+(?=["']$))["']$/, '$1')
 
 export const toTitleCase = (s: string) => s[0].toUpperCase() + s.slice(1)
+
+export const encodeBase64 = (s: string) => window.btoa(unescape(encodeURIComponent(s)))
+
+export const decodeBase64 = (s: string) => decodeURIComponent(escape(window.atob(s)))

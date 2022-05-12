@@ -1,12 +1,13 @@
 import * as React from "react"
 import { addDynamicEventListener, htmlStringToHtmlNode } from "@/background/DomManipulator"
-import { formatString } from "@/common/utils/stringUtils"
+import { decodeBase64, formatString } from "@/common/utils/stringUtils"
 import { renderToString } from "react-dom/server"
-import { toTemplateValues } from "./templateHelpers"
+import { generateItemValue, toTemplateValues } from "./templateHelpers"
 import { FlashCardTemplate } from "@/background/templates/Flashcard"
 import { SetInfoItem } from "@/common/types/types"
 import { sendInteractItemMessage } from "./messageSenders"
 import { ItemsInteractionForcedDone, ItemsInteractionIgnore, ItemsInteractionNext, ItemsInteractionStar } from "@/common/consts/constants"
+import { getTemplate } from "@/background/PageInjector"
 
 export function registerFlipCardEvent() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--content", (e: Event) => {
@@ -41,8 +42,8 @@ export function registerNextItemEvent(nextItemGetter: () => Promise<SetInfoItem 
 
     const newItemNode = htmlStringToHtmlNode(
       formatString(
-        renderToString(<FlashCardTemplate />),
-        toTemplateValues(nextItem, { setId: nextItem.setId, setTitle: nextItem.setTitle })
+        getTemplate(nextItem.type),
+        toTemplateValues(nextItem, generateItemValue(nextItem))
       )
     )
 
@@ -74,8 +75,8 @@ export function registerPrevItemEvent(prevItemGetter: () => SetInfoItem | null, 
 
     const newItemNode = htmlStringToHtmlNode(
       formatString(
-        renderToString(<FlashCardTemplate />),
-        toTemplateValues(prevItem, { setId: prevItem.setId, setTitle: prevItem.setTitle })
+        getTemplate(prevItem.type),
+        toTemplateValues(prevItem, generateItemValue(prevItem))
       )
     )
     wrapperElement?.replaceWith(newItemNode)
@@ -134,7 +135,9 @@ export function registerIgnoreEvent(itemGetter: () => Promise<SetInfoItem | null
       console.error(error)
     })
 
-    const nextBtn: HTMLElement = document.querySelector('.next-prev-buttons--next-button') as HTMLElement;
+    const ignoreButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement | null = ignoreButton.closest(".flash-card-wrapper")
+    const nextBtn: HTMLElement = wrapperElement?.querySelector('.next-prev-buttons--next-button') as HTMLElement;
     nextBtn.click();
   })
 }
@@ -153,7 +156,9 @@ export function registerGotItemEvent(itemGetter: () => Promise<SetInfoItem | nul
       console.error(error)
     })
 
-    const nextBtn: HTMLElement = document.querySelector('.next-prev-buttons--next-button') as HTMLElement;
+    const gotItemButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement | null = gotItemButton.closest(".flash-card-wrapper")
+    const nextBtn: HTMLElement = wrapperElement?.querySelector('.next-prev-buttons--next-button') as HTMLElement;
     nextBtn.click();
   })
 }
@@ -173,3 +178,36 @@ export function registerStarEvent(itemGetter: () => Promise<SetInfoItem | null>)
     })
   })
 }
+
+export function registerSelectAnswerEvent() {
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine .answer-btn", async (e: Event) => {
+    e.stopPropagation()
+
+    const answerBtn = e.target as Element
+    answerBtn?.classList.toggle("selected")
+  })
+}
+
+export function registerCheckAnswerEvent() {
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine .check--btn", async (e: Event) => {
+    e.stopPropagation()
+
+    const checkBtn = e.target as Element
+    const wrapperElement: HTMLElement | null = checkBtn.closest(".qna-card-wrapper")
+    const answersData = wrapperElement?.getAttribute("data-answers") || ''
+    const answerElements = wrapperElement?.querySelectorAll('.answer-btn');
+    const answers = JSON.parse(decodeBase64(answersData));
+
+    answerElements?.forEach((answer, idx) => {
+      if(!answers) return
+      if(answers[idx].isCorrect) {
+        answer.classList.add('correct')
+      }
+      if(answer.classList.contains('selected') && !answers[idx].isCorrect) {
+        answer.classList.add('incorrect')
+      }
+    })
+  })
+}
+
+
