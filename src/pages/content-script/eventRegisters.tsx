@@ -99,6 +99,7 @@ export function registerMorePopoverEvent() {
 
 export function registerNextSetEvent(itemGetter: () => Promise<SetInfoItem | null>) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card-next-set-link", async (e: Event) => {
+    e.preventDefault()
     e.stopPropagation()
 
     const nextSetButton = e.target as HTMLElement

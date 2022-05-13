@@ -31,7 +31,7 @@ export const FlashCardTemplate = () => {
               </a>
             </p>
             <p>
-              <a href="javascript:void()" className="flash-card-next-set-link">
+              <a href="#" className="flash-card-next-set-link">
                 {i18n("flashcard_next_set")}
               </a>
             </p>
