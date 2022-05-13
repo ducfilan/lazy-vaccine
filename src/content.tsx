@@ -1,6 +1,3 @@
-import * as React from "react"
-import { renderToString } from "react-dom/server"
-
 import PageInjector from "./background/PageInjector"
 import InjectionTargetFactory from "./background/InjectionTargetFactory"
 import { SetInfo } from "./common/types/types"
@@ -20,14 +17,12 @@ import {
   registerGotItemEvent,
   registerStarEvent,
   registerSelectAnswerEvent,
-  registerCheckAnswerEvent
+  registerCheckAnswerEvent,
 } from "./pages/content-script/eventRegisters"
-import { FlashCardTemplate } from "./background/templates/Flashcard"
 import { getHref } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
 import { generateItemValue, toTemplateValues } from "./pages/content-script/templateHelpers"
 import { ItemsInteractionShow } from "./common/consts/constants"
-import { encodeBase64 } from "./common/utils/stringUtils"
 
 let randomItemIndexVisitMap: number[] = []
 let setInfo: SetInfo | null
@@ -82,7 +77,7 @@ const randomTemplateValues = async () => {
   const item = getItemAtPointer(currentItemPointer++)
   sendInteractItemMessage(setInfo?._id || "", item?._id || "", ItemsInteractionShow)
     .then(() => {})
-    .catch(error => {
+    .catch((error) => {
       // TODO: handle error case.
       console.error(error)
     })
@@ -146,9 +141,9 @@ const getItemAtPointer = (pointerPosition: number) => {
 
   return rawItem
     ? {
-      ...rawItem,
-      setId: setInfo?._id || "",
-      setTitle: setInfo?.name || "",
-    }
+        ...rawItem,
+        setId: setInfo?._id || "",
+        setTitle: setInfo?.name || "",
+      }
     : null
 }

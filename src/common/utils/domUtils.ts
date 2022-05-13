@@ -1,8 +1,8 @@
 export const detectPageChanged = (callback: () => any, initialCall?: boolean) => {
   var oldHref = document.location.href
 
-  window.onload = function () {
-    initialCall && callback()
+  window.onload = async function () {
+    initialCall && (await callback())
 
     const bodyList = document.querySelector("body")
     if (bodyList === null) {
@@ -10,10 +10,10 @@ export const detectPageChanged = (callback: () => any, initialCall?: boolean) =>
     }
 
     const observer = new MutationObserver(function (mutations) {
-      mutations.forEach(function (mutation) {
+      mutations.forEach(async function (_mutation) {
         if (oldHref != document.location.href) {
           oldHref = document.location.href
-          callback()
+          await callback()
         }
       })
     })
