@@ -133,22 +133,22 @@ $white: #fff;
 
         &.incorrect {
           background-color: #fdd4db !important;
-          border-color: #FF9CAE !important;
+          border-color: #ff9cae !important;
         }
       }
     }
 
     .check--wrapper {
       width: 100%;
-      display: flex;
-      padding: 0 44px;
+      text-align: center;
     }
 
     .card--interactions {
       display: flex;
       padding: 10px 16px;
       justify-content: space-between;
-      margin-top: auto;
+      margin-top: 1em;
+      border-top: 1px solid #dbdbdb;
 
       button {
         &:hover {
@@ -167,15 +167,14 @@ $white: #fff;
       }
 
       .card--interactions--star {
-        color: #FFDF50 !important;
-        border-color: #FFDF50 !important;
+        color: #ffdf50 !important;
+        border-color: #ffdf50 !important;
 
         &:hover {
-          color: #FFDF50;
-          border-color: #FFDF50;
+          color: #ffdf50;
+          border-color: #ffdf50;
         }
       }
     }
-
   }
 }

@@ -1,5 +1,5 @@
-import { InjectTypes, ItemTypes } from "@/common/consts/constants"
-import { KeyValuePair, PageInjectorSiblingSelectorParts, SetInfoItem } from "@/common/types/types"
+import { InjectTypes } from "@/common/consts/constants"
+import { KeyValuePair, PageInjectorSiblingSelectorParts } from "@/common/types/types"
 import { formatString, trimQuotes } from "@/common/utils/stringUtils"
 import { MutationObserverFacade } from "@facades/mutationObserverFacade"
 import { renderToString } from "react-dom/server"
