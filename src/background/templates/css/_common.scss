@@ -1,0 +1,77 @@
+@use "sass:meta";
+
+@mixin box-shadow($h-shadow: 0, $v-shadow: 1px, $blur: 2px, $spread: 0, $color: fade-out($black, 0.85)) {
+  box-shadow: $h-shadow $v-shadow $blur $spread $color;
+}
+
+@keyframes animate-fade {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+$primary: #12b886;
+$white: #fff;
+
+.lazy-vaccine {
+  @include meta.load-css("./antd-icon.scss");
+  @include meta.load-css("./antd-btn.scss");
+  @include meta.load-css("./antd-popover.scss");
+
+  position: relative;
+  min-width: 300px;
+  z-index: 99999;
+
+  a {
+    color: $primary;
+    text-decoration: none;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .next-prev-buttons--wrapper {
+    height: 300px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+
+    button {
+      width: 32px;
+      height: 32px;
+      padding: 1.7px 0;
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 15%);
+      position: absolute;
+      z-index: 1;
+      top: calc(50% - 16px);
+      border: none;
+      background: $primary;
+      color: $white;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.85;
+      }
+    }
+
+    .next-prev-buttons--prev-button {
+      left: 0;
+      border-radius: 0;
+      border-top-right-radius: 13px;
+      border-bottom-right-radius: 13px;
+    }
+
+    .next-prev-buttons--next-button {
+      right: 0;
+      border-radius: 0;
+      border-top-left-radius: 13px;
+      border-bottom-left-radius: 13px;
+    }
+  }
+}
