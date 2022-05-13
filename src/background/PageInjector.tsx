@@ -1,8 +1,23 @@
-import { InjectTypes } from "@/common/consts/constants"
+import { InjectTypes, ItemTypes } from "@/common/consts/constants"
 import { KeyValuePair, PageInjectorSiblingSelectorParts, SetInfoItem } from "@/common/types/types"
 import { formatString, trimQuotes } from "@/common/utils/stringUtils"
 import { MutationObserverFacade } from "@facades/mutationObserverFacade"
+import { renderToString } from "react-dom/server"
+import { FlashCardTemplate } from "./templates/Flashcard"
 import { htmlStringToHtmlNode, insertBefore } from "./DomManipulator"
+import React from "react"
+import { QnATemplate } from "./templates/QandA"
+
+export function getTemplate(type: string) {
+  switch (type) {
+    case 'term&def':
+      return renderToString(<FlashCardTemplate />)
+    case 'q&a':
+      return renderToString(<QnATemplate />)
+    default:
+      return renderToString(<FlashCardTemplate />)
+  }
+}
 
 export default class PageInjector {
   private rate: number
@@ -64,9 +79,8 @@ export default class PageInjector {
   }
 
   private processAddedNodes(this: {
-    htmlTemplate: string,
     siblingSelectorParts: PageInjectorSiblingSelectorParts,
-    templateValueGetter: () => Promise<KeyValuePair[]>
+    templateValueGetter: () => Promise<KeyValuePair[]>,
   }, nodes: Element[]) {
     nodes = Array.prototype.slice.call(nodes).filter(
       (node: Element) => {
@@ -90,18 +104,20 @@ export default class PageInjector {
       const templateValue = await this.templateValueGetter()
       if (!templateValue || templateValue.length === 0) return
 
-      const htmlString = formatString(this.htmlTemplate, templateValue)
+      const typeItem = templateValue.find(item => item.key === 'type')?.value
+      const htmlTemplate = getTemplate(typeItem || "")
+      const htmlString = formatString(htmlTemplate, templateValue)
 
       insertBefore(htmlStringToHtmlNode(htmlString), node)
     })
   }
 
-  private inject(htmlTemplate: string, templateValueGetter: () => Promise<KeyValuePair[]>) {
+  private inject(templateValueGetter: () => Promise<KeyValuePair[]>) {
     try {
       if (this.type == InjectTypes.FixedPosition) {
-        this.injectFixedPosition(htmlTemplate, templateValueGetter)
+        this.injectFixedPosition(templateValueGetter)
       } else if (this.type == InjectTypes.DynamicGenerated) {
-        this.injectDynamicPosition(htmlTemplate, templateValueGetter)
+        this.injectDynamicPosition(templateValueGetter)
       } else {
         throw new Error("invalid inject type")
       }
@@ -110,7 +126,7 @@ export default class PageInjector {
     }
   }
 
-  private async injectFixedPosition(htmlTemplate: string, templateValueGetter: () => Promise<KeyValuePair[]>) {
+  private async injectFixedPosition(templateValueGetter: () => Promise<KeyValuePair[]>) {
     if (!this.parentSelector) {
       throw new Error("parentSelector is not set")
     }
@@ -118,6 +134,8 @@ export default class PageInjector {
     const templateValue = await templateValueGetter()
     if (!templateValue || templateValue.length === 0) return
 
+    const typeItem = templateValue.find(item => item.key === 'type')?.value
+    const htmlTemplate = getTemplate(typeItem || "")
     const htmlString = formatString(htmlTemplate, templateValue)
 
     const node = htmlStringToHtmlNode(htmlString)
@@ -128,7 +146,7 @@ export default class PageInjector {
     document.querySelector(this.parentSelector)?.prepend(node)
   }
 
-  private injectDynamicPosition(htmlTemplate: string, templateValueGetter: () => Promise<KeyValuePair[]>) {
+  private injectDynamicPosition(templateValueGetter: () => Promise<KeyValuePair[]>) {
     if (!this.siblingSelectorParts || this.isSiblingSelectorPartsEmpty()) {
       throw new Error("siblingSelectorParts is required when injecting dynamic generated content")
     }
@@ -136,7 +154,7 @@ export default class PageInjector {
     const observer = new MutationObserverFacade(
       this.parentSelector,
       null,
-      this.processAddedNodes.bind({ siblingSelectorParts: this.siblingSelectorParts, htmlTemplate, templateValueGetter })
+      this.processAddedNodes.bind({ siblingSelectorParts: this.siblingSelectorParts, templateValueGetter })
     )
 
     observer.observe()
@@ -145,12 +163,12 @@ export default class PageInjector {
   /**
    * Wait until the target node to be rendered then inject.
    */
-  waitInject(htmlContent: string, templateValueGetter: () => Promise<KeyValuePair[]>, intervalInMs: number = 500) {
+  waitInject(templateValueGetter: () => Promise<KeyValuePair[]>, intervalInMs: number = 500) {
     const id = setInterval(() => {
       const isSelectorRendered = document.querySelector(this.parentSelector)
 
       if (isSelectorRendered) {
-        this.inject(htmlContent, templateValueGetter)
+        this.inject(templateValueGetter)
 
         clearInterval(id)
       }
