@@ -23,11 +23,14 @@ export function registerFlipCardEvent() {
   })
 }
 
-export function registerNextItemEvent(nextItemGetter: () => Promise<SetInfoItem | null>, itemGetter: () => SetInfoItem | null) {
+export function registerNextItemEvent(
+  nextItemGetter: () => Promise<SetInfoItem | null>,
+  itemGetter: () => SetInfoItem | null
+) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--next-button", async (e: Event) => {
     e.stopPropagation()
 
-    if(e.isTrusted) {
+    if (e.isTrusted) {
       const currentItem = itemGetter()
       if (!currentItem) return // TODO: Notice problem.
 
@@ -57,7 +60,7 @@ export function registerPrevItemEvent(prevItemGetter: () => SetInfoItem | null, 
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--prev-button", async (e: Event) => {
     e.stopPropagation()
 
-    if(e.isTrusted) {
+    if (e.isTrusted) {
       const currentItem = itemGetter()
       if (!currentItem) return // TODO: Notice problem.
 
@@ -91,32 +94,28 @@ export function registerMorePopoverEvent() {
   })
 }
 
-export function registerNextSetEvent(itemGetter: () => Promise<SetInfoItem | null>) {
+export function registerNextSetEvent(preProcess: () => Promise<void>) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card-next-set-link", async (e: Event) => {
     e.preventDefault()
     e.stopPropagation()
+
+    await preProcess()
 
     const nextSetButton = e.target as HTMLElement
     const wrapperElement: HTMLElement | null = nextSetButton.closest(".lazy-vaccine")
 
     toggleHiddenPopover(wrapperElement)
-
-    const item = await itemGetter()
-    if (!item) return // TODO: Notice problem.
-
-    const newItemNode = htmlStringToHtmlNode(
-      formatString(
-        renderToString(<FlashCardTemplate />),
-        toTemplateValues(item, { setId: item.setId, setTitle: item.setTitle })
-      )
-    )
-
-    wrapperElement?.replaceWith(newItemNode)
+    clickNextItemButton(wrapperElement)
   })
 }
 
 function toggleHiddenPopover(wrapperElement: HTMLElement | null) {
   wrapperElement?.querySelector(".ant-popover")?.classList.toggle("ant-popover-hidden")
+}
+
+function clickNextItemButton(wrapperElement: HTMLElement | null) {
+  const nextBtn: HTMLElement = wrapperElement?.querySelector(".next-prev-buttons--next-button") as HTMLElement
+  nextBtn.click()
 }
 
 export function registerIgnoreEvent(itemGetter: () => SetInfoItem | null) {
@@ -135,8 +134,7 @@ export function registerIgnoreEvent(itemGetter: () => SetInfoItem | null) {
 
     const ignoreButton = e.target as HTMLElement
     const wrapperElement: HTMLElement | null = ignoreButton.closest(".lazy-vaccine")
-    const nextBtn: HTMLElement = wrapperElement?.querySelector(".next-prev-buttons--next-button") as HTMLElement
-    nextBtn.click()
+    clickNextItemButton(wrapperElement)
   })
 }
 
@@ -156,8 +154,7 @@ export function registerGotItemEvent(itemGetter: () => SetInfoItem | null) {
 
     const gotItemButton = e.target as HTMLElement
     const wrapperElement: HTMLElement | null = gotItemButton.closest(".lazy-vaccine")
-    const nextBtn: HTMLElement = wrapperElement?.querySelector(".next-prev-buttons--next-button") as HTMLElement
-    nextBtn.click()
+    clickNextItemButton(wrapperElement)
   })
 }
 

@@ -128,8 +128,6 @@ function registerFlashcardEvents() {
   registerNextSetEvent(async () => {
     await sendClearCachedRandomSetMessage()
     await initValues()
-
-    return getItemAtPointer(currentItemPointer++)
   })
 }
 
