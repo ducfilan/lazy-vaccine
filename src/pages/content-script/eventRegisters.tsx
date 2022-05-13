@@ -23,15 +23,12 @@ export function registerFlipCardEvent() {
   })
 }
 
-export function registerNextItemEvent(
-  nextItemGetter: () => Promise<SetInfoItem | null>,
-  itemGetter: () => Promise<SetInfoItem | null>
-) {
+export function registerNextItemEvent(nextItemGetter: () => Promise<SetInfoItem | null>, itemGetter: () => SetInfoItem | null) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--next-button", async (e: Event) => {
     e.stopPropagation()
 
-    if (e.isTrusted) {
-      const currentItem = await itemGetter()
+    if(e.isTrusted) {
+      const currentItem = itemGetter()
       if (!currentItem) return // TODO: Notice problem.
 
       sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext)
@@ -56,15 +53,12 @@ export function registerNextItemEvent(
   })
 }
 
-export function registerPrevItemEvent(
-  prevItemGetter: () => SetInfoItem | null,
-  itemGetter: () => Promise<SetInfoItem | null>
-) {
+export function registerPrevItemEvent(prevItemGetter: () => SetInfoItem | null, itemGetter: () => SetInfoItem | null) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--prev-button", async (e: Event) => {
     e.stopPropagation()
 
-    if (e.isTrusted) {
-      const currentItem = await itemGetter()
+    if(e.isTrusted) {
+      const currentItem = itemGetter()
       if (!currentItem) return // TODO: Notice problem.
 
       sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext).catch((error) => {
@@ -125,11 +119,11 @@ function toggleHiddenPopover(wrapperElement: HTMLElement | null) {
   wrapperElement?.querySelector(".ant-popover")?.classList.toggle("ant-popover-hidden")
 }
 
-export function registerIgnoreEvent(itemGetter: () => Promise<SetInfoItem | null>) {
+export function registerIgnoreEvent(itemGetter: () => SetInfoItem | null) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--ignore", async (e: Event) => {
     e.stopPropagation()
 
-    const item = await itemGetter()
+    const item = itemGetter()
     if (!item) return // TODO: Notice problem.
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionIgnore)
@@ -140,17 +134,17 @@ export function registerIgnoreEvent(itemGetter: () => Promise<SetInfoItem | null
       })
 
     const ignoreButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = ignoreButton.closest(".flash-card-wrapper")
+    const wrapperElement: HTMLElement | null = ignoreButton.closest(".lazy-vaccine")
     const nextBtn: HTMLElement = wrapperElement?.querySelector(".next-prev-buttons--next-button") as HTMLElement
     nextBtn.click()
   })
 }
 
-export function registerGotItemEvent(itemGetter: () => Promise<SetInfoItem | null>) {
+export function registerGotItemEvent(itemGetter: () => SetInfoItem | null) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--got-it", async (e: Event) => {
     e.stopPropagation()
 
-    const item = await itemGetter()
+    const item = itemGetter()
     if (!item) return // TODO: Notice problem.
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionForcedDone)
@@ -161,17 +155,17 @@ export function registerGotItemEvent(itemGetter: () => Promise<SetInfoItem | nul
       })
 
     const gotItemButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = gotItemButton.closest(".flash-card-wrapper")
+    const wrapperElement: HTMLElement | null = gotItemButton.closest(".lazy-vaccine")
     const nextBtn: HTMLElement = wrapperElement?.querySelector(".next-prev-buttons--next-button") as HTMLElement
     nextBtn.click()
   })
 }
 
-export function registerStarEvent(itemGetter: () => Promise<SetInfoItem | null>) {
+export function registerStarEvent(itemGetter: () => SetInfoItem | null) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--star", async (e: Event) => {
     e.stopPropagation()
 
-    const item = await itemGetter()
+    const item = itemGetter()
     if (!item) return // TODO: Notice problem.
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionStar)

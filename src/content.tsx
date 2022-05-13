@@ -97,11 +97,8 @@ function registerFlashcardEvents() {
     return getItemAtPointer(++currentItemPointer)
   }
 
-  const itemGetter = async () => {
-    await sendClearCachedRandomSetMessage()
-    await initValues()
-
-    return getItemAtPointer(currentItemPointer++)
+  const itemGetter = () => {
+    return getItemAtPointer(currentItemPointer)
   }
 
   registerFlipCardEvent()
