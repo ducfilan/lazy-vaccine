@@ -137,6 +137,10 @@ export type SetInfo = {
 export type SetInfoItem = {
   type: string,
   _id: string,
+  answers?: {
+    isCorrect?: boolean,
+    answer: string
+  }[],
   [key: string]: any
 }
 

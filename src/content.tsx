@@ -18,13 +18,16 @@ import {
   registerPrevItemEvent,
   registerIgnoreEvent,
   registerGotItemEvent,
-  registerStarEvent
+  registerStarEvent,
+  registerSelectAnswerEvent,
+  registerCheckAnswerEvent
 } from "./pages/content-script/eventRegisters"
 import { FlashCardTemplate } from "./background/templates/Flashcard"
 import { getHref } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
-import { toTemplateValues } from "./pages/content-script/templateHelpers"
+import { generateItemValue, toTemplateValues } from "./pages/content-script/templateHelpers"
 import { ItemsInteractionShow } from "./common/consts/constants"
+import { encodeBase64 } from "./common/utils/stringUtils"
 
 let randomItemIndexVisitMap: number[] = []
 let setInfo: SetInfo | null
@@ -68,8 +71,7 @@ async function injectCards() {
 
     injectionTargets.forEach(async ({ type, selector, siblingSelector }) => {
       const injector = new PageInjector(1, type, selector, siblingSelector)
-
-      injector.waitInject(renderToString(<FlashCardTemplate />), randomTemplateValues)
+      injector.waitInject(randomTemplateValues)
     })
   } catch (error) {
     console.log(`unexpected error: ${JSON.stringify(error)}`)
@@ -79,12 +81,13 @@ async function injectCards() {
 const randomTemplateValues = async () => {
   const item = getItemAtPointer(currentItemPointer++)
   sendInteractItemMessage(setInfo?._id || "", item?._id || "", ItemsInteractionShow)
-  .then(() => {})
-  .catch(error => {
-    // TODO: handle error case.
-    console.error(error)
-  })
-  return item ? toTemplateValues(item, { setId: setInfo?._id || "", setTitle: setInfo?.name || "" }) : []
+    .then(() => {})
+    .catch(error => {
+      // TODO: handle error case.
+      console.error(error)
+    })
+
+  return item ? toTemplateValues(item, generateItemValue(item)) : []
 }
 
 function registerFlashcardEvents() {
@@ -107,6 +110,10 @@ function registerFlashcardEvents() {
   }
 
   registerFlipCardEvent()
+
+  registerSelectAnswerEvent()
+
+  registerCheckAnswerEvent()
 
   registerIgnoreEvent(itemGetter)
 
@@ -139,9 +146,9 @@ const getItemAtPointer = (pointerPosition: number) => {
 
   return rawItem
     ? {
-        ...rawItem,
-        setId: setInfo?._id || "",
-        setTitle: setInfo?.name || "",
-      }
+      ...rawItem,
+      setId: setInfo?._id || "",
+      setTitle: setInfo?.name || "",
+    }
     : null
 }
