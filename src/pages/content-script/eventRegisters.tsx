@@ -6,7 +6,12 @@ import { generateItemValue, toTemplateValues } from "./templateHelpers"
 import { FlashCardTemplate } from "@/background/templates/Flashcard"
 import { SetInfoItem } from "@/common/types/types"
 import { sendInteractItemMessage } from "./messageSenders"
-import { ItemsInteractionForcedDone, ItemsInteractionIgnore, ItemsInteractionNext, ItemsInteractionStar } from "@/common/consts/constants"
+import {
+  ItemsInteractionForcedDone,
+  ItemsInteractionIgnore,
+  ItemsInteractionNext,
+  ItemsInteractionStar,
+} from "@/common/consts/constants"
 import { getTemplate } from "@/background/PageInjector"
 
 export function registerFlipCardEvent() {
@@ -18,20 +23,23 @@ export function registerFlipCardEvent() {
   })
 }
 
-export function registerNextItemEvent(nextItemGetter: () => Promise<SetInfoItem | null>, itemGetter: () => Promise<SetInfoItem | null>) {
+export function registerNextItemEvent(
+  nextItemGetter: () => Promise<SetInfoItem | null>,
+  itemGetter: () => Promise<SetInfoItem | null>
+) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--next-button", async (e: Event) => {
     e.stopPropagation()
 
-    if(e.isTrusted) {
+    if (e.isTrusted) {
       const currentItem = await itemGetter()
       if (!currentItem) return // TODO: Notice problem.
 
       sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext)
-      .then(() => {})
-      .catch(error => {
-        // TODO: handle error case.
-        console.error(error)
-      })
+        .then(() => {})
+        .catch((error) => {
+          // TODO: handle error case.
+          console.error(error)
+        })
     }
 
     const nextItem = await nextItemGetter()
@@ -41,27 +49,25 @@ export function registerNextItemEvent(nextItemGetter: () => Promise<SetInfoItem 
     const wrapperElement: HTMLElement | null = nextButton.closest(".lazy-vaccine")
 
     const newItemNode = htmlStringToHtmlNode(
-      formatString(
-        getTemplate(nextItem.type),
-        toTemplateValues(nextItem, generateItemValue(nextItem))
-      )
+      formatString(getTemplate(nextItem.type), toTemplateValues(nextItem, generateItemValue(nextItem)))
     )
 
     wrapperElement?.replaceWith(newItemNode)
   })
 }
 
-export function registerPrevItemEvent(prevItemGetter: () => SetInfoItem | null, itemGetter: () => Promise<SetInfoItem | null>) {
+export function registerPrevItemEvent(
+  prevItemGetter: () => SetInfoItem | null,
+  itemGetter: () => Promise<SetInfoItem | null>
+) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--prev-button", async (e: Event) => {
     e.stopPropagation()
 
-    if(e.isTrusted) {
+    if (e.isTrusted) {
       const currentItem = await itemGetter()
       if (!currentItem) return // TODO: Notice problem.
 
-      sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext)
-      .then(() => {})
-      .catch(error => {
+      sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext).catch((error) => {
         // TODO: handle error case.
         console.error(error)
       })
@@ -74,10 +80,7 @@ export function registerPrevItemEvent(prevItemGetter: () => SetInfoItem | null, 
     if (!prevItem) return
 
     const newItemNode = htmlStringToHtmlNode(
-      formatString(
-        getTemplate(prevItem.type),
-        toTemplateValues(prevItem, generateItemValue(prevItem))
-      )
+      formatString(getTemplate(prevItem.type), toTemplateValues(prevItem, generateItemValue(prevItem)))
     )
     wrapperElement?.replaceWith(newItemNode)
   })
@@ -129,16 +132,16 @@ export function registerIgnoreEvent(itemGetter: () => Promise<SetInfoItem | null
     if (!item) return // TODO: Notice problem.
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionIgnore)
-    .then(() => {})
-    .catch(error => {
-      // TODO: handle error case.
-      console.error(error)
-    })
+      .then(() => {})
+      .catch((error) => {
+        // TODO: handle error case.
+        console.error(error)
+      })
 
     const ignoreButton = e.target as HTMLElement
     const wrapperElement: HTMLElement | null = ignoreButton.closest(".flash-card-wrapper")
-    const nextBtn: HTMLElement = wrapperElement?.querySelector('.next-prev-buttons--next-button') as HTMLElement;
-    nextBtn.click();
+    const nextBtn: HTMLElement = wrapperElement?.querySelector(".next-prev-buttons--next-button") as HTMLElement
+    nextBtn.click()
   })
 }
 
@@ -150,16 +153,16 @@ export function registerGotItemEvent(itemGetter: () => Promise<SetInfoItem | nul
     if (!item) return // TODO: Notice problem.
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionForcedDone)
-    .then(() => {})
-    .catch(error => {
-      // TODO: handle error case.
-      console.error(error)
-    })
+      .then(() => {})
+      .catch((error) => {
+        // TODO: handle error case.
+        console.error(error)
+      })
 
     const gotItemButton = e.target as HTMLElement
     const wrapperElement: HTMLElement | null = gotItemButton.closest(".flash-card-wrapper")
-    const nextBtn: HTMLElement = wrapperElement?.querySelector('.next-prev-buttons--next-button') as HTMLElement;
-    nextBtn.click();
+    const nextBtn: HTMLElement = wrapperElement?.querySelector(".next-prev-buttons--next-button") as HTMLElement
+    nextBtn.click()
   })
 }
 
@@ -171,11 +174,11 @@ export function registerStarEvent(itemGetter: () => Promise<SetInfoItem | null>)
     if (!item) return // TODO: Notice problem.
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionStar)
-    .then(() => {})
-    .catch(error => {
-      // TODO: handle error case.
-      console.error(error)
-    })
+      .then(() => {})
+      .catch((error) => {
+        // TODO: handle error case.
+        console.error(error)
+      })
   })
 }
 
@@ -194,20 +197,18 @@ export function registerCheckAnswerEvent() {
 
     const checkBtn = e.target as Element
     const wrapperElement: HTMLElement | null = checkBtn.closest(".qna-card-wrapper")
-    const answersData = wrapperElement?.getAttribute("data-answers") || ''
-    const answerElements = wrapperElement?.querySelectorAll('.answer-btn');
-    const answers = JSON.parse(decodeBase64(answersData));
+    const answersData = wrapperElement?.getAttribute("data-answers") || ""
+    const answerElements = wrapperElement?.querySelectorAll(".answer-btn")
+    const answers = JSON.parse(decodeBase64(answersData))
 
     answerElements?.forEach((answer, idx) => {
-      if(!answers) return
-      if(answers[idx].isCorrect) {
-        answer.classList.add('correct')
+      if (!answers) return
+      if (answers[idx].isCorrect) {
+        answer.classList.add("correct")
       }
-      if(answer.classList.contains('selected') && !answers[idx].isCorrect) {
-        answer.classList.add('incorrect')
+      if (answer.classList.contains("selected") && !answers[idx].isCorrect) {
+        answer.classList.add("incorrect")
       }
     })
   })
 }
-
-
