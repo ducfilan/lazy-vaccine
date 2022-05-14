@@ -106,11 +106,41 @@
   "category_sets_total": {
     "message": "Có :total bài học trong :category_name"
   },
+  "marketplace_plant_type": {
+    "message": "Loại thực vật"
+  },
+  "marketplace_time_harvest": {
+    "message": "Thời gian thu hoạch (điểm)"
+  },
   "common_category": {
     "message": "Phân loại"
   },
   "common_cancel": {
     "message": "Hủy"
+  },
+  "common_filter": {
+    "message": "Bộ lọc"
+  },
+  "common_from": {
+    "message": "Từ"
+  },
+  "common_to": {
+    "message": "Đến"
+  },
+  "marketplace_roi": {
+    "message": "ROI"
+  },
+  "marketplace_seeds": {
+    "message": "Hạt giống"
+  },
+  "marketplace_lowest_price": {
+    "message": "Giá Thấp Nhất"
+  },
+  "marketplace_highest_price": {
+    "message": "Giá Cao Nhât"
+  },
+  "marketplace_latest": {
+    "message": "Mới Nhất"
   },
   "select": {
     "message": "Lựa chọn"

@@ -24,7 +24,7 @@ const CategorySetsPage = (props: any) => {
   const { user, http } = useGlobalContext()
   const { categoryId }: any = useParams()
   const [loading, setLoading] = useState<boolean>(true)
-  const [categories, setCategories] = useState<Category[]>()
+  const [categories, setCategories] = useState<Category[]>([])
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
   const [isSearching, setIsSearching] = useState<boolean>(true)
   const [totalSetsCount, setTotalSetsCount] = useState<number>()
@@ -102,9 +102,14 @@ const CategorySetsPage = (props: any) => {
       })
   }
 
-  function getCategoryName(): string {
-    const category = categories?.find((category) => category.key === selectedCategoryId)
-    return category?.title || "---"
+  function getCategoryName(categoriesList: any[]): string | any {
+    for (let category of categoriesList) {
+      if (category.key === selectedCategoryId) return category?.title || "---"
+      if (Array.isArray(category.children)) {
+        let title = getCategoryName(category.children)
+        if (title) return title
+      }
+    }
   }
 
   return (
@@ -125,7 +130,7 @@ const CategorySetsPage = (props: any) => {
                         },
                         {
                           key: "category_name",
-                          value: getCategoryName(),
+                          value: getCategoryName(categories),
                         },
                       ])
                     )}
