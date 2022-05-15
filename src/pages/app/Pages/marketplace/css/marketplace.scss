@@ -1,0 +1,16 @@
+.select-box {
+  width: 150px;
+}
+
+.card-seed-item {
+  .category-item {
+    border: 1px solid $grey-light;
+    padding: 2px 4px;
+    border-radius: 2px;
+    margin: 4px
+  }
+}
+
+.ant-card-body {
+  padding: 16px !important;
+}

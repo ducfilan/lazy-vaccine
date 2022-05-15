@@ -166,3 +166,11 @@ export type InjectionTarget = {
   type: number,
   siblingSelector: string
 }
+
+export type SeedInfo = {
+  _id: string
+  name: string
+  imgUrl?: string
+  categoryNames: string[]
+  price: number
+}

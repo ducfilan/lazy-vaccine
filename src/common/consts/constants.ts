@@ -39,6 +39,12 @@ export const AppPages = {
     path: "/user-profile/:userId",
     isSideNav: false,
   },
+  MarketPlace: {
+    key: "marketplace",
+    name: "Market Place",
+    path: "/marketplace",
+    isSideNav: true,
+  },
   MySpace: {
     key: "my-space",
     name: "My space",

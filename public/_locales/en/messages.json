@@ -214,6 +214,27 @@
   "flashcard_next_set": {
     "message": "Next set"
   },
+  "marketplace_plant_type": {
+    "message": "Plant type"
+  },
+  "marketplace_time_harvest": {
+    "message": "Time to harvest (points)"
+  },
+  "marketplace_roi": {
+    "message": "ROI"
+  },
+  "marketplace_seeds": {
+    "message": "seeds"
+  },
+  "marketplace_lowest_price": {
+    "message": "Lowest Price"
+  },
+  "marketplace_highest_price": {
+    "message": "Highest Price"
+  },
+  "marketplace_latest": {
+    "message": "Latest"
+  },
   "common_back": {
     "message": "Back"
   },
@@ -282,6 +303,15 @@
   },
   "common_not_found": {
     "message": "Not found"
+  },
+  "common_filter": {
+    "message": "Filter"
+  },
+  "common_from": {
+    "message": "From"
+  },
+  "common_to": {
+    "message": "To"
   },
   "select": {
     "message": "Select one"
