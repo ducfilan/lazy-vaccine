@@ -76,7 +76,6 @@ async function injectCards() {
 const randomTemplateValues = async () => {
   const item = getItemAtPointer(currentItemPointer++)
   sendInteractItemMessage(setInfo?._id || "", item?._id || "", ItemsInteractionShow)
-    .then(() => {})
     .catch((error) => {
       // TODO: handle error case.
       console.error(error)

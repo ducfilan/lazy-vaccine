@@ -16,7 +16,7 @@ const TopSetsInCategory = (props: { categoryId: string; title: string }) => {
   useEffect(() => {
     if (!http || !user) return
 
-    getTopSetsInCategory(http, user.locale, props.categoryId)
+    getTopSetsInCategory(http, props.categoryId, user.locale)
       .then((sets: SetInfo[]) => {
         setTopSetsInCategory(sets)
       })
