@@ -25,6 +25,7 @@ import { Locale } from "antd/lib/locale-provider"
 import SearchResultPage from "./Pages/search-result/SearchResult"
 import UserProfilePage from "./Pages/user-profile/UserProfile"
 import CategorySetsPage from "./Pages/category-sets/CategorySets"
+import MarketPlacePage from "./Pages/marketplace/MarketPlace"
 
 const { Content } = Layout
 
@@ -111,6 +112,7 @@ const AppPage = () => {
                   <Route path={AppPages.UserProfile.path} component={UserProfilePage} />
                   <Route path={AppPages.MySpace.path} component={UserProfilePage} />
                   <Route path={AppPages.CategorySets.path} component={CategorySetsPage} />
+                  <Route path={AppPages.MarketPlace.path} component={MarketPlacePage} />
                 </Switch>
               </Content>
             </Layout>
