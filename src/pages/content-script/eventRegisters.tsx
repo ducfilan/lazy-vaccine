@@ -1,9 +1,6 @@
-import * as React from "react"
 import { addDynamicEventListener, htmlStringToHtmlNode } from "@/background/DomManipulator"
 import { decodeBase64, formatString } from "@/common/utils/stringUtils"
-import { renderToString } from "react-dom/server"
 import { generateItemValue, toTemplateValues } from "./templateHelpers"
-import { FlashCardTemplate } from "@/background/templates/Flashcard"
 import { SetInfoItem } from "@/common/types/types"
 import { sendInteractItemMessage } from "./messageSenders"
 import {
@@ -35,7 +32,6 @@ export function registerNextItemEvent(
       if (!currentItem) return // TODO: Notice problem.
 
       sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext)
-        .then(() => {})
         .catch((error) => {
           // TODO: handle error case.
           console.error(error)
@@ -126,7 +122,6 @@ export function registerIgnoreEvent(itemGetter: () => SetInfoItem | null) {
     if (!item) return // TODO: Notice problem.
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionIgnore)
-      .then(() => {})
       .catch((error) => {
         // TODO: handle error case.
         console.error(error)
@@ -146,7 +141,6 @@ export function registerGotItemEvent(itemGetter: () => SetInfoItem | null) {
     if (!item) return // TODO: Notice problem.
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionForcedDone)
-      .then(() => {})
       .catch((error) => {
         // TODO: handle error case.
         console.error(error)
@@ -166,7 +160,6 @@ export function registerStarEvent(itemGetter: () => SetInfoItem | null) {
     if (!item) return // TODO: Notice problem.
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionStar)
-      .then(() => {})
       .catch((error) => {
         // TODO: handle error case.
         console.error(error)

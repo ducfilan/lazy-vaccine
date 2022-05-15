@@ -91,8 +91,7 @@ export async function getRandomSubscribedSet(http: Http): Promise<SetInfo | null
 }
 
 export async function interactItem(http: Http, setId: string, itemId: string, action: string): Promise<any> {
-  const res = await interactToSetItem(http, setId, itemId, action)
-  return res
+  return interactToSetItem(http, setId, itemId, action)
 }
 
 function getCachedSet(): SetInfo {
@@ -101,7 +100,7 @@ function getCachedSet(): SetInfo {
 }
 
 function setCachedSet(set: SetInfo) {
-  const cachedRandomSetInfo = localStorage.setItem(LocalStorageKeyPrefix + CacheKeys.randomSet, JSON.stringify(set))
+  localStorage.setItem(LocalStorageKeyPrefix + CacheKeys.randomSet, JSON.stringify(set))
 }
 
 function clearCachedRandomSet() {
