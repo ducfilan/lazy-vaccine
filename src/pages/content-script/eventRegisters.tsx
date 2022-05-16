@@ -114,7 +114,7 @@ function clickNextItemButton(wrapperElement: HTMLElement | null) {
   nextBtn.click()
 }
 
-export function registerIgnoreEvent(itemGetter: () => SetInfoItem | null) {
+export function registerIgnoreEvent(itemGetter: () => SetInfoItem | null, updateItemInteraction: (itemId: string) => void) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--ignore", async (e: Event) => {
     e.stopPropagation()
 
@@ -122,6 +122,7 @@ export function registerIgnoreEvent(itemGetter: () => SetInfoItem | null) {
     if (!item) return // TODO: Notice problem.
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionIgnore)
+      .then(() => updateItemInteraction(item._id))
       .catch((error) => {
         // TODO: handle error case.
         console.error(error)
@@ -133,7 +134,7 @@ export function registerIgnoreEvent(itemGetter: () => SetInfoItem | null) {
   })
 }
 
-export function registerGotItemEvent(itemGetter: () => SetInfoItem | null) {
+export function registerGotItemEvent(itemGetter: () => SetInfoItem | null, updateItemInteraction: (itemId: string) => void) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--got-it", async (e: Event) => {
     e.stopPropagation()
 
@@ -141,6 +142,7 @@ export function registerGotItemEvent(itemGetter: () => SetInfoItem | null) {
     if (!item) return // TODO: Notice problem.
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionForcedDone)
+      .then(() => updateItemInteraction(item._id))
       .catch((error) => {
         // TODO: handle error case.
         console.error(error)
