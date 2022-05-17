@@ -154,7 +154,7 @@ export function registerGotItemEvent(itemGetter: () => SetInfoItem | null, updat
   })
 }
 
-export function registerStarEvent(itemGetter: () => SetInfoItem | null) {
+export function registerStarEvent(itemGetter: () => SetInfoItem | null, updateItemInteraction: (itemId: string) => void) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--star", async (e: Event) => {
     e.stopPropagation()
 
@@ -162,6 +162,7 @@ export function registerStarEvent(itemGetter: () => SetInfoItem | null) {
     if (!item) return // TODO: Notice problem.
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionStar)
+      .then(() => updateItemInteraction(item._id))
       .catch((error) => {
         // TODO: handle error case.
         console.error(error)
