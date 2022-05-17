@@ -22,11 +22,14 @@ import {
 import { getHref } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
 import { generateItemValue, toTemplateValues } from "./pages/content-script/templateHelpers"
-import { ItemsInteractionShow } from "./common/consts/constants"
+import { ItemsInteractionForcedDone, ItemsInteractionIgnore, ItemsInteractionShow, ItemsInteractionStar } from "./common/consts/constants"
 
 let randomItemIndexVisitMap: number[] = []
 let setInfo: SetInfo | null
 let currentItemPointer = 0
+let itemsInPageInteractionMap: {
+  [itemId: string]: string[]
+} = {}
 
 detectPageChanged(async () => {
   try {
@@ -50,6 +53,9 @@ async function initValues() {
     if (setInfo) {
       randomItemIndexVisitMap = shuffleArray(Array.from(Array(setInfo.items?.length || 0).keys()))
       currentItemPointer = 0
+      setInfo.itemsInteractions?.map(itemInteractions => {
+        itemsInPageInteractionMap[itemInteractions.itemId] = Object.keys(itemInteractions.interactionCount)
+      })
     }
   } catch (error) {
     console.error(error)
@@ -74,8 +80,11 @@ async function injectCards() {
 }
 
 const randomTemplateValues = async () => {
-  const item = getItemAtPointer(currentItemPointer++)
-  sendInteractItemMessage(setInfo?._id || "", item?._id || "", ItemsInteractionShow)
+  const item = getItemAtPointer(currentItemPointer)
+  item && sendInteractItemMessage(setInfo?._id || "", item?._id || "", ItemsInteractionShow)
+    .then(() => {
+      itemsInPageInteractionMap[item?._id] = [...(itemsInPageInteractionMap[item?._id] || []), ItemsInteractionShow]
+    })
     .catch((error) => {
       // TODO: handle error case.
       console.error(error)
@@ -97,7 +106,7 @@ function registerFlashcardEvents() {
   }
 
   const itemGetter = () => {
-    return getItemAtPointer(currentItemPointer)
+    return getItemAtPointer(currentItemPointer, false)
   }
 
   registerFlipCardEvent()
@@ -106,11 +115,17 @@ function registerFlashcardEvents() {
 
   registerCheckAnswerEvent()
 
-  registerIgnoreEvent(itemGetter)
+  registerIgnoreEvent(itemGetter, (itemId: string) => {
+    itemsInPageInteractionMap[itemId] = [...(itemsInPageInteractionMap[itemId] || []), ItemsInteractionIgnore]
+  })
 
-  registerGotItemEvent(itemGetter)
+  registerGotItemEvent(itemGetter, (itemId: string) => {
+    itemsInPageInteractionMap[itemId] = [...(itemsInPageInteractionMap[itemId] || []), ItemsInteractionForcedDone]
+  })
 
-  registerStarEvent(itemGetter)
+  registerStarEvent(itemGetter, (itemId: string) => {
+    itemsInPageInteractionMap[itemId] = [...(itemsInPageInteractionMap[itemId] || []), ItemsInteractionStar]
+  })
 
   registerNextItemEvent(nextItemGetter, itemGetter)
 
@@ -130,8 +145,22 @@ function registerFlashcardEvents() {
   })
 }
 
-const getItemAtPointer = (pointerPosition: number) => {
-  const rawItem = setInfo?.items && setInfo?.items[randomItemIndexVisitMap[pointerPosition]]
+const getItemAtPointer = (pointerPosition: number, needCheckInteraction: boolean = true) => {
+  let rawItem
+
+  function getItemInfo() {
+    rawItem = setInfo?.items && setInfo?.items[randomItemIndexVisitMap[pointerPosition]]
+    if(!needCheckInteraction) {
+      return rawItem
+    }
+    const itemInteraction = rawItem && itemsInPageInteractionMap[rawItem._id]
+    if(itemInteraction && (itemInteraction.includes(ItemsInteractionForcedDone) || itemInteraction.includes(ItemsInteractionIgnore))) {
+      pointerPosition++
+      getItemInfo()
+    }
+    return rawItem
+  }
+  rawItem = getItemInfo()
 
   return rawItem
     ? {

@@ -132,6 +132,12 @@ export type SetInfo = {
   },
   actions?: string[],
   total?: number,
+  itemsInteractions?: {
+    itemId: string,
+    interactionCount: {
+      [key: string]: number
+    }
+  }[],
 }
 
 export type SetInfoItem = {
