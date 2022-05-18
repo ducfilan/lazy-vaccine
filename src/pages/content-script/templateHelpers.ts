@@ -18,6 +18,7 @@ export function generateItemValue(item: SetInfoItem) {
     setId: item.setId,
     setTitle: item.setTitle,
     listOfAnswers: item.answers ? encodeBase64(JSON.stringify(item?.answers)): '',
-    answerTemplate: item.answers ? item.answers.map(answer => `<div class="answer-btn">${answer.answer}</div>`).join('') : ''
+    answerTemplate: item.answers ? item.answers.map(answer => `<div class="answer-btn">${answer.answer}</div>`).join('') : '',
+    isStared: item.isStared
   }
 }

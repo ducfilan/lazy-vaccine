@@ -98,13 +98,17 @@ $white: #fff;
       }
 
       .card--interactions--star {
-        color: #ffdf50 !important;
+        color: #d8d8d8 !important;
         border-color: #ffdf50 !important;
 
         &:hover {
-          color: #ffdf50;
+          color: #fde476;
           border-color: #ffdf50;
         }
+      }
+
+      .stared {
+        color: #ffdf50 !important;
       }
     }
   }

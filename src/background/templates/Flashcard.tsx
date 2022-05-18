@@ -55,7 +55,7 @@ export const FlashCardTemplate = () => {
             <Button
               ghost
               type="primary"
-              className="card--interactions--star"
+              className="card--interactions--star :isStared"
               size="large"
               icon={<StarFilled />}
             >
