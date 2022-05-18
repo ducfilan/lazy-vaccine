@@ -117,11 +117,20 @@ function registerFlashcardEvents() {
 
   registerIgnoreEvent(itemGetter, (itemId: string) => {
     itemsInPageInteractionMap[itemId] = [...(itemsInPageInteractionMap[itemId] || []), ItemsInteractionIgnore]
+    filterItemList(itemId)
   })
 
   registerGotItemEvent(itemGetter, (itemId: string) => {
     itemsInPageInteractionMap[itemId] = [...(itemsInPageInteractionMap[itemId] || []), ItemsInteractionForcedDone]
+    filterItemList(itemId)
   })
+
+  const filterItemList = (itemId: string) => {
+    setInfo = setInfo && {
+      ...setInfo,
+      items: setInfo?.items?.filter(item => item._id !== itemId)
+    }
+  }
 
   registerStarEvent(itemGetter, (itemId: string) => {
     itemsInPageInteractionMap[itemId] = [...(itemsInPageInteractionMap[itemId] || []), ItemsInteractionStar]
@@ -154,7 +163,8 @@ const getItemAtPointer = (pointerPosition: number, needCheckInteraction: boolean
       return rawItem
     }
     const itemInteraction = rawItem && itemsInPageInteractionMap[rawItem._id]
-    if(itemInteraction && (itemInteraction.includes(ItemsInteractionForcedDone) || itemInteraction.includes(ItemsInteractionIgnore))) {
+    const hiddenItemCondition = itemInteraction && (itemInteraction.includes(ItemsInteractionForcedDone) || itemInteraction.includes(ItemsInteractionIgnore))
+    if(hiddenItemCondition) {
       pointerPosition++
       getItemInfo()
     }
@@ -167,6 +177,7 @@ const getItemAtPointer = (pointerPosition: number, needCheckInteraction: boolean
         ...rawItem,
         setId: setInfo?._id || "",
         setTitle: setInfo?.name || "",
+        isStared: itemsInPageInteractionMap[rawItem._id]?.includes('star') ? 'stared' : ''
       }
     : null
 }

@@ -67,7 +67,7 @@ export const QnATemplate = () => {
             <Button
               ghost
               type="primary"
-              className="card--interactions--star"
+              className="card--interactions--star :isStared"
               size="large"
               icon={<StarFilled />}
             >
