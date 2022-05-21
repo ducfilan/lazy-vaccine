@@ -1,7 +1,7 @@
 import { addDynamicEventListener, htmlStringToHtmlNode } from "@/background/DomManipulator"
 import { decodeBase64, formatString } from "@/common/utils/stringUtils"
 import { generateItemValue, toTemplateValues } from "./templateHelpers"
-import { SetInfoItem } from "@/common/types/types"
+import { SetInfo, SetInfoItem } from "@/common/types/types"
 import { sendInteractItemMessage } from "./messageSenders"
 import {
   ItemsInteractionForcedDone,
@@ -22,7 +22,8 @@ export function registerFlipCardEvent() {
 
 export function registerNextItemEvent(
   nextItemGetter: () => Promise<SetInfoItem | null>,
-  itemGetter: () => SetInfoItem | null
+  itemGetter: () => SetInfoItem | null,
+  setInfo: () => SetInfo | null
 ) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--next-button", async (e: Event) => {
     e.stopPropagation()
@@ -44,15 +45,19 @@ export function registerNextItemEvent(
     const nextButton = e.target as HTMLElement
     const wrapperElement: HTMLElement | null = nextButton.closest(".lazy-vaccine")
 
+    const currentSet = setInfo()
+
+    const templateValue = toTemplateValues(nextItem, generateItemValue(nextItem, currentSet))
+
     const newItemNode = htmlStringToHtmlNode(
-      formatString(getTemplate(nextItem.type), toTemplateValues(nextItem, generateItemValue(nextItem)))
+      formatString(getTemplate(nextItem.type, templateValue.find(item => item.key === 'qaConditionForTermDef')?.value === 'true'), templateValue)
     )
 
     wrapperElement?.replaceWith(newItemNode)
   })
 }
 
-export function registerPrevItemEvent(prevItemGetter: () => SetInfoItem | null, itemGetter: () => SetInfoItem | null) {
+export function registerPrevItemEvent(prevItemGetter: () => SetInfoItem | null, itemGetter: () => SetInfoItem | null, setInfo: () => SetInfo | null) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--prev-button", async (e: Event) => {
     e.stopPropagation()
 
@@ -72,8 +77,11 @@ export function registerPrevItemEvent(prevItemGetter: () => SetInfoItem | null, 
     const prevItem = prevItemGetter()
     if (!prevItem) return
 
+    const currentSet = setInfo()
+    const templateValue = toTemplateValues(prevItem, generateItemValue(prevItem, currentSet))
+
     const newItemNode = htmlStringToHtmlNode(
-      formatString(getTemplate(prevItem.type), toTemplateValues(prevItem, generateItemValue(prevItem)))
+      formatString(getTemplate(prevItem.type, templateValue.find(item => item.key === 'qaConditionForTermDef')?.value === 'true'), templateValue)
     )
     wrapperElement?.replaceWith(newItemNode)
   })
