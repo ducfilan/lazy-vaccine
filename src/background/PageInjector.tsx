@@ -8,10 +8,11 @@ import { htmlStringToHtmlNode, insertBefore } from "./DomManipulator"
 import React from "react"
 import { QnATemplate } from "./templates/QandA"
 
-export function getTemplate(type: string) {
+export function getTemplate(type: string, qaConditionForTermDef?: boolean) {
+  const termDefTemplates = [<FlashCardTemplate /> , <QnATemplate />]
   switch (type) {
-    case 'term&def':
-      return renderToString(<FlashCardTemplate />)
+    case 'term-def':
+      return renderToString(qaConditionForTermDef ? termDefTemplates[Math.floor(Math.random()*termDefTemplates.length)] : <FlashCardTemplate />);
     case 'q&a':
       return renderToString(<QnATemplate />)
     default:
@@ -105,7 +106,7 @@ export default class PageInjector {
       if (!templateValue || templateValue.length === 0) return
 
       const typeItem = templateValue.find(item => item.key === 'type')?.value
-      const htmlTemplate = getTemplate(typeItem || "")
+      const htmlTemplate = getTemplate(typeItem || "", templateValue.find(item => item.key === 'qaConditionForTermDef')?.value === 'true')
       const htmlString = formatString(htmlTemplate, templateValue)
 
       insertBefore(htmlStringToHtmlNode(htmlString), node)
@@ -135,7 +136,7 @@ export default class PageInjector {
     if (!templateValue || templateValue.length === 0) return
 
     const typeItem = templateValue.find(item => item.key === 'type')?.value
-    const htmlTemplate = getTemplate(typeItem || "")
+    const htmlTemplate = getTemplate(typeItem || "", templateValue.find(item => item.key === 'qaConditionForTermDef')?.value === 'true')
     const htmlString = formatString(htmlTemplate, templateValue)
 
     const node = htmlStringToHtmlNode(htmlString)

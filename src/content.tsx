@@ -90,7 +90,7 @@ const randomTemplateValues = async () => {
       console.error(error)
     })
 
-  return item ? toTemplateValues(item, generateItemValue(item)) : []
+  return item ? toTemplateValues(item, generateItemValue(item, setInfo)) : []
 }
 
 function registerFlashcardEvents() {
@@ -107,6 +107,10 @@ function registerFlashcardEvents() {
 
   const itemGetter = () => {
     return getItemAtPointer(currentItemPointer, false)
+  }
+
+  const setGetter = () => {
+    return setInfo
   }
 
   registerFlipCardEvent()
@@ -136,7 +140,7 @@ function registerFlashcardEvents() {
     itemsInPageInteractionMap[itemId] = [...(itemsInPageInteractionMap[itemId] || []), ItemsInteractionStar]
   })
 
-  registerNextItemEvent(nextItemGetter, itemGetter)
+  registerNextItemEvent(nextItemGetter, itemGetter, setGetter)
 
   registerPrevItemEvent(() => {
     if (currentItemPointer === 0) {
@@ -144,7 +148,7 @@ function registerFlashcardEvents() {
     }
 
     return getItemAtPointer(--currentItemPointer)
-  }, itemGetter)
+  }, itemGetter, setGetter)
 
   registerMorePopoverEvent()
 
