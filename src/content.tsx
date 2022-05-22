@@ -21,8 +21,13 @@ import {
 } from "./pages/content-script/eventRegisters"
 import { getHref } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
-import { generateItemValue, toTemplateValues } from "./pages/content-script/templateHelpers"
-import { ItemsInteractionForcedDone, ItemsInteractionIgnore, ItemsInteractionShow, ItemsInteractionStar } from "./common/consts/constants"
+import { generateTemplateExtraValues, toTemplateValues } from "./pages/content-script/templateHelpers"
+import {
+  ItemsInteractionForcedDone,
+  ItemsInteractionIgnore,
+  ItemsInteractionShow,
+  ItemsInteractionStar,
+} from "./common/consts/constants"
 
 let randomItemIndexVisitMap: number[] = []
 let setInfo: SetInfo | null
@@ -53,7 +58,7 @@ async function initValues() {
     if (setInfo) {
       randomItemIndexVisitMap = shuffleArray(Array.from(Array(setInfo.items?.length || 0).keys()))
       currentItemPointer = 0
-      setInfo.itemsInteractions?.map(itemInteractions => {
+      setInfo.itemsInteractions?.map((itemInteractions) => {
         itemsInPageInteractionMap[itemInteractions.itemId] = Object.keys(itemInteractions.interactionCount)
       })
     }
@@ -81,16 +86,17 @@ async function injectCards() {
 
 const randomTemplateValues = async () => {
   const item = getItemAtPointer(currentItemPointer)
-  item && sendInteractItemMessage(setInfo?._id || "", item?._id || "", ItemsInteractionShow)
-    .then(() => {
-      itemsInPageInteractionMap[item?._id] = [...(itemsInPageInteractionMap[item?._id] || []), ItemsInteractionShow]
-    })
-    .catch((error) => {
-      // TODO: handle error case.
-      console.error(error)
-    })
+  item &&
+    sendInteractItemMessage(setInfo?._id || "", item?._id || "", ItemsInteractionShow)
+      .then(() => {
+        itemsInPageInteractionMap[item?._id] = [...(itemsInPageInteractionMap[item?._id] || []), ItemsInteractionShow]
+      })
+      .catch((error) => {
+        // TODO: handle error case.
+        console.error(error)
+      })
 
-  return item ? toTemplateValues(item, generateItemValue(item, setInfo)) : []
+  return item ? toTemplateValues(item, generateTemplateExtraValues(item)) : []
 }
 
 function registerFlashcardEvents() {
@@ -132,7 +138,7 @@ function registerFlashcardEvents() {
   const filterItemList = (itemId: string) => {
     setInfo = setInfo && {
       ...setInfo,
-      items: setInfo?.items?.filter(item => item._id !== itemId)
+      items: setInfo?.items?.filter((item) => item._id !== itemId),
     }
   }
 
@@ -142,13 +148,17 @@ function registerFlashcardEvents() {
 
   registerNextItemEvent(nextItemGetter, itemGetter, setGetter)
 
-  registerPrevItemEvent(() => {
-    if (currentItemPointer === 0) {
-      return null
-    }
+  registerPrevItemEvent(
+    () => {
+      if (currentItemPointer === 0) {
+        return null
+      }
 
-    return getItemAtPointer(--currentItemPointer)
-  }, itemGetter, setGetter)
+      return getItemAtPointer(--currentItemPointer)
+    },
+    itemGetter,
+    setGetter
+  )
 
   registerMorePopoverEvent()
 
@@ -163,12 +173,14 @@ const getItemAtPointer = (pointerPosition: number, needCheckInteraction: boolean
 
   function getItemInfo() {
     rawItem = setInfo?.items && setInfo?.items[randomItemIndexVisitMap[pointerPosition]]
-    if(!needCheckInteraction) {
+    if (!needCheckInteraction) {
       return rawItem
     }
     const itemInteraction = rawItem && itemsInPageInteractionMap[rawItem._id]
-    const hiddenItemCondition = itemInteraction && (itemInteraction.includes(ItemsInteractionForcedDone) || itemInteraction.includes(ItemsInteractionIgnore))
-    if(hiddenItemCondition) {
+    const hiddenItemCondition =
+      itemInteraction &&
+      (itemInteraction.includes(ItemsInteractionForcedDone) || itemInteraction.includes(ItemsInteractionIgnore))
+    if (hiddenItemCondition) {
       pointerPosition++
       getItemInfo()
     }
@@ -181,7 +193,7 @@ const getItemAtPointer = (pointerPosition: number, needCheckInteraction: boolean
         ...rawItem,
         setId: setInfo?._id || "",
         setTitle: setInfo?.name || "",
-        isStared: itemsInPageInteractionMap[rawItem._id]?.includes('star') ? 'stared' : ''
+        isStared: itemsInPageInteractionMap[rawItem._id]?.includes("star") ? "stared" : "",
       }
     : null
 }

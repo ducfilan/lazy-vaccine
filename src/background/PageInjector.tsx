@@ -8,12 +8,11 @@ import { htmlStringToHtmlNode, insertBefore } from "./DomManipulator"
 import React from "react"
 import { QnATemplate } from "./templates/QandA"
 
-export function getTemplate(type: string, qaConditionForTermDef?: boolean) {
-  const termDefTemplates = [<FlashCardTemplate /> , <QnATemplate />]
+export function getTemplate(type: string) {
   switch (type) {
-    case 'term-def':
-      return renderToString(qaConditionForTermDef ? termDefTemplates[Math.floor(Math.random()*termDefTemplates.length)] : <FlashCardTemplate />);
-    case 'q&a':
+    case "term-def":
+      return renderToString(<FlashCardTemplate />)
+    case "q&a":
       return renderToString(<QnATemplate />)
     default:
       return renderToString(<FlashCardTemplate />)
@@ -30,13 +29,19 @@ export default class PageInjector {
   private waitCount = 0
 
   /**
-   * 
-   * @param rate 
+   *
+   * @param rate
    * @param type constants.InjectTypes
-   * @param parentSelector 
-   * @param siblingSelector 
+   * @param parentSelector
+   * @param siblingSelector
    */
-  constructor(rate: number, type: number, parentSelector: string, siblingSelector?: string, waitTimeOutInMs: number = 15000) {
+  constructor(
+    rate: number,
+    type: number,
+    parentSelector: string,
+    siblingSelector?: string,
+    waitTimeOutInMs: number = 15000
+  ) {
     this.rate = rate
     this.type = type
     this.parentSelector = parentSelector
@@ -49,19 +54,24 @@ export default class PageInjector {
       tags: [],
       classes: [],
       id: "",
-      attrs: []
+      attrs: [],
     }
 
     selectorString.split(/(?=\.)|(?=#)|(?=\[)/).forEach(function (token: string) {
       switch (token[0]) {
-        case '#':
+        case "#":
           selectorParts.id = token.slice(1)
           break
-        case '.':
+        case ".":
           selectorParts.classes.push(token.slice(1))
           break
-        case '[':
-          selectorParts.attrs.push([...token.slice(1, -1).split('=').map(part => trimQuotes(part))])
+        case "[":
+          selectorParts.attrs.push([
+            ...token
+              .slice(1, -1)
+              .split("=")
+              .map((part) => trimQuotes(part)),
+          ])
           break
         default:
           selectorParts.tags.push(token)
@@ -73,44 +83,56 @@ export default class PageInjector {
   }
 
   private isSiblingSelectorPartsEmpty(): boolean {
-    return this.siblingSelectorParts?.attrs.length == 0 &&
+    return (
+      this.siblingSelectorParts?.attrs.length == 0 &&
       this.siblingSelectorParts.tags.length == 0 &&
       this.siblingSelectorParts.classes.length == 0 &&
       this.siblingSelectorParts.id === ""
+    )
   }
 
-  private processAddedNodes(this: {
-    siblingSelectorParts: PageInjectorSiblingSelectorParts,
-    templateValueGetter: () => Promise<KeyValuePair[]>,
-  }, nodes: Element[]) {
-    nodes = Array.prototype.slice.call(nodes).filter(
-      (node: Element) => {
-        if ((!node.classList || node.classList.length == 0) && !node.id && (!node.attributes || node.attributes.length == 0)) {
-          return false
-        }
-
-        const classList = Array.prototype.slice.call(node.classList)
-        const attrs: NamedNodeMap = node.attributes
-
-        const isIdsMatch = this.siblingSelectorParts.id === "" || this.siblingSelectorParts.id == node.id
-        const isClassesMatch = this.siblingSelectorParts.classes.length === 0 || this.siblingSelectorParts.classes.every(c => classList.includes(c))
-        const isAttrsMatch = this.siblingSelectorParts.attrs.length == 0 || this.siblingSelectorParts.attrs.every(([attrKey, attrVal]) => attrs.getNamedItem(attrKey)?.value === attrVal)
-
-        return isIdsMatch && isClassesMatch && isAttrsMatch
+  private processAddedNodes(
+    this: {
+      siblingSelectorParts: PageInjectorSiblingSelectorParts
+      templateValueGetter: () => Promise<KeyValuePair[]>
+    },
+    nodes: Element[]
+  ) {
+    nodes = Array.prototype.slice.call(nodes).filter((node: Element) => {
+      if (
+        (!node.classList || node.classList.length == 0) &&
+        !node.id &&
+        (!node.attributes || node.attributes.length == 0)
+      ) {
+        return false
       }
-    )
+
+      const classList = Array.prototype.slice.call(node.classList)
+      const attrs: NamedNodeMap = node.attributes
+
+      const isIdsMatch = this.siblingSelectorParts.id === "" || this.siblingSelectorParts.id == node.id
+      const isClassesMatch =
+        this.siblingSelectorParts.classes.length === 0 ||
+        this.siblingSelectorParts.classes.every((c) => classList.includes(c))
+      const isAttrsMatch =
+        this.siblingSelectorParts.attrs.length == 0 ||
+        this.siblingSelectorParts.attrs.every(([attrKey, attrVal]) => attrs.getNamedItem(attrKey)?.value === attrVal)
+
+      return isIdsMatch && isClassesMatch && isAttrsMatch
+    })
 
     // TODO: Add rate processing logic.
-    nodes.length > 0 && nodes.forEach(async node => {
-      const templateValue = await this.templateValueGetter()
-      if (!templateValue || templateValue.length === 0) return
+    nodes.length > 0 &&
+      nodes.forEach(async (node) => {
+        const templateValue = await this.templateValueGetter()
+        if (!templateValue || templateValue.length === 0) return
 
-      const typeItem = templateValue.find(item => item.key === 'type')?.value
-      const htmlTemplate = getTemplate(typeItem || "", templateValue.find(item => item.key === 'qaConditionForTermDef')?.value === 'true')
-      const htmlString = formatString(htmlTemplate, templateValue)
+        const typeItem = templateValue.find((item) => item.key === "type")?.value
+        const htmlTemplate = getTemplate(typeItem || "")
+        const htmlString = formatString(htmlTemplate, templateValue)
 
-      insertBefore(htmlStringToHtmlNode(htmlString), node)
-    })
+        insertBefore(htmlStringToHtmlNode(htmlString), node)
+      })
   }
 
   private inject(templateValueGetter: () => Promise<KeyValuePair[]>) {
@@ -135,8 +157,8 @@ export default class PageInjector {
     const templateValue = await templateValueGetter()
     if (!templateValue || templateValue.length === 0) return
 
-    const typeItem = templateValue.find(item => item.key === 'type')?.value
-    const htmlTemplate = getTemplate(typeItem || "", templateValue.find(item => item.key === 'qaConditionForTermDef')?.value === 'true')
+    const typeItem = templateValue.find((item) => item.key === "type")?.value
+    const htmlTemplate = getTemplate(typeItem || "")
     const htmlString = formatString(htmlTemplate, templateValue)
 
     const node = htmlStringToHtmlNode(htmlString)
