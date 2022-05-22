@@ -1,7 +1,6 @@
 import { hrefToSiteName } from "@/background/DomManipulator"
 import { ItemTypes } from "@/common/consts/constants"
-import { SetInfoItem, KeyValuePair, SetInfo } from "@/common/types/types"
-import { shuffleArray } from "@/common/utils/arrayUtils"
+import { SetInfoItem, KeyValuePair } from "@/common/types/types"
 import { encodeBase64 } from "@/common/utils/stringUtils"
 import { getHref } from "./domHelpers"
 
@@ -15,31 +14,30 @@ export const toTemplateValues = (item: SetInfoItem | null | undefined, otherKeyV
   return [...itemKeyValue, ...otherKeyValue]
 }
 
-export function generateItemValue(item: SetInfoItem, setInfo: SetInfo | null) {
-  let qaConditionForTermDef = false
-  if(setInfo && !item.answers && setInfo.items) {
-    const termDefItems = setInfo.items.filter(item => item.type === ItemTypes.TermDef.value)
-    if(termDefItems.length < 4) {
-      return
-    }
-    const randomAnswersForTermDef = shuffleArray(termDefItems).slice(0, 3).map(item => {
-      return {
-        answer: item.definition
-      }
-    })
-    item.answers = shuffleArray([...randomAnswersForTermDef, {
-      isCorrect: true,
-      answer: item.definition
-    }])
-    qaConditionForTermDef = true
+export function generateTemplateExtraValues(nextItem: SetInfoItem) {
+  let commonValues = {
+    setId: nextItem.setId,
+    setTitle: nextItem.setTitle,
   }
-  return {
-    setId: item.setId,
-    setTitle: item.setTitle,
-    listOfAnswers: item.answers ? encodeBase64(JSON.stringify(item?.answers)): '',
-    answerTemplate: item.answers ? item.answers.map(answer => `<div class="answer-btn">${answer.answer}</div>`).join('') : '',
-    isStared: item.isStared,
-    qaConditionForTermDef: qaConditionForTermDef ? 'true' : '',
-    question: item.term || item.question
+
+  switch (nextItem.type) {
+    case ItemTypes.TermDef.value:
+      // Enough for this type.
+      return commonValues
+
+    case ItemTypes.QnA.value:
+      if (!nextItem.answers || nextItem.answers.length === 0) {
+        throw new Error("not enough answers")
+      }
+
+      return {
+        ...commonValues,
+        listOfAnswers: encodeBase64(JSON.stringify(nextItem.answers)),
+        answerTemplate: nextItem.answers.map(answer => `<div class="answer-btn">${answer.answer}</div>`).join(''),
+        question: nextItem.question
+      }
+
+    default:
+      return {}
   }
 }
