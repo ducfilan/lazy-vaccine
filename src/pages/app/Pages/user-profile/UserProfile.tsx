@@ -4,17 +4,21 @@ import { useHistory } from "react-router-dom"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
 import { UserProfileContext } from "./contexts/UserProfileContext"
-import { Divider, Layout, List, notification, Result, Skeleton, Typography } from "antd"
+import { Card, Col, Divider, Layout, List, notification, Result, Row, Skeleton, Statistic, Typography } from "antd"
 
-import { AppPages, InteractionCreate, InteractionLike, InteractionSubscribe } from "@/common/consts/constants"
+import { AchievementChartOrderIndex, AppPages, InteractionCreate, InteractionLike, InteractionSubscribe } from "@/common/consts/constants"
 import UserProfileSider from "./components/UserProfileSider"
 import { SetInfo, User } from "@/common/types/types"
-import { getUserInfo, getUserInteractionSets } from "@/common/repo/user"
+import { getUserInfo, getUserInteractionSets, getUserStatistics } from "@/common/repo/user"
 import SetItemCardLong from "@/pages/app/components/SetItemCardLong"
-import { formatString } from "@/common/utils/stringUtils"
+import { formatNumber, formatString } from "@/common/utils/stringUtils"
 import InfiniteScroll from "react-infinite-scroll-component"
 import shibaEmptyBoxIcon from "@img/emojis/shiba/box.png"
 import { isElementAtBottom } from "@/pages/content-script/domHelpers"
+import Icon, { BookOutlined, OrderedListOutlined } from "@ant-design/icons"
+import TreeIcon from "@img/ui/fa/tree-solid.svg"
+import AchievementChart from "./components/AchievementChart"
+import moment from "moment"
 
 const { Content } = Layout
 
@@ -31,6 +35,8 @@ const UserProfilePage = (props: any) => {
   const [skip, setSkip] = useState<number>()
   const [isSearching, setIsSearching] = useState<boolean>(true)
   const [totalSetsCount, setTotalSetsCount] = useState<number>()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [userStatistics, setUserStatistics] = useState<any>()
 
   const limitItemsPerGet = 5
 
@@ -114,10 +120,49 @@ const UserProfilePage = (props: any) => {
     }
   }
 
+  function setAchievementInfo() {
+    if (!http || !profileUser || !selectedTab) return
+    const endDate = Date.now()
+    const sevenDaysAgo: Date = new Date(endDate - 7 * 24 * 60 * 60 * 1000)
+    getUserStatistics(http, moment(sevenDaysAgo).format('YYYY-MM-DD'), moment(endDate).format('YYYY-MM-DD')).then((userStatistics => {
+      let labels: string[] = [], datasets: any = [{
+        label: 'Learnt items',
+        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        data: []
+      }, {
+        label: 'Incorrect items',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        data: []
+      }, {
+        label: 'Stared items',
+        backgroundColor: 'rgba(247, 255, 43, 0.5)',
+        data: []
+      }]
+      userStatistics.map(statistic => {
+        if (!statistic) return
+
+        labels.push(moment(statistic.date).format('MM/DD/YYYY'))
+        datasets[AchievementChartOrderIndex.LearntItems].data.push(statistic.interactions.show || 0)
+        datasets[AchievementChartOrderIndex.IncorrectItems].data.push(statistic.interactions.incorrect || 0)
+        datasets[AchievementChartOrderIndex.StaredItems].data.push(statistic.interactions.star || 0)
+      })
+      setUserStatistics({ labels, datasets })
+    }))
+      .catch(() => {
+        notification["error"]({
+          message: chrome.i18n.getMessage("error"),
+          description: chrome.i18n.getMessage("unexpected_error_message"),
+          duration: null,
+        })
+      })
+  }
+
   useEffect(() => {
     user && onPageLoaded()
   }, [http, user])
-  useEffect(() => profileUser && setSetsInfo(), [selectedTab, profileUser])
+  useEffect(() => {
+    profileUser && (selectedTab !== 'myAchievement' ? setSetsInfo() : setAchievementInfo())
+  }, [selectedTab, profileUser])
 
   return (
     <UserProfileContext.Provider value={{ user: profileUser, onTabChanged }}>
@@ -125,38 +170,66 @@ const UserProfilePage = (props: any) => {
         <UserProfileSider width={250} path={""} />
         <Layout style={{ paddingLeft: 24, marginTop: -12 }}>
           <Content>
-            {totalSetsCount ? (
-              <InfiniteScroll
-                next={() => {}}
-                dataLength={totalSetsCount}
-                hasMore={hasMore()}
-                loader={<Skeleton avatar paragraph={{ rows: 3 }} active />}
-                endMessage={<Divider plain>{i18n("common_end_list_result")}</Divider>}
-                onScroll={onSetsListScroll}
-              >
-                <List
-                  dataSource={sets}
-                  renderItem={(set) => (
-                    <List.Item key={set._id}>
-                      <SetItemCardLong set={set} />
-                    </List.Item>
-                  )}
-                />
-              </InfiniteScroll>
-            ) : isSearching ? (
-              <Skeleton avatar paragraph={{ rows: 3 }} active />
-            ) : (
-              <Result icon={<img src={shibaEmptyBoxIcon} />} title={i18n("common_not_found")}>
-                <Typography.Paragraph>
-                  {formatString(i18n("search_result_not_found"), [
-                    {
-                      key: "keyword",
-                      value: props.keyword,
-                    },
-                  ])}
-                </Typography.Paragraph>
-              </Result>
-            )}
+            {
+              //TODO: remove mock statistic data
+              selectedTab === 'myAchievement' ? <div className="top-12px">
+                <Card hoverable loading={isLoading} className="completed-info--stats ">
+                  <Row gutter={[16, 0]}>
+                    <Col className="gutter-row" span={8}>
+                      <Statistic title={chrome.i18n.getMessage("popup_stats_sets")} value={0} prefix={<BookOutlined />} />
+                    </Col>
+                    <Col className="gutter-row" span={8}>
+                      <Statistic
+                        title={chrome.i18n.getMessage("common_items")}
+                        value={0}
+                        prefix={<OrderedListOutlined />}
+                        suffix={`/ ${formatNumber(0)}`}
+                      />
+                    </Col>
+                    <Col className="gutter-row" span={8}>
+                      <Statistic
+                        title={chrome.i18n.getMessage("popup_stats_trees_plant")}
+                        value={0}
+                        prefix={<Icon component={TreeIcon} />}
+                      />
+                    </Col>
+                  </Row>
+                </Card>
+                <Typography.Title level={3} className="top-8px">{i18n("my_space_how_changed")}</Typography.Title>
+                <AchievementChart statistics={userStatistics} />
+              </div> :
+                totalSetsCount ? (
+                  <InfiniteScroll
+                    next={() => { }}
+                    dataLength={totalSetsCount}
+                    hasMore={hasMore()}
+                    loader={<Skeleton avatar paragraph={{ rows: 3 }} active />}
+                    endMessage={<Divider plain>{i18n("common_end_list_result")}</Divider>}
+                    onScroll={onSetsListScroll}
+                  >
+                    <List
+                      dataSource={sets}
+                      renderItem={(set) => (
+                        <List.Item key={set._id}>
+                          <SetItemCardLong set={set} />
+                        </List.Item>
+                      )}
+                    />
+                  </InfiniteScroll>
+                ) : isSearching ? (
+                  <Skeleton avatar paragraph={{ rows: 3 }} active />
+                ) : (
+                  <Result icon={<img src={shibaEmptyBoxIcon} />} title={i18n("common_not_found")}>
+                    <Typography.Paragraph>
+                      {formatString(i18n("search_result_not_found"), [
+                        {
+                          key: "keyword",
+                          value: props.keyword,
+                        },
+                      ])}
+                    </Typography.Paragraph>
+                  </Result>
+                )}
           </Content>
         </Layout>
       </Layout>
