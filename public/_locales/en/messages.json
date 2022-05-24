@@ -330,5 +330,11 @@
   },
   "leave_warning_message": {
     "message": "You have unsaved changes, if you leave, you will lost your data. Are you sure?"
+  },
+  "my_space_achievement": {
+    "message": "My Achievement"
+  },
+  "my_space_how_changed": {
+    "message": "How I Changed"
   }
 }
