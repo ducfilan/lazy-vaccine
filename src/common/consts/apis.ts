@@ -10,7 +10,10 @@ const Apis = {
   items: "/items",
   login: "/users/login",
   me: "/users/me",
-  preSignedUrl: "/images/pre-signed-url"
+  preSignedUrl: "/images/pre-signed-url",
+  getUserInteractionSets: (userId: string, interaction: string, skip: number, limit: number) => `${Apis.users}/${userId}/sets?interaction=${interaction}&skip=${skip}&limit=${limit}`,
+  randomSet: (interaction: string) => `${Apis.me}/random-set?interaction=${interaction}`,
+  itemsInteractions: (beginDate: string, endDate: string) => `items-statistics?beginDate=${beginDate}&endDate=${endDate}`,
 }
 
 export default Apis

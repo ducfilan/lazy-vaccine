@@ -180,3 +180,12 @@ export type SeedInfo = {
   categoryNames: string[]
   price: number
 }
+
+export type UserStatisticsResponse = {
+  userId: string,
+  _id: string,
+  date: string,
+  interactions: {
+    [key: string]: number
+  }
+}

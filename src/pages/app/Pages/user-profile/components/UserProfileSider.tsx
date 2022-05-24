@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Divider, Layout, Typography, Menu } from "antd"
-import { AimOutlined, LikeFilled, FormOutlined } from "@ant-design/icons"
+import { AimOutlined, LikeFilled, FormOutlined, TrophyOutlined } from "@ant-design/icons"
 
 import { useUserProfileContext } from "../contexts/UserProfileContext"
 import AvatarImage from "@/common/components/AvatarImage"
@@ -29,6 +29,9 @@ const UserProfileSider = (props: { width: number; path: string }) => {
           onTabChanged(key)
         }}
       >
+        <Menu.Item key="myAchievement" icon={<TrophyOutlined />}>
+          {i18n("my_space_achievement")}
+        </Menu.Item>
         <Menu.Item key="subscribed" icon={<AimOutlined />}>
           {i18n("common_subscribed")}
         </Menu.Item>

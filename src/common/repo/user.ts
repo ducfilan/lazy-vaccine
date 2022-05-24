@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios"
-import { SetInfo, User, UserInteractionSetResponse, UserInteractionSetsResponse } from "@/common/types/types"
+import { SetInfo, User, UserInteractionSetResponse, UserInteractionSetsResponse, UserStatisticsResponse } from "@/common/types/types"
 import Apis from "@consts/apis"
 import StatusCode from "@consts/statusCodes"
 import { Http } from "../facades/axiosFacade"
@@ -57,4 +57,13 @@ export async function updateUserInfo(http: Http, data: Object): Promise<boolean>
   const { status } = await http.patch<any, AxiosResponse<boolean>>(Apis.me, data)
 
   return status === StatusCode.Ok
+}
+
+export async function getUserStatistics(http: Http, beginDate: string, endDate: string): Promise<UserStatisticsResponse[]> {
+  const response = await http.get<any, AxiosResponse<UserStatisticsResponse[]>>(`items-statistics?beginDate=${beginDate}&endDate=${endDate}`);
+
+  const statistics = response?.data
+  if (!statistics) throw new Error("cannot get user statistics")
+
+  return statistics
 }
