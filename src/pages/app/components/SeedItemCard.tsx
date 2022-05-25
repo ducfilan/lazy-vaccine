@@ -1,7 +1,9 @@
+import { AppPages } from "@/common/consts/constants"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { SeedInfo } from "@/common/types/types"
+import { formatString } from "@/common/utils/stringUtils"
 import SolanaIcon from "@img/ui/solana-sol-logo.png"
-import { Card, Space } from "antd"
+import { Card, Space, Typography } from "antd"
 import React, { useState } from "react"
 import { Link } from "react-router-dom"
 
@@ -28,9 +30,16 @@ const SeedItemCard = (props: { seed: SeedInfo }) => {
       <Card.Meta
         style={{ textAlign: 'center' }}
         title={
-          <Link to={`/marketplace/${props.seed._id}`} title={props.seed.name}>
-            {props.seed.name}
-          </Link>
+                   <Link
+                   to={formatString(AppPages.SeedDetail.path, [
+                     {
+                       key: "seedId",
+                       value: props.seed._id,
+                     },
+                   ])}
+                 >
+                   <Typography.Title level={3}>{props.seed.name}</Typography.Title>
+                 </Link>
         }
         description={
           <Space className="pad-top-bottom-8px">

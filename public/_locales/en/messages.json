@@ -313,6 +313,30 @@
   "common_to": {
     "message": "To"
   },
+  "common_buy_now": {
+    "message": "Buy now"
+  },
+  "common_owner": {
+    "message": "Owner"
+  },
+  "common_introduction": {
+    "message": "Introduction"
+  },
+  "common_properties": {
+    "message": "Properties"
+  },
+  "seed_growing_conditions": {
+    "message": "Growing conditions"
+  },
+  "properties_height": {
+    "message": "Height"
+  },
+  "properties_hardness": {
+    "message": "Hardness"
+  },
+  "properties_maintenance": {
+    "message": "Maintenance"
+  },
   "select": {
     "message": "Select one"
   },
