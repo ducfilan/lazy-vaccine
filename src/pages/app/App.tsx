@@ -27,6 +27,7 @@ import UserProfilePage from "./Pages/user-profile/UserProfile"
 import CategorySetsPage from "./Pages/category-sets/CategorySets"
 import MarketPlacePage from "./Pages/marketplace/MarketPlace"
 import SeedDetailPage from "./Pages/seed-detail/SeedDetail"
+import TestSetPage from "./Pages/test-set/TestSet"
 
 const { Content } = Layout
 
@@ -115,6 +116,7 @@ const AppPage = () => {
                   <Route path={AppPages.CategorySets.path} component={CategorySetsPage} />
                   <Route path={AppPages.MarketPlace.path} component={MarketPlacePage} />
                   <Route path={AppPages.SeedDetail.path} component={SeedDetailPage} />
+                  <Route path={AppPages.TestSet.path} component={TestSetPage} />
                 </Switch>
               </Content>
             </Layout>

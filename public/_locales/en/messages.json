@@ -58,6 +58,9 @@
   "create_set_button": {
     "message": "Create set"
   },
+  "check_result_button": {
+    "message": "Check My Result"
+  },
   "create_set_search_place_holder": {
     "message": "Search for anything you want to learn..."
   },
@@ -298,6 +301,15 @@
   "common_more": {
     "message": "more"
   },
+  "common_test": {
+    "message": "Test"
+  },
+  "common_term": {
+    "message": "Term"
+  },
+  "common_definition": {
+    "message": "Definition"
+  },
   "common_end_list_result": {
     "message": "That's all that matches :)"
   },
@@ -360,5 +372,23 @@
   },
   "my_space_how_changed": {
     "message": "How I Changed"
+  },
+  "high_comment_title": {
+    "message": "You mastered this set!"
+  },
+  "high_comment_detail": {
+    "message": "Your learning counts! It proves that you've got enough qualification on the this set."
+  },
+  "medium_comment_title": {
+    "message": "You need a little more time for this!"
+  },
+  "medium_comment_detail": {
+    "message": "You're on the right track, but you're not quite there yet."
+  },
+  "low_comment_title": {
+    "message": "You're learning!"
+  },
+  "low_comment_detail": {
+    "message": "Even if you don't know all the answers yet, testing yourself is the most effective way to master them.\nKeep it up!"
   }
 }

@@ -146,6 +146,7 @@ export type SetInfoItem = {
   answers?: {
     isCorrect?: boolean,
     answer: string
+    [key: string]: any
   }[],
   [key: string]: any
 }
@@ -188,4 +189,11 @@ export type UserStatisticsResponse = {
   interactions: {
     [key: string]: number
   }
+}
+
+export type SetStatisticsResponse = {
+  _id: string,
+  subscribedSetsCount: number,
+  totalItemsCount: number,
+  learntItemsCount: number,
 }

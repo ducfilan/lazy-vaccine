@@ -14,7 +14,7 @@ import Icon, {
 
 import { User } from "@/common/types/types"
 import RegisterSteps from "@/common/consts/registerSteps"
-import { updateUserInfo } from "@/common/repo/user"
+import { getSetsStatistics, updateUserInfo } from "@/common/repo/user"
 import { formatNumber } from "@/common/utils/stringUtils"
 
 import NextPrevButton from "./NextPrevButton"
@@ -22,12 +22,13 @@ import PopupHeader from "./Header"
 import AvatarImage from "@/common/components/AvatarImage"
 import TreeIcon from "@img/ui/fa/tree-solid.svg"
 import { AppBasePath, AppPages } from "@/common/consts/constants"
+import { useEffect, useState } from "react"
 
 const { Text } = Typography
 
 const HomePageUrl = `${chrome.runtime.getURL(AppBasePath)}home`
 
-function HeaderContent() {
+function HeaderContent(props: { setsStatistics: any }) {
   const { user } = useGlobalContext()
   const isLoading = !user
 
@@ -50,20 +51,21 @@ function HeaderContent() {
         <Card hoverable loading={isLoading} className="completed-info--stats">
           <Row gutter={[16, 0]}>
             <Col className="gutter-row" span={6}>
-              <Statistic title={chrome.i18n.getMessage("popup_stats_sets")} value={0} prefix={<BookOutlined />} />
+              <Statistic title={chrome.i18n.getMessage("popup_stats_sets")} value={props.setsStatistics?.subscribedSetsCount} prefix={<BookOutlined />} />
             </Col>
             <Col className="gutter-row" span={12}>
               <Statistic
                 title={chrome.i18n.getMessage("common_items")}
-                value={0}
+                value={props.setsStatistics?.learntItemsCount}
                 prefix={<OrderedListOutlined />}
-                suffix={`/ ${formatNumber(0)}`}
+                suffix={`/ ${formatNumber(props.setsStatistics?.totalItemsCount)}`}
               />
             </Col>
             <Col className="gutter-row" span={6}>
+              {/* TODO: remove mock tree data */}
               <Statistic
                 title={chrome.i18n.getMessage("popup_stats_trees_plant")}
-                value={0}
+                value={2}
                 prefix={<Icon component={TreeIcon} />}
               />
             </Col>
@@ -76,6 +78,24 @@ function HeaderContent() {
 
 function CompletedInfo() {
   const { user, setUser, http } = useGlobalContext()
+  const [setsStatistics, setSetsStatistics] = useState<any>()
+
+  useEffect(() => {
+    user && getSetsStatisticsInfo()
+  }, [http, user])
+
+  const getSetsStatisticsInfo = () => {
+    if (!http) return
+    getSetsStatistics(http)
+      .then(setSetsStatistics)
+      .catch(() => {
+        notification["error"]({
+          message: chrome.i18n.getMessage("error"),
+          description: chrome.i18n.getMessage("unexpected_error_message"),
+          duration: null,
+        })
+      })
+  }
 
   const goBack = async () => {
     const prevStep = user ? RegisterSteps.prev(user.finishedRegisterStep) : null
@@ -106,48 +126,49 @@ function CompletedInfo() {
 
   return (
     <div className="completed-info--wrapper">
-      <PopupHeader content={<HeaderContent />} />
-
-      <div className="completed-info--pages-list">
-        <NextPrevButton direction={"left"} onPrev={goBack} />
-
-        <Row gutter={[32, 16]} className="completed-info--button-list">
-          <Col span={12}>
-            <Button
-              className="completed-info--button-more-sets"
-              size="large"
-              icon={<FileSearchOutlined />}
-              block
-              href={HomePageUrl}
-              target="_blank"
-            >
-              {chrome.i18n.getMessage("popup_stats_more_sets")}
-            </Button>
-          </Col>
-          <Col span={12}>
-            <Button className="completed-info--button-full-stats" size="large" icon={<BarChartOutlined />} block>
-              {chrome.i18n.getMessage("popup_stats_full_stats")}
-            </Button>
-          </Col>
-          <Col span={12}>
-            <Button
-              className="completed-info--button-my-profile"
-              size="large"
-              icon={<SmileOutlined />}
-              block
-              href={`${HomePageUrl}${AppPages.MySpace.path}`}
-              target="_blank"
-            >
-              {chrome.i18n.getMessage("popup_stats_my_profile")}
-            </Button>
-          </Col>
-          <Col span={12}>
-            <Button className="completed-info--button-settings" size="large" icon={<SettingOutlined />} block>
-              {chrome.i18n.getMessage("popup_stats_settings")}
-            </Button>
-          </Col>
-        </Row>
-      </div>
+      {setsStatistics && <>
+        <PopupHeader content={<HeaderContent setsStatistics={setsStatistics} />} />
+        <div className="completed-info--pages-list">
+          <NextPrevButton direction={"left"} onPrev={goBack} />
+          <Row gutter={[32, 16]} className="completed-info--button-list">
+            <Col span={12}>
+              <Button
+                className="completed-info--button-more-sets"
+                size="large"
+                icon={<FileSearchOutlined />}
+                block
+                href={HomePageUrl}
+                target="_blank"
+              >
+                {chrome.i18n.getMessage("popup_stats_more_sets")}
+              </Button>
+            </Col>
+            <Col span={12}>
+              <Button className="completed-info--button-full-stats" size="large" icon={<BarChartOutlined />} block>
+                {chrome.i18n.getMessage("popup_stats_full_stats")}
+              </Button>
+            </Col>
+            <Col span={12}>
+              <Button
+                className="completed-info--button-my-profile"
+                size="large"
+                icon={<SmileOutlined />}
+                block
+                href={`${HomePageUrl}${AppPages.MySpace.path}`}
+                target="_blank"
+              >
+                {chrome.i18n.getMessage("popup_stats_my_profile")}
+              </Button>
+            </Col>
+            <Col span={12}>
+              <Button className="completed-info--button-settings" size="large" icon={<SettingOutlined />} block>
+                {chrome.i18n.getMessage("popup_stats_settings")}
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      </>
+      }
     </div>
   )
 }
