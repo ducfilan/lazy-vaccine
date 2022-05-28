@@ -3,7 +3,7 @@ import * as React from "react"
 import { PageHeader, Menu, Dropdown, Button } from "antd"
 import { MenuOutlined, RightCircleOutlined } from "@ant-design/icons"
 
-import AppLog from "@img/ui/logo.png"
+import AppLogo from "@img/ui/logo.png"
 
 import { signOut } from "@facades/authFacade"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
@@ -75,7 +75,7 @@ function Navbar(props: { extraComponents?: React.ReactNode[]; centerComponent?: 
             {chrome.i18n.getMessage("appName")}
           </Link>
         }
-        avatar={{ gap: 0, src: AppLog, size: 48 }}
+        avatar={{ gap: 0, src: AppLogo, size: 48 }}
         extra={[
           ...(props.extraComponents || []),
           isLoggedIn ? (
