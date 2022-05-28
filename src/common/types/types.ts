@@ -204,3 +204,9 @@ export type TestResult = {
     score: number
   }
 }
+
+export type Mission = {
+  _id: string,
+  missionId: number,
+  missionDetail: string
+}

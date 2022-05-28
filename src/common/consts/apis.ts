@@ -16,6 +16,7 @@ const Apis = {
   itemsInteractions: (beginDate: string, endDate: string) => `items-statistics?beginDate=${beginDate}&endDate=${endDate}`,
   setsInteractions: () => `sets-statistics`,
   uploadTestResult: (setId: string) => `/interactions/${setId}/upload-result`,
+  getMissions: '/missions'
 }
 
 export default Apis
