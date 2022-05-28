@@ -40,9 +40,9 @@ export const AppPages = {
     isSideNav: false,
   },
   MarketPlace: {
-    key: "marketplace",
-    name: "Market Place",
-    path: "/marketplace",
+    key: "my-garden",
+    name: "My Garden",
+    path: "/my-garden",
     isSideNav: true,
   },
   MySpace: {
@@ -210,3 +210,4 @@ export const AchievementChartOrderIndex = {
   IncorrectItems: 1,
   StaredItems: 1
 }
+export const i18n = chrome.i18n.getMessage
