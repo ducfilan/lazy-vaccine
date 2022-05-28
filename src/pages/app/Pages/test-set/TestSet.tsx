@@ -20,7 +20,7 @@ const TestSetPage = (props: any) => {
   const { http } = useGlobalContext()
   const [setInfo, setSetInfo] = useState<SetInfo>()
   const [loading, setLoading] = useState<boolean>(true)
-  const [trueFalseQuestions, setTrueFalseQuestions] = useState<SetInfoItem[]>([])
+  const [trueFalseQuestions, setTrueFalseQuestions] = useState<SetInfoItem[] | any[]>([])
   const [multipleChoiceQuestions, setMultipleChoiceQuestions] = useState<SetInfoItem[]>([])
   const [finalResult, setFinalResult] = useState<number | null>(null)
   const [commentTitle, setCommentTitle] = useState<string>()
@@ -39,9 +39,11 @@ const TestSetPage = (props: any) => {
       switch (item.type) {
         case ItemTypes.TermDef.value:
           termDefItems.push(item)
+          // console.log(item)
           break
         case ItemTypes.QnA.value:
           qaItems.push(item)
+          console.log(item)
           break
         default:
           termDefItems.push(item)
@@ -49,11 +51,34 @@ const TestSetPage = (props: any) => {
       }
     })
 
+    termDefItems = shuffleArray(termDefItems)
     //handle case have no qa question
+    const qaItemsAmount = qaItems.length
     const trueFalseQuestionAmount = qaItems.length === 0 ? TestQuestionAmount : TrueFalseQuestionAmount
-    let trueFalseItems = shuffleArray(termDefItems)
+    let trueFalseItems = termDefItems
       .slice(0, trueFalseQuestionAmount)
-      .map((item) => {
+      .map((item, idx) => {
+        if(idx >= (TestQuestionAmount/2) && qaItemsAmount === 0) {
+          let randomDefinitions = shuffleArray(termDefItems.slice(trueFalseQuestionAmount + 1)).slice(0, 3).map(randomItem => {
+            return {
+              isCorrect: false,
+              answer: randomItem.definition
+            }
+          })
+          qaItems.push({
+            ...item,
+            type: ItemTypes.QnA.value,
+            question: item.term,
+            answers: shuffleArray([
+              {
+                isCorrect: true,
+                answer: item.definition
+              },
+              ...randomDefinitions
+            ])
+          })
+          return
+        }
         const randomResult: boolean = Math.random() < 0.5
         return {
           ...item,
@@ -67,7 +92,7 @@ const TestSetPage = (props: any) => {
         }
       })
     setTrueFalseQuestions(trueFalseItems)
-    setMultipleChoiceQuestions(qaItems.slice(0, TestQuestionAmount - trueFalseItems.length))
+    setMultipleChoiceQuestions(qaItems.slice(0, TestQuestionAmount - (qaItemsAmount === 0 ? TrueFalseQuestionAmount : trueFalseItems.length)))
   }
   function onPageLoaded() {
     if (!http) return
@@ -174,7 +199,7 @@ const TestSetPage = (props: any) => {
           <div style={{ width: "60%", margin: "0 auto" }}>
             {trueFalseQuestions &&
               trueFalseQuestions.map((item, index) => (
-                <TestTrueFalseCard setItem={item} key={index} ref={(ref) => (trueFalseCardRefs.current[index] = ref)} />
+                item && <TestTrueFalseCard setItem={item} key={index} ref={(ref) => (trueFalseCardRefs.current[index] = ref)} />
               ))}
             {multipleChoiceQuestions &&
               multipleChoiceQuestions.map((item, index) => (
