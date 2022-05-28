@@ -39,11 +39,9 @@ const TestSetPage = (props: any) => {
       switch (item.type) {
         case ItemTypes.TermDef.value:
           termDefItems.push(item)
-          // console.log(item)
           break
         case ItemTypes.QnA.value:
           qaItems.push(item)
-          console.log(item)
           break
         default:
           termDefItems.push(item)
