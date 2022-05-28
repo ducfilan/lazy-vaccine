@@ -29,6 +29,7 @@ import AchievementChart from "@/pages/app/Pages/user-profile/components/Achievem
 const { Text } = Typography
 
 const HomePageUrl = `${chrome.runtime.getURL(AppBasePath)}home`
+const MySpacePageUrl = `${chrome.runtime.getURL(AppBasePath)}${AppPages.MySpace.path}`
 
 function HeaderContent(props: { setsStatistics: any }) {
   const { user } = useGlobalContext()
@@ -53,7 +54,11 @@ function HeaderContent(props: { setsStatistics: any }) {
         <Card hoverable loading={isLoading} className="completed-info--stats">
           <Row gutter={[16, 0]}>
             <Col className="gutter-row" span={6}>
-              <Statistic title={chrome.i18n.getMessage("popup_stats_sets")} value={props.setsStatistics?.subscribedSetsCount} prefix={<BookOutlined />} />
+              <Statistic
+                title={chrome.i18n.getMessage("popup_stats_sets")}
+                value={props.setsStatistics?.subscribedSetsCount}
+                prefix={<BookOutlined />}
+              />
             </Col>
             <Col className="gutter-row" span={12}>
               <Statistic
@@ -93,7 +98,10 @@ function CompletedInfo() {
     try {
       const endDate = Date.now()
       const sevenDaysAgo: Date = new Date(endDate - 7 * 24 * 60 * 60 * 1000)
-      const [userStatistics, setStatistics] = await Promise.all([getUserStatistics(http, moment(sevenDaysAgo).format("YYYY-MM-DD"), moment(endDate).format("YYYY-MM-DD")), getSetsStatistics(http)])
+      const [userStatistics, setStatistics] = await Promise.all([
+        getUserStatistics(http, moment(sevenDaysAgo).format("YYYY-MM-DD"), moment(endDate).format("YYYY-MM-DD")),
+        getSetsStatistics(http),
+      ])
       let labels: string[] = [],
         datasets: any = [
           {
@@ -161,55 +169,56 @@ function CompletedInfo() {
 
   return (
     <div className="completed-info--wrapper">
-      {setsStatistics && <>
-        <PopupHeader content={<HeaderContent setsStatistics={setsStatistics} />} />
-        <div className="completed-info--pages-list">
-          <NextPrevButton direction={"left"} onPrev={goBack} />
-          <Row gutter={[32, 16]} className="completed-info--button-list">
-            <Col span={12}>
-              <Button
-                className="completed-info--button-more-sets"
-                size="large"
-                icon={<FileSearchOutlined />}
-                block
-                href={HomePageUrl}
-                target="_blank"
-              >
-                {chrome.i18n.getMessage("popup_stats_more_sets")}
-              </Button>
-            </Col>
-            <Col span={12}>
-              <Button
-                className="completed-info--button-my-profile"
-                size="large"
-                icon={<SmileOutlined />}
-                block
-                href={`${HomePageUrl}${AppPages.MySpace.path}`}
-                target="_blank"
-              >
-                {chrome.i18n.getMessage("popup_stats_my_profile")}
-              </Button>
-            </Col>
-            {/* TODO: update full-stats, setting */}
-            <Col span={12} style={{ display: "none" }}>
-              <Button className="completed-info--button-full-stats" size="large" icon={<BarChartOutlined />} block>
-                {chrome.i18n.getMessage("popup_stats_full_stats")}
-              </Button>
-            </Col>
-            <Col span={12} style={{ display: "none" }}>
-              <Button className="completed-info--button-settings" size="large" icon={<SettingOutlined />} block>
-                {chrome.i18n.getMessage("popup_stats_settings")}
-              </Button>
-            </Col>
-          </Row>
-        </div>
-      </>
-      }
-      {
-        userStatistics && <div className="chart-wrapper">
+      {setsStatistics && (
+        <>
+          <PopupHeader content={<HeaderContent setsStatistics={setsStatistics} />} />
+          <div className="completed-info--pages-list">
+            <NextPrevButton direction={"left"} onPrev={goBack} />
+            <Row gutter={[32, 16]} className="completed-info--button-list">
+              <Col span={12}>
+                <Button
+                  className="completed-info--button-more-sets"
+                  size="large"
+                  icon={<FileSearchOutlined />}
+                  block
+                  href={HomePageUrl}
+                  target="_blank"
+                >
+                  {chrome.i18n.getMessage("popup_stats_more_sets")}
+                </Button>
+              </Col>
+              <Col span={12}>
+                <Button
+                  className="completed-info--button-my-profile"
+                  size="large"
+                  icon={<SmileOutlined />}
+                  block
+                  href={MySpacePageUrl}
+                  target="_blank"
+                >
+                  {chrome.i18n.getMessage("popup_stats_my_profile")}
+                </Button>
+              </Col>
+              {/* TODO: update full-stats, setting */}
+              <Col span={12} style={{ display: "none" }}>
+                <Button className="completed-info--button-full-stats" size="large" icon={<BarChartOutlined />} block>
+                  {chrome.i18n.getMessage("popup_stats_full_stats")}
+                </Button>
+              </Col>
+              <Col span={12} style={{ display: "none" }}>
+                <Button className="completed-info--button-settings" size="large" icon={<SettingOutlined />} block>
+                  {chrome.i18n.getMessage("popup_stats_settings")}
+                </Button>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
+      {userStatistics && (
+        <div className="chart-wrapper">
           <AchievementChart statistics={userStatistics} />
         </div>
-      }
+      )}
     </div>
   )
 }
