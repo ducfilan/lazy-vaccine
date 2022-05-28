@@ -1,5 +1,5 @@
 import { Http } from "../facades/axiosFacade"
-import { SearchSetsResponse, SetInfo, SetsInCategoryResponse, TopSetsResponse } from "@/common/types/types"
+import { SearchSetsResponse, SetInfo, SetsInCategoryResponse, TestResult, TopSetsResponse } from "@/common/types/types"
 import { AxiosResponse } from "axios"
 import Apis from "@consts/apis"
 import { ParamError } from "@consts/errors"
@@ -116,4 +116,8 @@ export async function getSetsInCategory(http: Http, categoryId: string, skip: nu
   if (!response?.data)
     throw new Error(`cannot get sets in category id: ${categoryId}`)
   return response?.data
+}
+
+export async function uploadTestResult(http: Http, setId: string, result: TestResult): Promise<void> {
+  await http.post<any, AxiosResponse<any>>(Apis.uploadTestResult(setId), result)
 }
