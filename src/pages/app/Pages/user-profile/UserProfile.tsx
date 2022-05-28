@@ -15,7 +15,7 @@ import {
 } from "@/common/consts/constants"
 import UserProfileSider from "./components/UserProfileSider"
 import { SetInfo, User } from "@/common/types/types"
-import { getUserInfo, getUserInteractionSets, getUserStatistics } from "@/common/repo/user"
+import { getUserInfo, getUserInteractionSets, getUserStatistics, getSetsStatistics } from "@/common/repo/user"
 import SetItemCardLong from "@/pages/app/components/SetItemCardLong"
 import { formatNumber, formatString } from "@/common/utils/stringUtils"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -43,6 +43,7 @@ const UserProfilePage = (props: any) => {
   const [totalSetsCount, setTotalSetsCount] = useState<number>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [userStatistics, setUserStatistics] = useState<any>()
+  const [setsStatistics, setSetsStatistics] = useState<any>()
 
   const limitItemsPerGet = 5
 
@@ -126,49 +127,48 @@ const UserProfilePage = (props: any) => {
     }
   }
 
-  function setAchievementInfo() {
+  async function setAchievementInfo() {
     if (!http || !profileUser || !selectedTab) return
-    const endDate = Date.now()
-    const sevenDaysAgo: Date = new Date(endDate - 7 * 24 * 60 * 60 * 1000)
-    getUserStatistics(http, moment(sevenDaysAgo).format("YYYY-MM-DD"), moment(endDate).format("YYYY-MM-DD"))
-      // TODO: Move label to i18n.
-      .then((userStatistics) => {
-        let labels: string[] = [],
-          datasets: any = [
-            {
-              label: "Learnt items",
-              backgroundColor: "rgba(53, 162, 235, 0.5)",
-              data: [],
-            },
-            {
-              label: "Incorrect items",
-              backgroundColor: "rgba(255, 99, 132, 0.5)",
-              data: [],
-            },
-            {
-              label: "Stared items",
-              backgroundColor: "rgba(247, 255, 43, 0.5)",
-              data: [],
-            },
-          ]
-        userStatistics.forEach((statistic) => {
-          if (!statistic) return
+    try {
+      const endDate = Date.now()
+      const sevenDaysAgo: Date = new Date(endDate - 7 * 24 * 60 * 60 * 1000)
+      const [userStatistics, setStatistics] = await Promise.all([getUserStatistics(http, moment(sevenDaysAgo).format("YYYY-MM-DD"), moment(endDate).format("YYYY-MM-DD")), getSetsStatistics(http)])
+      let labels: string[] = [],
+        datasets: any = [
+          {
+            label: "Learnt items",
+            backgroundColor: "rgba(53, 162, 235, 0.5)",
+            data: [],
+          },
+          {
+            label: "Incorrect items",
+            backgroundColor: "rgba(255, 99, 132, 0.5)",
+            data: [],
+          },
+          {
+            label: "Stared items",
+            backgroundColor: "rgba(247, 255, 43, 0.5)",
+            data: [],
+          },
+        ]
+      userStatistics.forEach((statistic) => {
+        if (!statistic) return
 
-          labels.push(moment(statistic.date).format("MM/DD/YYYY"))
-          datasets[AchievementChartOrderIndex.LearntItems].data.push(statistic.interactions.show || 0)
-          datasets[AchievementChartOrderIndex.IncorrectItems].data.push(statistic.interactions.incorrect || 0)
-          datasets[AchievementChartOrderIndex.StaredItems].data.push(statistic.interactions.star || 0)
-        })
+        labels.push(moment(statistic.date).format("MM/DD/YYYY"))
+        datasets[AchievementChartOrderIndex.LearntItems].data.push(statistic.interactions.show || 0)
+        datasets[AchievementChartOrderIndex.IncorrectItems].data.push(statistic.interactions.incorrect || 0)
+        datasets[AchievementChartOrderIndex.StaredItems].data.push(statistic.interactions.star || 0)
+      })
 
-        setUserStatistics({ labels, datasets })
+      setUserStatistics({ labels, datasets })
+      setSetsStatistics(setStatistics)
+    } catch (error) {
+      notification["error"]({
+        message: chrome.i18n.getMessage("error"),
+        description: chrome.i18n.getMessage("unexpected_error_message"),
+        duration: null,
       })
-      .catch(() => {
-        notification["error"]({
-          message: chrome.i18n.getMessage("error"),
-          description: chrome.i18n.getMessage("unexpected_error_message"),
-          duration: null,
-        })
-      })
+    }
   }
 
   useEffect(() => {
@@ -185,43 +185,48 @@ const UserProfilePage = (props: any) => {
         <Layout style={{ paddingLeft: 24, marginTop: -12 }}>
           <Content>
             {
-              //TODO: remove mock statistic data
               selectedTab === "myAchievement" ? (
                 <div className="top-12px">
-                  <Card hoverable loading={isLoading} className="completed-info--stats ">
+                  {setsStatistics && <Card hoverable loading={isLoading} className="completed-info--stats ">
                     <Row gutter={[16, 0]}>
                       <Col className="gutter-row" span={8}>
                         <Statistic
                           title={chrome.i18n.getMessage("popup_stats_sets")}
-                          value={0}
+                          value={setsStatistics?.subscribedSetsCount}
                           prefix={<BookOutlined />}
                         />
                       </Col>
                       <Col className="gutter-row" span={8}>
                         <Statistic
                           title={chrome.i18n.getMessage("common_items")}
-                          value={0}
+                          value={setsStatistics?.learntItemsCount}
                           prefix={<OrderedListOutlined />}
-                          suffix={`/ ${formatNumber(0)}`}
+                          suffix={`/ ${formatNumber(setsStatistics?.totalItemsCount)}`}
                         />
                       </Col>
+                      {/* TODO: remove mock tree data */}
                       <Col className="gutter-row" span={8}>
                         <Statistic
                           title={chrome.i18n.getMessage("popup_stats_trees_plant")}
-                          value={0}
+                          value={2}
                           prefix={<Icon component={TreeIcon} />}
                         />
                       </Col>
                     </Row>
                   </Card>
-                  <Typography.Title level={3} className="top-8px">
-                    {i18n("my_space_how_changed")}
-                  </Typography.Title>
-                  <AchievementChart statistics={userStatistics} />
+                  }
+                  {
+                    userStatistics && <>
+                      <Typography.Title level={3} className="top-8px">
+                        {i18n("my_space_how_changed")}
+                      </Typography.Title>
+                      <AchievementChart statistics={userStatistics} />
+                    </>
+                  }
                 </div>
               ) : totalSetsCount ? (
                 <InfiniteScroll
-                  next={() => {}}
+                  next={() => { }}
                   dataLength={totalSetsCount}
                   hasMore={hasMore()}
                   loader={<Skeleton avatar paragraph={{ rows: 3 }} active />}

@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios"
-import { SetInfo, User, UserInteractionSetResponse, UserInteractionSetsResponse, UserStatisticsResponse } from "@/common/types/types"
+import { SetInfo, SetStatisticsResponse, User, UserInteractionSetResponse, UserInteractionSetsResponse, UserStatisticsResponse } from "@/common/types/types"
 import Apis from "@consts/apis"
 import StatusCode from "@consts/statusCodes"
 import { Http } from "../facades/axiosFacade"
@@ -66,4 +66,13 @@ export async function getUserStatistics(http: Http, beginDate: string, endDate: 
   if (!statistics) throw new Error("cannot get user statistics")
 
   return statistics
+}
+
+export async function getSetsStatistics(http: Http): Promise<SetStatisticsResponse> {
+  const response = await http.get<any, AxiosResponse<SetStatisticsResponse>>('sets-statistics');
+
+  const setsStatistics = response?.data
+  if (!setsStatistics) throw new Error("cannot get user statistics")
+
+  return setsStatistics
 }

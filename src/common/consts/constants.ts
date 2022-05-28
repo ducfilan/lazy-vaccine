@@ -63,6 +63,12 @@ export const AppPages = {
     path: "/seed-detail/:seedId",
     isSideNav: false,
   },
+  TestSet: {
+    key: "test-set",
+    name: "Test set",
+    path: "/test-set/:setId",
+    isSideNav: false,
+  },
 }
 
 export const LoginTypes = {
@@ -133,6 +139,15 @@ export const MaxLengthSetTitle = 60
 export const DebounceTimeout = 500
 
 export const MaxTryAgainSignInCount = 3
+
+export const TestQuestionAmount = 20
+
+export const TrueFalseQuestionAmount = 10
+
+export const TestResultLevel = {
+  High: 0.9,
+  Medium: 0.7,
+}
 
 export const StaticBaseUrl = "https://static.lazyvaccine.com"
 
