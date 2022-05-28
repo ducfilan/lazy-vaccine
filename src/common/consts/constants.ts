@@ -208,6 +208,5 @@ export const ItemsInteractionStar = 'star'
 export const AchievementChartOrderIndex = {
   LearntItems: 0,
   IncorrectItems: 1,
-  StaredItems: 1
+  StaredItems: 2
 }
-export const i18n = chrome.i18n.getMessage
