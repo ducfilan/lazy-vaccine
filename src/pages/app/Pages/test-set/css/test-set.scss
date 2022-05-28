@@ -1,0 +1,55 @@
+.definition-label {
+  font-size: 20px;
+}
+
+.term-content {
+  margin-right: 20px;
+  font-size: 20px;
+}
+
+.answers--wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-bottom: 10px;
+
+  .answer-btn {
+    font-weight: 300;
+    font-size: 15px;
+    width: 45%;
+    padding: 6px;
+    border: 1px solid #ede4f4;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      border-color: #939bb4;
+    }
+
+    &.selected {
+      background-color: #cedaf3;
+      border-color: #4257b2;
+    }
+  }
+}
+
+.selected-btn {
+  background-color: #d8fde8 !important;
+  border-color: #23b26d !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+.result-wrapper {
+  display: flex;
+  justify-content: center;
+  .comment-title {
+    font-weight: 600;
+    font-size: 24px;
+  }
+
+  .comment-detail {
+    font-size: 16px;
+  }
+}

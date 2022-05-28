@@ -7,12 +7,14 @@ import {
   TwitterSquareFilled,
   CopyFilled,
   AimOutlined,
+  ProfileOutlined
 } from "@ant-design/icons"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { useState } from "react"
 import { useSetDetailContext } from "../contexts/SetDetailContext"
-import { ColorPrimary, InteractionDislike, InteractionLike, InteractionSubscribe } from "@/common/consts/constants"
+import { AppPages, ColorPrimary, InteractionDislike, InteractionLike, InteractionSubscribe } from "@/common/consts/constants"
 import { interactToSet, undoInteractToSet } from "@/common/repo/set"
+import { Link } from "react-router-dom"
 
 const i18n = chrome.i18n.getMessage
 
@@ -82,6 +84,12 @@ const Interactions = () => {
             >
               {i18n(isSubscribed ? "common_unsubscribe" : "common_subscribe")}
             </Button>
+            <Link to={`${AppPages.TestSet.path.replace(":setId", setInfo?._id || "")}`}>
+              <Button
+                type="primary"
+                icon={<ProfileOutlined />}
+              >{i18n("common_test")}</Button>
+            </Link>
             <Statistic
               value={likeCount}
               valueStyle={{ fontSize: 18 }}
