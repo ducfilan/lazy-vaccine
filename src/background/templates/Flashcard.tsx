@@ -35,6 +35,15 @@ export const FlashCardTemplate = () => {
                 {i18n("flashcard_next_set")}
               </a>
             </p>
+            <p>
+              <a
+                href={`${chrome.runtime.getURL(AppBasePath)}${AppPages.TestSet.path}`}
+                title=":setTitle"
+                target={"_blank"}
+              >
+                {i18n("set_detail_test_set")}
+              </a>
+            </p>
           </>
         }
       />
@@ -58,8 +67,7 @@ export const FlashCardTemplate = () => {
               className="card--interactions--star :isStared"
               size="large"
               icon={<StarFilled />}
-            >
-            </Button>
+            ></Button>
 
             <Button
               ghost
