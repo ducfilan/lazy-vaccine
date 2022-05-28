@@ -199,6 +199,9 @@
   "set_detail_no_desc": {
     "message": "No description yet..."
   },
+  "set_detail_test_set": {
+    "message": "Test this set"
+  },
   "category_sets_total": {
     "message": ":total sets in :category_name"
   },
@@ -390,5 +393,8 @@
   },
   "low_comment_detail": {
     "message": "Even if you don't know all the answers yet, testing yourself is the most effective way to master them.\nKeep it up!"
+  },
+  "test_set_encourage_test": {
+    "message": "You've almost made it! You don't need to be scared of the test, that test needs to be scared of you. Good luck! ❤️"
   }
 }

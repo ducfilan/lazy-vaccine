@@ -87,6 +87,7 @@ function turnItemToQuestionAndAnswersItem(nextItem: SetInfoItem, setInfo: SetInf
   let qaItem = {
     _id: nextItem._id,
     type: ItemTypes.QnA.value,
+    setId: setInfo?._id,
     setTitle: setInfo?.name,
   } as SetInfoItem
 

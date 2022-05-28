@@ -35,23 +35,26 @@ export const QnATemplate = () => {
                 {i18n("flashcard_next_set")}
               </a>
             </p>
+            <p>
+              <a
+                href={`${chrome.runtime.getURL(AppBasePath)}${AppPages.TestSet.path}`}
+                title=":setTitle"
+                target={"_blank"}
+              >
+                {i18n("set_detail_test_set")}
+              </a>
+            </p>
           </>
         }
       />
       <div className="qna-card qna-card-wrapper" data-answers={":listOfAnswers"}>
         <div className="card--content">
           <p className="card--question">{":question"}</p>
-          <div className="answer--wrapper">
-            {":answerTemplate"}
-          </div>
+          <div className="answer--wrapper">{":answerTemplate"}</div>
           <div className="check--wrapper">
-            <Button
-                type="primary"
-                size="middle"
-                className="check--btn"
-              >
-                Check
-              </Button>
+            <Button type="primary" size="middle" className="check--btn">
+              Check
+            </Button>
           </div>
           <div className="card--interactions">
             <Button
@@ -70,8 +73,7 @@ export const QnATemplate = () => {
               className="card--interactions--star :isStared"
               size="large"
               icon={<StarFilled />}
-            >
-            </Button>
+            ></Button>
 
             <Button
               ghost

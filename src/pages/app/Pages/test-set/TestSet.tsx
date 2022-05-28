@@ -3,14 +3,15 @@ import * as React from "react"
 import { getSetInfo } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
-import { Button, Card, Col, notification, Row, Skeleton } from "antd"
+import { Button, Card, Col, notification, Result, Row, Skeleton } from "antd"
 import { TestSetContext } from "./contexts/TestSetContext"
-import { LeftOutlined } from "@ant-design/icons";
+import { LeftOutlined } from "@ant-design/icons"
 import { ItemTypes, TestQuestionAmount, TestResultLevel, TrueFalseQuestionAmount } from "@/common/consts/constants"
 import { shuffleArray } from "@/common/utils/arrayUtils"
 import TestTrueFalseCard from "../../components/TestTrueFalseCard"
 import TestMultipleChoiceCard from "../../components/TestMultipleChoiceCard"
 import { useRef } from "react"
+import shibaLoveIcon from "@img/emojis/shiba/love.png"
 
 const { useState, useEffect } = React
 const i18n = chrome.i18n.getMessage
@@ -24,16 +25,17 @@ const TestSetPage = (props: any) => {
   const [finalResult, setFinalResult] = useState<number | null>(null)
   const [commentTitle, setCommentTitle] = useState<string>()
   const [commentDetail, setCommentDetail] = useState<string>()
-  let trueFalseCardRefs = useRef<any>([]);
-  let multipleChoiceCardRefs = useRef<any>([]);
+  let trueFalseCardRefs = useRef<any>([])
+  let multipleChoiceCardRefs = useRef<any>([])
 
   function handleSetInfo(set: SetInfo) {
     if (!set.items) {
       return
     }
-    let termDefItems: SetInfoItem[] = [], qaItems: SetInfoItem[] = []
+    let termDefItems: SetInfoItem[] = [],
+      qaItems: SetInfoItem[] = []
     setSetInfo(set)
-    set.items.map(item => {
+    set.items.forEach((item) => {
       switch (item.type) {
         case ItemTypes.TermDef.value:
           termDefItems.push(item)
@@ -49,15 +51,21 @@ const TestSetPage = (props: any) => {
 
     //handle case have no qa question
     const trueFalseQuestionAmount = qaItems.length === 0 ? TestQuestionAmount : TrueFalseQuestionAmount
-    let trueFalseItems = shuffleArray(termDefItems).slice(0, trueFalseQuestionAmount).map(item => {
-      const randomResult: boolean = Math.random() < 0.5
-      return {
-        ...item,
-        defOption: randomResult ? item.definition : termDefItems.slice(trueFalseQuestionAmount + 1)[Math.floor(Math.random() * (termDefItems.length - trueFalseQuestionAmount))].definition,
-        answer: randomResult,
-        selectedAnswer: null
-      }
-    });
+    let trueFalseItems = shuffleArray(termDefItems)
+      .slice(0, trueFalseQuestionAmount)
+      .map((item) => {
+        const randomResult: boolean = Math.random() < 0.5
+        return {
+          ...item,
+          defOption: randomResult
+            ? item.definition
+            : termDefItems.slice(trueFalseQuestionAmount + 1)[
+                Math.floor(Math.random() * (termDefItems.length - trueFalseQuestionAmount))
+              ].definition,
+          answer: randomResult,
+          selectedAnswer: null,
+        }
+      })
     setTrueFalseQuestions(trueFalseItems)
     setMultipleChoiceQuestions(qaItems.slice(0, TestQuestionAmount - trueFalseItems.length))
   }
@@ -76,7 +84,7 @@ const TestSetPage = (props: any) => {
   }
 
   const goBack = () => {
-    props.history.goBack();
+    props.history.goBack()
   }
 
   const checkResult = () => {
@@ -117,7 +125,10 @@ const TestSetPage = (props: any) => {
   function checkMultipleChoiceCardResult(itemInfo: any): boolean {
     let isCorrected = true
     itemInfo?.answers.map((answer: any) => {
-      if ((answer?.selectedAnswer !== null && answer?.selectedAnswer !== answer?.isCorrect) || (answer?.selectedAnswer === null && answer?.isCorrect)) {
+      if (
+        (answer?.selectedAnswer !== null && answer?.selectedAnswer !== answer?.isCorrect) ||
+        (answer?.selectedAnswer === null && answer?.isCorrect)
+      ) {
         isCorrected = false
       }
     })
@@ -133,30 +144,49 @@ const TestSetPage = (props: any) => {
         <Row justify="start">
           <Col span={4}>
             <Button type="link" icon={<LeftOutlined />} onClick={goBack}>
-              {setInfo?.name} {i18n("common_test")}
+              {i18n("common_back")}
             </Button>
           </Col>
         </Row>
-        {finalResult === null ? <div style={{ width: '60%', margin: '0 auto' }}>
-          {trueFalseQuestions && trueFalseQuestions.map((item, index) => <TestTrueFalseCard setItem={item} key={index} ref={ref => trueFalseCardRefs.current[index] = ref} />)}
-          {multipleChoiceQuestions && multipleChoiceQuestions.map((item, index) => <TestMultipleChoiceCard setItem={item} key={index} ref={ref => multipleChoiceCardRefs.current[index] = ref} />)}
-          <Row justify="center">
-            <Button
-              type="primary"
-              size="middle"
-              className="top-16px"
-              onClick={() => checkResult()}
-            >
-              {i18n("check_result_button")}
-            </Button>
-          </Row>
-        </div> : <div className="result-wrapper">
-          <Card title={`${finalResult} / ${TestQuestionAmount} `} bordered={false} style={{ width: '60%', textAlign: 'center', fontSize: '36px' }}>
-            <p className="comment-title">{commentTitle}</p>
-            <p className="comment-detail">{commentDetail}</p>
-          </Card>
-        </div>}
+        <Result
+          style={{ paddingTop: 0, background: "#fff", borderRadius: 5, margin: "20px 0" }}
+          icon={<img src={shibaLoveIcon} />}
+          title={`${setInfo?.name} ${i18n("common_test")}`}
+          subTitle={i18n("test_set_encourage_test")}
+        />
 
+        {finalResult === null ? (
+          <div style={{ width: "60%", margin: "0 auto" }}>
+            {trueFalseQuestions &&
+              trueFalseQuestions.map((item, index) => (
+                <TestTrueFalseCard setItem={item} key={index} ref={(ref) => (trueFalseCardRefs.current[index] = ref)} />
+              ))}
+            {multipleChoiceQuestions &&
+              multipleChoiceQuestions.map((item, index) => (
+                <TestMultipleChoiceCard
+                  setItem={item}
+                  key={index}
+                  ref={(ref) => (multipleChoiceCardRefs.current[index] = ref)}
+                />
+              ))}
+            <Row justify="center">
+              <Button type="primary" size="large" className="top-16px" onClick={() => checkResult()} block>
+                {i18n("check_result_button")}
+              </Button>
+            </Row>
+          </div>
+        ) : (
+          <div className="result-wrapper">
+            <Card
+              title={`${finalResult} / ${TestQuestionAmount} `}
+              bordered={false}
+              style={{ width: "60%", textAlign: "center", fontSize: "36px" }}
+            >
+              <p className="comment-title">{commentTitle}</p>
+              <p className="comment-detail">{commentDetail}</p>
+            </Card>
+          </div>
+        )}
       </Skeleton>
     </TestSetContext.Provider>
   )

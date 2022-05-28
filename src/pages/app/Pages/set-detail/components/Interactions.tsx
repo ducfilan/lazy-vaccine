@@ -88,7 +88,7 @@ const Interactions = () => {
               <Button
                 type="primary"
                 icon={<ProfileOutlined />}
-              >{i18n("common_test")}</Button>
+              >{i18n("set_detail_test_set")}</Button>
             </Link>
             <Statistic
               value={likeCount}
