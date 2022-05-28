@@ -197,3 +197,10 @@ export type SetStatisticsResponse = {
   totalItemsCount: number,
   learntItemsCount: number,
 }
+
+export type TestResult = {
+  result: {
+    total: number,
+    score: number
+  }
+}

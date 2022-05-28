@@ -15,6 +15,7 @@ const Apis = {
   randomSet: (interaction: string) => `${Apis.me}/random-set?interaction=${interaction}`,
   itemsInteractions: (beginDate: string, endDate: string) => `items-statistics?beginDate=${beginDate}&endDate=${endDate}`,
   setsInteractions: () => `sets-statistics`,
+  uploadTestResult: (setId: string) => `/interactions/${setId}/upload-result`,
 }
 
 export default Apis
