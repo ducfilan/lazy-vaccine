@@ -1,8 +1,8 @@
 import * as React from "react"
 
-import { getSetInfo } from "@/common/repo/set"
+import { getSetInfo, uploadTestResult } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
-import { SetInfo, SetInfoItem } from "@/common/types/types"
+import { SetInfo, SetInfoItem, TestResult } from "@/common/types/types"
 import { Button, Card, Col, notification, Result, Row, Skeleton } from "antd"
 import { TestSetContext } from "./contexts/TestSetContext"
 import { LeftOutlined } from "@ant-design/icons"
@@ -116,6 +116,21 @@ const TestSetPage = (props: any) => {
     setCommentTitle(commentTitle)
     setCommentDetail(commentDetail)
     setFinalResult(result)
+    if (!http) {
+      return
+    }
+    const testResult: TestResult = {
+      result: { total: TestQuestionAmount, score: result }
+    }
+    uploadTestResult(http, props.match.params.setId, testResult)
+      .then(() => { })
+      .catch(() => {
+        notification["error"]({
+          message: chrome.i18n.getMessage("error"),
+          description: chrome.i18n.getMessage("unexpected_error_message"),
+          duration: null,
+        })
+      })
   }
 
   function checkTrueFalseCardResult(itemInfo: any): boolean {
