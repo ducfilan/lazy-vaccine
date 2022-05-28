@@ -137,17 +137,17 @@ const UserProfilePage = (props: any) => {
         datasets: any = [
           {
             label: "Learnt items",
-            backgroundColor: "rgba(53, 162, 235, 0.5)",
+            backgroundColor: "#36AE7C",
             data: [],
           },
           {
             label: "Incorrect items",
-            backgroundColor: "rgba(255, 99, 132, 0.5)",
+            backgroundColor: "#187498",
             data: [],
           },
           {
             label: "Stared items",
-            backgroundColor: "rgba(247, 255, 43, 0.5)",
+            backgroundColor: "#F9D923",
             data: [],
           },
         ]
