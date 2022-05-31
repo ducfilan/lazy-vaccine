@@ -3,7 +3,7 @@ import * as React from "react"
 import { getSetInfo, uploadTestResult } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { SetInfo, SetInfoItem, TestResult } from "@/common/types/types"
-import { Button, Card, Col, notification, Result, Row, Skeleton } from "antd"
+import { Button, Card, Col, notification, Result, Row, Skeleton, Statistic, Typography } from "antd"
 import { TestSetContext } from "./contexts/TestSetContext"
 import { LeftOutlined } from "@ant-design/icons"
 import { ItemTypes, TestQuestionAmount, TestResultLevel, TrueFalseQuestionAmount } from "@/common/consts/constants"
@@ -12,6 +12,8 @@ import TestTrueFalseCard from "../../components/TestTrueFalseCard"
 import TestMultipleChoiceCard from "../../components/TestMultipleChoiceCard"
 import { useRef } from "react"
 import shibaLoveIcon from "@img/emojis/shiba/love.png"
+import CongratsScreen from "@/pages/app/components/CongratsScreen"
+import { ArrowUpOutlined } from "@ant-design/icons"
 
 const { useState, useEffect } = React
 const i18n = chrome.i18n.getMessage
@@ -55,44 +57,46 @@ const TestSetPage = (props: any) => {
     //handle case have no qa question
     const qaItemsAmount = qaItems.length
     const trueFalseQuestionAmount = qaItems.length === 0 ? TestQuestionAmount : TrueFalseQuestionAmount
-    let trueFalseItems = termDefItems
-      .slice(0, trueFalseQuestionAmount)
-      .map((item, idx) => {
-        if(idx >= (TestQuestionAmount/2) && qaItemsAmount === 0) {
-          let randomDefinitions = shuffleArray(termDefItems.slice(trueFalseQuestionAmount + 1)).slice(0, 3).map(randomItem => {
+    let trueFalseItems = termDefItems.slice(0, trueFalseQuestionAmount).map((item, idx) => {
+      if (idx >= TestQuestionAmount / 2 && qaItemsAmount === 0) {
+        let randomDefinitions = shuffleArray(termDefItems.slice(trueFalseQuestionAmount + 1))
+          .slice(0, 3)
+          .map((randomItem) => {
             return {
               isCorrect: false,
-              answer: randomItem.definition
+              answer: randomItem.definition,
             }
           })
-          qaItems.push({
-            ...item,
-            type: ItemTypes.QnA.value,
-            question: item.term,
-            answers: shuffleArray([
-              {
-                isCorrect: true,
-                answer: item.definition
-              },
-              ...randomDefinitions
-            ])
-          })
-          return
-        }
-        const randomResult: boolean = Math.random() < 0.5
-        return {
+        qaItems.push({
           ...item,
-          defOption: randomResult
-            ? item.definition
-            : termDefItems.slice(trueFalseQuestionAmount + 1)[
-                Math.floor(Math.random() * (termDefItems.length - trueFalseQuestionAmount))
-              ].definition,
-          answer: randomResult,
-          selectedAnswer: null,
-        }
-      })
+          type: ItemTypes.QnA.value,
+          question: item.term,
+          answers: shuffleArray([
+            {
+              isCorrect: true,
+              answer: item.definition,
+            },
+            ...randomDefinitions,
+          ]),
+        })
+        return
+      }
+      const randomResult: boolean = Math.random() < 0.5
+      return {
+        ...item,
+        defOption: randomResult
+          ? item.definition
+          : termDefItems.slice(trueFalseQuestionAmount + 1)[
+              Math.floor(Math.random() * (termDefItems.length - trueFalseQuestionAmount))
+            ].definition,
+        answer: randomResult,
+        selectedAnswer: null,
+      }
+    })
     setTrueFalseQuestions(trueFalseItems)
-    setMultipleChoiceQuestions(qaItems.slice(0, TestQuestionAmount - (qaItemsAmount === 0 ? TrueFalseQuestionAmount : trueFalseItems.length)))
+    setMultipleChoiceQuestions(
+      qaItems.slice(0, TestQuestionAmount - (qaItemsAmount === 0 ? TrueFalseQuestionAmount : trueFalseItems.length))
+    )
   }
   function onPageLoaded() {
     if (!http) return
@@ -145,10 +149,10 @@ const TestSetPage = (props: any) => {
       return
     }
     const testResult: TestResult = {
-      result: { total: TestQuestionAmount, score: result }
+      result: { total: TestQuestionAmount, score: result },
     }
     uploadTestResult(http, props.match.params.setId, testResult)
-      .then(() => { })
+      .then(() => {})
       .catch(() => {
         notification["error"]({
           message: chrome.i18n.getMessage("error"),
@@ -188,44 +192,72 @@ const TestSetPage = (props: any) => {
             </Button>
           </Col>
         </Row>
-        <Result
-          style={{ paddingTop: 0, background: "#fff", borderRadius: 5, margin: "20px 0" }}
-          icon={<img src={shibaLoveIcon} />}
-          title={`${setInfo?.name} ${i18n("common_test")}`}
-          subTitle={i18n("test_set_encourage_test")}
-        />
 
         {finalResult === null ? (
-          <div style={{ width: "60%", margin: "0 auto" }}>
-            {trueFalseQuestions &&
-              trueFalseQuestions.map((item, index) => (
-                item && <TestTrueFalseCard setItem={item} key={index} ref={(ref) => (trueFalseCardRefs.current[index] = ref)} />
-              ))}
-            {multipleChoiceQuestions &&
-              multipleChoiceQuestions.map((item, index) => (
-                <TestMultipleChoiceCard
-                  setItem={item}
-                  key={index}
-                  ref={(ref) => (multipleChoiceCardRefs.current[index] = ref)}
-                />
-              ))}
-            <Row justify="center">
-              <Button type="primary" size="large" className="top-16px" onClick={() => checkResult()} block>
-                {i18n("check_result_button")}
-              </Button>
-            </Row>
-          </div>
+          <>
+            <Result
+              style={{ paddingTop: 0, background: "#fff", borderRadius: 5, margin: "20px 0" }}
+              icon={<img src={shibaLoveIcon} />}
+              title={`${setInfo?.name} ${i18n("common_test")}`}
+              subTitle={i18n("test_set_encourage_test")}
+            />
+            <div style={{ width: "60%", margin: "0 auto" }}>
+              {trueFalseQuestions &&
+                trueFalseQuestions.map(
+                  (item, index) =>
+                    item && (
+                      <TestTrueFalseCard
+                        setItem={item}
+                        key={index}
+                        ref={(ref) => (trueFalseCardRefs.current[index] = ref)}
+                      />
+                    )
+                )}
+              {multipleChoiceQuestions &&
+                multipleChoiceQuestions.map((item, index) => (
+                  <TestMultipleChoiceCard
+                    setItem={item}
+                    key={index}
+                    ref={(ref) => (multipleChoiceCardRefs.current[index] = ref)}
+                  />
+                ))}
+              <Row justify="center">
+                <Button type="primary" size="large" className="top-16px" onClick={() => checkResult()} block>
+                  {i18n("check_result_button")}
+                </Button>
+              </Row>
+            </div>
+          </>
         ) : (
-          <div className="result-wrapper">
-            <Card
-              title={`${finalResult} / ${TestQuestionAmount} `}
-              bordered={false}
-              style={{ width: "60%", textAlign: "center", fontSize: "36px" }}
-            >
-              <p className="comment-title">{commentTitle}</p>
-              <p className="comment-detail">{commentDetail}</p>
-            </Card>
-          </div>
+          <CongratsScreen
+            innerContent={
+              <div className="result-wrapper">
+                <Card
+                  title={<Typography.Title>{`${finalResult} / ${TestQuestionAmount}`}</Typography.Title>}
+                  bordered={false}
+                  style={{ width: "60%", textAlign: "center", fontSize: "36px" }}
+                >
+                  <p className="comment-title">{commentTitle}</p>
+                  <p className="comment-detail">{commentDetail}</p>
+                </Card>
+
+                <Card
+                  title={<Typography.Title>Reward</Typography.Title>}
+                  bordered={false}
+                  style={{ width: "60%", textAlign: "center", fontSize: "36px" }}
+                >
+                  <Statistic
+                    title={<p style={{ fontSize: 24, fontWeight: 600, color: "#000" }}>You've earned</p>}
+                    value={11.28}
+                    precision={2}
+                    valueStyle={{ color: "#3f8600" }}
+                    prefix={<ArrowUpOutlined />}
+                    suffix="LZV"
+                  />
+                </Card>
+              </div>
+            }
+          />
         )}
       </Skeleton>
     </TestSetContext.Provider>

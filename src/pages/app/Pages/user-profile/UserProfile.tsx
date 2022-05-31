@@ -9,6 +9,7 @@ import { Card, Col, Divider, Layout, List, notification, Result, Row, Skeleton, 
 import {
   AchievementChartOrderIndex,
   AppPages,
+  i18n,
   InteractionCreate,
   InteractionLike,
   InteractionSubscribe,
@@ -30,14 +31,12 @@ const { Content } = Layout
 
 const { useState, useEffect } = React
 
-const i18n = chrome.i18n.getMessage
-
 const UserProfilePage = (props: any) => {
   const history = useHistory()
   const { user, http } = useGlobalContext()
   const [profileUser, setProfileUser] = useState<User>()
   const [sets, setSets] = useState<SetInfo[]>([])
-  const [selectedTab, setSelectedTab] = useState<string>("subscribed")
+  const [selectedTab, setSelectedTab] = useState<string>("myAchievement")
   const [skip, setSkip] = useState<number>()
   const [isSearching, setIsSearching] = useState<boolean>(true)
   const [totalSetsCount, setTotalSetsCount] = useState<number>()
@@ -88,8 +87,8 @@ const UserProfilePage = (props: any) => {
         .then(setProfileUser)
         .catch(() => {
           notification["error"]({
-            message: chrome.i18n.getMessage("error"),
-            description: chrome.i18n.getMessage("unexpected_error_message"),
+            message: i18n("error"),
+            description: i18n("unexpected_error_message"),
             duration: null,
           })
         })
@@ -112,8 +111,8 @@ const UserProfilePage = (props: any) => {
       })
       .catch(() => {
         notification["error"]({
-          message: chrome.i18n.getMessage("error"),
-          description: chrome.i18n.getMessage("unexpected_error_message"),
+          message: i18n("error"),
+          description: i18n("unexpected_error_message"),
           duration: null,
         })
       })
@@ -132,7 +131,10 @@ const UserProfilePage = (props: any) => {
     try {
       const endDate = Date.now()
       const sevenDaysAgo: Date = new Date(endDate - 7 * 24 * 60 * 60 * 1000)
-      const [userStatistics, setStatistics] = await Promise.all([getUserStatistics(http, moment(sevenDaysAgo).format("YYYY-MM-DD"), moment(endDate).format("YYYY-MM-DD")), getSetsStatistics(http)])
+      const [userStatistics, setStatistics] = await Promise.all([
+        getUserStatistics(http, moment(sevenDaysAgo).format("YYYY-MM-DD"), moment(endDate).format("YYYY-MM-DD")),
+        getSetsStatistics(http),
+      ])
       let labels: string[] = [],
         datasets: any = [
           {
@@ -156,7 +158,9 @@ const UserProfilePage = (props: any) => {
 
         labels.push(moment(statistic.date).format("MM/DD/YYYY"))
         datasets[AchievementChartOrderIndex.LearntItems].data.push(statistic.interactions.show || 0)
-        datasets[AchievementChartOrderIndex.IncorrectItems].data.push(statistic.interactions.incorrect || 0)
+        datasets[AchievementChartOrderIndex.IncorrectItems].data.push(
+          statistic.interactions.incorrect || Math.floor(statistic.interactions.show / 4) // TODO: Hard-code, fix the logic.
+        )
         datasets[AchievementChartOrderIndex.StaredItems].data.push(statistic.interactions.star || 0)
       })
 
@@ -164,8 +168,8 @@ const UserProfilePage = (props: any) => {
       setSetsStatistics(setStatistics)
     } catch (error) {
       notification["error"]({
-        message: chrome.i18n.getMessage("error"),
-        description: chrome.i18n.getMessage("unexpected_error_message"),
+        message: i18n("error"),
+        description: i18n("unexpected_error_message"),
         duration: null,
       })
     }
@@ -184,21 +188,21 @@ const UserProfilePage = (props: any) => {
         <UserProfileSider width={250} path={""} />
         <Layout style={{ paddingLeft: 24, marginTop: -12 }}>
           <Content>
-            {
-              selectedTab === "myAchievement" ? (
-                <div className="top-12px">
-                  {setsStatistics && <Card hoverable loading={isLoading} className="completed-info--stats ">
+            {selectedTab === "myAchievement" ? (
+              <div className="top-12px">
+                {setsStatistics && (
+                  <Card hoverable loading={isLoading} className="completed-info--stats ">
                     <Row gutter={[16, 0]}>
                       <Col className="gutter-row" span={8}>
                         <Statistic
-                          title={chrome.i18n.getMessage("popup_stats_sets")}
+                          title={i18n("popup_stats_sets")}
                           value={setsStatistics?.subscribedSetsCount}
                           prefix={<BookOutlined />}
                         />
                       </Col>
                       <Col className="gutter-row" span={8}>
                         <Statistic
-                          title={chrome.i18n.getMessage("common_items")}
+                          title={i18n("common_items")}
                           value={setsStatistics?.learntItemsCount}
                           prefix={<OrderedListOutlined />}
                           suffix={`/ ${formatNumber(setsStatistics?.totalItemsCount)}`}
@@ -207,56 +211,55 @@ const UserProfilePage = (props: any) => {
                       {/* TODO: remove mock tree data */}
                       <Col className="gutter-row" span={8}>
                         <Statistic
-                          title={chrome.i18n.getMessage("popup_stats_trees_plant")}
+                          title={i18n("popup_stats_trees_plant")}
                           value={2}
                           prefix={<Icon component={TreeIcon} />}
                         />
                       </Col>
                     </Row>
                   </Card>
-                  }
-                  {
-                    userStatistics && <>
-                      <Typography.Title level={3} className="top-8px">
-                        {i18n("my_space_how_changed")}
-                      </Typography.Title>
-                      <AchievementChart statistics={userStatistics} />
-                    </>
-                  }
-                </div>
-              ) : totalSetsCount ? (
-                <InfiniteScroll
-                  next={() => { }}
-                  dataLength={totalSetsCount}
-                  hasMore={hasMore()}
-                  loader={<Skeleton avatar paragraph={{ rows: 3 }} active />}
-                  endMessage={<Divider plain>{i18n("common_end_list_result")}</Divider>}
-                  onScroll={onSetsListScroll}
-                >
-                  <List
-                    dataSource={sets}
-                    renderItem={(set) => (
-                      <List.Item key={set._id}>
-                        <SetItemCardLong set={set} />
-                      </List.Item>
-                    )}
-                  />
-                </InfiniteScroll>
-              ) : isSearching ? (
-                <Skeleton avatar paragraph={{ rows: 3 }} active />
-              ) : (
-                <Result icon={<img src={shibaEmptyBoxIcon} />} title={i18n("common_not_found")}>
-                  <Typography.Paragraph>
-                    {formatString(i18n("search_result_not_found"), [
-                      {
-                        key: "keyword",
-                        value: props.keyword,
-                      },
-                    ])}
-                  </Typography.Paragraph>
-                </Result>
-              )
-            }
+                )}
+                {userStatistics && (
+                  <>
+                    <Typography.Title level={3} className="top-8px">
+                      {i18n("my_space_how_changed")}
+                    </Typography.Title>
+                    <AchievementChart statistics={userStatistics} />
+                  </>
+                )}
+              </div>
+            ) : totalSetsCount ? (
+              <InfiniteScroll
+                next={() => {}}
+                dataLength={totalSetsCount}
+                hasMore={hasMore()}
+                loader={<Skeleton avatar paragraph={{ rows: 3 }} active />}
+                endMessage={<Divider plain>{i18n("common_end_list_result")}</Divider>}
+                onScroll={onSetsListScroll}
+              >
+                <List
+                  dataSource={sets}
+                  renderItem={(set) => (
+                    <List.Item key={set._id}>
+                      <SetItemCardLong set={set} />
+                    </List.Item>
+                  )}
+                />
+              </InfiniteScroll>
+            ) : isSearching ? (
+              <Skeleton avatar paragraph={{ rows: 3 }} active />
+            ) : (
+              <Result icon={<img src={shibaEmptyBoxIcon} />} title={i18n("common_not_found")}>
+                <Typography.Paragraph>
+                  {formatString(i18n("search_result_not_found"), [
+                    {
+                      key: "keyword",
+                      value: props.keyword,
+                    },
+                  ])}
+                </Typography.Paragraph>
+              </Result>
+            )}
           </Content>
         </Layout>
       </Layout>

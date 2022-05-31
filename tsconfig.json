@@ -5,6 +5,10 @@
         "strict": true,
         "noImplicitReturns": true,
         "noImplicitAny": true,
+        "lib": [
+            "es2018",
+            "dom"
+        ],
         "module": "es6",
         "moduleResolution": "node",
         "target": "es5",

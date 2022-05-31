@@ -24,7 +24,7 @@ const UserProfileSider = (props: { width: number; path: string }) => {
       </div>
       <Divider />
       <Menu
-        defaultSelectedKeys={["subscribed"]}
+        defaultSelectedKeys={["myAchievement"]}
         onClick={({ key }) => {
           onTabChanged(key)
         }}

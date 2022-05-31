@@ -205,6 +205,40 @@ export type TestResult = {
   }
 }
 
+export type NftInfo = {
+  name: string;
+  symbol: string;
+  description: string;
+  seller_fee_basis_points: number;
+  image: string;
+  attributes: Attribute[];
+  external_url: string;
+  properties: Properties;
+  collection: null;
+  use: null;
+}
+
+export type Attribute = {
+  trait_type: string;
+  value: number | string;
+}
+
+export type Properties = {
+  files: File[];
+  category: string;
+  creators: Creator[];
+}
+
+export type Creator = {
+  address: string;
+  share: number;
+}
+
+export type File = {
+  uri: string;
+  type: string;
+}
+
 export type Mission = {
   _id: string,
   missionId: number,

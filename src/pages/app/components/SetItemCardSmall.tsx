@@ -4,12 +4,11 @@ import { Card, Avatar, Button, Space, Typography } from "antd"
 import { UserOutlined, AimOutlined, LikeFilled, DislikeFilled } from "@ant-design/icons"
 import { SetInfo } from "@/common/types/types"
 import { Link } from "react-router-dom"
-import { useState } from "react"
 import { interactToSet, undoInteractToSet } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { ColorPrimary, InteractionDislike, InteractionLike, InteractionSubscribe } from "@/common/consts/constants"
 
-const { useCallback } = React
+const { useCallback, useState } = React
 
 const i18n = chrome.i18n.getMessage
 

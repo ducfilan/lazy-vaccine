@@ -16,7 +16,7 @@ import PagesNavigator from "./components/PagesNavigator"
 
 import { User } from "@/common/types/types"
 import { getMyInfo } from "@/common/repo/user"
-import { AppPages, LoginTypes } from "@/common/consts/constants"
+import { AppPages, i18n, LoginTypes } from "@/common/consts/constants"
 import { getGoogleAuthToken } from "@facades/authFacade"
 import { Http } from "@facades/axiosFacade"
 import { GlobalContext } from "@/common/contexts/GlobalContext"
@@ -25,9 +25,9 @@ import { Locale } from "antd/lib/locale-provider"
 import SearchResultPage from "./Pages/search-result/SearchResult"
 import UserProfilePage from "./Pages/user-profile/UserProfile"
 import CategorySetsPage from "./Pages/category-sets/CategorySets"
-import MarketPlacePage from "./Pages/marketplace/MarketPlace"
 import SeedDetailPage from "./Pages/seed-detail/SeedDetail"
 import TestSetPage from "./Pages/test-set/TestSet"
+import MarketPlacePage from "./Pages/marketplace/MarketPlacePage"
 
 const { Content } = Layout
 
@@ -64,8 +64,8 @@ const AppPage = () => {
       .catch((error) => {
         setIsLoading(false)
         notification["error"]({
-          message: chrome.i18n.getMessage("error"),
-          description: chrome.i18n.getMessage("unexpected_error_message"),
+          message: i18n("error"),
+          description: i18n("unexpected_error_message"),
           duration: null,
         })
       })
@@ -78,7 +78,7 @@ const AppPage = () => {
           <Navbar
             centerComponent={
               <Input
-                placeholder={chrome.i18n.getMessage("create_set_search_place_holder")}
+                placeholder={i18n("create_set_search_place_holder")}
                 className="is-absolute"
                 size="large"
                 suffix={<SearchOutlined style={{ color: "rgba(0,0,0,.45)" }} />}
@@ -97,7 +97,7 @@ const AppPage = () => {
                   history.location.pathname !== AppPages.CreateSet.path && history.push(AppPages.CreateSet.path)
                 }
               >
-                {chrome.i18n.getMessage("create_set_button")}
+                {i18n("create_set_button")}
               </Button>,
             ]}
           />
