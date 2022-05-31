@@ -210,3 +210,7 @@ export const AchievementChartOrderIndex = {
   IncorrectItems: 1,
   StaredItems: 2
 }
+
+export const i18n = chrome.i18n.getMessage
+
+export const MarketplaceUrl = "http://localhost:3000/#/"
