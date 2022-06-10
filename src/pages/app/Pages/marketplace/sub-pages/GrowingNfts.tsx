@@ -41,7 +41,7 @@ const GrowingNfts = () => {
       </section>
 
       <div className="nft-items-wrapper">
-        <div style={{ textAlign: "right", margin: "10px 0" }}>
+        <div style={{ textAlign: "right", margin: "10px 10px 15px" }}>
           <Button
             type="primary"
             icon={<ShopOutlined />}
@@ -53,35 +53,36 @@ const GrowingNfts = () => {
             Buy a tree
           </Button>
         </div>
-
-        {nftsInfo.map((nftInfo, i) => {
-          return (
-            <Card.Grid hoverable={false} style={{ width: "unset", padding: 12 }}>
-              <Card
-                key={i}
-                hoverable
-                style={{ width: 240 }}
-                cover={<img alt={nftInfo.name} src={nftInfo.image} />}
-                onClick={() => {
-                  setSelectedNftInfo(nftInfo)
-                }}
-              >
-                <Card.Meta
-                  title={nftInfo.name}
-                  description={
-                    <Typography.Paragraph
-                      ellipsis={{ rows: 3 }}
-                      style={{ minHeight: "3.143em" }}
-                      title={nftInfo.description}
-                    >
-                      {nftInfo.description || i18n("set_detail_no_desc")}
-                    </Typography.Paragraph>
-                  }
-                />
-              </Card>
-            </Card.Grid>
-          )
-        })}
+        <Card bordered={false}>
+          {nftsInfo.map((nftInfo, i) => {
+            return (
+              <Card.Grid hoverable={false} style={{ width: "unset", padding: 12, boxShadow: "none" }}>
+                <Card
+                  key={i}
+                  hoverable
+                  style={{ width: 240 }}
+                  cover={<img alt={nftInfo.name} src={nftInfo.image} />}
+                  onClick={() => {
+                    setSelectedNftInfo(nftInfo)
+                  }}
+                >
+                  <Card.Meta
+                    title={nftInfo.name}
+                    description={
+                      <Typography.Paragraph
+                        ellipsis={{ rows: 3 }}
+                        style={{ minHeight: "3.143em" }}
+                        title={nftInfo.description}
+                      >
+                        {nftInfo.description || i18n("set_detail_no_desc")}
+                      </Typography.Paragraph>
+                    }
+                  />
+                </Card>
+              </Card.Grid>
+            )
+          })}
+        </Card>
       </div>
     </>
   )

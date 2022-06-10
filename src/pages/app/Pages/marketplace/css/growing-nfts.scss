@@ -42,10 +42,12 @@ $primary: #12b886;
 }
 
 .nft-items-wrapper {
-  padding: 0 30px;
-
   .ant-card-cover {
     padding: 20px 20px 0;
+  }
+
+  .ant-card-contain-grid {
+    background: transparent;
   }
 
   .ant-card-meta-title {

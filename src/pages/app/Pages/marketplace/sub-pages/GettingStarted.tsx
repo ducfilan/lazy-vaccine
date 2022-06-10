@@ -33,7 +33,7 @@ const GettingStarted = () => {
   }, [refetchWalletInfo])
 
   useEffect(() => {
-    if (!isLoading || error) {
+    if (isLoading || error) {
       return
     }
 

@@ -1,19 +1,18 @@
-import * as React from "react"
+import React, { useRef } from "react"
+import { useParams, useNavigate } from "react-router-dom"
 
 import { getSetInfo, uploadTestResult } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { SetInfo, SetInfoItem, TestResult } from "@/common/types/types"
 import { Button, Card, Col, notification, Result, Row, Skeleton, Statistic, Typography } from "antd"
 import { TestSetContext } from "./contexts/TestSetContext"
-import { LeftOutlined } from "@ant-design/icons"
+import { LeftOutlined, ArrowUpOutlined } from "@ant-design/icons"
 import { ItemTypes, TestQuestionAmount, TestResultLevel, TrueFalseQuestionAmount } from "@/common/consts/constants"
 import { shuffleArray } from "@/common/utils/arrayUtils"
 import TestTrueFalseCard from "../../components/TestTrueFalseCard"
 import TestMultipleChoiceCard from "../../components/TestMultipleChoiceCard"
-import { useRef } from "react"
 import shibaLoveIcon from "@img/emojis/shiba/love.png"
 import CongratsScreen from "@/pages/app/components/CongratsScreen"
-import { ArrowUpOutlined } from "@ant-design/icons"
 
 const { useState, useEffect } = React
 const i18n = chrome.i18n.getMessage
@@ -29,6 +28,9 @@ const TestSetPage = (props: any) => {
   const [commentDetail, setCommentDetail] = useState<string>()
   let trueFalseCardRefs = useRef<any>([])
   let multipleChoiceCardRefs = useRef<any>([])
+
+  const { setId } = useParams()
+  const navigate = useNavigate()
 
   function handleSetInfo(set: SetInfo) {
     if (!set.items) {
@@ -99,7 +101,7 @@ const TestSetPage = (props: any) => {
   function onPageLoaded() {
     if (!http) return
 
-    getSetInfo(http, props.match.params.setId)
+    getSetInfo(http, setId!)
       .then((res) => handleSetInfo(res))
       .catch(() => {
         notification["error"]({
@@ -111,7 +113,7 @@ const TestSetPage = (props: any) => {
   }
 
   const goBack = () => {
-    props.history.goBack()
+    navigate(-1)
   }
 
   const checkResult = () => {
@@ -149,7 +151,7 @@ const TestSetPage = (props: any) => {
     const testResult: TestResult = {
       result: { total: TestQuestionAmount, score: result },
     }
-    uploadTestResult(http, props.match.params.setId, testResult)
+    uploadTestResult(http, setId!, testResult)
       .then(() => {})
       .catch(() => {
         notification["error"]({

@@ -2,8 +2,7 @@ import * as React from "react"
 import { Divider, Input, Layout, Tree, Typography } from "antd"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { Key } from "antd/lib/table/interface"
-import { EventDataNode } from "antd/lib/tree"
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useCategorySetsContext } from "../Pages/category-sets/contexts/CategorySetsContext"
 
 const { Title } = Typography
@@ -26,8 +25,7 @@ const flattenCategories = (categories: any[], depth: number): any[] => {
 
 const getParentKey = (key: string, tree: any): string => {
   let parentKey
-  for (let i = 0; i < tree.length; i++) {
-    const node = tree[i]
+  for (const node of tree) {
     if (node.children) {
       if (node.children.some((item: any) => item.key === key)) {
         parentKey = node.key
@@ -42,7 +40,7 @@ const getParentKey = (key: string, tree: any): string => {
 
 const CategoriesSider = (props: any) => {
   const { http } = useGlobalContext()
-  const history = useHistory()
+  const navigate = useNavigate()
   const categoriesKeys: any[] = useMemo(() => flattenCategories(props.categories || [], Infinity), [props.categories])
   const [expandedKeys, setExpandedKeys] = useState<any[]>()
   const { onChangeCategoryId, selectedCategoryId } = useCategorySetsContext()
@@ -63,22 +61,20 @@ const CategoriesSider = (props: any) => {
   }
 
   const onSelect = (
-    selectedKeys: Key[],
+    _selectedKeys: Key[],
     info: {
-      node: EventDataNode
+      node: any
     }
   ) => {
     const categoryId = `${info.node?.key}`
     const isCategoryPreSelected = categoryId === selectedCategoryId
     if (!http || isCategoryPreSelected) return
-    const { pathname } = props.location
-    if (pathname.includes("category")) {
+    // TODO: Dirty processing, need to change.
+    if (location.hash.includes("category")) {
       onChangeCategoryId(categoryId)
       return
     }
-    history.push({
-      pathname: `/category/${categoryId}`,
-    })
+    navigate(`/category/${categoryId}`)
   }
 
   return (
