@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import ReCAPTCHA from "react-google-recaptcha"
 
 import { AppPages, ItemTypes, RecaptchaSiteKey, TabKeyCode } from "@/common/consts/constants"
@@ -46,7 +46,7 @@ const { Option } = Select
 
 export const CreateSetItemsForm = () => {
   const { http } = useGlobalContext()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const { currentStep, setCurrentStep, setInfo, setSetInfo, isEdit } = useCreateSetContext()
 
@@ -56,7 +56,7 @@ export const CreateSetItemsForm = () => {
     setInfo?.items?.filter((item) => item.type === ItemTypes.TermDef.value).length || DefaultInitItemCount
   )
   const [itemTypes, setItemTypes] = useState<string[]>(
-    Array.from(Array(itemCount).keys()).map((i: number) => setInfo?.items?.at(i)?.type || ItemTypes.TermDef.value)
+    Array.from(Array(itemCount).keys()).map((i: number) => setInfo?.items![i]?.type || ItemTypes.TermDef.value)
   )
   const [lastItemType, setLastItemType] = useState<string>(ItemTypes.TermDef.value)
   const [, setCachedLastSetInfo] = useLocalStorage<SetInfo | null>(CacheKeys.lastSetInfo, null, "365d")
@@ -90,7 +90,7 @@ export const CreateSetItemsForm = () => {
     try {
       const insertedSetId = isEdit ? await editSet(http, newSetInfo) : await createSet(http, newSetInfo)
 
-      history.push(AppPages.SetDetail.path.replace(":setId", insertedSetId))
+      navigate(AppPages.SetDetail.path.replace(":setId", insertedSetId))
     } catch (error) {
       setCachedLastSetInfo(newSetInfo || null)
 

@@ -20,7 +20,7 @@ import { AppPages, i18n, LoginTypes } from "@/common/consts/constants"
 import { getGoogleAuthToken } from "@facades/authFacade"
 import { Http } from "@facades/axiosFacade"
 import { GlobalContext } from "@/common/contexts/GlobalContext"
-import { Route, Switch, useHistory, useLocation } from "react-router-dom"
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom"
 import { Locale } from "antd/lib/locale-provider"
 import SearchResultPage from "./Pages/search-result/SearchResult"
 import UserProfilePage from "./Pages/user-profile/UserProfile"
@@ -37,7 +37,7 @@ const AppPage = () => {
   const [http, setHttp] = useState<Http>()
   const [locale, setLocale] = useState<Locale>(enUS)
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const location = useLocation()
 
   useEffect(() => {
@@ -83,7 +83,7 @@ const AppPage = () => {
                 size="large"
                 suffix={<SearchOutlined style={{ color: "rgba(0,0,0,.45)" }} />}
                 onPressEnter={({ target }) => {
-                  history.push(`${AppPages.Sets.path}?keyword=${(target as HTMLInputElement).value}`)
+                  navigate(`${AppPages.Sets.path}?keyword=${(target as HTMLInputElement).value}`)
                 }}
               />
             }
@@ -93,9 +93,7 @@ const AppPage = () => {
                 size="large"
                 className="navbar-create-set--wrapper"
                 icon={<RocketOutlined />}
-                onClick={() =>
-                  history.location.pathname !== AppPages.CreateSet.path && history.push(AppPages.CreateSet.path)
-                }
+                onClick={() => location.pathname !== AppPages.CreateSet.path && navigate(AppPages.CreateSet.path)}
               >
                 {i18n("create_set_button")}
               </Button>,
@@ -105,19 +103,19 @@ const AppPage = () => {
             <PagesNavigator path={location.pathname} />
             <Layout style={{ padding: 24 }}>
               <Content>
-                <Switch>
-                  <Route path={AppPages.Home.path} component={HomePage} />
-                  <Route path={AppPages.CreateSet.path} component={CreateSetPage} />
-                  <Route path={AppPages.EditSet.path} component={CreateSetPage} />
-                  <Route path={AppPages.Sets.path} component={SearchResultPage} />
-                  <Route path={AppPages.SetDetail.path} component={SetDetailPage} />
-                  <Route path={AppPages.UserProfile.path} component={UserProfilePage} />
-                  <Route path={AppPages.MySpace.path} component={UserProfilePage} />
-                  <Route path={AppPages.CategorySets.path} component={CategorySetsPage} />
-                  <Route path={AppPages.MarketPlace.path} component={MarketPlacePage} />
-                  <Route path={AppPages.SeedDetail.path} component={SeedDetailPage} />
-                  <Route path={AppPages.TestSet.path} component={TestSetPage} />
-                </Switch>
+                <Routes>
+                  <Route path={AppPages.Home.path} element={<HomePage />} />
+                  <Route path={AppPages.CreateSet.path} element={<CreateSetPage />} />
+                  <Route path={AppPages.EditSet.path} element={<CreateSetPage />} />
+                  <Route path={AppPages.Sets.path} element={<SearchResultPage />} />
+                  <Route path={AppPages.SetDetail.path} element={<SetDetailPage />} />
+                  <Route path={AppPages.UserProfile.path} element={<UserProfilePage />} />
+                  <Route path={AppPages.MySpace.path} element={<UserProfilePage />} />
+                  <Route path={AppPages.CategorySets.path} element={<CategorySetsPage />} />
+                  <Route path={AppPages.MarketPlace.path} element={<MarketPlacePage />} />
+                  <Route path={AppPages.SeedDetail.path} element={<SeedDetailPage />} />
+                  <Route path={AppPages.TestSet.path} element={<TestSetPage />} />
+                </Routes>
               </Content>
             </Layout>
           </Layout>

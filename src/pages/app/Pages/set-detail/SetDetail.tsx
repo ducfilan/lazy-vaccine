@@ -1,4 +1,5 @@
-import * as React from "react"
+import React from "react"
+import { useParams } from "react-router-dom"
 
 import { getSetInfo } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
@@ -11,15 +12,17 @@ import { notification, Skeleton } from "antd"
 
 const { useState, useEffect } = React
 
-const SetDetailPage = (props: any) => {
+const SetDetailPage = () => {
   const { http } = useGlobalContext()
   const [setInfo, setSetInfo] = useState<SetInfo>()
   const [loading, setLoading] = useState<boolean>(true)
 
+  let { setId } = useParams()
+
   function onPageLoaded() {
     if (!http) return
 
-    getSetInfo(http, props.match.params.setId)
+    getSetInfo(http, setId!)
       .then(setSetInfo)
       .catch(() => {
         notification["error"]({

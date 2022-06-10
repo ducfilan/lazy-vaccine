@@ -8,23 +8,25 @@ import AppLogo from "@img/ui/logo.png"
 import { signOut } from "@facades/authFacade"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import AvatarImage from "./AvatarImage"
-import { HashRouter, Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { AppPages } from "@consts/constants"
 
 const DropdownMenu = (props: { isLoggedIn: boolean }) => {
-  const { user, setUser, http } = useGlobalContext()
+  const { user, setUser } = useGlobalContext()
 
-  return (
+  return props.isLoggedIn ? (
     <Dropdown
       overlay={
-        <Menu>
-          {props.isLoggedIn && (
-            <>
-              <Menu.Item key="name">
-                <RightCircleOutlined /> <Link to={AppPages.MySpace.path}>{user?.name}</Link>
-              </Menu.Item>
-              <Menu.Divider />
-              <Menu.Item key="logout">
+        <Menu
+          items={[
+            {
+              key: "name",
+              icon: <RightCircleOutlined />,
+              label: <Link to={AppPages.MySpace.path}>{user?.name}</Link>,
+            },
+            {
+              key: "logout",
+              label: (
                 <Button
                   type="link"
                   onClick={() => {
@@ -35,10 +37,10 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
                 >
                   {chrome.i18n.getMessage("logout")}
                 </Button>
-              </Menu.Item>
-            </>
-          )}
-        </Menu>
+              ),
+            },
+          ]}
+        />
       }
       overlayStyle={{
         minWidth: 120,
@@ -60,6 +62,8 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
         />
       </Button>
     </Dropdown>
+  ) : (
+    <></>
   )
 }
 
@@ -68,27 +72,25 @@ function Navbar(props: { extraComponents?: React.ReactNode[]; centerComponent?: 
   const isLoggedIn = !!user
 
   return (
-    <HashRouter>
-      <PageHeader
-        title={
-          <Link to={"/home"} style={{ color: "white" }}>
-            {chrome.i18n.getMessage("appName")}
-          </Link>
-        }
-        avatar={{ gap: 0, src: AppLogo, size: 48 }}
-        extra={[
-          ...(props.extraComponents || []),
-          isLoggedIn ? (
-            <AvatarImage key="avatar" imageUrl={user?.pictureUrl} link={AppPages.MySpace.path} />
-          ) : (
-            <div key="avatar"></div>
-          ),
-          <DropdownMenu key="menu" isLoggedIn={isLoggedIn} />,
-        ]}
-      >
-        {props.centerComponent}
-      </PageHeader>
-    </HashRouter>
+    <PageHeader
+      title={
+        <Link to={"/home"} style={{ color: "white" }}>
+          {chrome.i18n.getMessage("appName")}
+        </Link>
+      }
+      avatar={{ gap: 0, src: AppLogo, size: 48 }}
+      extra={[
+        ...(props.extraComponents || []),
+        isLoggedIn ? (
+          <AvatarImage key="avatar" imageUrl={user?.pictureUrl} link={AppPages.MySpace.path} />
+        ) : (
+          <div key="avatar"></div>
+        ),
+        <DropdownMenu key="menu" isLoggedIn={isLoggedIn} />,
+      ]}
+    >
+      {props.centerComponent}
+    </PageHeader>
   )
 }
 

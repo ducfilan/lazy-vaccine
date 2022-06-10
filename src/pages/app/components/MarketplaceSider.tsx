@@ -1,7 +1,7 @@
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { Button, Divider, InputNumber, Layout, Slider, Space, Typography } from "antd"
 import * as React from "react"
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 const { Title } = Typography
 const { Sider } = Layout
@@ -12,7 +12,7 @@ const { useState, useEffect, useMemo } = React
 
 const MarketplaceSider = (props: any) => {
   const { http } = useGlobalContext()
-  const history = useHistory()
+  const navigate = useNavigate()
   const plantTypes = [
     { id: 1, name: "Annuals" },
     { id: 2, name: "Bulbs" },

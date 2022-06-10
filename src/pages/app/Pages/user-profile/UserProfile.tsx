@@ -1,6 +1,7 @@
-import * as React from "react"
+import React from "react"
+import { useParams } from "react-router-dom"
 
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
 import { UserProfileContext } from "./contexts/UserProfileContext"
@@ -32,7 +33,7 @@ const { Content } = Layout
 const { useState, useEffect } = React
 
 const UserProfilePage = (props: any) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const { user, http } = useGlobalContext()
   const [profileUser, setProfileUser] = useState<User>()
   const [sets, setSets] = useState<SetInfo[]>([])
@@ -52,7 +53,7 @@ const UserProfilePage = (props: any) => {
     created: InteractionCreate,
   }
 
-  let userId = props.match?.params?.userId
+  let { userId } = useParams()
 
   function onPageLoaded() {
     if (!http) return
@@ -75,10 +76,11 @@ const UserProfilePage = (props: any) => {
   function setUserInfo() {
     if (!userId) {
       if (!user) {
-        history.push(AppPages.Home.path)
+        navigate(AppPages.Home.path)
         return
       }
 
+      // TODO: Get and display other users.
       setProfileUser(user)
     } else {
       if (!http) return

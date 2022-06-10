@@ -28,20 +28,29 @@ const UserProfileSider = (props: { width: number; path: string }) => {
         onClick={({ key }) => {
           onTabChanged(key)
         }}
-      >
-        <Menu.Item key="myAchievement" icon={<TrophyOutlined />}>
-          {i18n("my_space_achievement")}
-        </Menu.Item>
-        <Menu.Item key="subscribed" icon={<AimOutlined />}>
-          {i18n("common_subscribed")}
-        </Menu.Item>
-        <Menu.Item key="liked" icon={<LikeFilled />}>
-          {i18n("common_liked")}
-        </Menu.Item>
-        <Menu.Item key="created" icon={<FormOutlined />}>
-          {i18n("common_created")}
-        </Menu.Item>
-      </Menu>
+        items={[
+          {
+            key: "myAchievement",
+            icon: <TrophyOutlined />,
+            label: i18n("my_space_achievement"),
+          },
+          {
+            key: "subscribed",
+            icon: <AimOutlined />,
+            label: i18n("common_subscribed"),
+          },
+          {
+            key: "liked",
+            icon: <LikeFilled />,
+            label: i18n("common_liked"),
+          },
+          {
+            key: "created",
+            icon: <FormOutlined />,
+            label: i18n("common_created"),
+          },
+        ]}
+      />
     </Sider>
   )
 }

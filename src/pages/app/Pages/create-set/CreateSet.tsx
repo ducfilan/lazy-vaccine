@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useParams } from "react-router-dom"
 
 import { Col, notification, Row } from "antd"
 
@@ -19,12 +20,12 @@ const CreateSteps = {
   SetItems: 1,
 }
 
-const CreateSetPage = (props: any) => {
+const CreateSetPage = () => {
   const { http } = useGlobalContext()
   const [currentStep, setCurrentStep] = useState<number>(CreateSteps.SetInfo)
   const [setInfo, setSetInfo] = useState<SetInfo>()
 
-  const setId = props.match.params.setId
+  const { setId } = useParams()
   const isEdit = !!setId
 
   const i18n = chrome.i18n.getMessage

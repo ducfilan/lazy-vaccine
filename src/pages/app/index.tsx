@@ -1,14 +1,14 @@
 import * as React from "react"
-import { render } from "react-dom"
+import { createRoot } from "react-dom/client"
 import { HashRouter } from "react-router-dom"
 import "antd/dist/antd.less"
 
 import AppPage from "./App"
 
-var mountNode = document.getElementById("root")
-render(
+const mountNode = document.getElementById("root")
+const root = createRoot(mountNode!)
+root.render(
   <HashRouter>
     <AppPage />
-  </HashRouter>,
-  mountNode
+  </HashRouter>
 )
