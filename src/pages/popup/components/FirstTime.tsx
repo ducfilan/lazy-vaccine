@@ -5,7 +5,7 @@ import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { Button, Alert, Carousel } from "antd"
 import { GoogleOutlined } from "@ant-design/icons"
 import { signIn } from "@facades/authFacade"
-import { LoginTypes } from "@consts/constants"
+import { i18n, LoginTypes } from "@consts/constants"
 import { User } from "@/common/types/types"
 
 import WanImg from "@img/emojis/shiba/wan.png"
@@ -39,18 +39,18 @@ function FirstTime() {
   return (
     <>
       <div className="first-time-intro--wrapper is-relative">
-        <PopupHeader content={chrome.i18n.getMessage("popup_introduce_first")} iconUrl={WanImg} />
+        <PopupHeader content={i18n("popup_introduce_first")} iconUrl={WanImg} />
         <div className="first-time-intro--login-button has-text-centered">
           <Button shape="round" icon={<GoogleOutlined />} size={"large"} loading={isLoading} onClick={loginWithGoogle}>
-            {chrome.i18n.getMessage("login_google")}
+            {i18n("login_google")}
           </Button>
         </div>
       </div>
 
       <div className="first-time-intro--body-wrapper">
         <Alert
-          message={chrome.i18n.getMessage("error")}
-          description={chrome.i18n.getMessage("login_failed_message")}
+          message={i18n("error")}
+          description={i18n("login_failed_message")}
           type="error"
           showIcon
           closable

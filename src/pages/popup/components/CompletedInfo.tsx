@@ -21,7 +21,7 @@ import NextPrevButton from "./NextPrevButton"
 import PopupHeader from "./Header"
 import AvatarImage from "@/common/components/AvatarImage"
 import TreeIcon from "@img/ui/fa/tree-solid.svg"
-import { AchievementChartOrderIndex, AppBasePath, AppPages } from "@/common/consts/constants"
+import { AchievementChartOrderIndex, AppBasePath, AppPages, i18n } from "@/common/consts/constants"
 import { useEffect, useState } from "react"
 import moment from "moment"
 import AchievementChart from "@/pages/app/Pages/user-profile/components/AchievementChart"
@@ -55,14 +55,14 @@ function HeaderContent(props: { setsStatistics: any }) {
           <Row gutter={[16, 0]}>
             <Col className="gutter-row" span={6}>
               <Statistic
-                title={chrome.i18n.getMessage("popup_stats_sets")}
+                title={i18n("popup_stats_sets")}
                 value={props.setsStatistics?.subscribedSetsCount}
                 prefix={<BookOutlined />}
               />
             </Col>
             <Col className="gutter-row" span={12}>
               <Statistic
-                title={chrome.i18n.getMessage("common_items")}
+                title={i18n("common_items")}
                 value={props.setsStatistics?.learntItemsCount}
                 prefix={<OrderedListOutlined />}
                 suffix={`/ ${formatNumber(props.setsStatistics?.totalItemsCount)}`}
@@ -71,7 +71,7 @@ function HeaderContent(props: { setsStatistics: any }) {
             <Col className="gutter-row" span={6}>
               {/* TODO: remove mock tree data */}
               <Statistic
-                title={chrome.i18n.getMessage("popup_stats_trees_plant")}
+                title={i18n("popup_stats_trees_plant")}
                 value={2}
                 prefix={<Icon component={TreeIcon} />}
               />
@@ -133,8 +133,8 @@ function CompletedInfo() {
       setSetsStatistics(setStatistics)
     } catch (error) {
       notification["error"]({
-        message: chrome.i18n.getMessage("error"),
-        description: chrome.i18n.getMessage("unexpected_error_message"),
+        message: i18n("error"),
+        description: i18n("unexpected_error_message"),
         duration: null,
       })
     }
@@ -160,8 +160,8 @@ function CompletedInfo() {
     } catch (error) {
       // TODO: Handle more types of error: Server/Timeout/Network etc..
       notification["error"]({
-        message: chrome.i18n.getMessage("error"),
-        description: chrome.i18n.getMessage("unexpected_error_message"),
+        message: i18n("error"),
+        description: i18n("unexpected_error_message"),
         duration: null,
       })
     }
@@ -184,7 +184,7 @@ function CompletedInfo() {
                   href={HomePageUrl}
                   target="_blank"
                 >
-                  {chrome.i18n.getMessage("popup_stats_more_sets")}
+                  {i18n("popup_stats_more_sets")}
                 </Button>
               </Col>
               <Col span={12}>
@@ -196,18 +196,18 @@ function CompletedInfo() {
                   href={MySpacePageUrl}
                   target="_blank"
                 >
-                  {chrome.i18n.getMessage("popup_stats_my_profile")}
+                  {i18n("popup_stats_my_profile")}
                 </Button>
               </Col>
               {/* TODO: update full-stats, setting */}
               <Col span={12} style={{ display: "none" }}>
                 <Button className="completed-info--button-full-stats" size="large" icon={<BarChartOutlined />} block>
-                  {chrome.i18n.getMessage("popup_stats_full_stats")}
+                  {i18n("popup_stats_full_stats")}
                 </Button>
               </Col>
               <Col span={12} style={{ display: "none" }}>
                 <Button className="completed-info--button-settings" size="large" icon={<SettingOutlined />} block>
-                  {chrome.i18n.getMessage("popup_stats_settings")}
+                  {i18n("popup_stats_settings")}
                 </Button>
               </Col>
             </Row>

@@ -7,7 +7,7 @@ import { SetInfo, SetInfoItem, TestResult } from "@/common/types/types"
 import { Button, Card, Col, notification, Result, Row, Skeleton, Statistic, Typography } from "antd"
 import { TestSetContext } from "./contexts/TestSetContext"
 import { LeftOutlined, ArrowUpOutlined } from "@ant-design/icons"
-import { ItemTypes, TestQuestionAmount, TestResultLevel, TrueFalseQuestionAmount } from "@/common/consts/constants"
+import { i18n, ItemTypes, TestQuestionAmount, TestResultLevel, TrueFalseQuestionAmount } from "@/common/consts/constants"
 import { shuffleArray } from "@/common/utils/arrayUtils"
 import TestTrueFalseCard from "../../components/TestTrueFalseCard"
 import TestMultipleChoiceCard from "../../components/TestMultipleChoiceCard"
@@ -15,7 +15,6 @@ import shibaLoveIcon from "@img/emojis/shiba/love.png"
 import CongratsScreen from "@/pages/app/components/CongratsScreen"
 
 const { useState, useEffect } = React
-const i18n = chrome.i18n.getMessage
 
 const TestSetPage = (props: any) => {
   const { http } = useGlobalContext()
@@ -105,8 +104,8 @@ const TestSetPage = (props: any) => {
       .then((res) => handleSetInfo(res))
       .catch(() => {
         notification["error"]({
-          message: chrome.i18n.getMessage("error"),
-          description: chrome.i18n.getMessage("unexpected_error_message"),
+          message: i18n("error"),
+          description: i18n("unexpected_error_message"),
           duration: null,
         })
       })
@@ -133,14 +132,14 @@ const TestSetPage = (props: any) => {
     const correctness = result / TestQuestionAmount
     let commentTitle, commentDetail
     if (correctness >= TestResultLevel.High) {
-      commentTitle = chrome.i18n.getMessage("high_comment_title")
-      commentDetail = chrome.i18n.getMessage("high_comment_detail")
+      commentTitle = i18n("high_comment_title")
+      commentDetail = i18n("high_comment_detail")
     } else if (correctness < TestResultLevel.High && correctness >= TestResultLevel.Medium) {
-      commentTitle = chrome.i18n.getMessage("medium_comment_title")
-      commentDetail = chrome.i18n.getMessage("medium_comment_detail")
+      commentTitle = i18n("medium_comment_title")
+      commentDetail = i18n("medium_comment_detail")
     } else {
-      commentTitle = chrome.i18n.getMessage("low_comment_title")
-      commentDetail = chrome.i18n.getMessage("low_comment_detail")
+      commentTitle = i18n("low_comment_title")
+      commentDetail = i18n("low_comment_detail")
     }
     setCommentTitle(commentTitle)
     setCommentDetail(commentDetail)
@@ -155,8 +154,8 @@ const TestSetPage = (props: any) => {
       .then(() => {})
       .catch(() => {
         notification["error"]({
-          message: chrome.i18n.getMessage("error"),
-          description: chrome.i18n.getMessage("unexpected_error_message"),
+          message: i18n("error"),
+          description: i18n("unexpected_error_message"),
           duration: null,
         })
       })

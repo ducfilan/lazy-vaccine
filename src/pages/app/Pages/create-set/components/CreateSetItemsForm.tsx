@@ -3,7 +3,7 @@ import * as React from "react"
 import { useNavigate } from "react-router-dom"
 import ReCAPTCHA from "react-google-recaptcha"
 
-import { AppPages, ItemTypes, RecaptchaSiteKey, TabKeyCode } from "@/common/consts/constants"
+import { AppPages, i18n, ItemTypes, RecaptchaSiteKey, TabKeyCode } from "@/common/consts/constants"
 import {
   Affix,
   Alert,
@@ -39,7 +39,6 @@ import { removeToNewArrayAtIndex } from "@/common/utils/arrayUtils"
 
 const { useRef, useState } = React
 
-const i18n = chrome.i18n.getMessage
 const DefaultInitAnswersCount = 4
 const DefaultInitItemCount = 5
 const { Option } = Select

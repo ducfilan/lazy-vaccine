@@ -1,3 +1,4 @@
+import { i18n } from "@/common/consts/constants"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { Button, Divider, InputNumber, Layout, Slider, Space, Typography } from "antd"
 import * as React from "react"
@@ -5,10 +6,8 @@ import { useNavigate } from "react-router-dom"
 
 const { Title } = Typography
 const { Sider } = Layout
-const i18n = chrome.i18n.getMessage
 
 const { useState, useEffect, useMemo } = React
-
 
 const MarketplaceSider = (props: any) => {
   const { http } = useGlobalContext()
@@ -34,11 +33,10 @@ const MarketplaceSider = (props: any) => {
   ]
 
   const marks = {
-    0: 'Low',
-    50: 'Medium',
-    100: 'High',
-  };
-
+    0: "Low",
+    50: "Medium",
+    100: "High",
+  }
 
   return (
     <Sider width={props.width} className="marketplace-sider--wrapper pad-16px">
@@ -47,13 +45,7 @@ const MarketplaceSider = (props: any) => {
       <Title level={5}>{i18n("marketplace_plant_type")}</Title>
       <div className="plant-type--wrapper top-8px">
         {plantTypes.map((plantType) => (
-          <Button
-            ghost
-            key={plantType.id}
-            type="primary"
-            className="plant-type--item"
-            size="small"
-          >
+          <Button ghost key={plantType.id} type="primary" className="plant-type--item" size="small">
             {plantType.name}
           </Button>
         ))}
@@ -71,7 +63,7 @@ const MarketplaceSider = (props: any) => {
         </div>
       </Space>
       <Title level={5}>{i18n("marketplace_roi")}</Title>
-      <Slider marks={marks} step={null} defaultValue={0} className="top-8px"/>
+      <Slider marks={marks} step={null} defaultValue={0} className="top-8px" />
     </Sider>
   )
 }

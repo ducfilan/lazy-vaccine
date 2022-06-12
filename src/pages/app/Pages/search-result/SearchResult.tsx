@@ -8,7 +8,7 @@ import { Layout, Typography } from "antd"
 
 import { Category } from "@/common/types/types"
 import SearchResultItems from "./components/SearchResultItems"
-import { AppPages } from "@/common/consts/constants"
+import { AppPages, i18n } from "@/common/consts/constants"
 import CategoriesSider from "@/pages/app/components/CategoriesSider"
 import CacheKeys from "@/common/consts/cacheKeys"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
@@ -18,11 +18,7 @@ const { Content } = Layout
 
 const { useState, useEffect } = React
 
-const i18n = chrome.i18n.getMessage
-
 const SearchResultPage = () => {
-  const navigate = useNavigate()
-
   const { user, http } = useGlobalContext()
   const [categories, setCategories] = useState<Category[]>()
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")

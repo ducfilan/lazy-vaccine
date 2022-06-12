@@ -1,4 +1,5 @@
 import CacheKeys from "@/common/consts/cacheKeys"
+import { i18n } from "@/common/consts/constants"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { getCategories } from "@/common/repo/category"
@@ -12,7 +13,6 @@ import { HomeContext } from "./contexts/HomeContext"
 
 const { Content } = Layout
 const { useState, useEffect } = React
-const i18n = chrome.i18n.getMessage
 
 const HomePage = (props: any) => {
   const { user, http } = useGlobalContext()

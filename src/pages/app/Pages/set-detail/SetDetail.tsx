@@ -9,6 +9,7 @@ import Interactions from "./components/Interactions"
 import Items from "./components/Items"
 import { SetDetailContext } from "./contexts/SetDetailContext"
 import { notification, Skeleton } from "antd"
+import { i18n } from "@/common/consts/constants"
 
 const { useState, useEffect } = React
 
@@ -26,8 +27,8 @@ const SetDetailPage = () => {
       .then(setSetInfo)
       .catch(() => {
         notification["error"]({
-          message: chrome.i18n.getMessage("error"),
-          description: chrome.i18n.getMessage("unexpected_error_message"),
+          message: i18n("error"),
+          description: i18n("unexpected_error_message"),
           duration: null,
         })
       })

@@ -1,8 +1,7 @@
+import { i18n } from "@/common/consts/constants"
 import { SetInfoItem } from "@/common/types/types"
 import { Button, Card, Col, Row } from "antd"
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react"
-
-const i18n = chrome.i18n.getMessage
 
 const TestTrueFalseCard = forwardRef((props: { setItem: SetInfoItem }, ref) => {
   const [setItem, setSetItem] = useState<SetInfoItem>()

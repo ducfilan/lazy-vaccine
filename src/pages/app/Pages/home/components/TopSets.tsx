@@ -1,14 +1,11 @@
 import * as React from "react"
-import { Button, Carousel, Skeleton } from "antd"
-import { LeftOutlined, RightOutlined } from "@ant-design/icons"
+import { Carousel, Skeleton } from "antd"
 
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { useState } from "react"
 import { SetInfo } from "@/common/types/types"
 import { getTopSets } from "@/common/repo/set"
 import SetItemCardLong from "@/pages/app/components/SetItemCardLong"
-
-const i18n = chrome.i18n.getMessage
 
 const { useEffect } = React
 

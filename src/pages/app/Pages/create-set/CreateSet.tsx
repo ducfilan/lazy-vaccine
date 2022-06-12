@@ -12,6 +12,7 @@ import { CreateSetContext } from "./contexts/CreateSetContext"
 import { CreateSetForm } from "./components/CreateSetForm"
 import { CreateSetRightHelper } from "./components/CreateSetRightHelper"
 import { CreateSetItemsForm } from "./components/CreateSetItemsForm"
+import { i18n } from "@/common/consts/constants"
 
 const { useEffect, useState } = React
 
@@ -27,8 +28,6 @@ const CreateSetPage = () => {
 
   const { setId } = useParams()
   const isEdit = !!setId
-
-  const i18n = chrome.i18n.getMessage
 
   function onPageLoaded() {
     if (!http || !setId) return

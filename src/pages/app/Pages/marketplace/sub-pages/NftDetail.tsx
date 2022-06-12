@@ -1,3 +1,4 @@
+import { i18n } from "@/common/consts/constants"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { getMissions } from "@/common/repo/mission"
 import { Attribute, Mission } from "@/common/types/types"
@@ -8,7 +9,6 @@ import { useMarketPlaceContext } from "../contexts/MarketplaceContext"
 import "../css/nft-detail.scss"
 
 const { Panel } = Collapse
-const i18n = chrome.i18n.getMessage
 const { useState, useEffect } = React
 
 const HardnessAttributeKey = "hardness"

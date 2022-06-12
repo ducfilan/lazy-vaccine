@@ -9,7 +9,7 @@ import { signOut } from "@facades/authFacade"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import AvatarImage from "./AvatarImage"
 import { Link } from "react-router-dom"
-import { AppPages } from "@consts/constants"
+import { AppPages, i18n } from "@consts/constants"
 
 const DropdownMenu = (props: { isLoggedIn: boolean }) => {
   const { user, setUser } = useGlobalContext()
@@ -35,7 +35,7 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
                     })
                   }}
                 >
-                  {chrome.i18n.getMessage("logout")}
+                  {i18n("logout")}
                 </Button>
               ),
             },
@@ -75,7 +75,7 @@ function Navbar(props: { extraComponents?: React.ReactNode[]; centerComponent?: 
     <PageHeader
       title={
         <Link to={"/home"} style={{ color: "white" }}>
-          {chrome.i18n.getMessage("appName")}
+          {i18n("appName")}
         </Link>
       }
       avatar={{ gap: 0, src: AppLogo, size: 48 }}

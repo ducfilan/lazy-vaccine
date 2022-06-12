@@ -6,9 +6,7 @@ import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
 import "./css/QandA.scss"
 import { Popover } from "./common/Popover"
-import { AppBasePath, AppPages } from "@/common/consts/constants"
-
-const i18n = chrome.i18n.getMessage
+import { AppBasePath, AppPages, i18n } from "@/common/consts/constants"
 
 export const QnATemplate = () => {
   return (

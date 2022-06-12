@@ -9,6 +9,7 @@ import {
   MaxLengthSetTitle,
   MaxTagsCountPerSet,
   StaticBaseUrl,
+  i18n,
 } from "@/common/consts/constants"
 import { RequiredRule, MaxLengthRule } from "@/common/consts/validationRules"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
@@ -24,7 +25,7 @@ import { getExtensionFromFileType, getHash } from "@/common/utils/stringUtils"
 import { getPreSignedUploadUrl, uploadImage } from "@/common/repo/image"
 
 const { useState, useEffect } = React
-const i18n = chrome.i18n.getMessage
+
 const imageWidthInPx = 300
 const imageHeightInPx = 300
 

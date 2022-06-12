@@ -4,10 +4,10 @@ import { AimOutlined, LikeFilled, FormOutlined, TrophyOutlined } from "@ant-desi
 
 import { useUserProfileContext } from "../contexts/UserProfileContext"
 import AvatarImage from "@/common/components/AvatarImage"
+import { i18n } from "@/common/consts/constants"
 
 const { Title } = Typography
 const { Sider } = Layout
-const i18n = chrome.i18n.getMessage
 
 const UserProfileSider = (props: { width: number; path: string }) => {
   const { user, onTabChanged } = useUserProfileContext()

@@ -12,11 +12,9 @@ import {
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { useState } from "react"
 import { useSetDetailContext } from "../contexts/SetDetailContext"
-import { AppPages, ColorPrimary, InteractionDislike, InteractionLike, InteractionSubscribe } from "@/common/consts/constants"
+import { AppPages, ColorPrimary, i18n, InteractionDislike, InteractionLike, InteractionSubscribe } from "@/common/consts/constants"
 import { interactToSet, undoInteractToSet } from "@/common/repo/set"
 import { Link } from "react-router-dom"
-
-const i18n = chrome.i18n.getMessage
 
 const Interactions = () => {
   const { http } = useGlobalContext()

@@ -1,4 +1,4 @@
-import { RegexYoutubeHomePage, RegexYoutubeVideoView, RegexFacebookHomePage, SupportingPages } from "@/common/consts/constants"
+import { RegexYoutubeHomePage, RegexYoutubeVideoView, RegexFacebookHomePage, SupportingPages, i18n } from "@/common/consts/constants"
 
 let _getConditionalCallback = function (selector: string, callback: Function) {
   return function (this: Element, e: any) {
@@ -19,7 +19,7 @@ export function openPage(pageName: string) {
 }
 
 export function updatePageTitle(i18nKey: string) {
-  document.title = `${chrome.i18n.getMessage('appName')} - ${chrome.i18n.getMessage(i18nKey)}`
+  document.title = `${i18n('appName')} - ${i18n(i18nKey)}`
 }
 
 /**

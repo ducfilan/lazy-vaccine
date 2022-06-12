@@ -4,10 +4,10 @@ import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { Key } from "antd/lib/table/interface"
 import { useNavigate } from "react-router-dom"
 import { useCategorySetsContext } from "../Pages/category-sets/contexts/CategorySetsContext"
+import { i18n } from "@/common/consts/constants"
 
 const { Title } = Typography
 const { Sider } = Layout
-const i18n = chrome.i18n.getMessage
 
 const { useState, useMemo } = React
 

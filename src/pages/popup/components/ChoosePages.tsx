@@ -5,7 +5,7 @@ import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { Card, Space, Checkbox, notification } from "antd"
 import { CheckCircleFilled } from "@ant-design/icons"
 
-import { SupportingPages } from "@consts/constants"
+import { i18n, SupportingPages } from "@consts/constants"
 import NextPrevButton from "./NextPrevButton"
 import { User } from "@/common/types/types"
 import RegisterSteps from "@/common/consts/registerSteps"
@@ -21,7 +21,7 @@ function ChoosePages() {
 
   const [chosePages, setChosePages] = useState<string[]>(user?.pages || [SupportingPages.facebook.key])
 
-  const headerText = chrome.i18n.getMessage("popup_introduce_choose_pages")
+  const headerText = i18n("popup_introduce_choose_pages")
 
   const goForward = async () => {
     const nextStep = user ? RegisterSteps.next(user.finishedRegisterStep) : null
@@ -49,8 +49,8 @@ function ChoosePages() {
     } catch (error) {
       // TODO: Handle more types of error: Server/Timeout/Network etc..
       notification["error"]({
-        message: chrome.i18n.getMessage("error"),
-        description: chrome.i18n.getMessage("unexpected_error_message"),
+        message: i18n("error"),
+        description: i18n("unexpected_error_message"),
         duration: null,
       })
     }
@@ -75,7 +75,7 @@ function ChoosePages() {
         <NextPrevButton direction={"both"} onNext={goForward} onPrev={goBack} />
 
         <Space align="end" style={{ marginRight: 18 }}>
-          <Checkbox onChange={selectAllPages}>{chrome.i18n.getMessage("select_all")}</Checkbox>
+          <Checkbox onChange={selectAllPages}>{i18n("select_all")}</Checkbox>
         </Space>
 
         <Card bordered={false}>

@@ -1,3 +1,4 @@
+import { i18n } from "@/common/consts/constants";
 import { useGlobalContext } from "@/common/contexts/GlobalContext";
 import { LeftOutlined } from "@ant-design/icons";
 import SolanaIcon from "@img/ui/solana-sol-logo.png";
@@ -6,7 +7,6 @@ import * as React from "react";
 import { SeedDetailContext } from "./contexts/SeedDetailContext";
 
 const { Panel } = Collapse;
-const i18n = chrome.i18n.getMessage
 const { useState, useEffect } = React
 
 const SeedDetailPage = (props: any) => {

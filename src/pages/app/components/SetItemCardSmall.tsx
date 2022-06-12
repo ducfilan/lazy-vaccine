@@ -6,11 +6,9 @@ import { SetInfo } from "@/common/types/types"
 import { Link } from "react-router-dom"
 import { interactToSet, undoInteractToSet } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
-import { ColorPrimary, InteractionDislike, InteractionLike, InteractionSubscribe } from "@/common/consts/constants"
+import { ColorPrimary, i18n, InteractionDislike, InteractionLike, InteractionSubscribe } from "@/common/consts/constants"
 
 const { useCallback, useState } = React
-
-const i18n = chrome.i18n.getMessage
 
 const SetItemCardSmall = (props: { set: SetInfo }) => {
   const { http } = useGlobalContext()

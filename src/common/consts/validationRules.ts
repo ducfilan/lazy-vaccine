@@ -1,4 +1,6 @@
-export const RequiredRule = { required: true, message: chrome.i18n.getMessage("required_field") }
+import { i18n } from "./constants"
+
+export const RequiredRule = { required: true, message: i18n("required_field") }
 
 export const MaxLengthRule = (length: number) => (() => ({
   validator(_: any, value: any) {
@@ -6,6 +8,6 @@ export const MaxLengthRule = (length: number) => (() => ({
       return Promise.resolve()
     }
 
-    return Promise.reject(new Error(`${chrome.i18n.getMessage("max_length_field")} ${length}`))
+    return Promise.reject(new Error(`${i18n("max_length_field")} ${length}`))
   },
 }))

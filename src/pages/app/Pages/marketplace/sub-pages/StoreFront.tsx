@@ -1,3 +1,4 @@
+import { i18n } from "@/common/consts/constants"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { SeedInfo } from "@/common/types/types"
 import MarketplaceSider from "@/pages/app/components/MarketplaceSider"
@@ -10,8 +11,6 @@ import { MarketPlaceContext } from "../contexts/MarketplaceContext"
 const { Content } = Layout
 const { Option } = Select
 const { useState, useEffect } = React
-
-const i18n = chrome.i18n.getMessage
 
 const StoreFront = (props: any) => {
   const { user, http } = useGlobalContext()

@@ -14,11 +14,10 @@ import { CategorySetsContext } from "./contexts/CategorySetsContext"
 import parse from "html-react-parser"
 import { formatString } from "@/common/utils/stringUtils"
 import { isElementAtBottom } from "@/pages/content-script/domHelpers"
+import { i18n } from "@/common/consts/constants"
 
 const { Content } = Layout
 const { useState, useEffect } = React
-
-const i18n = chrome.i18n.getMessage
 
 const CategorySetsPage = (props: any) => {
   const { user, http } = useGlobalContext()
@@ -95,8 +94,8 @@ const CategorySetsPage = (props: any) => {
       })
       .catch(() => {
         notification["error"]({
-          message: chrome.i18n.getMessage("error"),
-          description: chrome.i18n.getMessage("unexpected_error_message"),
+          message: i18n("error"),
+          description: i18n("unexpected_error_message"),
           duration: null,
         })
       })
