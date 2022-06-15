@@ -18,6 +18,7 @@ import {
   registerStarEvent,
   registerSelectAnswerEvent,
   registerCheckAnswerEvent,
+  registerSelectEvent,
 } from "./pages/content-script/eventRegisters"
 import { getHref } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
@@ -28,6 +29,8 @@ import {
   ItemsInteractionShow,
   ItemsInteractionStar,
 } from "./common/consts/constants"
+
+import "@/background/templates/css/antd-wrapped.less"
 
 let randomItemIndexVisitMap: number[] = []
 let setInfo: SetInfo | null
@@ -161,6 +164,8 @@ function registerFlashcardEvents() {
   )
 
   registerMorePopoverEvent()
+
+  registerSelectEvent()
 
   registerNextSetEvent(async () => {
     await sendClearCachedRandomSetMessage()

@@ -2,7 +2,7 @@ import { addDynamicEventListener, htmlStringToHtmlNode } from "@/background/DomM
 import { decodeBase64, formatString } from "@/common/utils/stringUtils"
 import { generateTemplateExtraValues, toTemplateValues } from "./templateHelpers"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
-import { sendInteractItemMessage } from "./messageSenders"
+import { sendInteractItemMessage, sendSetLocalSettingMessage } from "./messageSenders"
 import {
   ItemsInteractionForcedDone,
   ItemsInteractionIgnore,
@@ -29,7 +29,6 @@ export function registerNextItemEvent(
 ) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--next-button", async (e: Event) => {
     e.stopPropagation()
-    debugger
 
     if (e.isTrusted) {
       const currentItem = itemGetter()
@@ -52,11 +51,13 @@ export function registerNextItemEvent(
 
     const itemToDisplay = itemToDisplayItem(nextItem, currentSet)
 
-    const templateValues = toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay))
+    toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay)).then((templateValues) => {
+      getTemplate(itemToDisplay.type).then((template) => {
+        const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
 
-    const newItemNode = htmlStringToHtmlNode(formatString(getTemplate(itemToDisplay.type), templateValues))
-
-    wrapperElement?.replaceWith(newItemNode)
+        wrapperElement?.replaceWith(newItemNode)
+      })
+    })
   })
 }
 
@@ -177,15 +178,18 @@ export function registerPrevItemEvent(
 
     const itemToDisplay = itemToDisplayItem(prevItem, currentSet)
 
-    const templateValues = toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay))
+    toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay)).then((templateValues) => {
+      getTemplate(itemToDisplay.type).then((template) => {
+        const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
 
-    const newItemNode = htmlStringToHtmlNode(formatString(getTemplate(itemToDisplay.type), templateValues))
-    wrapperElement?.replaceWith(newItemNode)
+        wrapperElement?.replaceWith(newItemNode)
+      })
+    })
   })
 }
 
 export function registerMorePopoverEvent() {
-  addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card-more-button", (e: Event) => {
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine .inject-card-more-button", (e: Event) => {
     e.stopPropagation()
 
     const moreButton = e.target as HTMLElement
@@ -314,5 +318,28 @@ export function registerCheckAnswerEvent() {
         answer.classList.add("incorrect")
       }
     })
+  })
+}
+
+export function registerSelectEvent() {
+  const wrapperSelector = ".select-menu"
+
+  addDynamicEventListener(document.body, "click", `.lazy-vaccine ${wrapperSelector} .select-btn`, async (e: Event) => {
+    const selectBtn = e.target as Element
+    selectBtn.closest(wrapperSelector)!.classList.toggle("active")
+  })
+
+  addDynamicEventListener(document.body, "click", `.lazy-vaccine ${wrapperSelector} .option`, async (e: Event) => {
+    const option = e.target as HTMLElement
+
+    let selectedOptionKey = option.dataset.key!
+    let selectedOptionLabel = option.innerText
+
+    let wrapper = option.closest(wrapperSelector) as HTMLElement
+    const settingKey = wrapper.dataset.settingKey!
+
+    sendSetLocalSettingMessage(settingKey, selectedOptionKey)
+    ;(wrapper?.querySelector(".sBtn-text") as HTMLElement).innerText = selectedOptionLabel
+    wrapper?.classList.remove("active")
   })
 }

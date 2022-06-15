@@ -161,6 +161,8 @@ export const ChromeMessageClearRandomSetCache = "clear-random-set-cache"
 export const ChromeMessageTypeGetRandomItem = "get-random-item"
 export const ChromeMessageTypeGetRandomSet = "get-random-set"
 export const ChromeMessageTypeInteractItem = "interact-item"
+export const ChromeMessageTypeSetLocalSetting = "set-local-setting"
+export const ChromeMessageTypeGetLocalSetting = "get-local-setting"
 
 export const InjectionTargets = {
   YoutubeHome: [
@@ -214,3 +216,6 @@ export const AchievementChartOrderIndex = {
 export const i18n = chrome.i18n.getMessage
 
 export const MarketplaceUrl = "http://localhost:3000/#/"
+
+export const SettingKeyFrontItem = "front-item"
+export const SettingKeyBackItem = "back-item"

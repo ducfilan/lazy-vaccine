@@ -1,4 +1,4 @@
-import { InjectTypes } from "@/common/consts/constants"
+import { i18n, InjectTypes, SettingKeyBackItem, SettingKeyFrontItem } from "@/common/consts/constants"
 import { KeyValuePair, PageInjectorSiblingSelectorParts } from "@/common/types/types"
 import { formatString, trimQuotes } from "@/common/utils/stringUtils"
 import { MutationObserverFacade } from "@facades/mutationObserverFacade"
@@ -7,15 +7,27 @@ import { FlashCardTemplate } from "./templates/Flashcard"
 import { htmlStringToHtmlNode, insertBefore } from "./DomManipulator"
 import React from "react"
 import { QnATemplate } from "./templates/QandA"
+import { sendGetLocalSettingMessage } from "@/pages/content-script/messageSenders"
 
-export function getTemplate(type: string) {
+export async function getTemplate(type: string) {
   switch (type) {
     case "term-def":
-      return renderToString(<FlashCardTemplate />)
+      let settingFrontItem = (
+        (await sendGetLocalSettingMessage(SettingKeyFrontItem)) || i18n("select")
+      ).toString()
+      let settingBackItem = (
+        (await sendGetLocalSettingMessage(SettingKeyBackItem)) || i18n("select")
+      ).toString()
+
+      return renderToString(
+        <FlashCardTemplate selectedFrontItem={settingFrontItem} selectedBackItem={settingBackItem} />
+      )
+
     case "q&a":
       return renderToString(<QnATemplate />)
+
     default:
-      return renderToString(<FlashCardTemplate />)
+      return renderToString(<FlashCardTemplate selectedFrontItem={""} selectedBackItem={""} />)
   }
 }
 
@@ -128,10 +140,11 @@ export default class PageInjector {
         if (!templateValue || templateValue.length === 0) return
 
         const typeItem = templateValue.find((item) => item.key === "type")?.value
-        const htmlTemplate = getTemplate(typeItem || "")
-        const htmlString = formatString(htmlTemplate, templateValue)
+        getTemplate(typeItem || "").then((htmlTemplate) => {
+          const htmlString = formatString(htmlTemplate, templateValue)
 
-        insertBefore(htmlStringToHtmlNode(htmlString), node)
+          insertBefore(htmlStringToHtmlNode(htmlString), node)
+        })
       })
   }
 
@@ -158,15 +171,16 @@ export default class PageInjector {
     if (!templateValue || templateValue.length === 0) return
 
     const typeItem = templateValue.find((item) => item.key === "type")?.value
-    const htmlTemplate = getTemplate(typeItem || "")
-    const htmlString = formatString(htmlTemplate, templateValue)
+    getTemplate(typeItem || "").then((htmlTemplate) => {
+      const htmlString = formatString(htmlTemplate, templateValue)
 
-    const node = htmlStringToHtmlNode(htmlString)
-    if (!node) {
-      throw new Error("invalid htmlTemplate")
-    }
+      const node = htmlStringToHtmlNode(htmlString)
+      if (!node) {
+        throw new Error("invalid htmlTemplate")
+      }
 
-    document.querySelector(this.parentSelector)?.prepend(node)
+      document.querySelector(this.parentSelector)?.prepend(node)
+    })
   }
 
   private injectDynamicPosition(templateValueGetter: () => Promise<KeyValuePair[]>) {

@@ -220,6 +220,15 @@
   "flashcard_next_set": {
     "message": "Next set"
   },
+  "flashcard_other_options": {
+    "message": "Other options"
+  },
+  "flashcard_front_item": {
+    "message": "Front item"
+  },
+  "flashcard_back_item": {
+    "message": "Back item"
+  },
   "marketplace_plant_type": {
     "message": "Plant type"
   },
@@ -339,6 +348,12 @@
   },
   "common_properties": {
     "message": "Properties"
+  },
+  "common_ignore": {
+    "message": "Ignore"
+  },
+  "common_got_it": {
+    "message": "Got it"
   },
   "seed_growing_conditions": {
     "message": "Growing conditions"

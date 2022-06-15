@@ -1,5 +1,3 @@
-@use "sass:meta";
-
 @mixin box-shadow($h-shadow: 0, $v-shadow: 1px, $blur: 2px, $spread: 0, $color: fade-out($black, 0.85)) {
   box-shadow: $h-shadow $v-shadow $blur $spread $color;
 }
@@ -19,10 +17,6 @@ $primary: #12b886;
 $white: #fff;
 
 .lazy-vaccine {
-  @include meta.load-css("./antd-icon.scss");
-  @include meta.load-css("./antd-btn.scss");
-  @include meta.load-css("./antd-popover.scss");
-
   position: relative;
   min-width: 300px;
   z-index: 99999;
@@ -62,16 +56,16 @@ $white: #fff;
 
     .next-prev-buttons--prev-button {
       left: 0;
-      border-radius: 0;
-      border-top-right-radius: 13px;
-      border-bottom-right-radius: 13px;
+      border-radius: 0!important;
+      border-top-right-radius: 13px!important;
+      border-bottom-right-radius: 13px!important;
     }
 
     .next-prev-buttons--next-button {
       right: 0;
-      border-radius: 0;
-      border-top-left-radius: 13px;
-      border-bottom-left-radius: 13px;
+      border-radius: 0!important;
+      border-top-left-radius: 13px!important;
+      border-bottom-left-radius: 13px!important;
     }
   }
 }

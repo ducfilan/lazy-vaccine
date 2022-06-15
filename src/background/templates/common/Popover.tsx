@@ -22,7 +22,7 @@ export const Popover = ({
         shape="circle"
         icon={<MoreOutlined style={{ color: "white" }} />}
         style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}
-        className="flash-card-more-button"
+        className="inject-card-more-button"
       />
 
       <div style={{ position: "absolute", top: 0, left: 0, width: "100%" }}>
