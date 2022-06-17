@@ -6,7 +6,14 @@ import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
 import "./css/flashcard.scss"
 import { Popover } from "./common/Popover"
-import { AppBasePath, AppPages, i18n, SettingKeyBackItem, SettingKeyFrontItem } from "@/common/consts/constants"
+import {
+  AppBasePath,
+  AppPages,
+  FlashCardOptions,
+  i18n,
+  SettingKeyBackItem,
+  SettingKeyFrontItem,
+} from "@/common/consts/constants"
 import { SelectBox } from "./common/SelectBox"
 
 export const FlashCardTemplate = (props: { selectedFrontItem: string; selectedBackItem: string }) => {
@@ -46,19 +53,13 @@ export const FlashCardTemplate = (props: { selectedFrontItem: string; selectedBa
               <SelectBox
                 label={i18n("flashcard_front_item")}
                 hint={props.selectedFrontItem}
-                options={[
-                  { key: "term", value: i18n("common_term") },
-                  { key: "definition", value: i18n("common_definition") },
-                ]}
+                options={Object.entries(FlashCardOptions).map(([key, value]) => ({ key, value }))}
                 settingKey={SettingKeyFrontItem}
               />
               <SelectBox
                 label={i18n("flashcard_back_item")}
                 hint={props.selectedBackItem}
-                options={[
-                  { key: "term", value: i18n("common_term") },
-                  { key: "definition", value: i18n("common_definition") },
-                ]}
+                options={Object.entries(FlashCardOptions).map(([key, value]) => ({ key, value }))}
                 settingKey={SettingKeyBackItem}
               />
             </div>

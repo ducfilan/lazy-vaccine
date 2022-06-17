@@ -219,3 +219,8 @@ export const MarketplaceUrl = "http://localhost:3000/#/"
 
 export const SettingKeyFrontItem = "front-item"
 export const SettingKeyBackItem = "back-item"
+
+export const FlashCardOptions: { [key: string]: string } = {
+  "term": i18n("common_term"),
+  "definition": i18n("common_definition"),
+}

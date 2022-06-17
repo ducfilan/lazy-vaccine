@@ -1,4 +1,4 @@
-import { i18n, InjectTypes, SettingKeyBackItem, SettingKeyFrontItem } from "@/common/consts/constants"
+import { FlashCardOptions, i18n, InjectTypes, SettingKeyBackItem, SettingKeyFrontItem } from "@/common/consts/constants"
 import { KeyValuePair, PageInjectorSiblingSelectorParts } from "@/common/types/types"
 import { formatString, trimQuotes } from "@/common/utils/stringUtils"
 import { MutationObserverFacade } from "@facades/mutationObserverFacade"
@@ -12,12 +12,11 @@ import { sendGetLocalSettingMessage } from "@/pages/content-script/messageSender
 export async function getTemplate(type: string) {
   switch (type) {
     case "term-def":
-      let settingFrontItem = (
-        (await sendGetLocalSettingMessage(SettingKeyFrontItem)) || i18n("select")
-      ).toString()
-      let settingBackItem = (
-        (await sendGetLocalSettingMessage(SettingKeyBackItem)) || i18n("select")
-      ).toString()
+      const frontItemSettingKey = (await sendGetLocalSettingMessage(SettingKeyFrontItem)) || ""
+      const backItemSettingKey = (await sendGetLocalSettingMessage(SettingKeyBackItem)) || ""
+
+      let settingFrontItem = FlashCardOptions[frontItemSettingKey.toString()] || i18n("select")
+      let settingBackItem = FlashCardOptions[backItemSettingKey.toString()] || i18n("select")
 
       return renderToString(
         <FlashCardTemplate selectedFrontItem={settingFrontItem} selectedBackItem={settingBackItem} />
