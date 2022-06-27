@@ -2,6 +2,7 @@ import * as React from "react"
 import { Col, Row, Checkbox, Card, Divider } from "antd"
 import { useSetDetailContext } from "../contexts/SetDetailContext"
 import { i18n, ItemTypes } from "@/common/consts/constants"
+import RichTextEditor from "@/pages/app/components/RichTextEditor"
 
 const Items = () => {
   const { setInfo } = useSetDetailContext()
@@ -47,7 +48,7 @@ const Items = () => {
             break
 
           case ItemTypes.Content.value:
-            innerContent = item.content
+            innerContent = <RichTextEditor readOnly value={item.content} />
             break
 
           default:

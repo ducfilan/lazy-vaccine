@@ -141,6 +141,42 @@ button {
   }
 }
 
+:not(pre) > code {
+  font-family: monospace;
+  background-color: #eee;
+  padding: 3px;
+}
+
+blockquote {
+  border-left: 2px solid #ddd;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 10px;
+  color: #aaa;
+  font-style: italic;
+}
+
+.slate-heading {
+  margin-bottom: 0.5em;
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 38px;
+  line-height: 1.23;
+}
+
+h2 {
+  font-size: 30px;
+  line-height: 1.35;
+}
+
+h3 {
+  font-size: 24px;
+  line-height: 1.35;
+}
+
 @keyframes bounce {
   0% {
     transform: translateY(3px);

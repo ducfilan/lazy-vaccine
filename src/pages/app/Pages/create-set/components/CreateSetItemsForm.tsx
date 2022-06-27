@@ -36,6 +36,7 @@ import useLocalStorage from "@/common/hooks/useLocalStorage"
 import CacheKeys from "@/common/consts/cacheKeys"
 import SupportingLanguages from "@/common/consts/supportingLanguages"
 import { removeToNewArrayAtIndex } from "@/common/utils/arrayUtils"
+import RichTextEditor from "@/pages/app/components/RichTextEditor"
 
 const { useRef, useState } = React
 
@@ -402,7 +403,7 @@ export const CreateSetItemsForm = () => {
                             label={i18n("create_set_content_label")}
                             rules={[RequiredRule]}
                           >
-                            <Input.TextArea placeholder={i18n("create_set_content_placeholder")} />
+                            <RichTextEditor value="" placeholder={i18n("create_set_content_placeholder")} />
                           </Form.Item>
                         )
 
