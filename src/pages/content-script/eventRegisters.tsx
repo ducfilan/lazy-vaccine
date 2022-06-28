@@ -51,13 +51,18 @@ export function registerNextItemEvent(
 
     const itemToDisplay = itemToDisplayItem(nextItem, currentSet)
 
-    toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay)).then((templateValues) => {
-      getTemplate(itemToDisplay.type).then((template) => {
-        const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
+    toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay))
+      .then((templateValues) => {
+        getTemplate(itemToDisplay.type).then((template) => {
+          const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
 
-        wrapperElement?.replaceWith(newItemNode)
+          wrapperElement?.replaceWith(newItemNode)
+        })
       })
-    })
+      .catch((error) => {
+        // There is some error when getting the next item, trigger next item.
+        console.error(error)
+      })
   })
 }
 
@@ -98,7 +103,8 @@ function turnItemToQuestionAndAnswersItem(nextItem: SetInfoItem, setInfo: SetInf
 
       const termDefItems = setInfo?.items?.filter((item) => item.type === ItemTypes.TermDef.value)
       if (!termDefItems || termDefItems.length < minimumTermDefItemsCountToFormQnA) {
-        throw new Error("not enough term definition items to form Q and A item")
+        // Not enough term definition items to form Q and A item
+        return nextItem
       }
 
       // TODO: Need to add more logic to determine.
