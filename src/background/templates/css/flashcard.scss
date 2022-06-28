@@ -9,7 +9,7 @@ $white: #fff;
   .flash-card-wrapper {
     width: 100%;
     margin-bottom: 20px;
-    transition: transform 1s;
+    transition: transform 0.5s;
     transform-style: preserve-3d;
     cursor: pointer;
     position: relative;
@@ -47,10 +47,6 @@ $white: #fff;
       position: absolute;
       top: 0;
       transform: rotateY(180deg);
-
-      p {
-        height: 100%;
-      }
     }
 
     .card--interactions {
