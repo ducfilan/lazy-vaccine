@@ -7,6 +7,7 @@ import { DisclaimerInfo } from "./common/DisclaimerInfo"
 import "./css/QandA.scss"
 import { Popover } from "./common/Popover"
 import { AppBasePath, AppPages, i18n } from "@/common/consts/constants"
+import { CardInteraction } from "./common/CardInteraction"
 
 export const QnATemplate = () => {
   return (
@@ -54,35 +55,8 @@ export const QnATemplate = () => {
               Check
             </Button>
           </div>
-          <div className="card--interactions">
-            <Button
-              ghost
-              type="primary"
-              className="card--interactions--ignore"
-              size="large"
-              icon={<MinusCircleOutlined />}
-            >
-              Ignore
-            </Button>
 
-            <Button
-              ghost
-              type="primary"
-              className="card--interactions--star :isStared"
-              size="large"
-              icon={<StarFilled />}
-            ></Button>
-
-            <Button
-              ghost
-              type="primary"
-              className="card--interactions--got-it"
-              size="large"
-              icon={<ThunderboltFilled />}
-            >
-              Got it
-            </Button>
-          </div>
+          <CardInteraction />
         </div>
       </div>
       <NextPrevButton direction="both" />

@@ -15,6 +15,7 @@ import {
   SettingKeyFrontItem,
 } from "@/common/consts/constants"
 import { SelectBox } from "./common/SelectBox"
+import { CardInteraction } from "./common/CardInteraction"
 
 export const FlashCardTemplate = (props: { selectedFrontItem: string; selectedBackItem: string }) => {
   return (
@@ -69,38 +70,11 @@ export const FlashCardTemplate = (props: { selectedFrontItem: string; selectedBa
       <div className="flash-card flash-card-wrapper">
         <div className="card--face card--face--front">
           <p className="card--content">{":front_content"}</p>
-          <div className="card--interactions">
-            <Button
-              ghost
-              type="primary"
-              className="card--interactions--ignore"
-              size="large"
-              icon={<MinusCircleOutlined />}
-            >
-              {i18n("common_ignore")}
-            </Button>
-
-            <Button
-              ghost
-              type="primary"
-              className="card--interactions--star :isStared"
-              size="large"
-              icon={<StarFilled />}
-            ></Button>
-
-            <Button
-              ghost
-              type="primary"
-              className="card--interactions--got-it"
-              size="large"
-              icon={<ThunderboltFilled />}
-            >
-              {i18n("common_got_it")}
-            </Button>
-          </div>
+          <CardInteraction />
         </div>
         <div className="card--face card--face--back">
           <p className="card--content">{":back_content"}</p>
+          <CardInteraction />
         </div>
       </div>
       <NextPrevButton direction="both" />

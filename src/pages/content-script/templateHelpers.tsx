@@ -1,11 +1,18 @@
+import React from "react"
+
 import { hrefToSiteName } from "@/background/DomManipulator"
 import { ItemTypes, SettingKeyBackItem, SettingKeyFrontItem } from "@/common/consts/constants"
 import { SetInfoItem, KeyValuePair } from "@/common/types/types"
 import { encodeBase64 } from "@/common/utils/stringUtils"
+import { renderToString } from "react-dom/server"
+import RichTextEditor from "@/pages/app/components/RichTextEditor"
 import { getHref } from "./domHelpers"
 import { sendGetLocalSettingMessage } from "./messageSenders"
 
-export const toTemplateValues = async (item: SetInfoItem | null | undefined, otherKeyValueItems: { [key: string]: string } = {}) => {
+export const toTemplateValues = async (
+  item: SetInfoItem | null | undefined,
+  otherKeyValueItems: { [key: string]: string } = {}
+) => {
   if (!item) return []
 
   const itemKeyValue = await mapItemTemplateValues(item)
@@ -18,25 +25,23 @@ export const toTemplateValues = async (item: SetInfoItem | null | undefined, oth
 async function mapItemTemplateValues(item: SetInfoItem): Promise<KeyValuePair[]> {
   switch (item.type) {
     case ItemTypes.TermDef.value:
-      let settingFrontItem = (
-        (await sendGetLocalSettingMessage(SettingKeyFrontItem)) || "term"
-      ).toString()
-      
-      let settingBackItem = (
-        (await sendGetLocalSettingMessage(SettingKeyBackItem)) || "definition"
-      ).toString()
-      
+      let settingFrontItem = ((await sendGetLocalSettingMessage(SettingKeyFrontItem)) || "term").toString()
+
+      let settingBackItem = ((await sendGetLocalSettingMessage(SettingKeyBackItem)) || "definition").toString()
+
       item.front_content = item[settingFrontItem]
       item.back_content = item[settingBackItem]
 
       delete item.term
       delete item.definition
+      break
 
-      return Object.entries(item).map(([key, value]) => ({ key, value } as KeyValuePair))
-
-    default:
-      return Object.entries(item).map(([key, value]) => ({ key, value } as KeyValuePair))
+    case ItemTypes.Content.value:
+      item.content = renderToString(<RichTextEditor readOnly value={item.content} />)
+      break
   }
+
+  return Object.entries(item).map(([key, value]) => ({ key, value } as KeyValuePair))
 }
 
 export function generateTemplateExtraValues(nextItem: SetInfoItem) {
@@ -58,8 +63,8 @@ export function generateTemplateExtraValues(nextItem: SetInfoItem) {
       return {
         ...commonValues,
         listOfAnswers: encodeBase64(JSON.stringify(nextItem.answers)),
-        answerTemplate: nextItem.answers.map(answer => `<div class="answer-btn">${answer.answer}</div>`).join(''),
-        question: nextItem.question
+        answerTemplate: nextItem.answers.map((answer) => `<div class="answer-btn">${answer.answer}</div>`).join(""),
+        question: nextItem.question,
       }
 
     default:
