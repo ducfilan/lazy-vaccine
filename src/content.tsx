@@ -163,11 +163,11 @@ function registerFlashcardEvents() {
 
   registerPrevItemEvent(
     () => {
-      if (currentItemPointer === 0) {
+      if (currentItemPointer <= 0) {
         return null
       }
 
-      return getItemAtPointer(--currentItemPointer)
+      return getItemAtPointer(--currentItemPointer, -1)
     },
     itemGetter,
     setGetter
@@ -183,10 +183,16 @@ function registerFlashcardEvents() {
   })
 }
 
-const getItemAtPointer = (pointerPosition: number): any => {
+/**
+ * Get item at pointer, skip hidden items.
+ * @param pointerPosition position to point to the set items.
+ * @param skipStep Step to skip when a hidden item is met.
+ * @returns item
+ */
+const getItemAtPointer = (pointerPosition: number, skipStep: number = 1): any => {
   let rawItem = setInfo?.items && setInfo?.items[randomItemIndexVisitMap[pointerPosition]]
   if (isItemHidden(rawItem!._id)) {
-    return getItemAtPointer(pointerPosition + 1)
+    return getItemAtPointer(pointerPosition + skipStep, skipStep)
   }
 
   return rawItem
