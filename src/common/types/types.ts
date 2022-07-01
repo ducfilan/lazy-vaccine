@@ -169,6 +169,7 @@ export type PageInjectorSiblingSelectorParts = {
 }
 
 export type InjectionTarget = {
+  rate: number,
   selector: string,
   type: number,
   siblingSelector: string

@@ -50,6 +50,9 @@ export default class PageInjector {
   private waitTimeOutInMs: number
   private waitCount = 0
 
+  private dynamicNewNodesCount = 0
+  private dynamicInjectedCount = 0
+
   /**
    *
    * @param rate
@@ -114,7 +117,7 @@ export default class PageInjector {
   }
 
   private processAddedNodes(
-    this: {
+    _this: {
       siblingSelectorParts: PageInjectorSiblingSelectorParts
       templateValueGetter: () => Promise<KeyValuePair[]>
     },
@@ -132,21 +135,23 @@ export default class PageInjector {
       const classList = Array.prototype.slice.call(node.classList)
       const attrs: NamedNodeMap = node.attributes
 
-      const isIdsMatch = this.siblingSelectorParts.id === "" || this.siblingSelectorParts.id == node.id
+      const isIdsMatch = _this.siblingSelectorParts.id === "" || _this.siblingSelectorParts.id == node.id
       const isClassesMatch =
-        this.siblingSelectorParts.classes.length === 0 ||
-        this.siblingSelectorParts.classes.every((c) => classList.includes(c))
+        _this.siblingSelectorParts.classes.length === 0 ||
+        _this.siblingSelectorParts.classes.every((c) => classList.includes(c))
       const isAttrsMatch =
-        this.siblingSelectorParts.attrs.length == 0 ||
-        this.siblingSelectorParts.attrs.every(([attrKey, attrVal]) => attrs.getNamedItem(attrKey)?.value === attrVal)
+        _this.siblingSelectorParts.attrs.length == 0 ||
+        _this.siblingSelectorParts.attrs.every(([attrKey, attrVal]) => attrs.getNamedItem(attrKey)?.value === attrVal)
 
       return isIdsMatch && isClassesMatch && isAttrsMatch
     })
 
-    // TODO: Add rate processing logic.
     nodes.length > 0 &&
       nodes.forEach(async (node) => {
-        const templateValue = await this.templateValueGetter()
+        if (this.dynamicNewNodesCount++ * this.rate < this.dynamicInjectedCount) return
+        this.dynamicInjectedCount++
+
+        const templateValue = await _this.templateValueGetter()
         if (!templateValue || templateValue.length === 0) return
 
         const typeItem = templateValue.find((item) => item.key === "type")?.value
@@ -163,7 +168,8 @@ export default class PageInjector {
       if (this.type == InjectTypes.FixedPosition) {
         this.injectFixedPosition(templateValueGetter)
       } else if (this.type == InjectTypes.DynamicGenerated) {
-        this.injectDynamicPosition(templateValueGetter)
+        const increaseOnCall = true
+        this.injectDynamicPosition(templateValueGetter.bind(null, increaseOnCall))
       } else {
         throw new Error("invalid inject type")
       }
@@ -201,7 +207,7 @@ export default class PageInjector {
     const observer = new MutationObserverFacade(
       this.parentSelector,
       null,
-      this.processAddedNodes.bind({ siblingSelectorParts: this.siblingSelectorParts, templateValueGetter })
+      this.processAddedNodes.bind(this, { siblingSelectorParts: this.siblingSelectorParts, templateValueGetter })
     )
 
     observer.observe()
@@ -210,14 +216,19 @@ export default class PageInjector {
   /**
    * Wait until the target node to be rendered then inject.
    */
-  waitInject(templateValueGetter: () => Promise<KeyValuePair[]>, intervalInMs: number = 500) {
+  waitInject(
+    templateValueGetter: () => Promise<KeyValuePair[]>,
+    intervalInMs: number = 500,
+    cleanupFn: () => void = () => {}
+  ) {
     const id = setInterval(() => {
       const isSelectorRendered = document.querySelector(this.parentSelector)
 
       if (isSelectorRendered) {
-        this.inject(templateValueGetter)
-
         clearInterval(id)
+
+        this.inject(templateValueGetter)
+        cleanupFn()
       }
 
       if (intervalInMs * ++this.waitCount > this.waitTimeOutInMs) {

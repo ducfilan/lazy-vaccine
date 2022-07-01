@@ -167,6 +167,7 @@ export const ChromeMessageTypeGetLocalSetting = "get-local-setting"
 export const InjectionTargets = {
   YoutubeHome: [
     {
+      rate: 0.1,
       selector: "#contents",
       type: InjectTypes.DynamicGenerated,
       siblingSelector: ".style-scope.ytd-rich-grid-row"
@@ -174,12 +175,14 @@ export const InjectionTargets = {
   ],
   YoutubeVideoView: [
     {
+      rate: 1,
       selector: "#secondary.ytd-watch-flexy",
       type: InjectTypes.FixedPosition
     } as InjectionTarget
   ],
   FacebookHomePage: [
     {
+      rate: 0.2,
       selector: "[role='feed']",
       type: InjectTypes.DynamicGenerated,
       siblingSelector: "[data-pagelet='FeedUnit_{n}']"

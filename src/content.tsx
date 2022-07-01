@@ -78,8 +78,8 @@ async function injectCards() {
   try {
     const injectionTargets = new InjectionTargetFactory(getHref()).getTargets()
 
-    injectionTargets.forEach(async ({ type, selector, siblingSelector }) => {
-      const injector = new PageInjector(1, type, selector, siblingSelector)
+    injectionTargets.forEach(async ({ rate, type, selector, siblingSelector }) => {
+      const injector = new PageInjector(rate, type, selector, siblingSelector)
       injector.waitInject(randomTemplateValues)
     })
   } catch (error) {
@@ -87,8 +87,17 @@ async function injectCards() {
   }
 }
 
-const randomTemplateValues = async () => {
+const randomTemplateValues = async (increaseOnCall: boolean = false) => {
   const item = getItemAtPointer(currentItemPointer)
+  if (increaseOnCall) {
+    currentItemPointer++
+
+    if (isDisplayedAllItemsInSet()) {
+      await sendClearCachedRandomSetMessage()
+      await initValues()
+    }
+  }
+
   item &&
     sendInteractItemMessage(setInfo?._id || "", item?._id || "", ItemsInteractionShow)
       .then(() => {
@@ -102,10 +111,11 @@ const randomTemplateValues = async () => {
   return item ? toTemplateValues(item, generateTemplateExtraValues(item)) : []
 }
 
+const isDisplayedAllItemsInSet = () => currentItemPointer + 1 === setInfo?.items?.length
+
 function registerFlashcardEvents() {
   const nextItemGetter = async () => {
-    const isDisplayedAllItemsInSet = currentItemPointer + 1 === setInfo?.items?.length
-    if (isDisplayedAllItemsInSet) {
+    if (isDisplayedAllItemsInSet()) {
       await sendClearCachedRandomSetMessage()
       await initValues()
       return getItemAtPointer(currentItemPointer++)
@@ -115,7 +125,7 @@ function registerFlashcardEvents() {
   }
 
   const itemGetter = () => {
-    return getItemAtPointer(currentItemPointer, false)
+    return getItemAtPointer(currentItemPointer)
   }
 
   const setGetter = () => {
@@ -173,25 +183,11 @@ function registerFlashcardEvents() {
   })
 }
 
-const getItemAtPointer = (pointerPosition: number, needCheckInteraction: boolean = true) => {
-  let rawItem
-
-  function getItemInfo() {
-    rawItem = setInfo?.items && setInfo?.items[randomItemIndexVisitMap[pointerPosition]]
-    if (!needCheckInteraction) {
-      return rawItem
-    }
-    const itemInteraction = rawItem && itemsInPageInteractionMap[rawItem._id]
-    const hiddenItemCondition =
-      itemInteraction &&
-      (itemInteraction.includes(ItemsInteractionForcedDone) || itemInteraction.includes(ItemsInteractionIgnore))
-    if (hiddenItemCondition) {
-      pointerPosition++
-      getItemInfo()
-    }
-    return rawItem
+const getItemAtPointer = (pointerPosition: number): any => {
+  let rawItem = setInfo?.items && setInfo?.items[randomItemIndexVisitMap[pointerPosition]]
+  if (isItemHidden(rawItem!._id)) {
+    return getItemAtPointer(pointerPosition + 1)
   }
-  rawItem = getItemInfo()
 
   return rawItem
     ? {
@@ -201,4 +197,10 @@ const getItemAtPointer = (pointerPosition: number, needCheckInteraction: boolean
         isStared: itemsInPageInteractionMap[rawItem._id]?.includes("star") ? "stared" : "",
       }
     : null
+}
+
+const isItemHidden = (itemId: string): boolean => {
+  const itemInteractions = itemsInPageInteractionMap[itemId] || []
+
+  return itemInteractions.includes(ItemsInteractionForcedDone) || itemInteractions.includes(ItemsInteractionIgnore)
 }
