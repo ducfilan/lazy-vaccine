@@ -184,13 +184,18 @@ export function registerPrevItemEvent(
 
     const itemToDisplay = itemToDisplayItem(prevItem, currentSet)
 
-    toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay)).then((templateValues) => {
-      getTemplate(itemToDisplay.type).then((template) => {
-        const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
+    toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay))
+      .then((templateValues) => {
+        getTemplate(itemToDisplay.type).then((template) => {
+          const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
 
-        wrapperElement?.replaceWith(newItemNode)
+          wrapperElement?.replaceWith(newItemNode)
+        })
       })
-    })
+      .catch((error) => {
+        // There is some error when getting the next item, trigger next item.
+        console.error(error)
+      })
   })
 }
 

@@ -1,4 +1,4 @@
-import { InjectionTargets, RegexFacebookHomePage, RegexYoutubeHomePage, RegexYoutubeSearchResults, RegexYoutubeVideoView } from "@/common/consts/constants"
+import { InjectionTargets, RegexFacebookHomePage, RegexGoogleHomePage, RegexYoutubeHomePage, RegexYoutubeSearchResults, RegexYoutubeVideoView } from "@/common/consts/constants"
 import { InjectionTarget } from "@/common/types/types"
 
 export default class InjectionTargetFactory {
@@ -19,6 +19,10 @@ export default class InjectionTargetFactory {
 
     if (RegExp(RegexFacebookHomePage).test(this.href)) {
       return InjectionTargets.FacebookHomePage
+    }
+
+    if (RegExp(RegexGoogleHomePage).test(this.href)) {
+      return InjectionTargets.GoogleHomePage
     }
 
     return []

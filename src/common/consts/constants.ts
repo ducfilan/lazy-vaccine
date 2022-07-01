@@ -167,6 +167,11 @@ export const ChromeMessageTypeGetLocalSetting = "get-local-setting"
 export const InjectionTargets = {
   YoutubeHome: [
     {
+      rate: 1,
+      selector: "#primary",
+      type: InjectTypes.FixedPosition
+    } as InjectionTarget,
+    {
       rate: 0.1,
       selector: "#contents",
       type: InjectTypes.DynamicGenerated,
@@ -188,12 +193,20 @@ export const InjectionTargets = {
       siblingSelector: "[data-pagelet='FeedUnit_{n}']"
     } as InjectionTarget
   ],
+  GoogleHomePage: [
+    {
+      rate: 1,
+      selector: ".o3j99.qarstb",
+      type: InjectTypes.FixedPosition,
+    } as InjectionTarget
+  ],
 }
 
 export const RegexYoutubeHomePage = /^https:\/\/(www\.)*youtube\.com\/{0,1}$/
 export const RegexYoutubeVideoView = /^https:\/\/(www\.)*youtube\.com\/watch\?v=.*$/
 export const RegexYoutubeSearchResults = /^https:\/\/(www\.)*youtube\.com\/results\?search_query=(.*)$/
 export const RegexFacebookHomePage = /^https:\/\/(www\.)*facebook\.com\/{0,1}$/
+export const RegexGoogleHomePage = /^https:\/\/(www\.)*google\.com*(\.\w*)*\/{0,1}$/
 
 export const InteractionSubscribe = "subscribe"
 export const InteractionLike = "like"

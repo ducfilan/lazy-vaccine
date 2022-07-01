@@ -15,11 +15,15 @@
 
 $primary: #12b886;
 $white: #fff;
+$black: #000;
 
 .lazy-vaccine {
   position: relative;
   min-width: 300px;
   z-index: 2201;
+  max-width: 800px;
+  margin: 0px auto;
+  color: $black;
 
   a {
     color: $primary;
@@ -56,16 +60,16 @@ $white: #fff;
 
     .next-prev-buttons--prev-button {
       left: 0;
-      border-radius: 0!important;
-      border-top-right-radius: 13px!important;
-      border-bottom-right-radius: 13px!important;
+      border-radius: 0 !important;
+      border-top-right-radius: 13px !important;
+      border-bottom-right-radius: 13px !important;
     }
 
     .next-prev-buttons--next-button {
       right: 0;
-      border-radius: 0!important;
-      border-top-left-radius: 13px!important;
-      border-bottom-left-radius: 13px!important;
+      border-radius: 0 !important;
+      border-top-left-radius: 13px !important;
+      border-bottom-left-radius: 13px !important;
     }
   }
 }
