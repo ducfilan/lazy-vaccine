@@ -78,8 +78,8 @@ async function injectCards() {
   try {
     const injectionTargets = new InjectionTargetFactory(getHref()).getTargets()
 
-    injectionTargets.forEach(async ({ rate, type, selector, siblingSelector }) => {
-      const injector = new PageInjector(rate, type, selector, siblingSelector)
+    injectionTargets.forEach(async ({ rate, type, selector, newGeneratedElementSelector, siblingSelector }) => {
+      const injector = new PageInjector(rate, type, selector, newGeneratedElementSelector, siblingSelector)
       injector.waitInject(randomTemplateValues)
     })
   } catch (error) {
@@ -92,6 +92,7 @@ const randomTemplateValues = async (increaseOnCall: boolean = false) => {
   if (increaseOnCall) {
     currentItemPointer++
 
+    // TODO: Possible infinity loop check.
     if (isDisplayedAllItemsInSet()) {
       await sendClearCachedRandomSetMessage()
       await initValues()
@@ -191,7 +192,10 @@ function registerFlashcardEvents() {
  */
 const getItemAtPointer = (pointerPosition: number, skipStep: number = 1): any => {
   let rawItem = setInfo?.items && setInfo?.items[randomItemIndexVisitMap[pointerPosition]]
-  if (isItemHidden(rawItem!._id)) {
+
+  if (!rawItem) return null
+
+  if (isItemHidden(rawItem._id)) {
     return getItemAtPointer(pointerPosition + skipStep, skipStep)
   }
 

@@ -41,6 +41,7 @@
       "matches": [
         "https://*.youtube.com/*",
         "https://*.facebook.com/*",
+        "https://*.twitter.com/*",
         "https://*.google.com/*",
         "https://*.google.ad/*",
         "https://*.google.ae/*",

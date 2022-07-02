@@ -45,7 +45,9 @@ export default class PageInjector {
   private rate: number
   private type: number
   private parentSelector: string
+  private newGeneratedElementSelectorParts: PageInjectorSiblingSelectorParts | null
   private siblingSelectorParts: PageInjectorSiblingSelectorParts | null
+  private siblingSelector: string
 
   private waitTimeOutInMs: number
   private waitCount = 0
@@ -64,13 +66,18 @@ export default class PageInjector {
     rate: number,
     type: number,
     parentSelector: string,
+    newGeneratedElementSelector?: string,
     siblingSelector?: string,
     waitTimeOutInMs: number = 15000
   ) {
     this.rate = rate
     this.type = type
     this.parentSelector = parentSelector
+    this.siblingSelector = siblingSelector || ""
     this.siblingSelectorParts = siblingSelector ? this.parseSelector(siblingSelector) : null
+    this.newGeneratedElementSelectorParts = newGeneratedElementSelector
+      ? this.parseSelector(newGeneratedElementSelector)
+      : this.siblingSelectorParts
     this.waitTimeOutInMs = waitTimeOutInMs
   }
 
@@ -118,7 +125,6 @@ export default class PageInjector {
 
   private processAddedNodes(
     _this: {
-      siblingSelectorParts: PageInjectorSiblingSelectorParts
       templateValueGetter: () => Promise<KeyValuePair[]>
     },
     nodes: Element[]
@@ -135,13 +141,16 @@ export default class PageInjector {
       const classList = Array.prototype.slice.call(node.classList)
       const attrs: NamedNodeMap = node.attributes
 
-      const isIdsMatch = _this.siblingSelectorParts.id === "" || _this.siblingSelectorParts.id == node.id
+      const isIdsMatch =
+        this.newGeneratedElementSelectorParts!.id === "" || this.newGeneratedElementSelectorParts!.id == node.id
       const isClassesMatch =
-        _this.siblingSelectorParts.classes.length === 0 ||
-        _this.siblingSelectorParts.classes.every((c) => classList.includes(c))
+        this.newGeneratedElementSelectorParts!.classes.length === 0 ||
+        this.newGeneratedElementSelectorParts!.classes.every((c) => classList.includes(c))
       const isAttrsMatch =
-        _this.siblingSelectorParts.attrs.length == 0 ||
-        _this.siblingSelectorParts.attrs.every(([attrKey, attrVal]) => attrs.getNamedItem(attrKey)?.value === attrVal)
+        this.newGeneratedElementSelectorParts!.attrs.length == 0 ||
+        this.newGeneratedElementSelectorParts!.attrs.every(
+          ([attrKey, attrVal]) => attrs.getNamedItem(attrKey)?.value === attrVal
+        )
 
       return isIdsMatch && isClassesMatch && isAttrsMatch
     })
@@ -158,7 +167,8 @@ export default class PageInjector {
         getTemplate(typeItem || "").then((htmlTemplate) => {
           const htmlString = formatString(htmlTemplate, templateValue)
 
-          insertBefore(htmlStringToHtmlNode(htmlString), node)
+          const siblingNode = node.querySelector(this.siblingSelector)
+          insertBefore(htmlStringToHtmlNode(htmlString), siblingNode || node)
         })
       })
   }
@@ -207,7 +217,7 @@ export default class PageInjector {
     const observer = new MutationObserverFacade(
       this.parentSelector,
       null,
-      this.processAddedNodes.bind(this, { siblingSelectorParts: this.siblingSelectorParts, templateValueGetter })
+      this.processAddedNodes.bind(this, { templateValueGetter })
     )
 
     observer.observe()

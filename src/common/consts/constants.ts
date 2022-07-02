@@ -200,6 +200,15 @@ export const InjectionTargets = {
       type: InjectTypes.FixedPosition,
     } as InjectionTarget
   ],
+  TwitterHomePage: [
+    {
+      rate: 0.2,
+      selector: "[data-testid=primaryColumn]",
+      type: InjectTypes.DynamicGenerated,
+      newGeneratedElementSelector: "[data-testId=cellInnerDiv]",
+      siblingSelector: ".css-1dbjc4n.r-1igl3o0.r-qklmqi.r-1adg3ll.r-1ny4l3l",
+    } as InjectionTarget
+  ],
 }
 
 export const RegexYoutubeHomePage = /^https:\/\/(www\.)*youtube\.com\/{0,1}$/
@@ -207,6 +216,7 @@ export const RegexYoutubeVideoView = /^https:\/\/(www\.)*youtube\.com\/watch\?v=
 export const RegexYoutubeSearchResults = /^https:\/\/(www\.)*youtube\.com\/results\?search_query=(.*)$/
 export const RegexFacebookHomePage = /^https:\/\/(www\.)*facebook\.com\/{0,1}$/
 export const RegexGoogleHomePage = /^https:\/\/(www\.)*google\.com*(\.\w*)*\/{0,1}$/
+export const RegexTwitterHomePage = /^https:\/\/(www\.)*twitter\.com\/home\/{0,1}$/
 
 export const InteractionSubscribe = "subscribe"
 export const InteractionLike = "like"

@@ -172,6 +172,7 @@ export type InjectionTarget = {
   rate: number,
   selector: string,
   type: number,
+  newGeneratedElementSelector: string,
   siblingSelector: string
 }
 
