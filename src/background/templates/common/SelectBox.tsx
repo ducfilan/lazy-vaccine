@@ -22,7 +22,7 @@ export const SelectBox = (props: {
 
         <ul className="options">
           {props.options.map((option) => (
-            <li className="option" data-key={option.key}>
+            <li className="option" data-key={option.key} key={option.key}>
               <span className="option-text">
                 {option.value}
               </span>

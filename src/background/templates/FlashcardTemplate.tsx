@@ -1,6 +1,7 @@
+import React from "react"
+
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
 import { Divider } from "antd"
-import * as React from "react"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
 import "./css/flashcard.scss"

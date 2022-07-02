@@ -306,6 +306,19 @@ export function registerSelectAnswerEvent() {
     e.stopPropagation()
 
     const answerBtn = e.target as Element
+
+    const wrapperElement: HTMLElement = answerBtn.closest(".qna-card-wrapper")!
+
+    const answersData = wrapperElement?.getAttribute("data-answers") || ""
+    const correctAnswersCount = JSON.parse(decodeBase64(answersData)).filter((answer: any) => answer.isCorrect).length
+
+    const answerElements = wrapperElement?.querySelectorAll(".answer-btn")
+    if (correctAnswersCount == 1) {
+      answerElements.forEach((answer) => {
+        answer.classList.remove("selected")
+      })
+    }
+
     answerBtn?.classList.toggle("selected")
   })
 }
@@ -316,8 +329,9 @@ export function registerCheckAnswerEvent() {
 
     const checkBtn = e.target as Element
     const wrapperElement: HTMLElement | null = checkBtn.closest(".qna-card-wrapper")
-    const answersData = wrapperElement?.getAttribute("data-answers") || ""
     const answerElements = wrapperElement?.querySelectorAll(".answer-btn")
+
+    const answersData = wrapperElement?.getAttribute("data-answers") || ""
     const answers = JSON.parse(decodeBase64(answersData))
 
     answerElements?.forEach((answer, idx) => {

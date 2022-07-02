@@ -1,4 +1,5 @@
 import React from "react"
+
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
 import { Button } from "antd"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
@@ -48,10 +49,11 @@ export const QnATemplate = () => {
       <div className="qna-card qna-card-wrapper" data-answers={":listOfAnswers"}>
         <div className="card--content">
           <p className="card--question">{":question"}</p>
+          <p>{i18n("inject_card_select")}</p>
           <div className="answer--wrapper">{":answerTemplate"}</div>
           <div className="check--wrapper">
             <Button type="primary" size="middle" className="check--btn">
-              Check
+              {i18n("common_check")}
             </Button>
           </div>
         </div>

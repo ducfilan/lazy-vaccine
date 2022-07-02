@@ -1,5 +1,6 @@
+import React from "react"
+
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
-import * as React from "react"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
 import "./css/content.scss"

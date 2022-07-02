@@ -65,6 +65,7 @@ export function generateTemplateExtraValues(nextItem: SetInfoItem) {
         listOfAnswers: encodeBase64(JSON.stringify(nextItem.answers)),
         answerTemplate: nextItem.answers.map((answer) => `<div class="answer-btn">${answer.answer}</div>`).join(""),
         question: nextItem.question,
+        correctAnswerCount: nextItem.answers.filter((answer) => answer.isCorrect).length || 1,
       }
 
     default:

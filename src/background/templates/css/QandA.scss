@@ -11,25 +11,24 @@ $white: #fff;
     position: relative;
     z-index: 1;
     background: $white;
+    padding: 10px 44px;
 
     .card--content {
       width: 100%;
       height: auto;
       background-color: $white;
-      font-weight: bold;
-      font-size: 18px;
       border-bottom-left-radius: 5px;
       border-bottom-right-radius: 5px;
       display: flex;
       flex-direction: column;
 
       .card--question {
-        padding: 10px 44px;
+        font-weight: bold;
+        font-size: 18px;
       }
     }
 
     .answer--wrapper {
-      padding: 0 44px;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
@@ -68,9 +67,7 @@ $white: #fff;
     }
 
     .check--wrapper {
-      width: 100%;
       text-align: center;
-      margin: 10px 0;
     }
   }
 }

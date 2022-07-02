@@ -229,6 +229,9 @@
   "flashcard_back_item": {
     "message": "Back item"
   },
+  "inject_card_select": {
+    "message": "Select :correctAnswerCount"
+  },
   "marketplace_plant_type": {
     "message": "Plant type"
   },
@@ -354,6 +357,9 @@
   },
   "common_got_it": {
     "message": "Got it"
+  },
+  "common_check": {
+    "message": "Check"
   },
   "seed_growing_conditions": {
     "message": "Growing conditions"

@@ -219,7 +219,9 @@ export default class PageInjector {
   waitInject(
     templateValueGetter: () => Promise<KeyValuePair[]>,
     intervalInMs: number = 500,
-    cleanupFn: () => void = () => {}
+    cleanupFn: () => void = () => {
+      // Do nothing by default.
+    }
   ) {
     const id = setInterval(() => {
       const isSelectorRendered = document.querySelector(this.parentSelector)
