@@ -22,48 +22,11 @@ $white: #fff;
 
       & > div:first-child {
         padding: 0 44px;
-        height: calc(100% - 60px);
+        height: 100%;
         overflow: auto;
         margin-block-start: 0;
         margin-block-end: 0;
       }
-    }
-
-    .card--interactions {
-      display: flex;
-      padding: 10px 16px;
-      justify-content: space-between;
-      border-top: 1px solid #dbdbdb;
-    }
-
-    .card--interactions button {
-      &:hover {
-        opacity: 0.8;
-      }
-    }
-
-    .card--interactions--ignore {
-      color: #e67e22 !important;
-      border-color: #e67e22 !important;
-
-      &:hover {
-        color: #e67e22 !important;
-        border-color: #e67e22 !important;
-      }
-    }
-
-    .card--interactions--star {
-      color: #d8d8d8 !important;
-      border-color: #ffdf50 !important;
-
-      &:hover {
-        color: #fde476;
-        border-color: #ffdf50;
-      }
-    }
-
-    .stared {
-      color: #ffdf50 !important;
     }
 
     blockquote {

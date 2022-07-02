@@ -1,3 +1,5 @@
+import "@/background/templates/css/antd-wrapped.less"
+
 import PageInjector from "./background/PageInjector"
 import InjectionTargetFactory from "./background/InjectionTargetFactory"
 import { SetInfo } from "./common/types/types"
@@ -29,8 +31,6 @@ import {
   ItemsInteractionShow,
   ItemsInteractionStar,
 } from "./common/consts/constants"
-
-import "@/background/templates/css/antd-wrapped.less"
 
 let randomItemIndexVisitMap: number[] = []
 let setInfo: SetInfo | null

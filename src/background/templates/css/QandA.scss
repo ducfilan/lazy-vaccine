@@ -8,13 +8,11 @@ $white: #fff;
 .lazy-vaccine {
   .qna-card-wrapper {
     width: 100%;
-    margin-bottom: 20px;
     position: relative;
-    min-height: 260px;
     z-index: 1;
+    background: $white;
 
     .card--content {
-      position: absolute;
       width: 100%;
       height: auto;
       background-color: $white;
@@ -72,44 +70,7 @@ $white: #fff;
     .check--wrapper {
       width: 100%;
       text-align: center;
-    }
-
-    .card--interactions {
-      display: flex;
-      padding: 10px 16px;
-      justify-content: space-between;
-      margin-top: 1em;
-      border-top: 1px solid #dbdbdb;
-
-      button {
-        &:hover {
-          opacity: 0.8;
-        }
-      }
-
-      .card--interactions--ignore {
-        color: #e67e22;
-        border-color: #e67e22;
-
-        &:hover {
-          color: #e67e22;
-          border-color: #e67e22;
-        }
-      }
-
-      .card--interactions--star {
-        color: #d8d8d8 !important;
-        border-color: #ffdf50 !important;
-
-        &:hover {
-          color: #fde476;
-          border-color: #ffdf50;
-        }
-      }
-
-      .stared {
-        color: #ffdf50 !important;
-      }
+      margin: 10px 0;
     }
   }
 }

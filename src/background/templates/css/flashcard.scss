@@ -8,12 +8,11 @@ $white: #fff;
 .lazy-vaccine {
   .flash-card-wrapper {
     width: 100%;
-    margin-bottom: 20px;
     transition: transform 0.5s;
     transform-style: preserve-3d;
     cursor: pointer;
     position: relative;
-    height: 300px;
+    height: 240px;
     z-index: 1;
 
     &.is-flipped {
@@ -28,13 +27,11 @@ $white: #fff;
       font-weight: bold;
       font-size: 40px;
       backface-visibility: hidden;
-      border-bottom-left-radius: 5px;
-      border-bottom-right-radius: 5px;
 
       p {
         padding: 0 44px;
         animation: animate-fade 0.5s;
-        height: calc(100% - 60px);
+        height: 100%;
         overflow: auto;
         display: grid;
         align-items: center;
@@ -47,43 +44,6 @@ $white: #fff;
       position: absolute;
       top: 0;
       transform: rotateY(180deg);
-    }
-
-    .card--interactions {
-      display: flex;
-      padding: 10px 16px;
-      justify-content: space-between;
-      border-top: 1px solid #dbdbdb;
-    }
-
-    .card--interactions button {
-      &:hover {
-        opacity: 0.8;
-      }
-    }
-
-    .card--interactions--ignore {
-      color: #e67e22 !important;
-      border-color: #e67e22 !important;
-
-      &:hover {
-        color: #e67e22 !important;
-        border-color: #e67e22 !important;
-      }
-    }
-
-    .card--interactions--star {
-      color: #d8d8d8 !important;
-      border-color: #ffdf50 !important;
-
-      &:hover {
-        color: #fde476;
-        border-color: #ffdf50;
-      }
-    }
-
-    .stared {
-      color: #ffdf50 !important;
     }
   }
 }

@@ -1,7 +1,6 @@
+import React from "react"
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
 import { Button } from "antd"
-import { ThunderboltFilled, MinusCircleOutlined, StarFilled } from "@ant-design/icons"
-import * as React from "react"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
 import "./css/QandA.scss"
@@ -55,10 +54,10 @@ export const QnATemplate = () => {
               Check
             </Button>
           </div>
-
-          <CardInteraction />
         </div>
       </div>
+
+      <CardInteraction />
       <NextPrevButton direction="both" />
     </div>
   )

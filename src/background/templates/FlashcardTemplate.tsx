@@ -1,6 +1,5 @@
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
-import { Button, Divider } from "antd"
-import { ThunderboltFilled, MinusCircleOutlined, StarFilled } from "@ant-design/icons"
+import { Divider } from "antd"
 import * as React from "react"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
@@ -70,13 +69,12 @@ export const FlashCardTemplate = (props: { selectedFrontItem: string; selectedBa
       <div className="flash-card flash-card-wrapper">
         <div className="card--face card--face--front">
           <p className="card--content">{":front_content"}</p>
-          <CardInteraction />
         </div>
         <div className="card--face card--face--back">
           <p className="card--content">{":back_content"}</p>
-          <CardInteraction />
         </div>
       </div>
+      <CardInteraction />
       <NextPrevButton direction="both" />
     </div>
   )
