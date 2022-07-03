@@ -209,11 +209,30 @@ export const InjectionTargets = {
   ],
   TwitterHomePage: [
     {
-      rate: 0.2,
+      rate: 0.1,
       selector: "[data-testid=primaryColumn]",
       type: InjectTypes.DynamicGenerated,
       newGeneratedElementSelector: "[data-testId=cellInnerDiv]",
       siblingSelector: "div:first-child",
+    } as InjectionTarget,
+    {
+      rate: 1,
+      selector: ".r-1yadl64.r-1ifxtd0.r-1udh08x",
+      type: InjectTypes.FixedPosition,
+    } as InjectionTarget
+  ],
+  TwitterPostPage: [
+    {
+      rate: 0.1,
+      selector: "[data-testid=primaryColumn]",
+      type: InjectTypes.DynamicGenerated,
+      newGeneratedElementSelector: "[data-testId=cellInnerDiv]",
+      siblingSelector: "div:first-child",
+    } as InjectionTarget,
+    {
+      rate: 1,
+      selector: ".r-1yadl64.r-1ifxtd0.r-1udh08x",
+      type: InjectTypes.FixedPosition,
     } as InjectionTarget
   ],
 }
@@ -224,6 +243,7 @@ export const RegexYoutubeSearchResults = /^https:\/\/(www\.)*youtube\.com\/resul
 export const RegexFacebookHomePage = /^https:\/\/(www\.)*facebook\.com\/{0,1}.*$/
 export const RegexGoogleHomePage = /^https:\/\/(www\.)*google\.com*(\.\w*)*\/{0,1}.*$/
 export const RegexTwitterHomePage = /^https:\/\/(www\.)*twitter\.com\/home\/{0,1}.*$/
+export const RegexTwitterPostPage = /^https:\/\/(www\.)*twitter\.com\/.*?\/status\/\d+.*$/
 
 export const InteractionSubscribe = "subscribe"
 export const InteractionLike = "like"
