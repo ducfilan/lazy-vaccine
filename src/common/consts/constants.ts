@@ -206,7 +206,7 @@ export const InjectionTargets = {
       selector: "[data-testid=primaryColumn]",
       type: InjectTypes.DynamicGenerated,
       newGeneratedElementSelector: "[data-testId=cellInnerDiv]",
-      siblingSelector: ".css-1dbjc4n.r-1igl3o0.r-qklmqi.r-1adg3ll.r-1ny4l3l",
+      siblingSelector: "div:first-child",
     } as InjectionTarget
   ],
 }

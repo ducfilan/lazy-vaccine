@@ -129,7 +129,7 @@ export default class PageInjector {
     },
     nodes: Element[]
   ) {
-    nodes = Array.prototype.slice.call(nodes).filter((node: Element) => {
+    nodes = [...nodes].filter((node: Element) => {
       if (
         (!node.classList || node.classList.length == 0) &&
         !node.id &&
