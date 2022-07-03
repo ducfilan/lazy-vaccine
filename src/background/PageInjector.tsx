@@ -45,10 +45,10 @@ export default class PageInjector {
   private rate: number
   private type: number
   private parentSelector: string
-  private newGeneratedElementSelectorParts: PageInjectorSiblingSelectorParts | null
-  private siblingSelectorParts: PageInjectorSiblingSelectorParts | null
+  private newGeneratedElementSelectorParts: PageInjectorSiblingSelectorParts
+  private siblingSelectorParts: PageInjectorSiblingSelectorParts
   private siblingSelector: string
-
+  private strict: boolean
   private waitTimeOutInMs: number
   private waitCount = 0
 
@@ -68,28 +68,43 @@ export default class PageInjector {
     parentSelector: string,
     newGeneratedElementSelector?: string,
     siblingSelector?: string,
+    strict?: boolean,
     waitTimeOutInMs: number = 15000
   ) {
     this.rate = rate
     this.type = type
     this.parentSelector = parentSelector
     this.siblingSelector = siblingSelector || ""
-    this.siblingSelectorParts = siblingSelector ? this.parseSelector(siblingSelector) : null
+    this.siblingSelectorParts = siblingSelector
+      ? this.parseSelector(siblingSelector)
+      : ({
+          tag: "",
+          classes: [],
+          id: "",
+          attrs: [],
+        } as PageInjectorSiblingSelectorParts)
     this.newGeneratedElementSelectorParts = newGeneratedElementSelector
       ? this.parseSelector(newGeneratedElementSelector)
       : this.siblingSelectorParts
+
+    this.strict = strict || false
     this.waitTimeOutInMs = waitTimeOutInMs
   }
 
   private parseSelector(selectorString: string) {
+    const { tag, selector } = selectorString.match(/^(?<tag>\w*)(?<selector>.*?)$/)?.groups as {
+      tag: string
+      selector: string
+    }
+
     let selectorParts: PageInjectorSiblingSelectorParts = {
-      tags: [],
+      tag: tag.toUpperCase(),
       classes: [],
       id: "",
       attrs: [],
     }
 
-    selectorString.split(/(?=\.)|(?=#)|(?=\[)/).forEach(function (token: string) {
+    selector.split(/(?=\.)|(?=#)|(?=\[)/).forEach(function (token: string) {
       switch (token[0]) {
         case "#":
           selectorParts.id = token.slice(1)
@@ -106,7 +121,6 @@ export default class PageInjector {
           ])
           break
         default:
-          selectorParts.tags.push(token)
           break
       }
     })
@@ -117,7 +131,7 @@ export default class PageInjector {
   private isSiblingSelectorPartsEmpty(): boolean {
     return (
       this.siblingSelectorParts?.attrs.length == 0 &&
-      this.siblingSelectorParts.tags.length == 0 &&
+      this.siblingSelectorParts.tag == "" &&
       this.siblingSelectorParts.classes.length == 0 &&
       this.siblingSelectorParts.id === ""
     )
@@ -131,9 +145,19 @@ export default class PageInjector {
   ) {
     nodes = [...nodes].filter((node: Element) => {
       if (
-        (!node.classList || node.classList.length == 0) &&
-        !node.id &&
-        (!node.attributes || node.attributes.length == 0)
+        (this.newGeneratedElementSelectorParts.classes.length > 0 && (!node.classList || node.classList.length == 0)) ||
+        (this.strict &&
+          this.newGeneratedElementSelectorParts.classes.length == 0 &&
+          node.classList &&
+          node.classList.length > 0) ||
+        (this.newGeneratedElementSelectorParts.attrs.length > 0 && (!node.attributes || node.attributes.length == 0)) ||
+        (this.strict &&
+          this.newGeneratedElementSelectorParts.attrs.length > 0 &&
+          node.attributes &&
+          node.attributes.length > 0) ||
+        (this.newGeneratedElementSelectorParts.id != "" && (!node.id || node.id == "")) ||
+        (this.strict && this.newGeneratedElementSelectorParts.id == "" && node.id && node.id != "") ||
+        (this.newGeneratedElementSelectorParts.tag != "" && (!node.tagName || node.tagName == ""))
       ) {
         return false
       }
@@ -141,18 +165,20 @@ export default class PageInjector {
       const classList = Array.prototype.slice.call(node.classList)
       const attrs: NamedNodeMap = node.attributes
 
+      const isTagNameMatch =
+        this.newGeneratedElementSelectorParts.tag === "" || this.newGeneratedElementSelectorParts.tag == node.tagName
       const isIdsMatch =
-        this.newGeneratedElementSelectorParts!.id === "" || this.newGeneratedElementSelectorParts!.id == node.id
+        this.newGeneratedElementSelectorParts.id === "" || this.newGeneratedElementSelectorParts.id == node.id
       const isClassesMatch =
-        this.newGeneratedElementSelectorParts!.classes.length === 0 ||
-        this.newGeneratedElementSelectorParts!.classes.every((c) => classList.includes(c))
+        this.newGeneratedElementSelectorParts.classes.length === 0 ||
+        this.newGeneratedElementSelectorParts.classes.every((c) => classList.includes(c))
       const isAttrsMatch =
-        this.newGeneratedElementSelectorParts!.attrs.length == 0 ||
-        this.newGeneratedElementSelectorParts!.attrs.every(
+        this.newGeneratedElementSelectorParts.attrs.length == 0 ||
+        this.newGeneratedElementSelectorParts.attrs.every(
           ([attrKey, attrVal]) => attrs.getNamedItem(attrKey)?.value === attrVal
         )
 
-      return isIdsMatch && isClassesMatch && isAttrsMatch
+      return isClassesMatch && isAttrsMatch && isIdsMatch && isTagNameMatch
     })
 
     nodes.length > 0 &&

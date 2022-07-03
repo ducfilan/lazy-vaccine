@@ -53,11 +53,11 @@ export function insertBefore(newNode: Node, referenceNode: Node) {
 }
 
 export function hrefToSiteName(href: string): string {
-  if (RegExp(RegexYoutubeHomePage).test(href)) {
+  if (RegExp(RegexYoutubeVideoView).test(href)) {
     return SupportingPages.youtube.title
   }
 
-  if (RegExp(RegexYoutubeVideoView).test(href)) {
+  if (RegExp(RegexYoutubeHomePage).test(href)) {
     return SupportingPages.youtube.title
   }
 

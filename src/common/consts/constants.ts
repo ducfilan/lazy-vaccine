@@ -190,7 +190,14 @@ export const InjectionTargets = {
       rate: 0.2,
       selector: "[role='feed']",
       type: InjectTypes.DynamicGenerated,
-      siblingSelector: "[data-pagelet='FeedUnit_{n}']"
+      newGeneratedElementSelector: "div",
+      siblingSelector: "div:first-child",
+      strict: true,
+    } as InjectionTarget,
+    {
+      rate: 1,
+      selector: "[role=complementary]",
+      type: InjectTypes.FixedPosition
     } as InjectionTarget
   ],
   GoogleHomePage: [
@@ -211,12 +218,12 @@ export const InjectionTargets = {
   ],
 }
 
-export const RegexYoutubeHomePage = /^https:\/\/(www\.)*youtube\.com\/{0,1}$/
+export const RegexYoutubeHomePage = /^https:\/\/(www\.)*youtube\.com\/{0,1}.*$/
 export const RegexYoutubeVideoView = /^https:\/\/(www\.)*youtube\.com\/watch\?v=.*$/
 export const RegexYoutubeSearchResults = /^https:\/\/(www\.)*youtube\.com\/results\?search_query=(.*)$/
-export const RegexFacebookHomePage = /^https:\/\/(www\.)*facebook\.com\/{0,1}$/
-export const RegexGoogleHomePage = /^https:\/\/(www\.)*google\.com*(\.\w*)*\/{0,1}$/
-export const RegexTwitterHomePage = /^https:\/\/(www\.)*twitter\.com\/home\/{0,1}$/
+export const RegexFacebookHomePage = /^https:\/\/(www\.)*facebook\.com\/{0,1}.*$/
+export const RegexGoogleHomePage = /^https:\/\/(www\.)*google\.com*(\.\w*)*\/{0,1}.*$/
+export const RegexTwitterHomePage = /^https:\/\/(www\.)*twitter\.com\/home\/{0,1}.*$/
 
 export const InteractionSubscribe = "subscribe"
 export const InteractionLike = "like"

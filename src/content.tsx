@@ -83,8 +83,8 @@ async function injectCards() {
   try {
     const injectionTargets = new InjectionTargetFactory(getHref()).getTargets()
 
-    injectionTargets.forEach(async ({ rate, type, selector, newGeneratedElementSelector, siblingSelector }) => {
-      const injector = new PageInjector(rate, type, selector, newGeneratedElementSelector, siblingSelector)
+    injectionTargets.forEach(async ({ rate, type, selector, newGeneratedElementSelector, siblingSelector, strict }) => {
+      const injector = new PageInjector(rate, type, selector, newGeneratedElementSelector, siblingSelector, strict)
       injector.waitInject(randomTemplateValues)
     })
   } catch (error) {

@@ -162,7 +162,7 @@ export type UploadImageResponse = {
 }
 
 export type PageInjectorSiblingSelectorParts = {
-  tags: string[],
+  tag: string,
   classes: string[],
   id: string,
   attrs: string[][]
@@ -173,7 +173,8 @@ export type InjectionTarget = {
   selector: string,
   type: number,
   newGeneratedElementSelector: string,
-  siblingSelector: string
+  siblingSelector: string,
+  strict: boolean,
 }
 
 export type SeedInfo = {
