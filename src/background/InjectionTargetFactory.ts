@@ -9,12 +9,12 @@ export default class InjectionTargetFactory {
   }
 
   getTargets(): InjectionTarget[] {
-    if (RegExp(RegexYoutubeHomePage).test(this.href)) {
-      return InjectionTargets.YoutubeHome
-    }
-
     if (RegExp(RegexYoutubeVideoView).test(this.href)) {
       return InjectionTargets.YoutubeVideoView
+    }
+
+    if (RegExp(RegexYoutubeHomePage).test(this.href)) {
+      return InjectionTargets.YoutubeHome
     }
 
     if (RegExp(RegexFacebookHomePage).test(this.href)) {
