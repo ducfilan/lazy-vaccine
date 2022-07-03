@@ -200,6 +200,13 @@ export const InjectionTargets = {
       type: InjectTypes.FixedPosition
     } as InjectionTarget
   ],
+  FacebookWatch: [
+    {
+      rate: 1,
+      selector: ".hybvsw6c.cjfnh4rs",
+      type: InjectTypes.FixedPosition
+    } as InjectionTarget
+  ],
   GoogleHomePage: [
     {
       rate: 1,
@@ -241,6 +248,7 @@ export const RegexYoutubeHomePage = /^https:\/\/(www\.)*youtube\.com\/{0,1}.*$/
 export const RegexYoutubeVideoView = /^https:\/\/(www\.)*youtube\.com\/watch\?v=.*$/
 export const RegexYoutubeSearchResults = /^https:\/\/(www\.)*youtube\.com\/results\?search_query=(.*)$/
 export const RegexFacebookHomePage = /^https:\/\/(www\.)*facebook\.com\/{0,1}.*$/
+export const RegexFacebookWatch = /^https:\/\/(www\.)*facebook\.com\/watch{0,1}.*$/
 export const RegexGoogleHomePage = /^https:\/\/(www\.)*google\.com*(\.\w*)*\/{0,1}.*$/
 export const RegexTwitterHomePage = /^https:\/\/(www\.)*twitter\.com\/home\/{0,1}.*$/
 export const RegexTwitterPostPage = /^https:\/\/(www\.)*twitter\.com\/.*?\/status\/\d+.*$/

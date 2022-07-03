@@ -1,4 +1,4 @@
-import { RegexYoutubeHomePage, RegexYoutubeVideoView, RegexFacebookHomePage, SupportingPages, i18n, RegexGoogleHomePage, RegexTwitterHomePage, RegexTwitterPostPage } from "@/common/consts/constants"
+import { RegexYoutubeHomePage, RegexYoutubeVideoView, RegexFacebookHomePage, SupportingPages, i18n, RegexGoogleHomePage, RegexTwitterHomePage, RegexTwitterPostPage, RegexFacebookWatch } from "@/common/consts/constants"
 
 let _getConditionalCallback = function (selector: string, callback: Function) {
   return function (this: Element, e: any) {
@@ -59,6 +59,10 @@ export function hrefToSiteName(href: string): string {
 
   if (RegExp(RegexYoutubeHomePage).test(href)) {
     return SupportingPages.youtube.title
+  }
+
+  if (RegExp(RegexFacebookWatch).test(href)) {
+    return SupportingPages.facebook.title
   }
 
   if (RegExp(RegexFacebookHomePage).test(href)) {
