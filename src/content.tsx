@@ -32,6 +32,11 @@ import {
   ItemsInteractionStar,
 } from "./common/consts/constants"
 
+import "@/background/templates/css/_common.scss"
+import "@/background/templates/css/content.scss"
+import "@/background/templates/css/flashcard.scss"
+import "@/background/templates/css/QandA.scss"
+
 let randomItemIndexVisitMap: number[] = []
 let setInfo: SetInfo | null
 let currentItemPointer = 0

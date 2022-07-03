@@ -4,7 +4,6 @@ import NextPrevButton from "@/pages/popup/components/NextPrevButton"
 import { Divider } from "antd"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
-import "./css/flashcard.scss"
 import { Popover } from "./common/Popover"
 import {
   AppBasePath,

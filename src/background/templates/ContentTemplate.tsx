@@ -3,7 +3,6 @@ import React from "react"
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
-import "./css/content.scss"
 import { Popover } from "./common/Popover"
 import { AppBasePath, AppPages, i18n } from "@/common/consts/constants"
 import { CardInteraction } from "./common/CardInteraction"

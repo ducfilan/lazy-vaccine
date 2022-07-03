@@ -4,7 +4,6 @@ import NextPrevButton from "@/pages/popup/components/NextPrevButton"
 import { Button } from "antd"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
-import "./css/QandA.scss"
 import { Popover } from "./common/Popover"
 import { AppBasePath, AppPages, i18n } from "@/common/consts/constants"
 import { CardInteraction } from "./common/CardInteraction"
