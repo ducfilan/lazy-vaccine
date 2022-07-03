@@ -1,17 +1,20 @@
 {
   "appName": {
-    "message": "Lazy Vaccine",
+    "message": "Lazy Vaccine Platform",
     "description": "The name of the application"
   },
   "appDescription": {
-    "message": "Gain more knowledge with less pain",
+    "message": "ブロックチェーン上の革新的な学習プラットフォーム、オンラインの気晴らしを減らし、人々を学習に戻し、知識を共有するように動機付けるのに役立つ",
     "description": "The description of the application"
   },
   "error": {
     "message": "エラー"
   },
   "unexpected_error_message": {
-    "message": "Unexpected error occurred 😢! Please try again later..."
+    "message": "予期しないエラーが発生しました😢！後でもう一度やり直してください..."
+  },
+  "data_saved_message": {
+    "message": "心配しないでください。データは保存されており、後で簡単に復元できます。"
   },
   "login_google": {
     "message": "Googleでログイン"
@@ -23,13 +26,13 @@
     "message": "ログアウト"
   },
   "popup_introduce_first": {
-    "message": "We spend so much time on the Internet.\nYes, no excuse. But a day remains 24 hours since we have the clock. From now on, this extension will help you use Internet more efficient. Just try to see! 😊"
+    "message": "私たちはインターネットに多くの時間を費やしています。\nそうですよ！、言い訳はできません。しかし、1日は24時間残っています。今後、この拡張機能はインターネットをより効率的に使用するのに役立ちます。見てみてください！ 😊"
   },
   "popup_introduce_choose_lang_codes": {
-    "message": "Nice to meet you, {user_name}! 🎉 I know your first language is {first_language}, do you want to show content in other languages?"
+    "message": "はじめまして、{user_name}さん！ 🎉あなたの第一言語は{first_language}ですが、他の言語でコンテンツを表示しますか？"
   },
   "popup_introduce_choose_pages": {
-    "message": "Great! 🤩 One last step...\nYou can select your most visited websites to start. That's it!"
+    "message": "すごい！ 🤩最後のステップ...\n最もアクセスの多いWebサイトを選択して開始できます。以上です！"
   },
   "popup_select_a_language": {
     "message": "言語選択"
@@ -89,28 +92,28 @@
     "message": "セットの作成"
   },
   "category_sets_total": {
-    "message": ":total sets in :category_name"
+    "message": "カテゴリ:category_nameには:totalつのセットがあります。"
   },
   "marketplace_plant_type": {
-    "message": "Plant type"
+    "message": "植物の種類"
   },
   "marketplace_time_harvest": {
-    "message": "Time to harvest (points)"
+    "message": "収穫までの時間（ポイント）"
   },
   "marketplace_roi": {
     "message": "ROI"
   },
   "marketplace_seeds": {
-    "message": "seeds"
+    "message": "種"
   },
   "marketplace_lowest_price": {
-    "message": "Lowest Price"
+    "message": "最低価格"
   },
   "marketplace_highest_price": {
-    "message": "Highest Price"
+    "message": "最高価格"
   },
   "marketplace_latest": {
-    "message": "Latest"
+    "message": "最新"
   },
   "common_category": {
     "message": "カテゴリー"
@@ -119,13 +122,13 @@
     "message": "キャンセル"
   },
   "common_filter": {
-    "message": "Filter"
+    "message": "フィルター"
   },
   "common_from": {
-    "message": "From"
+    "message": "から"
   },
   "common_to": {
-    "message": "To"
+    "message": "まで"
   },
   "select": {
     "message": "選択"
@@ -141,5 +144,278 @@
   },
   "leave_warning_message": {
     "message": "入力した情報はまだ保存されていません。大丈夫ですか?"
+  },
+  "popup_stats_full_stats": {
+    "message": "完全な統計"
+  },
+  "check_result_button": {
+    "message": "結果を確認する"
+  },
+  "edit_set_page_title": {
+    "message": "セットを編集"
+  },
+  "create_set_field_name": {
+    "message": "名前"
+  },
+  "create_set_request_category": {
+    "message": "新しいカテゴリをリクエストするには、ここをクリックしてください"
+  },
+  "create_set_field_tags_placeholder": {
+    "message": "セットに関連する入力タグ"
+  },
+  "create_set_next_button": {
+    "message": "次に、セットアイテムを追加します"
+  },
+  "create_set_help_text_1_title": {
+    "message": "セットとは何ですか？"
+  },
+  "create_set_help_text_1_content": {
+    "message": "-覚えておくべき個人的な事実の簡単なリスト\n-共通のコンテンツをクラスメート/同僚と共有します\n-すばらしい教材をコミュニティと共有します！"
+  },
+  "create_set_help_text_2_title": {
+    "message": "良いセットのヒント"
+  },
+  "create_set_help_text_2_content": {
+    "message": "-短いが説明的なタイトル\n-他の人があなたのセットを見つけやすくするために関連するタグを追加します\n-あなたのセットの内容に最も適した正しいカテゴリを選択します"
+  },
+  "create_set_help_text_3_title": {
+    "message": "まだ混乱していますか？"
+  },
+  "create_set_help_text_3_content": {
+    "message": "-この短いYouTubeビデオは間違いなくあなたを助けます！"
+  },
+  "create_set_add_item": {
+    "message": "アイテムを追加します（Tabキーを押します）"
+  },
+  "create_set_term_placeholder": {
+    "message": "学期"
+  },
+  "create_set_definition_placeholder": {
+    "message": "意味"
+  },
+  "create_set_question_placeholder": {
+    "message": "質問"
+  },
+  "create_set_answer_placeholder": {
+    "message": "答え"
+  },
+  "create_set_answer_validation_warning": {
+    "message": "少なくとも2つの答え！"
+  },
+  "create_set_items_validation_warning": {
+    "message": "申し訳ありませんが、セットを作成するには少なくとも2つのアイテムが必要です。さらに追加してください...🥺"
+  },
+  "create_set_answer_check_guide": {
+    "message": "正解答えをチェックしてください！"
+  },
+  "create_set_content_label": {
+    "message": "コンテンツ"
+  },
+  "create_set_content_placeholder": {
+    "message": "テキストを複数の小さなコンテンツアイテムに分割する"
+  },
+  "create_set_add_answer": {
+    "message": "回答を追加"
+  },
+  "create_set_check_captcha_warning": {
+    "message": "これを確認していただけませんか？"
+  },
+  "create_set_having_unsaved_set_warning": {
+    "message": "未保存のセットがありますが、復元しますか？"
+  },
+  "create_set_content_language": {
+    "message": "コンテンツ言語"
+  },
+  "create_set_definition_language": {
+    "message": "定義言語"
+  },
+  "create_set_set_picture": {
+    "message": "セットの写真"
+  },
+  "set_detail_sub_header_base_part": {
+    "message": ":item_countつのアイテムがあります、"
+  },
+  "set_detail_sub_header_part_1": {
+    "message": "内容は<span>:from_language</span>、"
+  },
+  "set_detail_share_me": {
+    "message": "共有する"
+  },
+  "set_detail_copy_link": {
+    "message": "リンクをコピーする"
+  },
+  "set_detail_sub_header_part_2": {
+    "message": "<span>:to_language</span>をする"
+  },
+  "set_detail_edit_set": {
+    "message": "セットを編集"
+  },
+  "set_detail_answers": {
+    "message": "回答"
+  },
+  "set_detail_no_desc": {
+    "message": "説明はまだありません..."
+  },
+  "set_detail_test_set": {
+    "message": "セットをテスト"
+  },
+  "search_result_not_found": {
+    "message": "検索-「:keyword」-はどのドキュメントとも一致しませんでした。\n提案：\n-すべての単語のスペルが正しいことを確認してください。\n-別のキーワードを試してください。"
+  },
+  "home_category_lookup": {
+    "message": "カテゴリルックアップ"
+  },
+  "home_everyone_favorite": {
+    "message": "みんなのお気に入り"
+  },
+  "flashcard_go_to_set": {
+    "message": "詳細の設定に移動"
+  },
+  "flashcard_next_set": {
+    "message": "次のセット"
+  },
+  "flashcard_other_options": {
+    "message": "その他のオプション"
+  },
+  "flashcard_front_item": {
+    "message": "表面のアイテム"
+  },
+  "flashcard_back_item": {
+    "message": "裏面のアイテム"
+  },
+  "inject_card_select": {
+    "message": ":correctAnswerCountつを選択します"
+  },
+  "common_back": {
+    "message": "戻る"
+  },
+  "common_create": {
+    "message": "作成"
+  },
+  "common_restore": {
+    "message": "復元"
+  },
+  "common_remove": {
+    "message": "削除する"
+  },
+  "common_yes": {
+    "message": "はい"
+  },
+  "common_no": {
+    "message": "いいえ"
+  },
+  "common_creator": {
+    "message": "作家"
+  },
+  "common_subscribe": {
+    "message": "登録"
+  },
+  "common_subscribed": {
+    "message": "登録済み"
+  },
+  "common_liked": {
+    "message": "いいね"
+  },
+  "common_created": {
+    "message": "作成した"
+  },
+  "common_unsubscribe": {
+    "message": "登録解除"
+  },
+  "common_upload": {
+    "message": "アップロード"
+  },
+  "common_edit_image": {
+    "message": "画像を編集する"
+  },
+  "common_inject_card_disclaimer": {
+    "message": "⚠このコンテンツは:websiteの一部ではなく、LazyVaccineに属しています"
+  },
+  "common_save_changes": {
+    "message": "変更を保存"
+  },
+  "common_search_result": {
+    "message": "検索結果"
+  },
+  "common_more": {
+    "message": "もっと"
+  },
+  "common_test": {
+    "message": "テスト"
+  },
+  "common_term": {
+    "message": "概念"
+  },
+  "common_definition": {
+    "message": "意味"
+  },
+  "common_end_list_result": {
+    "message": "全て表示されました。:)"
+  },
+  "common_not_found": {
+    "message": "見つかりません"
+  },
+  "common_buy_now": {
+    "message": "購入"
+  },
+  "common_owner": {
+    "message": "オーナー"
+  },
+  "common_introduction": {
+    "message": "紹介"
+  },
+  "common_properties": {
+    "message": "プロパティ"
+  },
+  "common_ignore": {
+    "message": "無視"
+  },
+  "common_got_it": {
+    "message": "了解した"
+  },
+  "common_check": {
+    "message": "確認"
+  },
+  "seed_growing_conditions": {
+    "message": "成長条件"
+  },
+  "properties_height": {
+    "message": "身長"
+  },
+  "properties_hardness": {
+    "message": "硬度"
+  },
+  "properties_maintenance": {
+    "message": "メンテナンス"
+  },
+  "max_length_field": {
+    "message": "最大は："
+  },
+  "my_space_achievement": {
+    "message": "私の業績"
+  },
+  "my_space_how_changed": {
+    "message": "統計"
+  },
+  "high_comment_title": {
+    "message": "このセットが出来た！"
+  },
+  "high_comment_detail": {
+    "message": "あなたの学習は重要です！これは、このセットに十分な資格があることを証明します。"
+  },
+  "medium_comment_title": {
+    "message": "これにはもう少し時間が必要です！"
+  },
+  "medium_comment_detail": {
+    "message": "あなたは正しい方向に進んでいますが、まだ完全には進んでいません。"
+  },
+  "low_comment_title": {
+    "message": "あなたは学んでいます！"
+  },
+  "low_comment_detail": {
+    "message": "まだすべての答えを知らなくても、自分でテストすることがそれらを習得するための最も効果的な方法です。\nそれを維持してください！"
+  },
+  "test_set_encourage_test": {
+    "message": "あなたはほとんどそれを成し遂げました！あなたはテストを恐れる必要はありません、そのテストはあなたを恐れる必要があります。幸運を！ ❤️"
   }
 }
