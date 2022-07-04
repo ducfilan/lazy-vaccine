@@ -1,18 +1,15 @@
 import * as React from "react"
 import { Divider, Input, Layout, Tree, Typography } from "antd"
-
-import { Category } from "@/common/types/types"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { Key } from "antd/lib/table/interface"
-import { EventDataNode } from "antd/lib/tree"
-import { useHomeContext } from "../Pages/home/contexts/HomeContext"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import { useCategorySetsContext } from "../Pages/category-sets/contexts/CategorySetsContext"
+import { i18n } from "@/common/consts/constants"
 
 const { Title } = Typography
 const { Sider } = Layout
-const i18n = chrome.i18n.getMessage
 
-const { useState, useEffect, useMemo } = React
+const { useState, useMemo } = React
 
 const flattenCategories = (categories: any[], depth: number): any[] => {
   return depth > 0
@@ -28,8 +25,7 @@ const flattenCategories = (categories: any[], depth: number): any[] => {
 
 const getParentKey = (key: string, tree: any): string => {
   let parentKey
-  for (let i = 0; i < tree.length; i++) {
-    const node = tree[i]
+  for (const node of tree) {
     if (node.children) {
       if (node.children.some((item: any) => item.key === key)) {
         parentKey = node.key
@@ -42,14 +38,12 @@ const getParentKey = (key: string, tree: any): string => {
   return parentKey
 }
 
-const CategoriesSider = (props: { width: number; path: string; categories: Category[] | undefined}) => {
+const CategoriesSider = (props: any) => {
   const { http } = useGlobalContext()
-  const categoriesKeys: any[] = useMemo(
-    () => flattenCategories(props.categories || [], Infinity),
-    [props.categories]
-  );
+  const navigate = useNavigate()
+  const categoriesKeys: any[] = useMemo(() => flattenCategories(props.categories || [], Infinity), [props.categories])
   const [expandedKeys, setExpandedKeys] = useState<any[]>()
-  const { selectedCategoryId, onCategoryChanged } = useHomeContext()
+  const { onChangeCategoryId, selectedCategoryId } = useCategorySetsContext()
 
   function lookupCategories(e: any) {
     const { value } = e.target
@@ -67,15 +61,21 @@ const CategoriesSider = (props: { width: number; path: string; categories: Categ
   }
 
   const onSelect = (
-    selectedKeys: Key[],
+    _selectedKeys: Key[],
     info: {
-      node: EventDataNode;
+      node: any
     }
   ) => {
-    const isCategoryPreSelected = info.node?.key === selectedCategoryId
+    const categoryId = `${info.node?.key}`
+    const isCategoryPreSelected = categoryId === selectedCategoryId
     if (!http || isCategoryPreSelected) return
-    onCategoryChanged(info.node?.key.toString())
-  };
+    // TODO: Dirty processing, need to change.
+    if (location.hash.includes("category")) {
+      onChangeCategoryId(categoryId)
+      return
+    }
+    navigate(`/category/${categoryId}`)
+  }
 
   return (
     <Sider width={props.width} className="categories-sider--wrapper pad-16px">
@@ -84,13 +84,7 @@ const CategoriesSider = (props: { width: number; path: string; categories: Categ
       <Input placeholder={i18n("home_category_lookup")} onChange={lookupCategories} className="bot-16px" />
       {/* The states in Ant design which are prefixed with default only work when they are rendered for the first time */}
       {props.categories && props.categories.length > 0 && (
-        <Tree
-          treeData={props.categories}
-          expandedKeys={expandedKeys}
-          onExpand={setExpandedKeys}
-          onSelect={onSelect}
-          titleRender={(node) => {return <Link to={`/home/category/${node.key}`}>{node?.title || '---' }</Link>}}
-        />
+        <Tree treeData={props.categories} expandedKeys={expandedKeys} onExpand={setExpandedKeys} onSelect={onSelect} />
       )}
     </Sider>
   )

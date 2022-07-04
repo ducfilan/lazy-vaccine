@@ -1,0 +1,72 @@
+$primary: #12b886;
+$white: #fff;
+
+.lazy-vaccine {
+  .content-card-wrapper {
+    width: 100%;
+    margin-bottom: 20px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+
+    .card--face {
+      width: 100%;
+      height: 100%;
+      background-color: $white;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+
+      & > div:first-child {
+        padding: 0 44px;
+        height: 100%;
+        overflow: auto;
+        margin-block-start: 0;
+        margin-block-end: 0;
+      }
+    }
+
+    blockquote {
+      border-left: 2px solid #ddd;
+      margin-left: 0;
+      margin-right: 0;
+      padding-left: 10px;
+      color: #aaa;
+      font-style: italic;
+    }
+
+    .slate-heading {
+      margin-bottom: 0.5em;
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 38px;
+      line-height: 1.23;
+    }
+
+    h2 {
+      font-size: 30px;
+      line-height: 1.35;
+    }
+
+    h3 {
+      font-size: 24px;
+      line-height: 1.35;
+    }
+
+    ol,
+    ul,
+    dl {
+      margin-top: 0;
+      margin-bottom: 1em;
+      display: block;
+      list-style-type: disc;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      padding-inline-start: 40px;
+    }
+  }
+}

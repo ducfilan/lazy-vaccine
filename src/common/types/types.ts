@@ -36,6 +36,7 @@ export type Category = {
   title: string
   value: string
   path?: string
+  isTopCategory: boolean
   children?: Category[]
 }
 
@@ -49,11 +50,13 @@ export class CategoryResponse {
   name: any
   description: any
   path?: string
+  isTopCategory: boolean
 
-  constructor(id: string, name: object, description: object, path?: string) {
+  constructor(id: string, name: object, description: object, isTopCategory: boolean, path?: string) {
     this._id = id
     this.name = name
     this.description = description
+    this.isTopCategory = isTopCategory
     this.path = path
   }
 
@@ -63,6 +66,7 @@ export class CategoryResponse {
       title: this.name[langCode],
       value: this._id,
       path: this.path,
+      isTopCategory: this.isTopCategory,
     } as Category
   }
 }
@@ -128,11 +132,22 @@ export type SetInfo = {
   },
   actions?: string[],
   total?: number,
+  itemsInteractions?: {
+    itemId: string,
+    interactionCount: {
+      [key: string]: number
+    }
+  }[],
 }
 
 export type SetInfoItem = {
   type: string,
   _id: string,
+  answers?: {
+    isCorrect?: boolean,
+    answer: string
+    [key: string]: any
+  }[],
   [key: string]: any
 }
 
@@ -147,14 +162,88 @@ export type UploadImageResponse = {
 }
 
 export type PageInjectorSiblingSelectorParts = {
-  tags: string[],
+  tag: string,
   classes: string[],
   id: string,
   attrs: string[][]
 }
 
 export type InjectionTarget = {
+  rate: number,
   selector: string,
   type: number,
-  siblingSelector: string
+  newGeneratedElementSelector: string,
+  siblingSelector: string,
+  strict: boolean,
+}
+
+export type SeedInfo = {
+  _id: string
+  name: string
+  imgUrl?: string
+  categoryNames: string[]
+  price: number
+}
+
+export type UserStatisticsResponse = {
+  userId: string,
+  _id: string,
+  date: string,
+  interactions: {
+    [key: string]: number
+  }
+}
+
+export type SetStatisticsResponse = {
+  _id: string,
+  subscribedSetsCount: number,
+  totalItemsCount: number,
+  learntItemsCount: number,
+}
+
+export type TestResult = {
+  result: {
+    total: number,
+    score: number
+  }
+}
+
+export type NftInfo = {
+  name: string;
+  symbol: string;
+  description: string;
+  seller_fee_basis_points: number;
+  image: string;
+  attributes: Attribute[];
+  external_url: string;
+  properties: Properties;
+  collection: null;
+  use: null;
+}
+
+export type Attribute = {
+  trait_type: string;
+  value: number | string;
+}
+
+export type Properties = {
+  files: File[];
+  category: string;
+  creators: Creator[];
+}
+
+export type Creator = {
+  address: string;
+  share: number;
+}
+
+export type File = {
+  uri: string;
+  type: string;
+}
+
+export type Mission = {
+  _id: string,
+  missionId: number,
+  missionDetail: string
 }

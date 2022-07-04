@@ -6,11 +6,17 @@
 
 @import "~@/common/css/components/_common/navbar";
 @import "~@/common/css/components/_common/page-footer";
+@import "~@/common/css/components/_common/categories-sider";
+@import "~@/common/css/components/_common/marketplace-sider";
 
 @import "../Pages/create-set/css/create-set";
 @import "../Pages/set-detail/css/set-detail";
 @import "../Pages/home/css/home";
 @import "../Pages/user-profile/css/user-profile";
+@import "../Pages/category-sets/css/category-sets";
+@import "../Pages/marketplace/css/marketplace";
+@import "../Pages/seed-detail/css/seed-detail";
+@import "../Pages/test-set/css/test-set";
 
 body {
   min-height: 100vh;
@@ -133,6 +139,42 @@ button {
       transition: all 1000ms cubic-bezier(0.19, 1, 0.22, 1);
     }
   }
+}
+
+:not(pre) > code {
+  font-family: monospace;
+  background-color: #eee;
+  padding: 3px;
+}
+
+blockquote {
+  border-left: 2px solid #ddd;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 10px;
+  color: #aaa;
+  font-style: italic;
+}
+
+.slate-heading {
+  margin-bottom: 0.5em;
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 38px;
+  line-height: 1.23;
+}
+
+h2 {
+  font-size: 30px;
+  line-height: 1.35;
+}
+
+h3 {
+  font-size: 24px;
+  line-height: 1.35;
 }
 
 @keyframes bounce {

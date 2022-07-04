@@ -1,4 +1,4 @@
-import * as React from "react"
+import React from "react"
 import Resizer from "react-image-file-resizer"
 
 import { getCategories } from "@/common/repo/category"
@@ -9,6 +9,7 @@ import {
   MaxLengthSetTitle,
   MaxTagsCountPerSet,
   StaticBaseUrl,
+  i18n,
 } from "@/common/consts/constants"
 import { RequiredRule, MaxLengthRule } from "@/common/consts/validationRules"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
@@ -17,7 +18,6 @@ import { Category, SetInfo, UploadImageResponse } from "@/common/types/types"
 import { Form, Typography, Input, Button, Card, TreeSelect, Select, Alert, Space, Popconfirm, Upload } from "antd"
 import { RightOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons"
 import { useCreateSetContext } from "../contexts/CreateSetContext"
-import { Prompt } from "react-router"
 import { deepClone, preventReload } from "@/common/utils/utils"
 import ImgCrop from "antd-img-crop"
 import { RcFile, UploadChangeParam, UploadFile } from "antd/lib/upload/interface"
@@ -25,7 +25,7 @@ import { getExtensionFromFileType, getHash } from "@/common/utils/stringUtils"
 import { getPreSignedUploadUrl, uploadImage } from "@/common/repo/image"
 
 const { useState, useEffect } = React
-const i18n = chrome.i18n.getMessage
+
 const imageWidthInPx = 300
 const imageHeightInPx = 300
 
@@ -114,7 +114,7 @@ export const CreateSetForm = () => {
     const isUploadSuccess = await uploadImage(info.action, file, {
       headers: {
         "x-amz-acl": "public-read",
-        "Content-Type": uploadFileType,
+        "Content-Type": uploadFileType!,
       },
     })
 
@@ -172,7 +172,7 @@ export const CreateSetForm = () => {
 
   return (
     <>
-      <Prompt when={!isDataSaved} message={i18n("leave_warning_message")} />
+      {/* <Prompt when={!isDataSaved} message={i18n("leave_warning_message")} /> */}
 
       {cachedLastSetInfo && !isEdit && (
         <Alert

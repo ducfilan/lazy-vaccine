@@ -7,6 +7,7 @@ import { SetInfo } from "@/common/types/types"
 import {
   AppPages,
   ColorPrimary,
+  i18n,
   InteractionDislike,
   InteractionLike,
   InteractionSubscribe,
@@ -20,8 +21,6 @@ import { useState, useCallback } from "react"
 const setImgStyle = {
   borderRadius: "40% 70% 70% 40%",
 }
-
-const i18n = chrome.i18n.getMessage
 
 const SetItemCardLong = (props: { set: SetInfo }) => {
   const { http } = useGlobalContext()

@@ -1,5 +1,5 @@
 import { Http } from "../facades/axiosFacade"
-import { SearchSetsResponse, SetInfo, SetsInCategoryResponse, TopSetsResponse } from "@/common/types/types"
+import { SearchSetsResponse, SetInfo, SetsInCategoryResponse, TestResult, TopSetsResponse } from "@/common/types/types"
 import { AxiosResponse } from "axios"
 import Apis from "@consts/apis"
 import { ParamError } from "@consts/errors"
@@ -17,7 +17,7 @@ export async function editSet(http?: Http, setInfo?: SetInfo): Promise<string> {
   if (!http || !setInfo) throw new ParamError()
 
   // Remove unnecessary info.
-  const { creatorId, creatorName, lastUpdated, ...setInfoMinimized } = setInfo
+  const { creatorId, creatorName, lastUpdated, actions, isLiked, isDisliked, isSubscribed, ...setInfoMinimized } = setInfo
 
   await http.patch<any, AxiosResponse<string>>(Apis.sets, setInfoMinimized)
 
@@ -60,7 +60,7 @@ export async function getTopSets(http: Http, langCode: string = DefaultLangCode)
   return topSets
 }
 
-export async function getTopSetsInCategory(http: Http, langCode: string = DefaultLangCode, categoryId: string): Promise<SetInfo[]> {
+export async function getTopSetsInCategory(http: Http, categoryId: string, langCode: string = DefaultLangCode): Promise<SetInfo[]> {
   const response = await http.get<any, AxiosResponse<TopSetsResponse>>(Apis.topSetsInCategory(langCode, categoryId))
 
   if (!response?.data) throw new Error(`cannot get top sets in category id: ${categoryId}, lang code: ${langCode}`)
@@ -86,6 +86,10 @@ export async function undoInteractToSet(http: Http, setId: string, action: strin
   await http.delete<any, AxiosResponse<any>>(Apis.interaction(setId, action))
 }
 
+export async function interactToSetItem(http: Http, setId: string, itemId: string, action: string): Promise<void> {
+  await http.post<any, AxiosResponse<any>>(Apis.itemInteraction(setId, itemId, action))
+}
+
 export async function searchSets(http: Http, keyword: string, skip: number, limit: number) {
   const response = await http.get<any, AxiosResponse<SearchSetsResponse>>(`${Apis.sets}?keyword=${keyword}&skip=${skip}&limit=${limit}`)
 
@@ -105,11 +109,15 @@ export async function searchSets(http: Http, keyword: string, skip: number, limi
   return resp
 }
 
-export async function getSetsInCategory(http: Http,categoryId: string,skip: number,limit: number): Promise<SetsInCategoryResponse> {
+export async function getSetsInCategory(http: Http, categoryId: string, skip: number, limit: number): Promise<SetsInCategoryResponse> {
   const response = await http.get<any, AxiosResponse<SetsInCategoryResponse>>(
     Apis.getSetsInCategory(categoryId, skip, limit)
   )
   if (!response?.data)
     throw new Error(`cannot get sets in category id: ${categoryId}`)
   return response?.data
+}
+
+export async function uploadTestResult(http: Http, setId: string, result: TestResult): Promise<void> {
+  await http.post<any, AxiosResponse<any>>(Apis.uploadTestResult(setId), result)
 }

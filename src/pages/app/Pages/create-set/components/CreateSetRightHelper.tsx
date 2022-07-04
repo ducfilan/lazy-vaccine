@@ -2,8 +2,7 @@ import * as React from "react"
 import { Card, Carousel } from "antd"
 import { FireFilled, QuestionCircleFilled, MessageFilled } from "@ant-design/icons"
 import shibaTailIcon from "@img/emojis/shiba/tail.png"
-
-const i18n = chrome.i18n.getMessage
+import { i18n } from "@/common/consts/constants"
 
 export const CreateSetRightHelper = () => {
   return (

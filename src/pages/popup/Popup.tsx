@@ -1,4 +1,6 @@
-import * as React from "react"
+import React from "react"
+import { BrowserRouter as Router } from "react-router-dom"
+
 const { useState, useEffect } = React
 
 import "./css/popup.scss"
@@ -92,10 +94,12 @@ const PopupPage = () => {
 
   return (
     <GlobalContext.Provider value={{ user, setUser, http }}>
-      <div className="App">
-        {!isLoading && <Navbar />}
-        {renderPages()}
-      </div>
+      <Router>
+        <div className="App">
+          {!isLoading && <Navbar />}
+          {renderPages()}
+        </div>
+      </Router>
     </GlobalContext.Provider>
   )
 }

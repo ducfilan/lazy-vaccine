@@ -4,7 +4,7 @@ import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
 import { Select, Row, Col, notification } from "antd"
 
-import { DefaultLangCode } from "@consts/constants"
+import { DefaultLangCode, i18n } from "@consts/constants"
 import SupportingLanguages from "@consts/supportingLanguages"
 import { formatString, langCodeToName } from "@/common/utils/stringUtils"
 import LanguageItem from "./LanguageItem"
@@ -22,7 +22,7 @@ function ChooseLanguages() {
 
   const [choseLanguages, setChoseLanguages] = useState<string[]>(user?.langCodes || [user?.locale || DefaultLangCode])
 
-  const headerText = formatString(chrome.i18n.getMessage("popup_introduce_choose_lang_codes"), [
+  const headerText = formatString(i18n("popup_introduce_choose_lang_codes"), [
     { key: "user_name", value: user?.name || "" },
     { key: "first_language", value: langCodeToName(user?.locale) },
   ])
@@ -56,8 +56,8 @@ function ChooseLanguages() {
     } catch (error) {
       // TODO: Handle more types of error: Server/Timeout/Network etc..
       notification["error"]({
-        message: chrome.i18n.getMessage("error"),
-        description: chrome.i18n.getMessage("unexpected_error_message"),
+        message: i18n("error"),
+        description: i18n("unexpected_error_message"),
         duration: null,
       })
     }
@@ -89,7 +89,7 @@ function ChooseLanguages() {
             <Select
               showSearch
               className="choose-languages--dropdown-button"
-              placeholder={chrome.i18n.getMessage("popup_select_a_language")}
+              placeholder={i18n("popup_select_a_language")}
               optionFilterProp="children"
               filterOption={(input, option) => option?.value.toLowerCase().includes(input.toLowerCase())}
               onChange={addLanguage}

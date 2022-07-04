@@ -1,10 +1,10 @@
 {
   "appName": {
-    "message": "Lazy vaccine",
+    "message": "Lazy Vaccine Platform",
     "description": "The name of the application"
   },
   "appDescription": {
-    "message": "Gain more knowledge with less pain",
+    "message": "Một nền tảng học tập trên blockchain giúp giảm thiểu sự phân tâm để tập trung khi trực tuyến và thúc đẩy mọi người chia sẻ kiến thức",
     "description": "The description of the application"
   },
   "error": {
@@ -23,13 +23,13 @@
     "message": "đăng xuất"
   },
   "popup_introduce_first": {
-    "message": "We spend so much time on the Internet.\nYes, no excuse. But a day remains 24 hours since we have the clock. From now on, this extension will help you use Internet more efficient. Just try to see! 😊"
+    "message": "Chúng ta dành quá nhiều thời gian trên Internet.\nĐúng vậy, không có gì phải bào chữa. Tuy nhiên bạn cần biết rằng 1 ngày luôn chỉ có 24 giờ. Từ giờ, tiện ích này sẽ giúp thời gian sử dụng Internet của bạn hiệu quả hơn. Hãy thử và xem kết quả nhé! 😊"
   },
   "popup_introduce_choose_lang_codes": {
-    "message": "Nice to meet you, {user_name}! 🎉 I know your first language is {first_language}, do you want to show content in other languages?"
+    "message": "Chào bạn, {user_name}! 🎉 Có vẻ ngôn ngữ chính của bạn là {first_language}, bạn còn muốn hiển thị nội dung từ ngôn ngữ khác mà bạn biết không?"
   },
   "popup_introduce_choose_pages": {
-    "message": "Great! 🤩 One last step...\nYou can select your most visited websites to start. That's it!"
+    "message": "Tuyệt vời! 🤩 Chỉ còn 1 bước cuối cùng...\nBạn hãy chọn những trang web mà bạn thường xuyên truy cập. Chỉ cần vậy thôi!"
   },
   "popup_select_a_language": {
     "message": "Chọn ngôn ngữ"
@@ -62,7 +62,7 @@
     "message": "Tạo một bài mới"
   },
   "create_set_field_name": {
-    "message": "Name"
+    "message": "Tên bài học"
   },
   "pageSetsListTitle": {
     "message": "Danh sách các bài học"
@@ -89,13 +89,13 @@
     "message": "Ví dụ: IELTS, ngữ pháp tiếng Nhật N3, AWS associate mock test"
   },
   "create_set_field_tags_placeholder": {
-    "message": "Input # to get tags"
+    "message": "Thêm các thẻ tag cho bài học nhé"
   },
   "create_set_next_button": {
-    "message": "Next"
+    "message": "Tiếp theo"
   },
   "create_set_help_text_1_title": {
-    "message": "What is a set?"
+    "message": "Bài học là gì?"
   },
   "create_set_help_text_1_content": {
     "message": "- Một danh sách những điều cần nhớ\n- Chia sẻ nội dung quen thuộc với bạn học/đồng nghiệp\n- Chia sẻ tài liệu giảng dạy tuyệt vời với cộng đồng!"
@@ -103,11 +103,44 @@
   "create_set_create_button": {
     "message": "Tạo bài"
   },
+  "category_sets_total": {
+    "message": "Có :total bài học trong :category_name"
+  },
+  "marketplace_plant_type": {
+    "message": "Loại thực vật"
+  },
+  "marketplace_time_harvest": {
+    "message": "Thời gian thu hoạch (điểm)"
+  },
   "common_category": {
     "message": "Phân loại"
   },
   "common_cancel": {
     "message": "Hủy"
+  },
+  "common_filter": {
+    "message": "Bộ lọc"
+  },
+  "common_from": {
+    "message": "Từ"
+  },
+  "common_to": {
+    "message": "Đến"
+  },
+  "marketplace_roi": {
+    "message": "ROI"
+  },
+  "marketplace_seeds": {
+    "message": "Hạt giống"
+  },
+  "marketplace_lowest_price": {
+    "message": "Giá Thấp Nhất"
+  },
+  "marketplace_highest_price": {
+    "message": "Giá Cao Nhât"
+  },
+  "marketplace_latest": {
+    "message": "Mới Nhất"
   },
   "select": {
     "message": "Lựa chọn"
@@ -123,5 +156,263 @@
   },
   "leave_warning_message": {
     "message": "Những thông tin bạn nhập chưa được lưu, bạn có chắc chắn muốn rời đi không?"
+  },
+  "data_saved_message": {
+    "message": "Đừng lo, nội  dung của bạn đã được lưu và có thể khôi phục lại dễ dàng!"
+  },
+  "check_result_button": {
+    "message": "Kiểm tra kết quả"
+  },
+  "edit_set_page_title": {
+    "message": "Chỉnh sửa"
+  },
+  "create_set_request_category": {
+    "message": "Bấm vào đây để yêu cầu 1 phân loại mới"
+  },
+  "create_set_help_text_2_title": {
+    "message": "Tip để tạo 1 bài học tốt"
+  },
+  "create_set_help_text_2_content": {
+    "message": "- Một tiêu đề có ý nghĩa\n- Thêm các thẻ để mọi người có thể tìm bài học của bạn dễ dàng hơn\n- Chọn một phân loại phù hợp nhất với nội dung bài học của bạn"
+  },
+  "create_set_help_text_3_title": {
+    "message": "Nếu bạn vẫn còn chưa rõ?"
+  },
+  "create_set_help_text_3_content": {
+    "message": "- Hãy xem video Youtube này để rõ hơn nhé!"
+  },
+  "create_set_add_item": {
+    "message": "Thêm 1 item (Bấm phím TAB để nhanh hơn)"
+  },
+  "create_set_term_placeholder": {
+    "message": "Từ"
+  },
+  "create_set_definition_placeholder": {
+    "message": "Nghĩa"
+  },
+  "create_set_question_placeholder": {
+    "message": "Câu hỏi"
+  },
+  "create_set_answer_placeholder": {
+    "message": "Câu trả lời"
+  },
+  "create_set_answer_validation_warning": {
+    "message": "Tối thiểu phải có 2 đáp án!"
+  },
+  "create_set_items_validation_warning": {
+    "message": "Xin lỗi, Chúng ta cần ít nhất 2 item để tạo bài học! Xin hãy điền thêm... 🥺"
+  },
+  "create_set_answer_check_guide": {
+    "message": "Chọn những đáp án đúng của câu hỏi!"
+  },
+  "create_set_content_label": {
+    "message": "Nội dung"
+  },
+  "create_set_content_placeholder": {
+    "message": "Chia nhỏ các nội dung học tập lớn thành các mục nhỏ"
+  },
+  "create_set_add_answer": {
+    "message": "Thêm đáp án"
+  },
+  "create_set_check_captcha_warning": {
+    "message": "Xin hãy click vào đây để xác nhận"
+  },
+  "create_set_having_unsaved_set_warning": {
+    "message": "Bạn có bài học chưa tạo xong vẫn còn lưu, bạn muốn phục hồi không?"
+  },
+  "create_set_content_language": {
+    "message": "Ngôn ngữ của nội dung"
+  },
+  "create_set_definition_language": {
+    "message": "Ngôn ngữ của định nghĩa"
+  },
+  "create_set_set_picture": {
+    "message": "Ảnh của bài học"
+  },
+  "set_detail_sub_header_base_part": {
+    "message": "Chúng ta có :item_count item, "
+  },
+  "set_detail_sub_header_part_1": {
+    "message": "nội dung từ <span>:from_language</span>"
+  },
+  "set_detail_share_me": {
+    "message": "Chia sẻ"
+  },
+  "set_detail_copy_link": {
+    "message": "Sao chép link"
+  },
+  "set_detail_sub_header_part_2": {
+    "message": ", hướng đến <span>:to_language</span>"
+  },
+  "set_detail_edit_set": {
+    "message": "Chỉnh sửa"
+  },
+  "set_detail_answers": {
+    "message": "Đáp án"
+  },
+  "set_detail_no_desc": {
+    "message": "Chưa có giới thiệu..."
+  },
+  "set_detail_test_set": {
+    "message": "Kiểm tra bài học này"
+  },
+  "search_result_not_found": {
+    "message": "Bạn đã tìm kiếm - \":keyword\" - nhưng không có kết quả.\nGợi ý:\n - Đảm bảo rằng các từ khóa không có sai sót.\n- Thử 1 từ khóa khác."
+  },
+  "home_category_lookup": {
+    "message": "Tìm kiếm phân loại"
+  },
+  "home_everyone_favorite": {
+    "message": "Nội dung nổi bật nhất"
+  },
+  "flashcard_go_to_set": {
+    "message": "Xem chi tiết"
+  },
+  "flashcard_next_set": {
+    "message": "Bài học tiếp theo"
+  },
+  "flashcard_other_options": {
+    "message": "Các tùy chọn khác"
+  },
+  "flashcard_front_item": {
+    "message": "Mặt trước"
+  },
+  "flashcard_back_item": {
+    "message": "Mặt sau"
+  },
+  "inject_card_select": {
+    "message": "Chọn :correctAnswerCount đáp án"
+  },
+  "common_back": {
+    "message": "Quay lại"
+  },
+  "common_create": {
+    "message": "Tạo"
+  },
+  "common_restore": {
+    "message": "Phục hồi"
+  },
+  "common_remove": {
+    "message": "Xóa"
+  },
+  "common_yes": {
+    "message": "Có"
+  },
+  "common_no": {
+    "message": "Không"
+  },
+  "common_creator": {
+    "message": "Người tạo"
+  },
+  "common_subscribe": {
+    "message": "Đăng kí"
+  },
+  "common_subscribed": {
+    "message": "Đã đăng kí"
+  },
+  "common_liked": {
+    "message": "Đã thích"
+  },
+  "common_created": {
+    "message": "Đã tạo"
+  },
+  "common_unsubscribe": {
+    "message": "Hủy đăng kí"
+  },
+  "common_upload": {
+    "message": "Tải lên"
+  },
+  "common_edit_image": {
+    "message": "Thay đổi ảnh"
+  },
+  "common_inject_card_disclaimer": {
+    "message": "⚠ Nội dung này không thuộc về :website, mà thuộc về Lazy Vaccine"
+  },
+  "common_save_changes": {
+    "message": "Lưu thay dổi"
+  },
+  "common_search_result": {
+    "message": "Kết quả tìm kiếm"
+  },
+  "common_more": {
+    "message": "thêm"
+  },
+  "common_test": {
+    "message": "Kiểm tra"
+  },
+  "common_term": {
+    "message": "Định nghĩa"
+  },
+  "common_definition": {
+    "message": "Giải thích"
+  },
+  "common_end_list_result": {
+    "message": "Đã hiển thị toàn bộ kết quả :)"
+  },
+  "common_not_found": {
+    "message": "Không tìm thấy"
+  },
+  "common_buy_now": {
+    "message": "Mua"
+  },
+  "common_owner": {
+    "message": "Chủ sở hữu"
+  },
+  "common_introduction": {
+    "message": "Giới thiệu"
+  },
+  "common_properties": {
+    "message": "Thuộc tính"
+  },
+  "common_ignore": {
+    "message": "Bỏ qua"
+  },
+  "common_got_it": {
+    "message": "Đã thuộc"
+  },
+  "common_check": {
+    "message": "Kiểm tra"
+  },
+  "seed_growing_conditions": {
+    "message": "Điều kiện phát triển"
+  },
+  "properties_height": {
+    "message": "Chiều cao"
+  },
+  "properties_hardness": {
+    "message": "Độ khó"
+  },
+  "properties_maintenance": {
+    "message": "Chăm sóc"
+  },
+  "max_length_field": {
+    "message": "Tối đa: "
+  },
+  "my_space_achievement": {
+    "message": "Thành tích của tôi"
+  },
+  "my_space_how_changed": {
+    "message": "Lịch sử học tập"
+  },
+  "high_comment_title": {
+    "message": "Bạn đã nắm hết bài học này!"
+  },
+  "high_comment_detail": {
+    "message": "Nỗ lực học tập của bạn là xứng đáng! Điểm số này xác nhận bạn đã hoàn thành học tập bài học này."
+  },
+  "medium_comment_title": {
+    "message": "Bạn cần phản cố gắng thêm!"
+  },
+  "medium_comment_detail": {
+    "message": "Bạn đang đi đúng hướng, nhưng vẫn còn phải cố gắng thêm."
+  },
+  "low_comment_title": {
+    "message": "Bạn vẫn đang học!"
+  },
+  "low_comment_detail": {
+    "message": "Mặc dù bạn chưa biết hết các đáp án, nhưng bạn đã dám thử thách bản thân, điều này hoàn toàn tốt.\nHãy tiếp tục cố gắng nha!"
+  },
+  "test_set_encourage_test": {
+    "message": "Bạn đã học được 1 thời gian, đến lúc kiểm tra bản thân rồi! Bạn không cần phải sợ các bài kiểm tra, mà các bài kiểm tra này phải sợ bạn. Chúc bạn may mắn! ❤️"
   }
 }

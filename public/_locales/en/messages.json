@@ -1,10 +1,10 @@
 {
   "appName": {
-    "message": "Lazy vaccine",
+    "message": "Lazy Vaccine Platform",
     "description": "The name of the application"
   },
   "appDescription": {
-    "message": "Gain more knowledge with less pain",
+    "message": "Help reduce online distractions, drive people back to learn and motivate people to share knowledge",
     "description": "The description of the application"
   },
   "error": {
@@ -58,6 +58,9 @@
   "create_set_button": {
     "message": "Create set"
   },
+  "check_result_button": {
+    "message": "Check My Result"
+  },
   "create_set_search_place_holder": {
     "message": "Search for anything you want to learn..."
   },
@@ -86,7 +89,7 @@
     "message": "E.g. IELTS, spanish grammar, AWS associate mock test"
   },
   "create_set_field_tags_placeholder": {
-    "message": "Input # to get tags"
+    "message": "Input tags that are related to the set"
   },
   "create_set_next_button": {
     "message": "Next, add set items"
@@ -196,6 +199,12 @@
   "set_detail_no_desc": {
     "message": "No description yet..."
   },
+  "set_detail_test_set": {
+    "message": "Test this set"
+  },
+  "category_sets_total": {
+    "message": ":total sets in :category_name"
+  },
   "search_result_not_found": {
     "message": "Your search - :keyword - did not match any documents.\nSuggestions:\n - Make sure that all words are spelled correctly.\n- Try different keywords."
   },
@@ -210,6 +219,39 @@
   },
   "flashcard_next_set": {
     "message": "Next set"
+  },
+  "flashcard_other_options": {
+    "message": "Other options"
+  },
+  "flashcard_front_item": {
+    "message": "Front item"
+  },
+  "flashcard_back_item": {
+    "message": "Back item"
+  },
+  "inject_card_select": {
+    "message": "Select :correctAnswerCount"
+  },
+  "marketplace_plant_type": {
+    "message": "Plant type"
+  },
+  "marketplace_time_harvest": {
+    "message": "Time to harvest (points)"
+  },
+  "marketplace_roi": {
+    "message": "ROI"
+  },
+  "marketplace_seeds": {
+    "message": "seeds"
+  },
+  "marketplace_lowest_price": {
+    "message": "Lowest Price"
+  },
+  "marketplace_highest_price": {
+    "message": "Highest Price"
+  },
+  "marketplace_latest": {
+    "message": "Latest"
   },
   "common_back": {
     "message": "Back"
@@ -274,11 +316,62 @@
   "common_more": {
     "message": "more"
   },
+  "common_test": {
+    "message": "Test"
+  },
+  "common_term": {
+    "message": "Term"
+  },
+  "common_definition": {
+    "message": "Definition"
+  },
   "common_end_list_result": {
     "message": "That's all that matches :)"
   },
   "common_not_found": {
     "message": "Not found"
+  },
+  "common_filter": {
+    "message": "Filter"
+  },
+  "common_from": {
+    "message": "From"
+  },
+  "common_to": {
+    "message": "To"
+  },
+  "common_buy_now": {
+    "message": "Buy now"
+  },
+  "common_owner": {
+    "message": "Owner"
+  },
+  "common_introduction": {
+    "message": "Introduction"
+  },
+  "common_properties": {
+    "message": "Properties"
+  },
+  "common_ignore": {
+    "message": "Ignore"
+  },
+  "common_got_it": {
+    "message": "Got it"
+  },
+  "common_check": {
+    "message": "Check"
+  },
+  "seed_growing_conditions": {
+    "message": "Growing conditions"
+  },
+  "properties_height": {
+    "message": "Height"
+  },
+  "properties_hardness": {
+    "message": "Hardness"
+  },
+  "properties_maintenance": {
+    "message": "Maintenance"
   },
   "select": {
     "message": "Select one"
@@ -297,5 +390,32 @@
   },
   "leave_warning_message": {
     "message": "You have unsaved changes, if you leave, you will lost your data. Are you sure?"
+  },
+  "my_space_achievement": {
+    "message": "My Achievement"
+  },
+  "my_space_how_changed": {
+    "message": "How I Changed"
+  },
+  "high_comment_title": {
+    "message": "You mastered this set!"
+  },
+  "high_comment_detail": {
+    "message": "Your learning counts! It proves that you've got enough qualification on the this set."
+  },
+  "medium_comment_title": {
+    "message": "You need a little more time for this!"
+  },
+  "medium_comment_detail": {
+    "message": "You're on the right track, but you're not quite there yet."
+  },
+  "low_comment_title": {
+    "message": "You're learning!"
+  },
+  "low_comment_detail": {
+    "message": "Even if you don't know all the answers yet, testing yourself is the most effective way to master them.\nKeep it up!"
+  },
+  "test_set_encourage_test": {
+    "message": "You've almost made it! You don't need to be scared of the test, that test needs to be scared of you. Good luck! ❤️"
   }
 }

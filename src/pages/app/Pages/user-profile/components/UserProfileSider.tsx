@@ -1,13 +1,13 @@
 import * as React from "react"
 import { Divider, Layout, Typography, Menu } from "antd"
-import { AimOutlined, LikeFilled, FormOutlined } from "@ant-design/icons"
+import { AimOutlined, LikeFilled, FormOutlined, TrophyOutlined } from "@ant-design/icons"
 
 import { useUserProfileContext } from "../contexts/UserProfileContext"
 import AvatarImage from "@/common/components/AvatarImage"
+import { i18n } from "@/common/consts/constants"
 
 const { Title } = Typography
 const { Sider } = Layout
-const i18n = chrome.i18n.getMessage
 
 const UserProfileSider = (props: { width: number; path: string }) => {
   const { user, onTabChanged } = useUserProfileContext()
@@ -24,21 +24,33 @@ const UserProfileSider = (props: { width: number; path: string }) => {
       </div>
       <Divider />
       <Menu
-        defaultSelectedKeys={["subscribed"]}
+        defaultSelectedKeys={["myAchievement"]}
         onClick={({ key }) => {
           onTabChanged(key)
         }}
-      >
-        <Menu.Item key="subscribed" icon={<AimOutlined />}>
-          {i18n("common_subscribed")}
-        </Menu.Item>
-        <Menu.Item key="liked" icon={<LikeFilled />}>
-          {i18n("common_liked")}
-        </Menu.Item>
-        <Menu.Item key="created" icon={<FormOutlined />}>
-          {i18n("common_created")}
-        </Menu.Item>
-      </Menu>
+        items={[
+          {
+            key: "myAchievement",
+            icon: <TrophyOutlined />,
+            label: i18n("my_space_achievement"),
+          },
+          {
+            key: "subscribed",
+            icon: <AimOutlined />,
+            label: i18n("common_subscribed"),
+          },
+          {
+            key: "liked",
+            icon: <LikeFilled />,
+            label: i18n("common_liked"),
+          },
+          {
+            key: "created",
+            icon: <FormOutlined />,
+            label: i18n("common_created"),
+          },
+        ]}
+      />
     </Sider>
   )
 }

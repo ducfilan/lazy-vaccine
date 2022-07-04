@@ -1,0 +1,118 @@
+@mixin box-shadow($h-shadow: 0, $v-shadow: 1px, $blur: 2px, $spread: 0, $color: fade-out($black, 0.85)) {
+  box-shadow: $h-shadow $v-shadow $blur $spread $color;
+}
+
+@keyframes animate-fade {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+$primary: #12b886;
+$white: #fff;
+$black: #000;
+
+.lazy-vaccine {
+  position: relative;
+  min-width: 300px;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0px auto;
+  color: $black;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  a {
+    color: $primary;
+    text-decoration: none;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .card--interactions {
+    display: flex;
+    padding: 10px 16px;
+    justify-content: space-between;
+    border-top: 1px solid #dbdbdb;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background: $white;
+    margin-bottom: 20px;
+
+    button {
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .card--interactions--ignore {
+      color: #e67e22;
+      border-color: #e67e22;
+
+      &:hover {
+        color: #e67e22;
+        border-color: #e67e22;
+      }
+    }
+
+    .card--interactions--star {
+      color: #d8d8d8 !important;
+      border-color: #ffdf50 !important;
+
+      &:hover {
+        color: #fde476;
+        border-color: #ffdf50;
+      }
+    }
+
+    .stared {
+      color: #ffdf50 !important;
+    }
+  }
+
+  .next-prev-buttons--wrapper {
+    height: 300px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+
+    button {
+      width: 32px;
+      height: 32px;
+      padding: 1.7px 0;
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 15%);
+      position: absolute;
+      z-index: 1;
+      top: calc(50% - 16px);
+      border: none;
+      background: $primary;
+      color: $white;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.85;
+      }
+    }
+
+    .next-prev-buttons--prev-button {
+      left: 0;
+      border-radius: 0 !important;
+      border-top-right-radius: 13px !important;
+      border-bottom-right-radius: 13px !important;
+    }
+
+    .next-prev-buttons--next-button {
+      right: 0;
+      border-radius: 0 !important;
+      border-top-left-radius: 13px !important;
+      border-bottom-left-radius: 13px !important;
+    }
+  }
+}

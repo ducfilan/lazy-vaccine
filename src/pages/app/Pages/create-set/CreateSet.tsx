@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useParams } from "react-router-dom"
 
 import { Col, notification, Row } from "antd"
 
@@ -11,6 +12,7 @@ import { CreateSetContext } from "./contexts/CreateSetContext"
 import { CreateSetForm } from "./components/CreateSetForm"
 import { CreateSetRightHelper } from "./components/CreateSetRightHelper"
 import { CreateSetItemsForm } from "./components/CreateSetItemsForm"
+import { i18n } from "@/common/consts/constants"
 
 const { useEffect, useState } = React
 
@@ -19,15 +21,13 @@ const CreateSteps = {
   SetItems: 1,
 }
 
-const CreateSetPage = (props: any) => {
+const CreateSetPage = () => {
   const { http } = useGlobalContext()
   const [currentStep, setCurrentStep] = useState<number>(CreateSteps.SetInfo)
   const [setInfo, setSetInfo] = useState<SetInfo>()
 
-  const setId = props.match.params.setId
+  const { setId } = useParams()
   const isEdit = !!setId
-
-  const i18n = chrome.i18n.getMessage
 
   function onPageLoaded() {
     if (!http || !setId) return

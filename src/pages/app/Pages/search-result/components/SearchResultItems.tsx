@@ -9,8 +9,7 @@ import SetItemCardLong from "@/pages/app/components/SetItemCardLong"
 import InfiniteScroll from "react-infinite-scroll-component"
 import shibaEmptyBoxIcon from "@img/emojis/shiba/box.png"
 import { formatString } from "@/common/utils/stringUtils"
-
-const i18n = chrome.i18n.getMessage
+import { i18n } from "@/common/consts/constants"
 
 const SearchResultItems = (props: { keyword: string }) => {
   const { http } = useGlobalContext()

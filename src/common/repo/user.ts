@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios"
-import { SetInfo, User, UserInteractionSetResponse, UserInteractionSetsResponse } from "@/common/types/types"
+import { SetInfo, SetStatisticsResponse, User, UserInteractionSetResponse, UserInteractionSetsResponse, UserStatisticsResponse } from "@/common/types/types"
 import Apis from "@consts/apis"
 import StatusCode from "@consts/statusCodes"
 import { Http } from "../facades/axiosFacade"
@@ -24,7 +24,7 @@ export async function getUserInfo(http: Http, userId: string): Promise<User> {
 }
 
 export async function getUserInteractionSets(http: Http, userId: string, interaction: string, skip: number, limit: number): Promise<UserInteractionSetsResponse> {
-  const response = await http.get<any, AxiosResponse<UserInteractionSetsResponse>>(`${Apis.users}/${userId}/sets?interaction=${interaction}&skip=${skip}&limit=${limit}`);
+  const response = await http.get<any, AxiosResponse<UserInteractionSetsResponse>>(Apis.getUserInteractionSets(userId, interaction, skip, limit));
 
   const sets = response?.data
   if (!sets) throw new Error("cannot get user interaction sets")
@@ -41,7 +41,7 @@ export async function getUserInteractionSets(http: Http, userId: string, interac
 }
 
 export async function getUserInteractionRandomSet(http: Http, interaction: string): Promise<SetInfo> {
-  const response = await http.get<any, AxiosResponse<UserInteractionSetResponse>>(`${Apis.me}/random-set?interaction=${interaction}`)
+  const response = await http.get<any, AxiosResponse<UserInteractionSetResponse>>(Apis.randomSet(interaction))
 
   const { actions, set } = response?.data
   if (!set) throw new Error("cannot get user interaction sets")
@@ -57,4 +57,22 @@ export async function updateUserInfo(http: Http, data: Object): Promise<boolean>
   const { status } = await http.patch<any, AxiosResponse<boolean>>(Apis.me, data)
 
   return status === StatusCode.Ok
+}
+
+export async function getUserStatistics(http: Http, beginDate: string, endDate: string): Promise<UserStatisticsResponse[]> {
+  const response = await http.get<any, AxiosResponse<UserStatisticsResponse[]>>(Apis.itemsInteractions(beginDate, endDate));
+
+  const statistics = response?.data
+  if (!statistics) throw new Error("cannot get user statistics")
+
+  return statistics
+}
+
+export async function getSetsStatistics(http: Http): Promise<SetStatisticsResponse> {
+  const response = await http.get<any, AxiosResponse<SetStatisticsResponse>>('sets-statistics');
+
+  const setsStatistics = response?.data
+  if (!setsStatistics) throw new Error("cannot get user statistics")
+
+  return setsStatistics
 }

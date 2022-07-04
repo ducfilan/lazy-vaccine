@@ -1,6 +1,6 @@
-import * as React from "react"
+import React from "react"
 
-import { useHistory } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
 import { SearchResultContext } from "./contexts/SearchResultContext"
@@ -8,7 +8,7 @@ import { Layout, Typography } from "antd"
 
 import { Category } from "@/common/types/types"
 import SearchResultItems from "./components/SearchResultItems"
-import { AppPages } from "@/common/consts/constants"
+import { AppPages, i18n } from "@/common/consts/constants"
 import CategoriesSider from "@/pages/app/components/CategoriesSider"
 import CacheKeys from "@/common/consts/cacheKeys"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
@@ -18,15 +18,11 @@ const { Content } = Layout
 
 const { useState, useEffect } = React
 
-const i18n = chrome.i18n.getMessage
-
-const SearchResultPage = (props: any) => {
-  const history = useHistory()
-
+const SearchResultPage = () => {
   const { user, http } = useGlobalContext()
   const [categories, setCategories] = useState<Category[]>()
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
-  const [keyword, setKeyword] = useState<string>()
+  const [searchParams] = useSearchParams()
 
   useEffect(() => {
     if (!http || !user) return
@@ -34,23 +30,12 @@ const SearchResultPage = (props: any) => {
     if (cachedCategories) {
       setCategories(cachedCategories)
     } else {
-      getCategories(http, user.locale).then((categories: Category[]) => {
-        setCategories(categories)
-        setCachedCategories(categories)
+      getCategories(http, user.locale).then((newCategories: Category[]) => {
+        setCategories(newCategories)
+        setCachedCategories(newCategories)
       })
     }
   }, [http, user])
-
-  const keywordParam = new URLSearchParams(props.location.search).get("keyword") || ""
-
-  if (!keywordParam) {
-    history.push(AppPages.Home.path)
-    return <></>
-  }
-
-  useEffect(() => {
-    setKeyword(keywordParam)
-  }, [keywordParam])
 
   return (
     <SearchResultContext.Provider value={{ categories, setCategories }}>
@@ -62,7 +47,7 @@ const SearchResultPage = (props: any) => {
               <Typography.Title level={3} className="top--25px">
                 {i18n("common_search_result")}
               </Typography.Title>
-              {keyword && <SearchResultItems keyword={keyword} />}
+              <SearchResultItems keyword={searchParams.get("keyword")!} />
             </Content>
           </Content>
         </Layout>

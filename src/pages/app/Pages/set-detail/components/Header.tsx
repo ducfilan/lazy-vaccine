@@ -7,9 +7,7 @@ import { Link } from "react-router-dom"
 import { formatString, langCodeToName } from "@/common/utils/stringUtils"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { useSetDetailContext } from "../contexts/SetDetailContext"
-import { AppPages } from "@/common/consts/constants"
-
-const i18n = chrome.i18n.getMessage
+import { AppPages, i18n } from "@/common/consts/constants"
 
 const Header = () => {
   const { user } = useGlobalContext()

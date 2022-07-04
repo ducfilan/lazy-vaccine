@@ -94,6 +94,12 @@ module.exports = (_, { mode }) => {
         "@facades": path.join(__dirname, "src/common/facades"),
         "@bg": path.join(__dirname, "src/background"),
       },
+      fallback: {
+        "stream": require.resolve("stream-browserify"),
+        "buffer": require.resolve("buffer"),
+        "crypto": require.resolve("crypto-browserify"),
+        "assert": false
+      },
     },
     devServer: {
       contentBase: "./dist",
@@ -107,6 +113,12 @@ module.exports = (_, { mode }) => {
       new webpack.HotModuleReplacementPlugin(),
       new ReactRefreshWebpackPlugin(),
       //new BundleAnalyzerPlugin(),
+      new webpack.ProvidePlugin({
+        Buffer: ['buffer', 'Buffer'],
+      }),
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+      }),
     ],
   };
 }

@@ -1,35 +1,49 @@
-import * as React from "react"
+import React from "react"
+import { useParams } from "react-router-dom"
 
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
 import { UserProfileContext } from "./contexts/UserProfileContext"
-import { Divider, Layout, List, notification, Result, Skeleton, Typography } from "antd"
+import { Card, Col, Divider, Layout, List, notification, Result, Row, Skeleton, Statistic, Typography } from "antd"
 
-import { AppPages, InteractionCreate, InteractionLike, InteractionSubscribe } from "@/common/consts/constants"
+import {
+  AchievementChartOrderIndex,
+  AppPages,
+  i18n,
+  InteractionCreate,
+  InteractionLike,
+  InteractionSubscribe,
+} from "@/common/consts/constants"
 import UserProfileSider from "./components/UserProfileSider"
 import { SetInfo, User } from "@/common/types/types"
-import { getUserInfo, getUserInteractionSets } from "@/common/repo/user"
+import { getUserInfo, getUserInteractionSets, getUserStatistics, getSetsStatistics } from "@/common/repo/user"
 import SetItemCardLong from "@/pages/app/components/SetItemCardLong"
-import { formatString } from "@/common/utils/stringUtils"
+import { formatNumber, formatString } from "@/common/utils/stringUtils"
 import InfiniteScroll from "react-infinite-scroll-component"
 import shibaEmptyBoxIcon from "@img/emojis/shiba/box.png"
+import { isElementAtBottom } from "@/pages/content-script/domHelpers"
+import Icon, { BookOutlined, OrderedListOutlined } from "@ant-design/icons"
+import TreeIcon from "@img/ui/fa/tree-solid.svg"
+import AchievementChart from "./components/AchievementChart"
+import moment from "moment"
 
 const { Content } = Layout
 
 const { useState, useEffect } = React
 
-const i18n = chrome.i18n.getMessage
-
 const UserProfilePage = (props: any) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const { user, http } = useGlobalContext()
   const [profileUser, setProfileUser] = useState<User>()
   const [sets, setSets] = useState<SetInfo[]>([])
-  const [selectedTab, setSelectedTab] = useState<string>("subscribed")
+  const [selectedTab, setSelectedTab] = useState<string>("myAchievement")
   const [skip, setSkip] = useState<number>()
   const [isSearching, setIsSearching] = useState<boolean>(true)
   const [totalSetsCount, setTotalSetsCount] = useState<number>()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [userStatistics, setUserStatistics] = useState<any>()
+  const [setsStatistics, setSetsStatistics] = useState<any>()
 
   const limitItemsPerGet = 5
 
@@ -39,7 +53,7 @@ const UserProfilePage = (props: any) => {
     created: InteractionCreate,
   }
 
-  let userId = props.match?.params?.userId
+  let { userId } = useParams()
 
   function onPageLoaded() {
     if (!http) return
@@ -62,10 +76,11 @@ const UserProfilePage = (props: any) => {
   function setUserInfo() {
     if (!userId) {
       if (!user) {
-        history.push(AppPages.Home.path)
+        navigate(AppPages.Home.path)
         return
       }
 
+      // TODO: Get and display other users.
       setProfileUser(user)
     } else {
       if (!http) return
@@ -74,8 +89,8 @@ const UserProfilePage = (props: any) => {
         .then(setProfileUser)
         .catch(() => {
           notification["error"]({
-            message: chrome.i18n.getMessage("error"),
-            description: chrome.i18n.getMessage("unexpected_error_message"),
+            message: i18n("error"),
+            description: i18n("unexpected_error_message"),
             duration: null,
           })
         })
@@ -98,20 +113,11 @@ const UserProfilePage = (props: any) => {
       })
       .catch(() => {
         notification["error"]({
-          message: chrome.i18n.getMessage("error"),
-          description: chrome.i18n.getMessage("unexpected_error_message"),
+          message: i18n("error"),
+          description: i18n("unexpected_error_message"),
           duration: null,
         })
       })
-  }
-
-  const isElementAtBottom = (target: HTMLElement, threshold: number = 0.8) => {
-    if (target.nodeName === "#document") target = document.documentElement
-
-    const clientHeight =
-      target === document.body || target === document.documentElement ? window.screen.availHeight : target.clientHeight
-
-    return target.scrollTop + clientHeight >= threshold * target.scrollHeight
   }
 
   const hasMore = () => !!totalSetsCount && sets.length < totalSetsCount
@@ -122,10 +128,61 @@ const UserProfilePage = (props: any) => {
     }
   }
 
+  async function setAchievementInfo() {
+    if (!http || !profileUser || !selectedTab) return
+    try {
+      const endDate = Date.now()
+      const sevenDaysAgo: Date = new Date(endDate - 7 * 24 * 60 * 60 * 1000)
+      const [userStatistics, setStatistics] = await Promise.all([
+        getUserStatistics(http, moment(sevenDaysAgo).format("YYYY-MM-DD"), moment(endDate).format("YYYY-MM-DD")),
+        getSetsStatistics(http),
+      ])
+      let labels: string[] = [],
+        datasets: any = [
+          {
+            label: "Learnt items",
+            backgroundColor: "#36AE7C",
+            data: [],
+          },
+          {
+            label: "Incorrect items",
+            backgroundColor: "#187498",
+            data: [],
+          },
+          {
+            label: "Stared items",
+            backgroundColor: "#F9D923",
+            data: [],
+          },
+        ]
+      userStatistics.forEach((statistic) => {
+        if (!statistic) return
+
+        labels.push(moment(statistic.date).format("MM/DD/YYYY"))
+        datasets[AchievementChartOrderIndex.LearntItems].data.push(statistic.interactions.show || 0)
+        datasets[AchievementChartOrderIndex.IncorrectItems].data.push(
+          statistic.interactions.incorrect || Math.floor(statistic.interactions.show / 4) // TODO: Hard-code, fix the logic.
+        )
+        datasets[AchievementChartOrderIndex.StaredItems].data.push(statistic.interactions.star || 0)
+      })
+
+      setUserStatistics({ labels, datasets })
+      setSetsStatistics(setStatistics)
+    } catch (error) {
+      notification["error"]({
+        message: i18n("error"),
+        description: i18n("unexpected_error_message"),
+        duration: null,
+      })
+    }
+  }
+
   useEffect(() => {
     user && onPageLoaded()
   }, [http, user])
-  useEffect(() => profileUser && setSetsInfo(), [selectedTab, profileUser])
+  useEffect(() => {
+    profileUser && (selectedTab !== "myAchievement" ? setSetsInfo() : setAchievementInfo())
+  }, [selectedTab, profileUser])
 
   return (
     <UserProfileContext.Provider value={{ user: profileUser, onTabChanged }}>
@@ -133,7 +190,47 @@ const UserProfilePage = (props: any) => {
         <UserProfileSider width={250} path={""} />
         <Layout style={{ paddingLeft: 24, marginTop: -12 }}>
           <Content>
-            {totalSetsCount ? (
+            {selectedTab === "myAchievement" ? (
+              <div className="top-12px">
+                {setsStatistics && (
+                  <Card hoverable loading={isLoading} className="completed-info--stats ">
+                    <Row gutter={[16, 0]}>
+                      <Col className="gutter-row" span={8}>
+                        <Statistic
+                          title={i18n("popup_stats_sets")}
+                          value={setsStatistics?.subscribedSetsCount}
+                          prefix={<BookOutlined />}
+                        />
+                      </Col>
+                      <Col className="gutter-row" span={8}>
+                        <Statistic
+                          title={i18n("common_items")}
+                          value={setsStatistics?.learntItemsCount}
+                          prefix={<OrderedListOutlined />}
+                          suffix={`/ ${formatNumber(setsStatistics?.totalItemsCount)}`}
+                        />
+                      </Col>
+                      {/* TODO: remove mock tree data */}
+                      <Col className="gutter-row" span={8}>
+                        <Statistic
+                          title={i18n("popup_stats_trees_plant")}
+                          value={2}
+                          prefix={<Icon component={TreeIcon} />}
+                        />
+                      </Col>
+                    </Row>
+                  </Card>
+                )}
+                {userStatistics && (
+                  <>
+                    <Typography.Title level={3} className="top-8px">
+                      {i18n("my_space_how_changed")}
+                    </Typography.Title>
+                    <AchievementChart statistics={userStatistics} />
+                  </>
+                )}
+              </div>
+            ) : totalSetsCount ? (
               <InfiniteScroll
                 next={() => {}}
                 dataLength={totalSetsCount}
