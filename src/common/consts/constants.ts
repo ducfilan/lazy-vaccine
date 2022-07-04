@@ -249,6 +249,33 @@ export const InjectionTargets = {
       type: InjectTypes.FixedPosition,
     } as InjectionTarget
   ],
+  RedditHomePage: [
+    {
+      rate: 0.1,
+      selector: ".rpBJOHq2PR60pnwJlUyP0",
+      type: InjectTypes.DynamicGenerated,
+      newGeneratedElementSelector: "div",
+      siblingSelector: ".scrollerItem",
+      strict: true,
+    } as InjectionTarget,
+    {
+      rate: 1,
+      selector: "._1vYrJH5uc57mZQJPN4l34E",
+      type: InjectTypes.FixedPosition,
+    } as InjectionTarget,
+    {
+      rate: 1,
+      selector: "#TrendingPostsContainer",
+      type: InjectTypes.FixedPosition,
+    } as InjectionTarget
+  ],
+  RedditCommentPage: [
+    {
+      rate: 1,
+      selector: "#overlayScrollContainer ._1vYrJH5uc57mZQJPN4l34E",
+      type: InjectTypes.FixedPosition,
+    } as InjectionTarget
+  ],
 }
 
 export const RegexYoutubeHomePage = /^https:\/\/(www\.)*youtube\.com\/{0,1}.*$/
@@ -260,6 +287,8 @@ export const RegexFacebookGaming = /^https:\/\/(www\.)*facebook\.com\/gaming{0,1
 export const RegexGoogleHomePage = /^https:\/\/(www\.)*google\.com*(\.\w*)*\/{0,1}.*$/
 export const RegexTwitterHomePage = /^https:\/\/(www\.)*twitter\.com\/home\/{0,1}.*$/
 export const RegexTwitterPostPage = /^https:\/\/(www\.)*twitter\.com\/.*?\/status\/\d+.*$/
+export const RegexRedditCommentPage = /^https:\/\/(www\.)*reddit\.com\/r\/.*?\/comments\/.*$/
+export const RegexRedditHomePage = /^https:\/\/(www\.)*reddit\.com\/{0,1}.*$/
 
 export const InteractionSubscribe = "subscribe"
 export const InteractionLike = "like"

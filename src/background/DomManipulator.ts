@@ -1,4 +1,4 @@
-import { RegexYoutubeHomePage, RegexYoutubeVideoView, RegexFacebookHomePage, SupportingPages, i18n, RegexGoogleHomePage, RegexTwitterHomePage, RegexTwitterPostPage, RegexFacebookWatch, RegexFacebookGaming } from "@/common/consts/constants"
+import { RegexYoutubeHomePage, RegexYoutubeVideoView, RegexFacebookHomePage, SupportingPages, i18n, RegexGoogleHomePage, RegexTwitterHomePage, RegexTwitterPostPage, RegexFacebookWatch, RegexFacebookGaming, RegexRedditHomePage, RegexRedditCommentPage } from "@/common/consts/constants"
 
 let _getConditionalCallback = function (selector: string, callback: Function) {
   return function (this: Element, e: any) {
@@ -83,6 +83,14 @@ export function hrefToSiteName(href: string): string {
 
   if (RegExp(RegexTwitterHomePage).test(href)) {
     return SupportingPages.twitter.title
+  }
+
+  if (RegExp(RegexRedditCommentPage).test(href)) {
+    return SupportingPages.reddit.title
+  }
+
+  if (RegExp(RegexRedditHomePage).test(href)) {
+    return SupportingPages.reddit.title
   }
 
   throw new Error("not supporting site")
