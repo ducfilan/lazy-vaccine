@@ -41,6 +41,7 @@ async function mapItemTemplateValues(item: SetInfoItem): Promise<KeyValuePair[]>
       break
   }
 
+  item.itemId = item._id
   return Object.entries(item).map(([key, value]) => ({ key, value } as KeyValuePair))
 }
 

@@ -4,17 +4,33 @@ import { generateTemplateExtraValues, toTemplateValues } from "./templateHelpers
 import { SetInfo, SetInfoItem } from "@/common/types/types"
 import { sendInteractItemMessage, sendSetLocalSettingMessage } from "./messageSenders"
 import {
+  ItemsInteractionAnswerCorrect,
+  ItemsInteractionAnswerIncorrect,
+  ItemsInteractionFlip,
   ItemsInteractionForcedDone,
   ItemsInteractionIgnore,
   ItemsInteractionNext,
+  ItemsInteractionPrev,
   ItemsInteractionStar,
   ItemTypes,
 } from "@/common/consts/constants"
 import { getTemplate } from "@/background/PageInjector"
-import { generateNumbersArray, shuffleArray } from "@/common/utils/arrayUtils"
+import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
 
 export function registerFlipCardEvent() {
-  addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--content", (e: Event) => {
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card .card--content", (e: Event) => {
+    const cardFace = e.target as HTMLElement
+    const wrapperElement: HTMLElement | null = cardFace.closest(".lazy-vaccine")
+
+    sendInteractItemMessage(
+      wrapperElement?.dataset["setId"]!,
+      wrapperElement?.dataset["itemId"]!,
+      ItemsInteractionFlip
+    ).catch((error) => {
+      // TODO: handle error case.
+      console.error(error)
+    })
+
     e.stopPropagation()
 
     const cardElement = e.target as Element
@@ -163,21 +179,18 @@ export function registerPrevItemEvent(
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--prev-button", async (e: Event) => {
     e.stopPropagation()
 
-    if (e.isTrusted) {
-      const currentItem = itemGetter()
-      if (!currentItem) return // TODO: Notice problem.
-
-      sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext).catch((error) => {
-        // TODO: handle error case.
-        console.error(error)
-      })
-    }
-
     const prevButton = e.target as HTMLElement
     const wrapperElement: HTMLElement | null = prevButton.closest(".lazy-vaccine")
 
     const prevItem = prevItemGetter()
     if (!prevItem) return
+
+    if (e.isTrusted) {
+      sendInteractItemMessage(prevItem.setId, prevItem._id, ItemsInteractionPrev).catch((error) => {
+        // TODO: handle error case.
+        console.error(error)
+      })
+    }
 
     const currentSet = setInfo()
     if (!currentSet) throw new Error("cannot get set")
@@ -328,11 +341,34 @@ export function registerCheckAnswerEvent() {
     e.stopPropagation()
 
     const checkBtn = e.target as Element
-    const wrapperElement: HTMLElement | null = checkBtn.closest(".qna-card-wrapper")
-    const answerElements = wrapperElement?.querySelectorAll(".answer-btn")
+    const wrapperElement: HTMLElement = checkBtn.closest(".lazy-vaccine")!
+    const contentWrapperElement: HTMLElement | null = checkBtn.closest(".qna-card-wrapper")
+    const answerElements = contentWrapperElement?.querySelectorAll(".answer-btn")
 
-    const answersData = wrapperElement?.getAttribute("data-answers") || ""
+    const answersData = contentWrapperElement?.getAttribute("data-answers") || ""
     const answers = JSON.parse(decodeBase64(answersData))
+
+    const selectedAnswers = Array.from(answerElements || [])
+      .filter((answer) => answer.classList.contains("selected"))
+      .map((answer) => answer.innerHTML)
+    const correctAnswers = answers.filter((answer: any) => answer.isCorrect).map((answer: any) => answer.answer)
+
+    const isAnsweredCorrect = isArraysEqual(selectedAnswers, correctAnswers)
+    const isAnswered = wrapperElement.dataset.answered === "true"
+
+    !isAnswered && 
+    wrapperElement.dataset.setid &&
+      wrapperElement.dataset.itemid &&
+      sendInteractItemMessage(
+        wrapperElement.dataset.setid!,
+        wrapperElement.dataset.itemid!,
+        isAnsweredCorrect ? ItemsInteractionAnswerCorrect : ItemsInteractionAnswerIncorrect
+      ).then(() => {
+        wrapperElement.dataset.answered = "true"
+      }).catch((error) => {
+        // TODO: handle error case.
+        console.error(error)
+      })
 
     answerElements?.forEach((answer, idx) => {
       if (!answers) return

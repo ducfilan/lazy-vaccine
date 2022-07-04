@@ -299,11 +299,13 @@ export const ColorPrimary = "#12b886"
 
 export const ItemsInteractionShow = 'show'
 export const ItemsInteractionNext = 'next'
+export const ItemsInteractionPrev = 'prev'
 export const ItemsInteractionIgnore = 'ignore'
 export const ItemsInteractionForcedDone = 'forced-done'
 export const ItemsInteractionAnswerCorrect = 'answer-correct'
 export const ItemsInteractionAnswerIncorrect = 'answer-incorrect'
 export const ItemsInteractionStar = 'star'
+export const ItemsInteractionFlip = 'flip'
 
 export const AchievementChartOrderIndex = {
   LearntItems: 0,

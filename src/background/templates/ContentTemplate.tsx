@@ -9,7 +9,7 @@ import { CardInteraction } from "./common/CardInteraction"
 
 export const ContentTemplate = () => {
   return (
-    <div className="lazy-vaccine">
+    <div className="lazy-vaccine" data-setId=":setId" data-itemId=":itemId">
       <DisclaimerInfo />
       <Popover
         top={20}
