@@ -112,6 +112,10 @@ export const SupportingPages: { [brandName: string]: { key: string, title: strin
     key: "pinterest",
     title: "Pinterest",
   },
+  messenger: {
+    key: "messenger",
+    title: "FB Messenger",
+  },
 }
 
 export const CreateSetDescriptionMaxLength = 250
@@ -276,6 +280,13 @@ export const InjectionTargets = {
       type: InjectTypes.FixedPosition,
     } as InjectionTarget
   ],
+  FacebookMessengerHomePage: [
+    {
+      rate: 1,
+      selector: "[role=navigation] > div:first-child > div:first-child > div:first-child > div:nth-child(2)",
+      type: InjectTypes.FixedPosition,
+    } as InjectionTarget
+  ],
 }
 
 export const RegexYoutubeHomePage = /^https:\/\/(www\.)*youtube\.com\/{0,1}.*$/
@@ -289,6 +300,7 @@ export const RegexTwitterHomePage = /^https:\/\/(www\.)*twitter\.com\/home\/{0,1
 export const RegexTwitterPostPage = /^https:\/\/(www\.)*twitter\.com\/.*?\/status\/\d+.*$/
 export const RegexRedditCommentPage = /^https:\/\/(www\.)*reddit\.com\/r\/.*?\/comments\/.*$/
 export const RegexRedditHomePage = /^https:\/\/(www\.)*reddit\.com\/{0,1}.*$/
+export const RegexFacebookMessengerHomePage = /^https:\/\/(www\.)*messenger\.com\/{0,1}.*$/
 
 export const InteractionSubscribe = "subscribe"
 export const InteractionLike = "like"

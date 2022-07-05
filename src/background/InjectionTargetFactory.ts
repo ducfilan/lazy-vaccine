@@ -1,4 +1,4 @@
-import { InjectionTargets, RegexFacebookGaming, RegexFacebookHomePage, RegexFacebookWatch, RegexGoogleHomePage, RegexRedditCommentPage, RegexRedditHomePage, RegexTwitterHomePage, RegexTwitterPostPage, RegexYoutubeHomePage, RegexYoutubeSearchResults, RegexYoutubeVideoView } from "@/common/consts/constants"
+import { InjectionTargets, RegexFacebookGaming, RegexFacebookHomePage, RegexFacebookMessengerHomePage, RegexFacebookWatch, RegexGoogleHomePage, RegexRedditCommentPage, RegexRedditHomePage, RegexTwitterHomePage, RegexTwitterPostPage, RegexYoutubeHomePage, RegexYoutubeSearchResults, RegexYoutubeVideoView } from "@/common/consts/constants"
 import { InjectionTarget } from "@/common/types/types"
 
 export default class InjectionTargetFactory {
@@ -47,6 +47,10 @@ export default class InjectionTargetFactory {
 
     if (RegExp(RegexRedditHomePage).test(this.href)) {
       return InjectionTargets.RedditHomePage
+    }
+
+    if (RegExp(RegexFacebookMessengerHomePage).test(this.href)) {
+      return InjectionTargets.FacebookMessengerHomePage
     }
 
     return []

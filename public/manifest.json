@@ -43,6 +43,7 @@
         "https://*.facebook.com/*",
         "https://*.twitter.com/*",
         "https://*.reddit.com/*",
+        "https://*.messenger.com/*",
         "https://*.google.com/*",
         "https://*.google.ad/*",
         "https://*.google.ae/*",
@@ -235,7 +236,9 @@
         "https://*.google.cat/*"
       ],
       "js": [
-        "content.js"
+        "content.js",
+        "124.js",
+        "770.js"
       ],
       "run_at": "document_end"
     }
