@@ -4,6 +4,8 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CopyPlugin = require("copy-webpack-plugin");
 const DotenvPlugin = require("dotenv-webpack");
+const TerserPlugin = require("terser-webpack-plugin");
+
 
 const path = require("path");
 
@@ -120,5 +122,11 @@ module.exports = (_, { mode }) => {
         process: 'process/browser',
       }),
     ],
+    optimization: {
+      minimize: true,
+      minimizer: [new TerserPlugin({
+        extractComments: false,
+      })],
+    },
   };
 }
