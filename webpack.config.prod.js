@@ -49,6 +49,9 @@ module.exports = (_, { mode }) => {
         {
           test: /\.(png|jpg|gif|svg)$/i,
           type: "asset/resource",
+          generator: {
+            filename: 'static/[hash][ext][query]'
+          },
           exclude: [
             path.join(__dirname, "src/images/ui/fa"),
             path.join(__dirname, "src/images/ui/fa/brands"),
@@ -58,6 +61,9 @@ module.exports = (_, { mode }) => {
         {
           test: /\.svg$/,
           use: ["@svgr/webpack"],
+          generator: {
+            filename: 'static/[hash][ext][query]'
+          },
           include: [
             path.join(__dirname, "src/images/ui/flags"),
             path.join(__dirname, "src/images/ui/fa"),
@@ -126,6 +132,13 @@ module.exports = (_, { mode }) => {
       minimize: true,
       minimizer: [new TerserPlugin({
         extractComments: false,
+        parallel: true,
+        terserOptions: {
+          ecma: 6,
+          output: {
+            ascii_only: true
+          },
+        },
       })],
     },
   };
