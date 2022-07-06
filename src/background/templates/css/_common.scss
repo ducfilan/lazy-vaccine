@@ -78,7 +78,7 @@ $black: #000;
   }
 
   .next-prev-buttons--wrapper {
-    height: 300px;
+    height: calc(100% - 60px);
     position: absolute;
     top: 0;
     width: 100%;
