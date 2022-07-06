@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { LocalStorageKeyPrefix } from "@consts/constants"
-import { addDuration } from "../utils/stringUtils"
+import { addDuration } from "@/common/utils/stringUtils"
 
 /**
  * Local storage hook

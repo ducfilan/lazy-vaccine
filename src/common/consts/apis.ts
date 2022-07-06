@@ -1,3 +1,5 @@
+import { StaticApiBaseUrl } from "@consts/constants"
+
 const Apis = {
   categories: (langCode: string) => `/categories?lang=${langCode}`,
   getSetsInCategory: (categoryId: string, skip: number, limit: number) => `/categories/${categoryId}/sets?skip=${skip}&limit=${limit}`,
@@ -16,7 +18,8 @@ const Apis = {
   itemsInteractions: (beginDate: string, endDate: string) => `items-statistics?beginDate=${beginDate}&endDate=${endDate}`,
   setsInteractions: () => `sets-statistics`,
   uploadTestResult: (setId: string) => `/interactions/${setId}/upload-result`,
-  getMissions: '/missions'
+  getMissions: "/missions",
+  getInjectionTargets: `${StaticApiBaseUrl}/injection-targets.json`,
 }
 
 export default Apis

@@ -1,4 +1,4 @@
-import { Http } from "../facades/axiosFacade"
+import { Http } from "@facades/axiosFacade"
 import { SearchSetsResponse, SetInfo, SetsInCategoryResponse, TestResult, TopSetsResponse } from "@/common/types/types"
 import { AxiosResponse } from "axios"
 import Apis from "@consts/apis"

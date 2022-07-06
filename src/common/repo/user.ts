@@ -2,8 +2,8 @@ import { AxiosResponse } from "axios"
 import { SetInfo, SetStatisticsResponse, User, UserInteractionSetResponse, UserInteractionSetsResponse, UserStatisticsResponse } from "@/common/types/types"
 import Apis from "@consts/apis"
 import StatusCode from "@consts/statusCodes"
-import { Http } from "../facades/axiosFacade"
-import { InteractionSubscribe, InteractionLike, InteractionDislike } from "../consts/constants"
+import { Http } from "@facades/axiosFacade"
+import { InteractionSubscribe, InteractionLike, InteractionDislike } from "@consts/constants"
 
 export async function getMyInfo(http: Http): Promise<User> {
   const response = await http.get<any, AxiosResponse<User>>(Apis.me)

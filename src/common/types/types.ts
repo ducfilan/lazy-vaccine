@@ -201,6 +201,8 @@ export type SetStatisticsResponse = {
   learntItemsCount: number,
 }
 
+export type InjectionTargetsResponse = { Title: string, MatchPattern: string; Targets: InjectionTarget[], Order: number }[]
+
 export type TestResult = {
   result: {
     total: number,

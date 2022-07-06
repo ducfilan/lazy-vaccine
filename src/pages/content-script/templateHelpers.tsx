@@ -17,7 +17,7 @@ export const toTemplateValues = async (
 
   const itemKeyValue = await mapItemTemplateValues(item)
   let otherKeyValue = Object.entries(otherKeyValueItems).map(([key, value]) => ({ key, value } as KeyValuePair))
-  otherKeyValue = [...otherKeyValue, { key: "website", value: hrefToSiteName(getHref()) }]
+  otherKeyValue = [...otherKeyValue, { key: "website", value: await hrefToSiteName(getHref()) }]
 
   return [...itemKeyValue, ...otherKeyValue]
 }

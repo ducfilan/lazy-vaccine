@@ -1,4 +1,4 @@
-import { InjectionTargets, RegexFacebookGaming, RegexFacebookHomePage, RegexFacebookMessengerHomePage, RegexFacebookWatch, RegexGoogleHomePage, RegexRedditCommentPage, RegexRedditHomePage, RegexTwitterHomePage, RegexTwitterPostPage, RegexYoutubeHomePage, RegexYoutubeSearchResults, RegexYoutubeVideoView } from "@/common/consts/constants"
+import { getInjectionTargets } from "@/common/repo/injection-targets"
 import { InjectionTarget } from "@/common/types/types"
 
 export default class InjectionTargetFactory {
@@ -8,49 +8,13 @@ export default class InjectionTargetFactory {
     this.href = href
   }
 
-  getTargets(): InjectionTarget[] {
-    if (RegExp(RegexYoutubeVideoView).test(this.href)) {
-      return InjectionTargets.YoutubeVideoView
-    }
+  async getTargets(): Promise<InjectionTarget[]> {
+    const targets = await getInjectionTargets()
 
-    if (RegExp(RegexYoutubeHomePage).test(this.href)) {
-      return InjectionTargets.YoutubeHome
-    }
-
-    if (RegExp(RegexFacebookWatch).test(this.href)) {
-      return InjectionTargets.FacebookWatch
-    }
-
-    if (RegExp(RegexFacebookGaming).test(this.href)) {
-      return InjectionTargets.FacebookGaming
-    }
-
-    if (RegExp(RegexFacebookHomePage).test(this.href)) {
-      return InjectionTargets.FacebookHomePage
-    }
-
-    if (RegExp(RegexGoogleHomePage).test(this.href)) {
-      return InjectionTargets.GoogleHomePage
-    }
-
-    if (RegExp(RegexTwitterPostPage).test(this.href)) {
-      return InjectionTargets.TwitterPostPage
-    }
-
-    if (RegExp(RegexTwitterHomePage).test(this.href)) {
-      return InjectionTargets.TwitterHomePage
-    }
-
-    if (RegExp(RegexRedditCommentPage).test(this.href)) {
-      return InjectionTargets.RedditCommentPage
-    }
-
-    if (RegExp(RegexRedditHomePage).test(this.href)) {
-      return InjectionTargets.RedditHomePage
-    }
-
-    if (RegExp(RegexFacebookMessengerHomePage).test(this.href)) {
-      return InjectionTargets.FacebookMessengerHomePage
+    for (const target of targets) {
+      if (RegExp(target.MatchPattern).test(this.href)) {
+        return target.Targets
+      }
     }
 
     return []

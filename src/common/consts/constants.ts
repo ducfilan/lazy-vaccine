@@ -153,7 +153,8 @@ export const TestResultLevel = {
   Medium: 0.7,
 }
 
-export const StaticBaseUrl = "https://static.lazyvaccine.com"
+export const StaticBaseUrl = process.env.STATIC_ASSET_URL
+export const StaticApiBaseUrl = process.env.STATIC_API_BASE_URL
 
 export const InjectTypes = {
   FixedPosition: 1,
@@ -167,140 +168,6 @@ export const ChromeMessageTypeGetRandomSet = "get-random-set"
 export const ChromeMessageTypeInteractItem = "interact-item"
 export const ChromeMessageTypeSetLocalSetting = "set-local-setting"
 export const ChromeMessageTypeGetLocalSetting = "get-local-setting"
-
-export const InjectionTargets = {
-  YoutubeHome: [
-    {
-      rate: 1,
-      selector: "#primary",
-      type: InjectTypes.FixedPosition
-    } as InjectionTarget,
-    {
-      rate: 0.1,
-      selector: "#contents",
-      type: InjectTypes.DynamicGenerated,
-      siblingSelector: ".style-scope.ytd-rich-grid-row"
-    } as InjectionTarget
-  ],
-  YoutubeVideoView: [
-    {
-      rate: 1,
-      selector: "#secondary.ytd-watch-flexy",
-      type: InjectTypes.FixedPosition
-    } as InjectionTarget
-  ],
-  FacebookHomePage: [
-    {
-      rate: 0.2,
-      selector: "[role='feed']",
-      type: InjectTypes.DynamicGenerated,
-      newGeneratedElementSelector: "div",
-      siblingSelector: "div:first-child",
-      strict: true,
-    } as InjectionTarget,
-    {
-      rate: 1,
-      selector: "[role=complementary]",
-      type: InjectTypes.FixedPosition
-    } as InjectionTarget
-  ],
-  FacebookWatch: [
-    {
-      rate: 1,
-      selector: ".hybvsw6c.cjfnh4rs",
-      type: InjectTypes.FixedPosition
-    } as InjectionTarget
-  ],
-  FacebookGaming: [
-    {
-      rate: 1,
-      selector: ".hybvsw6c.cjfnh4rs",
-      type: InjectTypes.FixedPosition
-    } as InjectionTarget
-  ],
-  GoogleHomePage: [
-    {
-      rate: 1,
-      selector: ".o3j99.qarstb",
-      type: InjectTypes.FixedPosition,
-    } as InjectionTarget
-  ],
-  TwitterHomePage: [
-    {
-      rate: 0.1,
-      selector: "[data-testid=primaryColumn]",
-      type: InjectTypes.DynamicGenerated,
-      newGeneratedElementSelector: "[data-testId=cellInnerDiv]",
-      siblingSelector: "div:first-child",
-    } as InjectionTarget,
-    {
-      rate: 1,
-      selector: ".r-1yadl64.r-1ifxtd0.r-1udh08x",
-      type: InjectTypes.FixedPosition,
-    } as InjectionTarget
-  ],
-  TwitterPostPage: [
-    {
-      rate: 0.1,
-      selector: "[data-testid=primaryColumn]",
-      type: InjectTypes.DynamicGenerated,
-      newGeneratedElementSelector: "[data-testId=cellInnerDiv]",
-      siblingSelector: "div:first-child",
-    } as InjectionTarget,
-    {
-      rate: 1,
-      selector: ".r-1yadl64.r-1ifxtd0.r-1udh08x",
-      type: InjectTypes.FixedPosition,
-    } as InjectionTarget
-  ],
-  RedditHomePage: [
-    {
-      rate: 0.1,
-      selector: ".rpBJOHq2PR60pnwJlUyP0",
-      type: InjectTypes.DynamicGenerated,
-      newGeneratedElementSelector: "div",
-      siblingSelector: ".scrollerItem",
-      strict: true,
-    } as InjectionTarget,
-    {
-      rate: 1,
-      selector: "._1vYrJH5uc57mZQJPN4l34E",
-      type: InjectTypes.FixedPosition,
-    } as InjectionTarget,
-    {
-      rate: 1,
-      selector: "#TrendingPostsContainer",
-      type: InjectTypes.FixedPosition,
-    } as InjectionTarget
-  ],
-  RedditCommentPage: [
-    {
-      rate: 1,
-      selector: "#overlayScrollContainer ._1vYrJH5uc57mZQJPN4l34E",
-      type: InjectTypes.FixedPosition,
-    } as InjectionTarget
-  ],
-  FacebookMessengerHomePage: [
-    {
-      rate: 1,
-      selector: "[role=navigation] > div:first-child > div:first-child > div:first-child > div:nth-child(2)",
-      type: InjectTypes.FixedPosition,
-    } as InjectionTarget
-  ],
-}
-
-export const RegexYoutubeHomePage = /^https:\/\/(www\.)*youtube\.com\/{0,1}.*$/
-export const RegexYoutubeVideoView = /^https:\/\/(www\.)*youtube\.com\/watch\?v=.*$/
-export const RegexYoutubeSearchResults = /^https:\/\/(www\.)*youtube\.com\/results\?search_query=(.*)$/
-export const RegexFacebookHomePage = /^https:\/\/(www\.)*facebook\.com\/{0,1}.*$/
-export const RegexFacebookWatch = /^https:\/\/(www\.)*facebook\.com\/watch{0,1}.*$/
-export const RegexFacebookGaming = /^https:\/\/(www\.)*facebook\.com\/gaming{0,1}.*$/
-export const RegexGoogleHomePage = /^https:\/\/(www\.)*google\.com*(\.\w*)*\/{0,1}.*$/
-export const RegexTwitterHomePage = /^https:\/\/(www\.)*twitter\.com\/home\/{0,1}.*$/
-export const RegexTwitterPostPage = /^https:\/\/(www\.)*twitter\.com\/.*?\/status\/\d+.*$/
-export const RegexRedditCommentPage = /^https:\/\/(www\.)*reddit\.com\/r\/.*?\/comments\/.*$/
-export const RegexRedditHomePage = /^https:\/\/(www\.)*reddit\.com\/{0,1}.*$/
-export const RegexFacebookMessengerHomePage = /^https:\/\/(www\.)*messenger\.com\/{0,1}.*$/
 
 export const InteractionSubscribe = "subscribe"
 export const InteractionLike = "like"
