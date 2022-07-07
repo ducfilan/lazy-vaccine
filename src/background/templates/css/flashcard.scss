@@ -8,7 +8,6 @@ $white: #fff;
     transform-style: preserve-3d;
     cursor: pointer;
     position: relative;
-    height: 240px;
     z-index: 1;
 
     &.is-flipped {
@@ -23,6 +22,7 @@ $white: #fff;
       font-weight: bold;
       font-size: 40px;
       backface-visibility: hidden;
+      padding: 50px 0;
 
       p {
         padding: 0 44px;
