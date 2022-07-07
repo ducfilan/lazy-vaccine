@@ -4,6 +4,7 @@ import { generateTemplateExtraValues, toTemplateValues } from "./templateHelpers
 import { SetInfo, SetInfoItem } from "@/common/types/types"
 import { sendInteractItemMessage, sendSetLocalSettingMessage } from "./messageSenders"
 import {
+  InjectWrapperClassName,
   ItemsInteractionAnswerCorrect,
   ItemsInteractionAnswerIncorrect,
   ItemsInteractionFlip,
@@ -23,7 +24,7 @@ export function registerFlipCardEvent() {
     if (!cardFace.classList.contains("card--face")) {
       cardFace = cardFace.parentElement as HTMLElement
     }
-    const wrapperElement: HTMLElement = cardFace.closest(".lazy-vaccine")!
+    const wrapperElement: HTMLElement = cardFace.closest(InjectWrapperClassName)!
 
     sendInteractItemMessage(
       wrapperElement.dataset["setId"]!,
@@ -66,7 +67,7 @@ export function registerNextItemEvent(
     if (!nextItem) return // TODO: Notice problem.
 
     const nextButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = nextButton.closest(".lazy-vaccine")
+    const wrapperElement: HTMLElement | null = nextButton.closest(InjectWrapperClassName)
 
     const currentSet = setGetter()
     if (!currentSet) throw new Error("cannot get set")
@@ -186,7 +187,7 @@ export function registerPrevItemEvent(
     e.stopPropagation()
 
     const prevButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = prevButton.closest(".lazy-vaccine")
+    const wrapperElement: HTMLElement | null = prevButton.closest(InjectWrapperClassName)
 
     const prevItem = prevItemGetter()
     if (!prevItem) return
@@ -223,7 +224,7 @@ export function registerMorePopoverEvent() {
     e.stopPropagation()
 
     const moreButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = moreButton.closest(".lazy-vaccine")
+    const wrapperElement: HTMLElement | null = moreButton.closest(InjectWrapperClassName)
 
     toggleHiddenPopover(wrapperElement)
   })
@@ -237,7 +238,7 @@ export function registerNextSetEvent(preProcess: () => Promise<void>) {
     await preProcess()
 
     const nextSetButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = nextSetButton.closest(".lazy-vaccine")
+    const wrapperElement: HTMLElement | null = nextSetButton.closest(InjectWrapperClassName)
 
     toggleHiddenPopover(wrapperElement)
     clickNextItemButton(wrapperElement)
@@ -271,7 +272,7 @@ export function registerIgnoreEvent(
       })
 
     const ignoreButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = ignoreButton.closest(".lazy-vaccine")
+    const wrapperElement: HTMLElement | null = ignoreButton.closest(InjectWrapperClassName)
     clickNextItemButton(wrapperElement)
   })
 }
@@ -294,7 +295,7 @@ export function registerGotItemEvent(
       })
 
     const gotItemButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = gotItemButton.closest(".lazy-vaccine")
+    const wrapperElement: HTMLElement | null = gotItemButton.closest(InjectWrapperClassName)
     clickNextItemButton(wrapperElement)
   })
 }
@@ -347,7 +348,7 @@ export function registerCheckAnswerEvent() {
     e.stopPropagation()
 
     const checkBtn = e.target as Element
-    const wrapperElement: HTMLElement = checkBtn.closest(".lazy-vaccine")!
+    const wrapperElement: HTMLElement = checkBtn.closest(InjectWrapperClassName)!
     const contentWrapperElement: HTMLElement | null = checkBtn.closest(".qna-card-wrapper")
     const answerElements = contentWrapperElement?.querySelectorAll(".answer-btn")
 

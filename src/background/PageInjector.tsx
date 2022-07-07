@@ -2,6 +2,7 @@ import {
   FlashCardOptions,
   i18n,
   InjectTypes,
+  InjectWrapperClassName,
   ItemTypes,
   SettingKeyBackItem,
   SettingKeyFrontItem,
@@ -199,7 +200,8 @@ export default class PageInjector {
           const insertToChildren = this.newGeneratedElementSelector != "" && this.siblingSelector != ""
           if (insertToChildren) {
             const siblingNode = node.querySelector(this.siblingSelector)
-            siblingNode && insertBefore(htmlStringToHtmlNode(htmlString), siblingNode)
+            const similarNode = node.querySelector(InjectWrapperClassName)
+            !similarNode && siblingNode && insertBefore(htmlStringToHtmlNode(htmlString), siblingNode)
           }else {
             insertBefore(htmlStringToHtmlNode(htmlString), node)
           }

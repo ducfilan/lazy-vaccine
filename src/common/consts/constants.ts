@@ -203,3 +203,5 @@ export const FlashCardOptions: { [key: string]: string } = {
   "term": i18n("common_term"),
   "definition": i18n("common_definition"),
 }
+
+export const InjectWrapperClassName = ".lazy-vaccine"
