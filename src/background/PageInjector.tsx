@@ -47,6 +47,7 @@ export default class PageInjector {
   private parentSelector: string
   private newGeneratedElementSelectorParts: PageInjectorSiblingSelectorParts
   private siblingSelectorParts: PageInjectorSiblingSelectorParts
+  private newGeneratedElementSelector: string
   private siblingSelector: string
   private strict: boolean
   private waitTimeOutInMs: number
@@ -83,6 +84,8 @@ export default class PageInjector {
           id: "",
           attrs: [],
         } as PageInjectorSiblingSelectorParts)
+      
+    this.newGeneratedElementSelector = newGeneratedElementSelector || ""
     this.newGeneratedElementSelectorParts = newGeneratedElementSelector
       ? this.parseSelector(newGeneratedElementSelector)
       : this.siblingSelectorParts
@@ -193,8 +196,13 @@ export default class PageInjector {
         getTemplate(typeItem || "").then((htmlTemplate) => {
           const htmlString = formatString(htmlTemplate, templateValue)
 
-          const siblingNode = node.querySelector(this.siblingSelector)
-          insertBefore(htmlStringToHtmlNode(htmlString), siblingNode || node)
+          const insertToChildren = this.newGeneratedElementSelector != "" && this.siblingSelector != ""
+          if (insertToChildren) {
+            const siblingNode = node.querySelector(this.siblingSelector)
+            siblingNode && insertBefore(htmlStringToHtmlNode(htmlString), siblingNode)
+          }else {
+            insertBefore(htmlStringToHtmlNode(htmlString), node)
+          }
         })
       })
   }
