@@ -16,13 +16,11 @@ $white: #fff;
 
     .card--face {
       width: 100%;
-      height: 100%;
       background-color: $white;
       text-align: center;
       font-weight: bold;
       font-size: 40px;
       backface-visibility: hidden;
-      padding: 50px 0;
 
       p {
         padding: 0 44px;
@@ -33,6 +31,8 @@ $white: #fff;
         align-items: center;
         margin-block-start: 0;
         margin-block-end: 0;
+        max-height: 500px;
+        padding: 50px 0;
       }
     }
 

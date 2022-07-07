@@ -18,13 +18,16 @@ import { getTemplate } from "@/background/PageInjector"
 import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
 
 export function registerFlipCardEvent() {
-  addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card .card--content", (e: Event) => {
-    const cardFace = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = cardFace.closest(".lazy-vaccine")
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card .card--face", (e: Event) => {
+    let cardFace = e.target as HTMLElement
+    if (!cardFace.classList.contains("card--face")) {
+      cardFace = cardFace.parentElement as HTMLElement
+    }
+    const wrapperElement: HTMLElement = cardFace.closest(".lazy-vaccine")!
 
     sendInteractItemMessage(
-      wrapperElement?.dataset["setId"]!,
-      wrapperElement?.dataset["itemId"]!,
+      wrapperElement.dataset["setId"]!,
+      wrapperElement.dataset["itemId"]!,
       ItemsInteractionFlip
     ).catch((error) => {
       // TODO: handle error case.
@@ -33,8 +36,11 @@ export function registerFlipCardEvent() {
 
     e.stopPropagation()
 
-    const cardElement = e.target as Element
-    cardElement.closest(".flash-card-wrapper")?.classList.toggle("is-flipped")
+    const faceToDisplayClass = cardFace.classList.contains("card--face--front") ? ".card--face--back" : ".card--face--front"
+
+    cardFace.parentElement?.style.setProperty("height", cardFace.parentElement?.querySelector(faceToDisplayClass)?.clientHeight + "px")
+
+    cardFace.closest(".flash-card-wrapper")?.classList.toggle("is-flipped")
   })
 }
 
