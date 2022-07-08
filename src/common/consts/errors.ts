@@ -9,3 +9,9 @@ export class ParamError extends Error {
     super(message, ...args)
   }
 }
+
+export class NotSubscribedError extends Error {
+  constructor(message = "", ...args: []) {
+    super(message, ...args)
+  }
+}

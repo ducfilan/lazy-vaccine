@@ -282,7 +282,7 @@ export const CreateSetItemsForm = () => {
                     />
                   </Form.Item>
 
-                  <button
+                  <Button
                     className="button create-set-items--remove-button"
                     onClick={() => {
                       itemTypes[itemIndex] === ItemTypes.TermDef.value && setTermDefItemsCount(termDefItemsCount - 1)
@@ -292,7 +292,7 @@ export const CreateSetItemsForm = () => {
                     }}
                   >
                     <MinusCircleFilled />
-                  </button>
+                  </Button>
 
                   {(() => {
                     const itemType =

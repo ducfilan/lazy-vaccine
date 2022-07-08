@@ -1,5 +1,3 @@
-import { InjectionTarget } from "@/common/types/types"
-
 export const AppBasePath = "pages/lazy-vaccine.html#"
 
 export const AppPages = {
@@ -132,6 +130,12 @@ export const ItemTypes = {
   TermDef: { label: "Term - Definition", value: "term-def" },
   QnA: { label: "Question - Answers", value: "q&a" },
   Content: { label: "Content", value: "content" },
+}
+
+// Item types to use when cannot get the learning item.
+export const OtherItemTypes = {
+  NotLoggedIn: { value: "not-logged-in" },
+  NotSubscribed: { value: "not-subscribed" },
 }
 
 export const TabKeyCode = "Tab"

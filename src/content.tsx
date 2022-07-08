@@ -21,6 +21,7 @@ import {
   registerSelectAnswerEvent,
   registerCheckAnswerEvent,
   registerSelectEvent,
+  registerSuggestionSearchButtonClickEvent,
 } from "./pages/content-script/eventRegisters"
 import { getHref } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
@@ -30,12 +31,17 @@ import {
   ItemsInteractionIgnore,
   ItemsInteractionShow,
   ItemsInteractionStar,
+  OtherItemTypes,
 } from "./common/consts/constants"
 
 import "@/background/templates/css/_common.scss"
 import "@/background/templates/css/content.scss"
 import "@/background/templates/css/flashcard.scss"
 import "@/background/templates/css/QandA.scss"
+import "@/background/templates/css/suggest-subscribe.scss"
+
+import { NotSubscribedError } from "./common/consts/errors"
+import { hrefToSiteName } from "./background/DomManipulator"
 
 let randomItemIndexVisitMap: number[] = []
 let setInfo: SetInfo | null
@@ -43,6 +49,7 @@ let currentItemPointer = 0
 let itemsInPageInteractionMap: {
   [itemId: string]: string[]
 } = {}
+let havingSubscribedSets = false
 
 detectPageChanged(async () => {
   try {
@@ -62,15 +69,21 @@ registerFlashcardEvents()
 
 async function initValues() {
   try {
+    currentItemPointer = 0
+    havingSubscribedSets = false
+
     setInfo = await sendGetRandomSubscribedSetMessage()
     if (setInfo) {
       randomItemIndexVisitMap = shuffleArray(Array.from(Array(setInfo.items?.length || 0).keys()))
-      currentItemPointer = 0
+      havingSubscribedSets = true
       setInfo.itemsInteractions?.map((itemInteractions) => {
         itemsInPageInteractionMap[itemInteractions.itemId] = Object.keys(itemInteractions.interactionCount)
       })
     }
   } catch (error) {
+    if (error instanceof NotSubscribedError) {
+      havingSubscribedSets = false
+    }
     console.error(error)
   }
 }
@@ -93,6 +106,13 @@ async function injectCards() {
 }
 
 const randomTemplateValues = async (increaseOnCall: boolean = false) => {
+  if (!havingSubscribedSets) {
+    return [
+      { key: "type", value: OtherItemTypes.NotSubscribed.value },
+      { key: "website", value: await hrefToSiteName(getHref()) },
+    ]
+  }
+
   const item = getItemAtPointer(currentItemPointer)
   if (increaseOnCall) {
     currentItemPointer++
@@ -187,6 +207,8 @@ function registerFlashcardEvents() {
     await sendClearCachedRandomSetMessage()
     await initValues()
   })
+
+  registerSuggestionSearchButtonClickEvent()
 }
 
 /**

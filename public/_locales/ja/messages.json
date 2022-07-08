@@ -417,5 +417,14 @@
   },
   "test_set_encourage_test": {
     "message": "あなたはほとんどそれを成し遂げました！あなたはテストを恐れる必要はありません、そのテストはあなたを恐れる必要があります。幸運を！ ❤️"
+  },
+  "suggestion_card_go_to_home": {
+    "message": "ホームページへ"
+  },
+  "suggestion_card_search_placeholder": {
+    "message": "何を勉強したいですか？"
+  },
+  "suggestion_card_suggestion_text": {
+    "message": "学習セットを登録していません。 学習を開始するためにもう1つのステップ、セットを見つけて登録しましょう！"
   }
 }

@@ -4,6 +4,8 @@ import { generateTemplateExtraValues, toTemplateValues } from "./templateHelpers
 import { SetInfo, SetInfoItem } from "@/common/types/types"
 import { sendInteractItemMessage, sendSetLocalSettingMessage } from "./messageSenders"
 import {
+  AppBasePath,
+  AppPages,
   InjectWrapperClassName,
   ItemsInteractionAnswerCorrect,
   ItemsInteractionAnswerIncorrect,
@@ -17,6 +19,7 @@ import {
 } from "@/common/consts/constants"
 import { getTemplate } from "@/background/PageInjector"
 import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
+import { redirectToUrl } from "@/common/utils/domUtils"
 
 export function registerFlipCardEvent() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card .card--face", (e: Event) => {
@@ -37,9 +40,14 @@ export function registerFlipCardEvent() {
 
     e.stopPropagation()
 
-    const faceToDisplayClass = cardFace.classList.contains("card--face--front") ? ".card--face--back" : ".card--face--front"
+    const faceToDisplayClass = cardFace.classList.contains("card--face--front")
+      ? ".card--face--back"
+      : ".card--face--front"
 
-    cardFace.parentElement?.style.setProperty("height", cardFace.parentElement?.querySelector(faceToDisplayClass)?.clientHeight + "px")
+    cardFace.parentElement?.style.setProperty(
+      "height",
+      cardFace.parentElement?.querySelector(faceToDisplayClass)?.clientHeight + "px"
+    )
 
     cardFace.closest(".flash-card-wrapper")?.classList.toggle("is-flipped")
   })
@@ -363,19 +371,21 @@ export function registerCheckAnswerEvent() {
     const isAnsweredCorrect = isArraysEqual(selectedAnswers, correctAnswers)
     const isAnswered = wrapperElement.dataset.answered === "true"
 
-    !isAnswered && 
-    wrapperElement.dataset.setid &&
+    !isAnswered &&
+      wrapperElement.dataset.setid &&
       wrapperElement.dataset.itemid &&
       sendInteractItemMessage(
         wrapperElement.dataset.setid!,
         wrapperElement.dataset.itemid!,
         isAnsweredCorrect ? ItemsInteractionAnswerCorrect : ItemsInteractionAnswerIncorrect
-      ).then(() => {
-        wrapperElement.dataset.answered = "true"
-      }).catch((error) => {
-        // TODO: handle error case.
-        console.error(error)
-      })
+      )
+        .then(() => {
+          wrapperElement.dataset.answered = "true"
+        })
+        .catch((error) => {
+          // TODO: handle error case.
+          console.error(error)
+        })
 
     answerElements?.forEach((answer, idx) => {
       if (!answers) return
@@ -410,4 +420,18 @@ export function registerSelectEvent() {
     ;(wrapper?.querySelector(".sBtn-text") as HTMLElement).innerText = selectedOptionLabel
     wrapper?.classList.remove("active")
   })
+}
+
+export function registerSuggestionSearchButtonClickEvent() {
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `.lazy-vaccine .suggestion-card .ant-input-search-button`,
+    async (e: Event) => {
+      const button = e.target as HTMLInputElement
+      const keyword = (button.closest(".ant-input-wrapper")?.querySelector(".ant-input") as HTMLInputElement).value
+
+      redirectToUrl(`${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`)
+    }
+  )
 }

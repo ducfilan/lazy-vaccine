@@ -4,6 +4,7 @@ import Apis from "@consts/apis"
 import StatusCode from "@consts/statusCodes"
 import { Http } from "@facades/axiosFacade"
 import { InteractionSubscribe, InteractionLike, InteractionDislike } from "@consts/constants"
+import { NotSubscribedError } from "../consts/errors"
 
 export async function getMyInfo(http: Http): Promise<User> {
   const response = await http.get<any, AxiosResponse<User>>(Apis.me)
@@ -27,7 +28,7 @@ export async function getUserInteractionSets(http: Http, userId: string, interac
   const response = await http.get<any, AxiosResponse<UserInteractionSetsResponse>>(Apis.getUserInteractionSets(userId, interaction, skip, limit));
 
   const sets = response?.data
-  if (!sets) throw new Error("cannot get user interaction sets")
+  if (!sets) throw new NotSubscribedError("cannot get user interaction sets")
 
   sets.sets.forEach(({ set, actions }) => {
     set.isSubscribed = actions?.includes(InteractionSubscribe)
@@ -44,7 +45,7 @@ export async function getUserInteractionRandomSet(http: Http, interaction: strin
   const response = await http.get<any, AxiosResponse<UserInteractionSetResponse>>(Apis.randomSet(interaction))
 
   const { actions, set } = response?.data
-  if (!set) throw new Error("cannot get user interaction sets")
+  if (!set) throw new NotSubscribedError("cannot get user interaction sets")
 
   set.isSubscribed = actions?.includes(InteractionSubscribe)
   set.isLiked = actions?.includes(InteractionLike)
