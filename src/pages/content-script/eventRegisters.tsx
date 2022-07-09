@@ -434,4 +434,19 @@ export function registerSuggestionSearchButtonClickEvent() {
       redirectToUrl(`${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`)
     }
   )
+
+  addDynamicEventListener(
+    document.body,
+    "keydown",
+    `.lazy-vaccine .suggestion-card .ant-input`,
+    async (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        const keyword = (e.target as HTMLInputElement).value
+
+        redirectToUrl(
+          `${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`
+        )
+      }
+    }
+  )
 }
