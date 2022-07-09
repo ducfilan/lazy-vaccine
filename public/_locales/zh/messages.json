@@ -1,0 +1,430 @@
+{
+  "appName": {
+    "message": "Lazy Vaccine Platform",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "帮助减少在线分心，推动人们重新学习并激励人们分享知识",
+    "description": "The description of the application"
+  },
+  "error": {
+    "message": "误差",
+  },
+  "unexpected_error_message": {
+    "message": "发生意外错误😢！ 请稍后再试...",
+  },
+  "data_saved_message": {
+    "message": "不用担心，您的数据已保存，以后可以轻松恢复！",
+  },
+  "login_google": {
+    "message": "使用 Google 登录",
+  },
+  "login_failed_message": {
+    "message": "对不起(｡╯︵╰｡)！ 发生意外错误！ 请现在再试一次！",
+  },
+  "logout": {
+    "message": "登出",
+  },
+  "popup_introduce_first": {
+    "message": "我们在互联网上花费了很多时间。\n是的，没有任何借口。 但是，自从我们有了时钟以来，一天仍然是 24 小时。 从现在开始，我将帮助您更有效地使用互联网。\n只是尝试看看！ 😊",
+  },
+  "popup_introduce_choose_lang_codes": {
+    "message": "很高兴认识你，:user_name！ 🎉 我看到你的第一语言是:first_language，你想用其他语言显示内容吗？",
+  },
+  "popup_introduce_choose_pages": {
+    "message": "伟大的！ 🤩 最后一步...\n您可以选择您最常访问的网站开始。 而已！",
+  },
+  "popup_select_a_language": {
+    "message": "选择语言",
+  },
+  "popup_stats_sets": {
+    "message": "组数",
+  },
+  "popup_stats_trees_plant": {
+    "message": "种树",
+  },
+  "popup_stats_settings": {
+    "message": "设定",
+  },
+  "popup_stats_more_sets": {
+    "message": "更多套装",
+  },
+  "popup_stats_full_stats": {
+    "message": "完整统计",
+  },
+  "popup_stats_my_profile": {
+    "message": "我的简介",
+  },
+  "create_set_button": {
+    "message": "创建一组",
+  },
+  "check_result_button": {
+    "message": "检查我的结果",
+  },
+  "create_set_search_place_holder": {
+    "message": "搜索您想学习的任何内容...",
+  },
+  "create_set_page_title": {
+    "message": "创建一个新组",
+  },
+  "edit_set_page_title": {
+    "message": "编辑组",
+  },
+  "create_set_field_name": {
+    "message": "名称",
+  },
+  "create_set_field_name_placeholder": {
+    "message": "组的标题",
+  },
+  "create_set_field_description": {
+    "message": "描述",
+  },
+  "create_set_request_category": {
+    "message": "单击此处请求新类别",
+  },
+  "create_set_field_tags": {
+    "message": "关键词",
+  },
+  "create_set_field_tags_extra": {
+    "message": "例如。 雅思、西班牙语语法、AWS 关联模拟考试",
+  },
+  "create_set_field_tags_placeholder": {
+    "message": "与集合相关的输入标签",
+  },
+  "create_set_next_button": {
+    "message": "接下来，添加组项目",
+  },
+  "create_set_help_text_1_title": {
+    "message": "什么是组？",
+  },
+  "create_set_help_text_1_content": {
+    "message": "- 要记住的个人事实的快速列表\n- 与您的同学/同事分享共同内容\n- 与社区分享精彩的教材！",
+  },
+  "create_set_help_text_2_title": {
+    "message": "一套好套装的小贴士",
+  },
+  "create_set_help_text_2_content": {
+    "message": "- 简短但具有描述性的标题\n- 添加相关标签以帮助其他人更轻松地找到您的系列\n- 选择最适合您的系列内容的正确类别",
+  },
+  "create_set_help_text_3_title": {
+    "message": "还在迷茫吗？",
+  },
+  "create_set_help_text_3_content": {
+    "message": "- 这个简短的 youtube 视频肯定会对您有所帮助！",
+  },
+  "create_set_add_item": {
+    "message": "添加项目（按 TAB 键）",
+  },
+  "create_set_term_placeholder": {
+    "message": "术语",
+  },
+  "create_set_definition_placeholder": {
+    "message": "定义",
+  },
+  "create_set_question_placeholder": {
+    "message": "问题",
+  },
+  "create_set_answer_placeholder": {
+    "message": "答案",
+  },
+  "create_set_answer_validation_warning": {
+    "message": "至少有2个答案！",
+  },
+  "create_set_items_validation_warning": {
+    "message": "抱歉，我们需要至少 2 个项目才能创建一个组！ 请添加更多...🥺",
+  },
+  "create_set_answer_check_guide": {
+    "message": "检查正确答案！",
+  },
+  "create_set_content_label": {
+    "message": "内容",
+  },
+  "create_set_content_placeholder": {
+    "message": "将您的文本分隔为多个小内容项",
+  },
+  "create_set_add_answer": {
+    "message": "添加答案",
+  },
+  "create_set_check_captcha_warning": {
+    "message": "请检查一下好吗？",
+  },
+  "pageSetsListTitle": {
+    "message": "组列表",
+  },
+  "pageSetDetailTitle": {
+    "message": "组细节",
+  },
+  "pageCreateSetItemsTitle": {
+    "message": "将项目添加到组",
+  },
+  "create_set_field_description_placeholder": {
+    "message": "组的详细信息",
+  },
+  "create_set_create_button": {
+    "message": "创建一组",
+  },
+  "create_set_having_unsaved_set_warning": {
+    "message": "您有未保存的组，您要恢复它吗？",
+  },
+  "create_set_content_language": {
+    "message": "内容语言",
+  },
+  "create_set_definition_language": {
+    "message": "定义语言",
+  },
+  "create_set_set_picture": {
+    "message": "组的照片",
+  },
+  "set_detail_sub_header_base_part": {
+    "message": "我们有 :item_count 个项目，",
+  },
+  "set_detail_sub_header_part_1": {
+    "message": "内容在 <span>:from_language</span>",
+  },
+  "set_detail_share_me": {
+    "message": "分享这个",
+  },
+  "set_detail_copy_link": {
+    "message": "复制链接",
+  },
+  "set_detail_sub_header_part_2": {
+    "message": ", 目标为 <span>:to_language</span>",
+  },
+  "set_detail_edit_set": {
+    "message": "编辑组",
+  },
+  "set_detail_answers": {
+    "message": "答案",
+  },
+  "set_detail_no_desc": {
+    "message": "暂无说明...",
+  },
+  "set_detail_test_set": {
+    "message": "测试这套",
+  },
+  "category_sets_total": {
+    "message": ":total套在:category_name",
+  },
+  "search_result_not_found": {
+    "message": "您的搜索 - :keyword - 不匹配任何文档。\n建议：\n - 确保所有单词拼写正确。\n- 尝试不同的关键字。",
+  },
+  "home_category_lookup": {
+    "message": "类别查找",
+  },
+  "home_everyone_favorite": {
+    "message": "每个人的最爱",
+  },
+  "flashcard_go_to_set": {
+    "message": "转到组的详细信息",
+  },
+  "flashcard_next_set": {
+    "message": "下一组",
+  },
+  "flashcard_other_options": {
+    "message": "其他选项",
+  },
+  "flashcard_front_item": {
+    "message": "前项",
+  },
+  "flashcard_back_item": {
+    "message": "返回项目",
+  },
+  "inject_card_select": {
+    "message": "选择 :correctAnswerCount",
+  },
+  "marketplace_plant_type": {
+    "message": "植物类型",
+  },
+  "marketplace_time_harvest": {
+    "message": "收获时间（分）",
+  },
+  "marketplace_roi": {
+    "message": "投资回报率",
+  },
+  "marketplace_seeds": {
+    "message": "种子",
+  },
+  "marketplace_lowest_price": {
+    "message": "最低价格",
+  },
+  "marketplace_highest_price": {
+    "message": "最高价",
+  },
+  "marketplace_latest": {
+    "message": "最新的",
+  },
+  "common_back": {
+    "message": "回去",
+  },
+  "common_create": {
+    "message": "创建",
+  },
+  "common_restore": {
+    "message": "恢复",
+  },
+  "common_remove": {
+    "message": "消除",
+  },
+  "common_yes": {
+    "message": "有",
+  },
+  "common_no": {
+    "message": "不",
+  },
+  "common_cancel": {
+    "message": "取消",
+  },
+  "common_creator": {
+    "message": "创作者",
+  },
+  "common_items": {
+    "message": "项目",
+  },
+  "common_subscribe": {
+    "message": "订阅",
+  },
+  "common_subscribed": {
+    "message": "已订阅",
+  },
+  "common_liked": {
+    "message": "喜欢",
+  },
+  "common_created": {
+    "message": "已创建",
+  },
+  "common_unsubscribe": {
+    "message": "取消订阅",
+  },
+  "common_category": {
+    "message": "类别",
+  },
+  "common_upload": {
+    "message": "上传",
+  },
+  "common_edit_image": {
+    "message": "编辑图片",
+  },
+  "common_inject_card_disclaimer": {
+    "message": "⚠ 此内容不属于:website，属于Lazy Vaccine",
+  },
+  "common_save_changes": {
+    "message": "保存更改",
+  },
+  "common_search_result": {
+    "message": "搜索结果",
+  },
+  "common_more": {
+    "message": "更多",
+  },
+  "common_test": {
+    "message": "测试",
+  },
+  "common_term": {
+    "message": "术语",
+  },
+  "common_definition": {
+    "message": "定义",
+  },
+  "common_end_list_result": {
+    "message": "这就是所有匹配:)",
+  },
+  "common_not_found": {
+    "message": "未找到",
+  },
+  "common_filter": {
+    "message": "筛选",
+  },
+  "common_from": {
+    "message": "从",
+  },
+  "common_to": {
+    "message": "至",
+  },
+  "common_buy_now": {
+    "message": "现在买",
+  },
+  "common_owner": {
+    "message": "所有者",
+  },
+  "common_introduction": {
+    "message": "介绍",
+  },
+  "common_properties": {
+    "message": "特性",
+  },
+  "common_ignore": {
+    "message": "无视",
+  },
+  "common_got_it": {
+    "message": "知道了",
+  },
+  "common_check": {
+    "message": "查看",
+  },
+  "seed_growing_conditions": {
+    "message": "生长条件",
+  },
+  "properties_height": {
+    "message": "高度",
+  },
+  "properties_hardness": {
+    "message": "硬度",
+  },
+  "properties_maintenance": {
+    "message": "保养",
+  },
+  "select": {
+    "message": "选择一个",
+  },
+  "select_all": {
+    "message": "全选",
+  },
+  "clear_all": {
+    "message": "全部清除",
+  },
+  "required_field": {
+    "message": "这是必需的",
+  },
+  "max_length_field": {
+    "message": "最大是：",
+  },
+  "leave_warning_message": {
+    "message": "您有未保存的更改，如果您离开，您将丢失数据。 你确定吗？",
+  },
+  "my_space_achievement": {
+    "message": "我的成就",
+  },
+  "my_space_how_changed": {
+    "message": "我是如何改变的",
+  },
+  "high_comment_title": {
+    "message": "你掌握了这套！",
+  },
+  "high_comment_detail": {
+    "message": "你的学习很重要！ 证明你对这个组有足够的资格。",
+  },
+  "medium_comment_title": {
+    "message": "你需要多一点时间来做这件事！",
+  },
+  "medium_comment_detail": {
+    "message": "你在正确的轨道上，但你还没有完全到达那里。",
+  },
+  "low_comment_title": {
+    "message": "你在学习！",
+  },
+  "low_comment_detail": {
+    "message": "即使您还不知道所有答案，测试自己是掌握它们的最有效方法。\n坚持下去！",
+  },
+  "test_set_encourage_test": {
+    "message": "你几乎成功了！ 你不需要害怕考试，考试需要害怕你。 祝你好运！ ❤️",
+  },
+  "suggestion_card_go_to_home": {
+    "message": "去首页",
+  },
+  "suggestion_card_search_placeholder": {
+    "message": "你想学什么？",
+  },
+  "suggestion_card_suggestion_text": {
+    "message": "您还没有订阅任何学习组。只需再走1步即可开始学习，让我们找到一些X订阅！",
+  }
+}

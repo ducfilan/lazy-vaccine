@@ -27,6 +27,6 @@ export const detectPageChanged = (callback: () => any, initialCall?: boolean) =>
   }
 }
 
-export const redirectToUrl = (url: string) => {
+export const redirectToUrlInNewTab = (url: string) => {
   window?.open(url, "_blank")?.focus()
 }

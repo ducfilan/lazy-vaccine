@@ -19,7 +19,7 @@ import {
 } from "@/common/consts/constants"
 import { getTemplate } from "@/background/PageInjector"
 import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
-import { redirectToUrl } from "@/common/utils/domUtils"
+import { redirectToUrlInNewTab } from "@/common/utils/domUtils"
 
 export function registerFlipCardEvent() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card .card--face", (e: Event) => {
@@ -431,7 +431,7 @@ export function registerSuggestionSearchButtonClickEvent() {
       const button = e.target as HTMLInputElement
       const keyword = (button.closest(".ant-input-wrapper")?.querySelector(".ant-input") as HTMLInputElement).value
 
-      redirectToUrl(`${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`)
+      redirectToUrlInNewTab(`${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`)
     }
   )
 
@@ -443,7 +443,7 @@ export function registerSuggestionSearchButtonClickEvent() {
       if (e.key === "Enter") {
         const keyword = (e.target as HTMLInputElement).value
 
-        redirectToUrl(
+        redirectToUrlInNewTab(
           `${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`
         )
       }
