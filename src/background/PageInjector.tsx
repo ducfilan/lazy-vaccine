@@ -19,6 +19,7 @@ import { QnATemplate } from "./templates/QandATemplate"
 import { sendGetLocalSettingMessage } from "@/pages/content-script/messageSenders"
 import { ContentTemplate } from "./templates/ContentTemplate"
 import { SuggestSubscribeTemplate } from "./templates/SuggestSubscribeTemplate"
+import { SuggestLoginTemplate } from "./templates/SuggestLoginTemplate"
 
 export async function getTemplate(type: string) {
   switch (type) {
@@ -38,6 +39,9 @@ export async function getTemplate(type: string) {
 
     case ItemTypes.Content.value:
       return renderToString(<ContentTemplate />)
+
+    case OtherItemTypes.NotLoggedIn.value:
+      return renderToString(<SuggestLoginTemplate />)
 
     case OtherItemTypes.NotSubscribed.value:
       return renderToString(<SuggestSubscribeTemplate />)

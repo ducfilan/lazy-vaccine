@@ -24,15 +24,20 @@ import { GlobalContext } from "@/common/contexts/GlobalContext"
 const PopupPage = () => {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [http, setHttp] = useState<Http>()
+  const [http, setHttp] = useState<Http | null>(null)
 
   useEffect(() => {
     try {
       setIsLoading(true)
 
-      getGoogleAuthToken().then((token: string) => {
-        setHttp(new Http(token, LoginTypes.google))
-      })
+      getGoogleAuthToken()
+        .then((token: string) => {
+          setHttp(new Http(token, LoginTypes.google))
+        })
+        .catch((error: any) => {
+          setIsLoading(false)
+          console.error(error)
+        })
     } catch (error) {
       // Not able to login with current token, ignore to show the first page to login.
     }
@@ -93,7 +98,7 @@ const PopupPage = () => {
   }
 
   return (
-    <GlobalContext.Provider value={{ user, setUser, http }}>
+    <GlobalContext.Provider value={{ user, setUser, http, setHttp }}>
       <Router>
         <div className="App">
           {!isLoading && <Navbar />}

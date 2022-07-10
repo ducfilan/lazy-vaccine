@@ -1,5 +1,3 @@
-import "@/background/templates/css/antd-wrapped.less"
-
 import PageInjector from "./background/PageInjector"
 import InjectionTargetFactory from "./background/InjectionTargetFactory"
 import { SetInfo } from "./common/types/types"
@@ -22,6 +20,7 @@ import {
   registerCheckAnswerEvent,
   registerSelectEvent,
   registerSuggestionSearchButtonClickEvent,
+  registerSuggestionLoginButtonClickEvent,
 } from "./pages/content-script/eventRegisters"
 import { getHref } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
@@ -40,8 +39,21 @@ import "@/background/templates/css/flashcard.scss"
 import "@/background/templates/css/QandA.scss"
 import "@/background/templates/css/suggest-subscribe.scss"
 
-import { NotSubscribedError } from "./common/consts/errors"
 import { hrefToSiteName } from "./background/DomManipulator"
+
+const getNotLoggedInTemplateValues = async () => {
+  return [
+    { key: "type", value: OtherItemTypes.NotLoggedIn.value },
+    { key: "website", value: await hrefToSiteName(getHref()) },
+  ]
+}
+
+const getNotSubscribedTemplateValues = async () => {
+  return [
+    { key: "type", value: OtherItemTypes.NotSubscribed.value },
+    { key: "website", value: await hrefToSiteName(getHref()) },
+  ]
+}
 
 let randomItemIndexVisitMap: number[] = []
 let setInfo: SetInfo | null
@@ -49,21 +61,27 @@ let currentItemPointer = 0
 let itemsInPageInteractionMap: {
   [itemId: string]: string[]
 } = {}
+
+let isLoggedIn = false
 let havingSubscribedSets = false
 
-detectPageChanged(async () => {
+detectPageChanged(processInjection, true)
+
+async function processInjection() {
   try {
     // Remove cache from background page (app's scope).
     await sendClearCachedRandomSetMessage()
 
     await initValues()
+
     removeOldCards()
+
     await injectCards()
   } catch (error) {
     console.error(error)
     console.error("error when injecting set item")
   }
-}, true)
+}
 
 registerFlashcardEvents()
 
@@ -75,16 +93,21 @@ async function initValues() {
     setInfo = await sendGetRandomSubscribedSetMessage()
     if (setInfo) {
       randomItemIndexVisitMap = shuffleArray(Array.from(Array(setInfo.items?.length || 0).keys()))
+      isLoggedIn = true
       havingSubscribedSets = true
+
       setInfo.itemsInteractions?.map((itemInteractions) => {
         itemsInPageInteractionMap[itemInteractions.itemId] = Object.keys(itemInteractions.interactionCount)
       })
     }
-  } catch (error) {
-    if (error instanceof NotSubscribedError) {
+  } catch (error: any) {
+    if (error.type === "NotSubscribedError") {
       havingSubscribedSets = false
+    } else if (error.type === "NotLoggedInError") {
+      isLoggedIn = false
+    } else {
+      console.error(error)
     }
-    console.error(error)
   }
 }
 
@@ -106,11 +129,12 @@ async function injectCards() {
 }
 
 const randomTemplateValues = async (increaseOnCall: boolean = false) => {
+  if (!isLoggedIn) {
+    return getNotLoggedInTemplateValues()
+  }
+
   if (!havingSubscribedSets) {
-    return [
-      { key: "type", value: OtherItemTypes.NotSubscribed.value },
-      { key: "website", value: await hrefToSiteName(getHref()) },
-    ]
+    return getNotSubscribedTemplateValues()
   }
 
   const item = getItemAtPointer(currentItemPointer)
@@ -209,6 +233,7 @@ function registerFlashcardEvents() {
   })
 
   registerSuggestionSearchButtonClickEvent()
+  registerSuggestionLoginButtonClickEvent(processInjection)
 }
 
 /**

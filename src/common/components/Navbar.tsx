@@ -12,7 +12,7 @@ import { Link } from "react-router-dom"
 import { AppPages, i18n } from "@consts/constants"
 
 const DropdownMenu = (props: { isLoggedIn: boolean }) => {
-  const { user, setUser } = useGlobalContext()
+  const { user, setUser, setHttp } = useGlobalContext()
 
   return props.isLoggedIn ? (
     <Dropdown
@@ -32,6 +32,7 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
                   onClick={() => {
                     signOut(() => {
                       setUser(null)
+                      setHttp(null)
                     })
                   }}
                 >

@@ -426,5 +426,8 @@
   },
   "suggestion_card_suggestion_text": {
     "message": "You didn't subscribed to any learning set. Just 1 more step to start learning, let's find some set to subscribe!"
+  },
+  "suggestion_card_not_logged_in_text": {
+    "message": "Hello! To help you learn, firstly, I want to know who you are. Let's log in. It will take a few seconds only!"
   }
 }

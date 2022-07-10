@@ -15,3 +15,9 @@ export class NotSubscribedError extends Error {
     super(message, ...args)
   }
 }
+
+export class NotLoggedInError extends Error {
+  constructor(message = "", ...args: []) {
+    super(message, ...args)
+  }
+}

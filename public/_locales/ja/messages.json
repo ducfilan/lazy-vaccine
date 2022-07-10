@@ -426,5 +426,8 @@
   },
   "suggestion_card_suggestion_text": {
     "message": "学習セットを登録していません。 学習を開始するためにもう1つのステップ、セットを見つけて登録しましょう！"
+  },
+  "suggestion_card_not_logged_in_text": {
+    "message": "こんにちは！ あなたが学ぶのを助けるために、まず、私はあなたが誰であるかを知りたいです。 ログインしましょう。数秒で完了します。"
   }
 }

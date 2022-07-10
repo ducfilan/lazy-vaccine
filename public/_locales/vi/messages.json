@@ -423,5 +423,8 @@
   },
   "suggestion_card_suggestion_text": {
     "message": "Bạn chưa đăng ký nội dung học tập nào. Chỉ 1 bước nữa để bắt đầu, hãy tìm những bài học bạn đang quan tâm và đăng kí nhé!"
+  },
+  "suggestion_card_not_logged_in_text": {
+    "message": "Xin chào bạn! Để bắt đầu giúp bạn học tập, trước tiên mình muốn biết bạn là ai. Hãy đăng nhập, chỉ mất vài giây thôi!"
   }
 }

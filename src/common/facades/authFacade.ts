@@ -2,21 +2,25 @@ import { AxiosResponse } from "axios"
 
 import Apis from "@consts/apis"
 import GoogleApiUrls from "@consts/googleApiUrls"
+import registerSteps from "@consts/registerSteps"
+import { NotLoggedInError } from "@consts/errors"
 import { LoginTypes, MaxTryAgainSignInCount } from "@consts/constants"
 import CacheKeys from "@consts/cacheKeys"
 import { GoogleUserInfo, User } from "@/common/types/types"
-import registerSteps from "@consts/registerSteps"
 import { get, Http } from "./axiosFacade"
 
 export function getGoogleAuthToken(options: any = {}, tryAgainCount: number = 0) {
   return new Promise<any>((resolve, reject) => {
     chrome.identity.getAuthToken(options, async serviceAccessToken => {
-      if (chrome.runtime.lastError) {
-        if (tryAgainCount > MaxTryAgainSignInCount) {
-          reject(chrome.runtime.lastError.message)
+      const lastError = chrome.runtime.lastError
+      if (lastError) {
+        if (lastError.message?.includes("not granted or revoked") || lastError.message?.includes("not approve access")) {
+          reject(new NotLoggedInError(lastError.message))
+        } else if (tryAgainCount >= MaxTryAgainSignInCount) {
+          reject(lastError.message)
+        } else {
+          return getGoogleAuthToken({ interactive: true }, tryAgainCount + 1)
         }
-
-        return getGoogleAuthToken({ interactive: true }, tryAgainCount + 1)
       } else if (serviceAccessToken) {
         resolve(serviceAccessToken)
       } else {
@@ -73,6 +77,7 @@ export function signOut(callback?: () => void) {
     chrome.storage.sync.set({ [CacheKeys.isSignedOut]: true })
   } catch (error) {
     // TODO: Notice user.
+    console.error(error)
   }
 }
 

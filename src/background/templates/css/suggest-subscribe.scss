@@ -1,51 +1,78 @@
 $primary: #12b886;
 $white: #fff;
+$google-color: #4285f4;
 
-.suggestion-card {
-  background-color: $white;
-  padding: 20px;
-  font-size: 16px;
-  z-index: 1;
+.lazy-vaccine {
+  .suggestion-card {
+    background-color: $white;
+    padding: 20px;
+    font-size: 16px;
+    z-index: 1;
 
-  .card--face {
-    display: grid;
-    gap: 10px;
-    grid-template-areas: "a b";
-    align-items: start;
-    margin-bottom: 20px;
-  }
+    .card--face {
+      display: grid;
+      gap: 10px;
+      grid-template-areas: "a b";
+      align-items: start;
+      margin-bottom: 20px;
+    }
 
-  .talk-bubble {
-    display: inline-block;
-    position: relative;
-    height: auto;
-    background-color: $primary;
-    border-radius: 20px;
-  }
+    .talk-bubble {
+      display: inline-block;
+      position: relative;
+      height: auto;
+      background-color: $primary;
+      border-radius: 20px;
+    }
 
-  .tri-right.left-in:after {
-    content: " ";
-    position: absolute;
-    width: 0;
-    height: 0;
-    left: -20px;
-    right: auto;
-    top: 38px;
-    bottom: auto;
-    border: 12px solid;
-    border-color: $primary $primary transparent transparent;
-  }
+    .tri-right.left-in:after {
+      content: " ";
+      position: absolute;
+      width: 0;
+      height: 0;
+      left: -20px;
+      right: auto;
+      top: 38px;
+      bottom: auto;
+      border: 12px solid;
+      border-color: $primary $primary transparent transparent;
+    }
 
-  .talk-text {
-    padding: 1em;
-    text-align: left;
-    line-height: 1.5em;
+    .talk-text {
+      padding: 1em;
+      text-align: left;
+      line-height: 1.5em;
 
-    p {
-      /* remove webkit p margins */
-      -webkit-margin-before: 0em;
-      -webkit-margin-after: 0em;
-      color: $white;
+      p {
+        /* remove webkit p margins */
+        -webkit-margin-before: 0em;
+        -webkit-margin-after: 0em;
+        color: $white;
+      }
+    }
+
+    .login-button-wrapper {
+      width: 100%;
+      text-align: center;
+
+      .login-button {
+        box-shadow: 0 1px 2px 0 rgb(10 10 10 / 15%);
+
+        height: 60px;
+        font-size: 24px;
+        color: $primary;
+        padding: 0 50px;
+
+        &:after {
+          border-color: transparent transparent #dbdbdb #dbdbdb !important;
+        }
+
+        .anticon {
+          color: $google-color;
+          font-size: 32px;
+          vertical-align: middle;
+        }
+      }
     }
   }
 }

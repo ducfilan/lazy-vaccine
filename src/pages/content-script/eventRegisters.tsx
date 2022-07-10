@@ -2,7 +2,7 @@ import { addDynamicEventListener, htmlStringToHtmlNode } from "@/background/DomM
 import { decodeBase64, formatString } from "@/common/utils/stringUtils"
 import { generateTemplateExtraValues, toTemplateValues } from "./templateHelpers"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
-import { sendInteractItemMessage, sendSetLocalSettingMessage } from "./messageSenders"
+import { sendGetGoogleTokenMessage, sendInteractItemMessage, sendSetLocalSettingMessage } from "./messageSenders"
 import {
   AppBasePath,
   AppPages,
@@ -431,7 +431,9 @@ export function registerSuggestionSearchButtonClickEvent() {
       const button = e.target as HTMLInputElement
       const keyword = (button.closest(".ant-input-wrapper")?.querySelector(".ant-input") as HTMLInputElement).value
 
-      redirectToUrlInNewTab(`${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`)
+      redirectToUrlInNewTab(
+        `${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`
+      )
     }
   )
 
@@ -449,4 +451,20 @@ export function registerSuggestionSearchButtonClickEvent() {
       }
     }
   )
+}
+
+export function registerSuggestionLoginButtonClickEvent(callback: () => Promise<void>) {
+  addDynamicEventListener(document.body, "click", `.lazy-vaccine .suggestion-card .login-button`, async (e: Event) => {
+    const button = e.target as HTMLInputElement
+    button.disabled = true
+
+    sendGetGoogleTokenMessage()
+      .then(callback)
+      .catch((error) => {
+        console.error(error)
+      })
+      .finally(() => {
+        button.disabled = false
+      })
+  })
 }
