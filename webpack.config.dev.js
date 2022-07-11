@@ -6,5 +6,8 @@ module.exports = (_, { mode }) => {
 
   return merge(common(_, isDevelopment), {
     devtool: "inline-source-map",
+    optimization: {
+      minimize: false
+    }
   });
 }
