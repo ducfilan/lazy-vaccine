@@ -232,9 +232,10 @@ export function registerMorePopoverEvent() {
     e.stopPropagation()
 
     const moreButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = moreButton.closest(InjectWrapperClassName)
-
+    const wrapperElement: HTMLElement = moreButton.closest(InjectWrapperClassName)!
     toggleHiddenPopover(wrapperElement)
+
+    wrapperElement.style.zIndex = isPopoverHidden(wrapperElement) ? "2" : "9999"
   })
 }
 
@@ -256,6 +257,9 @@ export function registerNextSetEvent(preProcess: () => Promise<void>) {
 function toggleHiddenPopover(wrapperElement: HTMLElement | null) {
   wrapperElement?.querySelector(".ant-popover")?.classList.toggle("ant-popover-hidden")
 }
+
+const isPopoverHidden = (wrapperElement: HTMLElement) =>
+  wrapperElement.querySelector(".ant-popover")?.classList.contains("ant-popover-hidden")
 
 function clickNextItemButton(wrapperElement: HTMLElement | null) {
   const nextBtn: HTMLElement = wrapperElement?.querySelector(".next-prev-buttons--next-button") as HTMLElement
