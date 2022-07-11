@@ -3,10 +3,8 @@ import { KeyValuePair } from "@/common/types/types"
 import { DefaultLangCode, LiteralDurationsExtractRegex } from "@consts/constants"
 
 export function formatString(template: string, values: KeyValuePair[]): string {
-  for (let i = 0; i < values.length; i++) {
-    const pair = values[i]
-
-    template = template.replace(`:${pair.key}`, pair.value)
+  for (const pair of values) {
+    template = template.replaceAll(`:${pair.key}`, pair.value)
   }
 
   return template

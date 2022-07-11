@@ -94,7 +94,7 @@ export default class PageInjector {
           id: "",
           attrs: [],
         } as PageInjectorSiblingSelectorParts)
-      
+
     this.newGeneratedElementSelector = newGeneratedElementSelector || ""
     this.newGeneratedElementSelectorParts = newGeneratedElementSelector
       ? this.parseSelector(newGeneratedElementSelector)
@@ -211,7 +211,7 @@ export default class PageInjector {
             const siblingNode = node.querySelector(this.siblingSelector)
             const similarNode = node.querySelector(InjectWrapperClassName)
             !similarNode && siblingNode && insertBefore(htmlStringToHtmlNode(htmlString), siblingNode)
-          }else {
+          } else {
             insertBefore(htmlStringToHtmlNode(htmlString), node)
           }
         })

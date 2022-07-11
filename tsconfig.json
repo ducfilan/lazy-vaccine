@@ -7,7 +7,8 @@
         "noImplicitAny": true,
         "lib": [
             "es2018",
-            "dom"
+            "dom",
+            "ES2021.String"
         ],
         "module": "es6",
         "moduleResolution": "node",
