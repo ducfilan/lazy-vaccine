@@ -20,6 +20,7 @@ import {
 import { getTemplate } from "@/background/PageInjector"
 import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
 import { redirectToUrlInNewTab } from "@/common/utils/domUtils"
+import { wrap } from "gsap"
 
 export function registerFlipCardEvent() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card .card--face", (e: Event) => {
@@ -237,7 +238,20 @@ export function registerMorePopoverEvent() {
 
     wrapperElement.style.zIndex = isPopoverHidden(wrapperElement) ? "2" : "9999"
   })
+
+  document.addEventListener("mouseup", function (e: MouseEvent) {
+    const target = e.target as HTMLElement
+    const wrapperElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ant-popover")
+    wrapperElements.forEach((wrapperElement) => {
+      if (!wrapperElement.contains(target) && !isMoreButton(target)) {
+        hidePopover(wrapperElement.closest(InjectWrapperClassName))
+      }
+    })
+  })
 }
+
+const isMoreButton = (element: HTMLElement) =>
+  element.classList.contains("inject-card-more-button") || element.closest(".inject-card-more-button")
 
 export function registerNextSetEvent(preProcess: () => Promise<void>) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card-next-set-link", async (e: Event) => {
@@ -256,6 +270,10 @@ export function registerNextSetEvent(preProcess: () => Promise<void>) {
 
 function toggleHiddenPopover(wrapperElement: HTMLElement | null) {
   wrapperElement?.querySelector(".ant-popover")?.classList.toggle("ant-popover-hidden")
+}
+
+function hidePopover(wrapperElement: HTMLElement | null) {
+  wrapperElement?.querySelector(".ant-popover")?.classList.add("ant-popover-hidden")
 }
 
 const isPopoverHidden = (wrapperElement: HTMLElement) =>
