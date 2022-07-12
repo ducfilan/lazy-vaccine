@@ -90,8 +90,8 @@ export async function interactToSetItem(http: Http, setId: string, itemId: strin
   await http.post<any, AxiosResponse<any>>(Apis.itemInteraction(setId, itemId, action))
 }
 
-export async function searchSets(http: Http, keyword: string, skip: number, limit: number) {
-  const response = await http.get<any, AxiosResponse<SearchSetsResponse>>(`${Apis.sets}?keyword=${keyword}&skip=${skip}&limit=${limit}`)
+export async function searchSets(http: Http, keyword: string, languages: string[], skip: number, limit: number) {
+  const response = await http.get<any, AxiosResponse<SearchSetsResponse>>(`${Apis.sets}?keyword=${keyword}&languages=${languages.join(",")}&skip=${skip}&limit=${limit}`)
 
   if (!response?.data) throw new Error(`cannot search sets with keyword: ${keyword}`)
 

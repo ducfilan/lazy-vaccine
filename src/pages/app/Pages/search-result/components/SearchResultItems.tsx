@@ -1,8 +1,7 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 
 import { SearchSetsResponse, SetInfo } from "@/common/types/types"
 import { Divider, List, Result, Skeleton, Typography } from "antd"
-import { useEffect, useState } from "react"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { searchSets } from "@/common/repo/set"
 import SetItemCardLong from "@/pages/app/components/SetItemCardLong"
@@ -11,7 +10,7 @@ import shibaEmptyBoxIcon from "@img/emojis/shiba/box.png"
 import { formatString } from "@/common/utils/stringUtils"
 import { i18n } from "@/common/consts/constants"
 
-const SearchResultItems = (props: { keyword: string }) => {
+const SearchResultItems = (props: { keyword: string; languages: string[] }) => {
   const { http } = useGlobalContext()
 
   const [sets, setSets] = useState<SetInfo[]>([])
@@ -25,7 +24,7 @@ const SearchResultItems = (props: { keyword: string }) => {
     if (!http || isSearching) return
     setIsSearching(true)
 
-    searchSets(http, props.keyword, skip || 0, limitItemsPerGet)
+    searchSets(http, props.keyword, props.languages, skip || 0, limitItemsPerGet)
       .then((resp: SearchSetsResponse) => {
         setIsSearching(false)
 
