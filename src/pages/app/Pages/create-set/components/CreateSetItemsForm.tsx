@@ -85,6 +85,8 @@ export const CreateSetItemsForm = () => {
     fromLanguage: LanguageCode
     toLanguage: LanguageCode
   }) => {
+    if (!http) return
+
     const newSetInfo = { ...setInfo, ...itemsInfo } as SetInfo
 
     try {

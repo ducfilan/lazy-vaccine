@@ -20,7 +20,6 @@ import {
 import { getTemplate } from "@/background/PageInjector"
 import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
 import { redirectToUrlInNewTab } from "@/common/utils/domUtils"
-import { wrap } from "gsap"
 
 export function registerFlipCardEvent() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card .card--face", (e: Event) => {
