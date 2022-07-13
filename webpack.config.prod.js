@@ -114,7 +114,9 @@ module.exports = (_, { mode }) => {
       hot: true,
     },
     plugins: [
-      new DotenvPlugin(),
+      new DotenvPlugin({
+        path: isDevelopment ? "./.env" : "./prod.env"
+      }),
       new CopyPlugin({
         patterns: [{ from: "public", to: "." }],
       }),
