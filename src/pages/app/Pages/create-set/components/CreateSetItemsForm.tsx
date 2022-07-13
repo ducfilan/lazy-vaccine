@@ -56,7 +56,7 @@ export const CreateSetItemsForm = () => {
     setInfo?.items?.filter((item) => item.type === ItemTypes.TermDef.value).length || DefaultInitItemCount
   )
   const [itemTypes, setItemTypes] = useState<string[]>(
-    Array.from(Array(itemCount).keys()).map((i: number) => setInfo?.items![i]?.type || ItemTypes.TermDef.value)
+    Array.from(Array(itemCount).keys()).map((i: number) => setInfo?.items?.at(i)?.type || ItemTypes.TermDef.value)
   )
   const [lastItemType, setLastItemType] = useState<string>(ItemTypes.TermDef.value)
   const [, setCachedLastSetInfo] = useLocalStorage<SetInfo | null>(CacheKeys.lastSetInfo, null, "365d")
