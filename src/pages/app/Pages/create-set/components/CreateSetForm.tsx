@@ -55,11 +55,8 @@ export const CreateSetForm = () => {
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
   const [cachedLastSetInfo, setCachedLastSetInfo] = useLocalStorage<SetInfo | null>(CacheKeys.lastSetInfo, null, "7d")
   const [isDataSaved, setIsDataSaved] = useState<boolean>(true)
-  const [imageFileName, setImageFileName] = useState<string>()
   const [imageUrl, setImageUrl] = useState<string>()
-  const [uploadFileType, setUploadFileType] = useState<string>()
   const [uploadingImage, setUploadingImage] = useState<boolean>(false)
-  const [preSignedUrl, setPreSignedUrl] = useState<string>()
 
   const [formRef] = Form.useForm()
 
@@ -83,7 +80,7 @@ export const CreateSetForm = () => {
     setIsDataSaved(true)
   }
 
-  const onImageBeforeUpload = async (file: RcFile) => {
+  const getUploadFileInfo = async (file: RcFile) => {
     if (!http || !user) return
 
     const ext = getExtensionFromFileType(file.type)
@@ -92,9 +89,8 @@ export const CreateSetForm = () => {
     const uniqueFileName = `${getHash(user?.email)}_${getHash(file.name)}_${new Date().getTime()}.${ext}`
 
     const url = await getPreSignedUploadUrl(http, uniqueFileName, file.type)
-    setPreSignedUrl(url)
-    setImageFileName(uniqueFileName)
-    setUploadFileType(file.type)
+
+    return { preSignedUrl: url, fileName: uniqueFileName, fileType: file.type }
   }
 
   const onImageUploaderChange = (info: UploadChangeParam<UploadFile<UploadImageResponse>>) => {
@@ -109,18 +105,22 @@ export const CreateSetForm = () => {
   }
 
   const onImageUpload = async (info: any) => {
+    const { preSignedUrl, fileName, fileType } = (await getUploadFileInfo(info.file)) || {}
+
+    if (!preSignedUrl) return
+
     const file = await resizeAndCompressImage(info.file)
 
-    const isUploadSuccess = await uploadImage(info.action, file, {
+    const isUploadSuccess = await uploadImage(preSignedUrl!, file, {
       headers: {
         "x-amz-acl": "public-read",
-        "Content-Type": uploadFileType!,
+        "Content-Type": fileType!,
       },
     })
 
     if (isUploadSuccess) {
       setUploadingImage(false)
-      const imgUrl = `${StaticBaseUrl}/${imageFileName}`
+      const imgUrl = `${StaticBaseUrl}/${fileName}`
       setImageUrl(imgUrl)
       formRef.setFieldsValue({ imgUrl })
     }
@@ -209,14 +209,12 @@ export const CreateSetForm = () => {
           initialValues={setInfo}
         >
           <Form.Item name="imgUrl" label={i18n("create_set_set_picture")}>
-            <ImgCrop rotate modalTitle={i18n("common_edit_image")} modalCancel={i18n("common_cancel")}>
+            <ImgCrop rotate modalTitle={i18n("common_edit_image")} modalCancel={i18n("common_cancel")} minZoom={0.5}>
               <Upload
-                action={preSignedUrl}
                 listType="picture-card"
                 showUploadList={false}
                 accept="image/jpeg,image/png"
                 method="PUT"
-                beforeUpload={onImageBeforeUpload}
                 onChange={onImageUploaderChange}
                 customRequest={onImageUpload}
               >

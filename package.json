@@ -59,7 +59,7 @@
     "@types/react": "^18.0.12",
     "@types/react-dom": "^18.0.5",
     "@types/react-router-dom": "^5.3.3",
-    "antd": "^4.21.0",
+    "antd": "^4.21.6",
     "antd-img-crop": "^4.2.3",
     "axios": "^0.27.2",
     "buffer": "^6.0.3",

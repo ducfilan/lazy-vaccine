@@ -14,6 +14,7 @@ export async function getPreSignedUploadUrl(http: Http, fileName: string, conten
 }
 
 export async function uploadImage(action: string, file: any, headers: AxiosRequestConfig): Promise<boolean> {
+  console.log("called uploadImage")
   const response = await put(action, file, headers)
 
   return response.status == StatusCode.Ok
