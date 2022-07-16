@@ -429,5 +429,17 @@
   },
   "suggestion_card_not_logged_in_text": {
     "message": "Hello! To help you learn, firstly, I want to know who you are. Let's log in. It will take a few seconds only!"
+  },
+  "rich_text_upload_modal_title": {
+    "message": "Insert a new photo"
+  },
+  "rich_text_insert_url_title": {
+    "message": "Insert an url"
+  },
+  "rich_text_upload_tab_title": {
+    "message": "Upload photo"
+  },
+  "rich_text_image_url": {
+    "message": "Image url"
   }
 }

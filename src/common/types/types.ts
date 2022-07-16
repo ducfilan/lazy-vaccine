@@ -249,3 +249,13 @@ export type Mission = {
   missionId: number,
   missionDetail: string
 }
+
+export type ImageElement = {
+  type: 'image'
+  url: string
+  children: EmptyText[]
+}
+
+export type EmptyText = {
+  text: string
+}

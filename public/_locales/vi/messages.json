@@ -426,5 +426,17 @@
   },
   "suggestion_card_not_logged_in_text": {
     "message": "Xin chào bạn! Để bắt đầu giúp bạn học tập, trước tiên mình muốn biết bạn là ai. Hãy đăng nhập, chỉ mất vài giây thôi!"
+  },
+  "rich_text_upload_modal_title": {
+    "message": "Thêm ảnh"
+  },
+  "rich_text_insert_url_title": {
+    "message": "Thêm đường dẫn (link đến ảnh)"
+  },
+  "rich_text_upload_tab_title": {
+    "message": "Tải ảnh lên"
+  },
+  "rich_text_image_url": {
+    "message": "Link ảnh"
   }
 }
