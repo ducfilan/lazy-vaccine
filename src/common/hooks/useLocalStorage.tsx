@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { LocalStorageKeyPrefix } from "@consts/constants"
-import { addDuration } from "../utils/stringUtils"
+import { addDuration } from "@/common/utils/stringUtils"
 
 /**
  * Local storage hook
@@ -8,7 +8,7 @@ import { addDuration } from "../utils/stringUtils"
  * @param expireIn Expire in literal string format, [number]d [number]h [number]m [number]s
  * @returns
  */
-function useLocalStorage<T>(key: string, initialValue: T, expireIn: string) {
+function useLocalStorage<T>(key: string, initialValue: T, expireIn: string): any {
   const __prefix__ = LocalStorageKeyPrefix
 
   const isExpired = (expireAtDateString: string) => new Date() > new Date(expireAtDateString)

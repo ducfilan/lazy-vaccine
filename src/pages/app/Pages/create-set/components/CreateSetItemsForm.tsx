@@ -56,7 +56,7 @@ export const CreateSetItemsForm = () => {
     setInfo?.items?.filter((item) => item.type === ItemTypes.TermDef.value).length || DefaultInitItemCount
   )
   const [itemTypes, setItemTypes] = useState<string[]>(
-    Array.from(Array(itemCount).keys()).map((i: number) => setInfo?.items![i]?.type || ItemTypes.TermDef.value)
+    Array.from(Array(itemCount).keys()).map((i: number) => setInfo?.items?.at(i)?.type || ItemTypes.TermDef.value)
   )
   const [lastItemType, setLastItemType] = useState<string>(ItemTypes.TermDef.value)
   const [, setCachedLastSetInfo] = useLocalStorage<SetInfo | null>(CacheKeys.lastSetInfo, null, "365d")
@@ -85,6 +85,8 @@ export const CreateSetItemsForm = () => {
     fromLanguage: LanguageCode
     toLanguage: LanguageCode
   }) => {
+    if (!http) return
+
     const newSetInfo = { ...setInfo, ...itemsInfo } as SetInfo
 
     try {
@@ -282,7 +284,7 @@ export const CreateSetItemsForm = () => {
                     />
                   </Form.Item>
 
-                  <button
+                  <Button
                     className="button create-set-items--remove-button"
                     onClick={() => {
                       itemTypes[itemIndex] === ItemTypes.TermDef.value && setTermDefItemsCount(termDefItemsCount - 1)
@@ -292,7 +294,7 @@ export const CreateSetItemsForm = () => {
                     }}
                   >
                     <MinusCircleFilled />
-                  </button>
+                  </Button>
 
                   {(() => {
                     const itemType =
@@ -323,7 +325,7 @@ export const CreateSetItemsForm = () => {
                               label={i18n("create_set_question_placeholder")}
                               rules={[RequiredRule]}
                             >
-                              <Input.TextArea placeholder={i18n("create_set_question_placeholder")} />
+                              <RichTextEditor value="" placeholder={i18n("create_set_question_placeholder")} />
                             </Form.Item>
                             <Form.List
                               name={[name, "answers"]}

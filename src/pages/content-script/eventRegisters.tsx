@@ -2,23 +2,54 @@ import { addDynamicEventListener, htmlStringToHtmlNode } from "@/background/DomM
 import { decodeBase64, formatString } from "@/common/utils/stringUtils"
 import { generateTemplateExtraValues, toTemplateValues } from "./templateHelpers"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
-import { sendInteractItemMessage, sendSetLocalSettingMessage } from "./messageSenders"
+import { sendGetGoogleTokenMessage, sendInteractItemMessage, sendSetLocalSettingMessage } from "./messageSenders"
 import {
+  AppBasePath,
+  AppPages,
+  InjectWrapperClassName,
+  ItemsInteractionAnswerCorrect,
+  ItemsInteractionAnswerIncorrect,
+  ItemsInteractionFlip,
   ItemsInteractionForcedDone,
   ItemsInteractionIgnore,
   ItemsInteractionNext,
+  ItemsInteractionPrev,
   ItemsInteractionStar,
   ItemTypes,
 } from "@/common/consts/constants"
 import { getTemplate } from "@/background/PageInjector"
-import { generateNumbersArray, shuffleArray } from "@/common/utils/arrayUtils"
+import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
+import { redirectToUrlInNewTab } from "@/common/utils/domUtils"
 
 export function registerFlipCardEvent() {
-  addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--content", (e: Event) => {
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card .card--face", (e: Event) => {
+    let cardFace = e.target as HTMLElement
+    if (!cardFace.classList.contains("card--face")) {
+      cardFace = cardFace.parentElement as HTMLElement
+    }
+    const wrapperElement: HTMLElement = cardFace.closest(InjectWrapperClassName)!
+
+    sendInteractItemMessage(
+      wrapperElement.dataset["setId"]!,
+      wrapperElement.dataset["itemId"]!,
+      ItemsInteractionFlip
+    ).catch((error) => {
+      // TODO: handle error case.
+      console.error(error)
+    })
+
     e.stopPropagation()
 
-    const cardElement = e.target as Element
-    cardElement.closest(".flash-card-wrapper")?.classList.toggle("is-flipped")
+    const faceToDisplayClass = cardFace.classList.contains("card--face--front")
+      ? ".card--face--back"
+      : ".card--face--front"
+
+    cardFace.parentElement?.style.setProperty(
+      "height",
+      cardFace.parentElement?.querySelector(faceToDisplayClass)?.clientHeight + "px"
+    )
+
+    cardFace.closest(".flash-card-wrapper")?.classList.toggle("is-flipped")
   })
 }
 
@@ -44,7 +75,7 @@ export function registerNextItemEvent(
     if (!nextItem) return // TODO: Notice problem.
 
     const nextButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = nextButton.closest(".lazy-vaccine")
+    const wrapperElement: HTMLElement | null = nextButton.closest(InjectWrapperClassName)
 
     const currentSet = setGetter()
     if (!currentSet) throw new Error("cannot get set")
@@ -163,21 +194,18 @@ export function registerPrevItemEvent(
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--prev-button", async (e: Event) => {
     e.stopPropagation()
 
-    if (e.isTrusted) {
-      const currentItem = itemGetter()
-      if (!currentItem) return // TODO: Notice problem.
+    const prevButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement | null = prevButton.closest(InjectWrapperClassName)
 
-      sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext).catch((error) => {
+    const prevItem = prevItemGetter()
+    if (!prevItem) return
+
+    if (e.isTrusted) {
+      sendInteractItemMessage(prevItem.setId, prevItem._id, ItemsInteractionPrev).catch((error) => {
         // TODO: handle error case.
         console.error(error)
       })
     }
-
-    const prevButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = prevButton.closest(".lazy-vaccine")
-
-    const prevItem = prevItemGetter()
-    if (!prevItem) return
 
     const currentSet = setInfo()
     if (!currentSet) throw new Error("cannot get set")
@@ -204,11 +232,25 @@ export function registerMorePopoverEvent() {
     e.stopPropagation()
 
     const moreButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = moreButton.closest(".lazy-vaccine")
-
+    const wrapperElement: HTMLElement = moreButton.closest(InjectWrapperClassName)!
     toggleHiddenPopover(wrapperElement)
+
+    wrapperElement.style.zIndex = isPopoverHidden(wrapperElement) ? "2" : "9999"
+  })
+
+  document.addEventListener("mouseup", function (e: MouseEvent) {
+    const target = e.target as HTMLElement
+    const wrapperElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ant-popover")
+    wrapperElements.forEach((wrapperElement) => {
+      if (!wrapperElement.contains(target) && !isMoreButton(target)) {
+        hidePopover(wrapperElement.closest(InjectWrapperClassName))
+      }
+    })
   })
 }
+
+const isMoreButton = (element: HTMLElement) =>
+  element.classList.contains("inject-card-more-button") || element.closest(".inject-card-more-button")
 
 export function registerNextSetEvent(preProcess: () => Promise<void>) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card-next-set-link", async (e: Event) => {
@@ -218,7 +260,7 @@ export function registerNextSetEvent(preProcess: () => Promise<void>) {
     await preProcess()
 
     const nextSetButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = nextSetButton.closest(".lazy-vaccine")
+    const wrapperElement: HTMLElement | null = nextSetButton.closest(InjectWrapperClassName)
 
     toggleHiddenPopover(wrapperElement)
     clickNextItemButton(wrapperElement)
@@ -228,6 +270,13 @@ export function registerNextSetEvent(preProcess: () => Promise<void>) {
 function toggleHiddenPopover(wrapperElement: HTMLElement | null) {
   wrapperElement?.querySelector(".ant-popover")?.classList.toggle("ant-popover-hidden")
 }
+
+function hidePopover(wrapperElement: HTMLElement | null) {
+  wrapperElement?.querySelector(".ant-popover")?.classList.add("ant-popover-hidden")
+}
+
+const isPopoverHidden = (wrapperElement: HTMLElement) =>
+  wrapperElement.querySelector(".ant-popover")?.classList.contains("ant-popover-hidden")
 
 function clickNextItemButton(wrapperElement: HTMLElement | null) {
   const nextBtn: HTMLElement = wrapperElement?.querySelector(".next-prev-buttons--next-button") as HTMLElement
@@ -252,7 +301,7 @@ export function registerIgnoreEvent(
       })
 
     const ignoreButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = ignoreButton.closest(".lazy-vaccine")
+    const wrapperElement: HTMLElement | null = ignoreButton.closest(InjectWrapperClassName)
     clickNextItemButton(wrapperElement)
   })
 }
@@ -275,7 +324,7 @@ export function registerGotItemEvent(
       })
 
     const gotItemButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = gotItemButton.closest(".lazy-vaccine")
+    const wrapperElement: HTMLElement | null = gotItemButton.closest(InjectWrapperClassName)
     clickNextItemButton(wrapperElement)
   })
 }
@@ -328,11 +377,36 @@ export function registerCheckAnswerEvent() {
     e.stopPropagation()
 
     const checkBtn = e.target as Element
-    const wrapperElement: HTMLElement | null = checkBtn.closest(".qna-card-wrapper")
-    const answerElements = wrapperElement?.querySelectorAll(".answer-btn")
+    const wrapperElement: HTMLElement = checkBtn.closest(InjectWrapperClassName)!
+    const contentWrapperElement: HTMLElement | null = checkBtn.closest(".qna-card-wrapper")
+    const answerElements = contentWrapperElement?.querySelectorAll(".answer-btn")
 
-    const answersData = wrapperElement?.getAttribute("data-answers") || ""
+    const answersData = contentWrapperElement?.getAttribute("data-answers") || ""
     const answers = JSON.parse(decodeBase64(answersData))
+
+    const selectedAnswers = Array.from(answerElements || [])
+      .filter((answer) => answer.classList.contains("selected"))
+      .map((answer) => answer.innerHTML)
+    const correctAnswers = answers.filter((answer: any) => answer.isCorrect).map((answer: any) => answer.answer)
+
+    const isAnsweredCorrect = isArraysEqual(selectedAnswers, correctAnswers)
+    const isAnswered = wrapperElement.dataset.answered === "true"
+
+    !isAnswered &&
+      wrapperElement.dataset.setid &&
+      wrapperElement.dataset.itemid &&
+      sendInteractItemMessage(
+        wrapperElement.dataset.setid!,
+        wrapperElement.dataset.itemid!,
+        isAnsweredCorrect ? ItemsInteractionAnswerCorrect : ItemsInteractionAnswerIncorrect
+      )
+        .then(() => {
+          wrapperElement.dataset.answered = "true"
+        })
+        .catch((error) => {
+          // TODO: handle error case.
+          console.error(error)
+        })
 
     answerElements?.forEach((answer, idx) => {
       if (!answers) return
@@ -366,5 +440,52 @@ export function registerSelectEvent() {
     sendSetLocalSettingMessage(settingKey, selectedOptionKey)
     ;(wrapper?.querySelector(".sBtn-text") as HTMLElement).innerText = selectedOptionLabel
     wrapper?.classList.remove("active")
+  })
+}
+
+export function registerSuggestionSearchButtonClickEvent() {
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `.lazy-vaccine .suggestion-card .ant-input-search-button`,
+    async (e: Event) => {
+      const button = e.target as HTMLInputElement
+      const keyword = (button.closest(".ant-input-wrapper")?.querySelector(".ant-input") as HTMLInputElement).value
+
+      redirectToUrlInNewTab(
+        `${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`
+      )
+    }
+  )
+
+  addDynamicEventListener(
+    document.body,
+    "keydown",
+    `.lazy-vaccine .suggestion-card .ant-input`,
+    async (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        const keyword = (e.target as HTMLInputElement).value
+
+        redirectToUrlInNewTab(
+          `${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`
+        )
+      }
+    }
+  )
+}
+
+export function registerSuggestionLoginButtonClickEvent(callback: () => Promise<void>) {
+  addDynamicEventListener(document.body, "click", `.lazy-vaccine .suggestion-card .login-button`, async (e: Event) => {
+    const button = e.target as HTMLInputElement
+    button.disabled = true
+
+    sendGetGoogleTokenMessage()
+      .then(callback)
+      .catch((error) => {
+        console.error(error)
+      })
+      .finally(() => {
+        button.disabled = false
+      })
   })
 }

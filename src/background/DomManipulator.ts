@@ -1,4 +1,5 @@
-import { RegexYoutubeHomePage, RegexYoutubeVideoView, RegexFacebookHomePage, SupportingPages, i18n, RegexGoogleHomePage, RegexTwitterHomePage, RegexTwitterPostPage, RegexFacebookWatch, RegexFacebookGaming } from "@/common/consts/constants"
+import { i18n } from "@/common/consts/constants"
+import { getInjectionTargets } from "@/common/repo/injection-targets"
 
 let _getConditionalCallback = function (selector: string, callback: Function) {
   return function (this: Element, e: any) {
@@ -52,37 +53,13 @@ export function insertBefore(newNode: Node, referenceNode: Node) {
   referenceNode.parentNode?.insertBefore(newNode, referenceNode.nextSibling)
 }
 
-export function hrefToSiteName(href: string): string {
-  if (RegExp(RegexYoutubeVideoView).test(href)) {
-    return SupportingPages.youtube.title
-  }
+export async function hrefToSiteName(href: string): Promise<string> {
+  const targets = await getInjectionTargets()
 
-  if (RegExp(RegexYoutubeHomePage).test(href)) {
-    return SupportingPages.youtube.title
-  }
-
-  if (RegExp(RegexFacebookWatch).test(href)) {
-    return SupportingPages.facebook.title
-  }
-
-  if (RegExp(RegexFacebookGaming).test(href)) {
-    return SupportingPages.facebook.title
-  }
-
-  if (RegExp(RegexFacebookHomePage).test(href)) {
-    return SupportingPages.facebook.title
-  }
-
-  if (RegExp(RegexGoogleHomePage).test(href)) {
-    return SupportingPages.google.title
-  }
-
-  if (RegExp(RegexTwitterPostPage).test(href)) {
-    return SupportingPages.twitter.title
-  }
-
-  if (RegExp(RegexTwitterHomePage).test(href)) {
-    return SupportingPages.twitter.title
+  for (const target of targets) {
+    if (RegExp(target.MatchPattern).test(href)) {
+      return target.Title
+    }
   }
 
   throw new Error("not supporting site")

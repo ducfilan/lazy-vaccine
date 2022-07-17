@@ -1,5 +1,5 @@
 import { sendMessage } from "@/background/MessagingFacade"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomItem, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypeSetLocalSetting } from "@/common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomItem, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeToken } from "@/common/consts/constants"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
 
 export function sendClearCachedRandomSetMessage() {
@@ -35,5 +35,11 @@ export function sendSetLocalSettingMessage(settingKey: string, settingValue: str
 export function sendGetLocalSettingMessage(settingKey: string) {
   return new Promise<{ settingValue: string | null }>((resolve, reject) => {
     sendMessage(ChromeMessageTypeGetLocalSetting, { settingKey }, resolve, reject)
+  })
+}
+
+export function sendGetGoogleTokenMessage() {
+  return new Promise<{ token: string }>((resolve, reject) => {
+    sendMessage(ChromeMessageTypeToken, { interactive: true }, resolve, reject)
   })
 }

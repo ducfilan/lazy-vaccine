@@ -417,5 +417,29 @@
   },
   "test_set_encourage_test": {
     "message": "You've almost made it! You don't need to be scared of the test, that test needs to be scared of you. Good luck! ❤️"
+  },
+  "suggestion_card_go_to_home": {
+    "message": "Go to homepage"
+  },
+  "suggestion_card_search_placeholder": {
+    "message": "What do you want to learn?"
+  },
+  "suggestion_card_suggestion_text": {
+    "message": "You didn't subscribed to any learning set. Just 1 more step to start learning, let's find some set to subscribe!"
+  },
+  "suggestion_card_not_logged_in_text": {
+    "message": "Hello! To help you learn, firstly, I want to know who you are. Let's log in. It will take a few seconds only!"
+  },
+  "rich_text_upload_modal_title": {
+    "message": "Insert a new photo"
+  },
+  "rich_text_insert_url_title": {
+    "message": "Insert an url"
+  },
+  "rich_text_upload_tab_title": {
+    "message": "Upload photo"
+  },
+  "rich_text_image_url": {
+    "message": "Image url"
   }
 }

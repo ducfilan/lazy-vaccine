@@ -1,10 +1,14 @@
 const { merge } = require("webpack-merge");
-const common = require("./webpack.config.prod");
+
+const getCommonConfigs = require("./webpack.config.prod");
 
 module.exports = (_, { mode }) => {
-  const isDevelopment = mode === "development";
+  const commonConfigs = getCommonConfigs(_, { mode })
 
-  return merge(common(_, isDevelopment), {
+  return merge(commonConfigs, {
     devtool: "inline-source-map",
+    optimization: {
+      minimize: false
+    }
   });
 }

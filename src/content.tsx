@@ -1,4 +1,4 @@
-import "@/background/templates/css/antd-wrapped.less"
+import "./background/templates/css/antd-wrapped.less"
 
 import PageInjector from "./background/PageInjector"
 import InjectionTargetFactory from "./background/InjectionTargetFactory"
@@ -21,6 +21,8 @@ import {
   registerSelectAnswerEvent,
   registerCheckAnswerEvent,
   registerSelectEvent,
+  registerSuggestionSearchButtonClickEvent,
+  registerSuggestionLoginButtonClickEvent,
 } from "./pages/content-script/eventRegisters"
 import { getHref } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
@@ -30,12 +32,30 @@ import {
   ItemsInteractionIgnore,
   ItemsInteractionShow,
   ItemsInteractionStar,
+  OtherItemTypes,
 } from "./common/consts/constants"
 
 import "@/background/templates/css/_common.scss"
 import "@/background/templates/css/content.scss"
 import "@/background/templates/css/flashcard.scss"
 import "@/background/templates/css/QandA.scss"
+import "@/background/templates/css/suggest-subscribe.scss"
+
+import { hrefToSiteName } from "./background/DomManipulator"
+
+const getNotLoggedInTemplateValues = async () => {
+  return [
+    { key: "type", value: OtherItemTypes.NotLoggedIn.value },
+    { key: "website", value: await hrefToSiteName(getHref()) },
+  ]
+}
+
+const getNotSubscribedTemplateValues = async () => {
+  return [
+    { key: "type", value: OtherItemTypes.NotSubscribed.value },
+    { key: "website", value: await hrefToSiteName(getHref()) },
+  ]
+}
 
 let randomItemIndexVisitMap: number[] = []
 let setInfo: SetInfo | null
@@ -44,34 +64,52 @@ let itemsInPageInteractionMap: {
   [itemId: string]: string[]
 } = {}
 
-detectPageChanged(async () => {
+let isLoggedIn = false
+let havingSubscribedSets = false
+
+detectPageChanged(processInjection, true)
+
+async function processInjection() {
   try {
     // Remove cache from background page (app's scope).
     await sendClearCachedRandomSetMessage()
 
     await initValues()
+
     removeOldCards()
+
     await injectCards()
   } catch (error) {
     console.error(error)
     console.error("error when injecting set item")
   }
-}, true)
+}
 
 registerFlashcardEvents()
 
 async function initValues() {
   try {
+    currentItemPointer = 0
+    havingSubscribedSets = false
+
     setInfo = await sendGetRandomSubscribedSetMessage()
     if (setInfo) {
       randomItemIndexVisitMap = shuffleArray(Array.from(Array(setInfo.items?.length || 0).keys()))
-      currentItemPointer = 0
+      isLoggedIn = true
+      havingSubscribedSets = true
+
       setInfo.itemsInteractions?.map((itemInteractions) => {
         itemsInPageInteractionMap[itemInteractions.itemId] = Object.keys(itemInteractions.interactionCount)
       })
     }
-  } catch (error) {
-    console.error(error)
+  } catch (error: any) {
+    if (error.type === "NotSubscribedError") {
+      havingSubscribedSets = false
+    } else if (error.type === "NotLoggedInError") {
+      isLoggedIn = false
+    } else {
+      console.error(error)
+    }
   }
 }
 
@@ -81,7 +119,7 @@ function removeOldCards() {
 
 async function injectCards() {
   try {
-    const injectionTargets = new InjectionTargetFactory(getHref()).getTargets()
+    const injectionTargets = await new InjectionTargetFactory(getHref()).getTargets()
 
     injectionTargets.forEach(async ({ rate, type, selector, newGeneratedElementSelector, siblingSelector, strict }) => {
       const injector = new PageInjector(rate, type, selector, newGeneratedElementSelector, siblingSelector, strict)
@@ -93,6 +131,14 @@ async function injectCards() {
 }
 
 const randomTemplateValues = async (increaseOnCall: boolean = false) => {
+  if (!isLoggedIn) {
+    return getNotLoggedInTemplateValues()
+  }
+
+  if (!havingSubscribedSets) {
+    return getNotSubscribedTemplateValues()
+  }
+
   const item = getItemAtPointer(currentItemPointer)
   if (increaseOnCall) {
     currentItemPointer++
@@ -187,6 +233,9 @@ function registerFlashcardEvents() {
     await sendClearCachedRandomSetMessage()
     await initValues()
   })
+
+  registerSuggestionSearchButtonClickEvent()
+  registerSuggestionLoginButtonClickEvent(processInjection)
 }
 
 /**

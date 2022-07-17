@@ -26,3 +26,7 @@ export const detectPageChanged = (callback: () => any, initialCall?: boolean) =>
     observer.observe(bodyList, config)
   }
 }
+
+export const redirectToUrlInNewTab = (url: string) => {
+  window?.open(url, "_blank")?.focus()
+}

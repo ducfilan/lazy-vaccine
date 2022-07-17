@@ -3,10 +3,8 @@ import { KeyValuePair } from "@/common/types/types"
 import { DefaultLangCode, LiteralDurationsExtractRegex } from "@consts/constants"
 
 export function formatString(template: string, values: KeyValuePair[]): string {
-  for (let i = 0; i < values.length; i++) {
-    const pair = values[i]
-
-    template = template.replace(`:${pair.key}`, pair.value)
+  for (const pair of values) {
+    template = template.replaceAll(`:${pair.key}`, pair.value)
   }
 
   return template
@@ -67,3 +65,25 @@ export const toTitleCase = (s: string) => s[0].toUpperCase() + s.slice(1)
 export const encodeBase64 = (s: string) => window.btoa(unescape(encodeURIComponent(s)))
 
 export const decodeBase64 = (s: string) => decodeURIComponent(escape(window.atob(s)))
+
+/**
+* If you don't care about primitives and only objects then this function
+* is for you, otherwise look elsewhere.
+* This function will return `false` for any valid json primitive.
+* EG, 'true' -> false
+*     '123' -> false
+*     'null' -> false
+*     '"I'm a string"' -> false
+*/
+export const isValidJson = (jsonString: string) => {
+  try {
+    const o = JSON.parse(jsonString)
+
+    if (o && typeof o === "object") {
+      return o;
+    }
+  }
+  catch (e) { }
+
+  return false
+}

@@ -1,5 +1,6 @@
 import CacheKeys from "./common/consts/cacheKeys"
 import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomItem, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
+import { NotLoggedInError, NotSubscribedError } from "./common/consts/errors"
 import { getGoogleAuthToken } from "./common/facades/authFacade"
 import { Http } from "./common/facades/axiosFacade"
 import { interactToSetItem } from "./common/repo/set"
@@ -10,10 +11,10 @@ import { randomIntFromInterval } from "./common/utils/numberUtils"
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.type) {
     case ChromeMessageTypeToken:
-      getGoogleAuthToken().then((token: string) => {
+      getGoogleAuthToken(request.arg || {}).then((token: string) => {
         sendResponse({ success: true, result: token })
       }).catch(error => {
-        sendResponse({ success: false, error })
+        sendResponse({ success: false, error: toResponseError(error) })
       })
       break
 
@@ -23,10 +24,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         getRandomSubscribedItem(http).then((item: { type: string;[key: string]: any } | null) => {
           sendResponse({ success: true, result: item })
         }).catch(error => {
-          sendResponse({ success: false, error })
+          sendResponse({ success: false, error: toResponseError(error) })
         })
       }).catch(error => {
-        sendResponse({ success: false, error })
+        sendResponse({ success: false, error: toResponseError(error) })
       })
       break
 
@@ -36,10 +37,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         getRandomSubscribedSet(http).then((set) => {
           sendResponse({ success: true, result: set })
         }).catch(error => {
-          sendResponse({ success: false, error })
+          sendResponse({ success: false, error: toResponseError(error) })
         })
-      }).catch(error => {
-        sendResponse({ success: false, error })
+      }).catch((error: Error) => {
+        sendResponse({ success: false, error: toResponseError(error) })
       })
       break
 
@@ -54,10 +55,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         interactItem(http, request.arg.setId, request.arg.itemId, request.arg.action).then(() => {
           sendResponse({ success: true })
         }).catch(error => {
-          sendResponse({ success: false, error })
+          sendResponse({ success: false, error: toResponseError(error) })
         })
       }).catch(error => {
-        sendResponse({ success: false, error })
+        sendResponse({ success: false, error: toResponseError(error) })
       })
       sendResponse({ success: true })
       break
@@ -125,4 +126,16 @@ function getLocalSetting(settingKey: string) {
 
 function setLocalSetting(settingKey: string, settingValue: string) {
   return localStorage.setItem(`${LocalStorageKeyPrefix}${CacheKeys.localSetting}.${settingKey}`, settingValue)
+}
+
+function toResponseError(error: Error) {
+  let type = "Error"
+
+  if (error instanceof NotLoggedInError) {
+    type = "NotLoggedInError"
+  } else if (error instanceof NotSubscribedError) {
+    type = "NotSubscribedError"
+  }
+
+  return { success: false, error: { type: type, message: error.message } }
 }

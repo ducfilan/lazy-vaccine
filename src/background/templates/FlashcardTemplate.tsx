@@ -18,7 +18,7 @@ import { CardInteraction } from "./common/CardInteraction"
 
 export const FlashCardTemplate = (props: { selectedFrontItem: string; selectedBackItem: string }) => {
   return (
-    <div className="lazy-vaccine">
+    <div className="lazy-vaccine" data-setId=":setId" data-itemId=":itemId">
       <DisclaimerInfo />
       <Popover
         top={20}

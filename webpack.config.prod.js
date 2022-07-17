@@ -4,6 +4,8 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CopyPlugin = require("copy-webpack-plugin");
 const DotenvPlugin = require("dotenv-webpack");
+const TerserPlugin = require("terser-webpack-plugin");
+
 
 const path = require("path");
 
@@ -47,6 +49,9 @@ module.exports = (_, { mode }) => {
         {
           test: /\.(png|jpg|gif|svg)$/i,
           type: "asset/resource",
+          generator: {
+            filename: 'static/[hash][ext][query]'
+          },
           exclude: [
             path.join(__dirname, "src/images/ui/fa"),
             path.join(__dirname, "src/images/ui/fa/brands"),
@@ -56,6 +61,9 @@ module.exports = (_, { mode }) => {
         {
           test: /\.svg$/,
           use: ["@svgr/webpack"],
+          generator: {
+            filename: 'static/[hash][ext][query]'
+          },
           include: [
             path.join(__dirname, "src/images/ui/flags"),
             path.join(__dirname, "src/images/ui/fa"),
@@ -106,7 +114,9 @@ module.exports = (_, { mode }) => {
       hot: true,
     },
     plugins: [
-      new DotenvPlugin(),
+      new DotenvPlugin({
+        path: isDevelopment ? "./.env" : "./prod.env"
+      }),
       new CopyPlugin({
         patterns: [{ from: "public", to: "." }],
       }),
@@ -120,5 +130,18 @@ module.exports = (_, { mode }) => {
         process: 'process/browser',
       }),
     ],
+    optimization: {
+      minimize: true,
+      minimizer: [new TerserPlugin({
+        extractComments: false,
+        parallel: true,
+        terserOptions: {
+          ecma: 6,
+          output: {
+            ascii_only: true
+          },
+        },
+      })],
+    },
   };
 }

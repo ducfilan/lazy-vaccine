@@ -2,7 +2,9 @@ import {
   FlashCardOptions,
   i18n,
   InjectTypes,
+  InjectWrapperClassName,
   ItemTypes,
+  OtherItemTypes,
   SettingKeyBackItem,
   SettingKeyFrontItem,
 } from "@/common/consts/constants"
@@ -16,6 +18,8 @@ import React from "react"
 import { QnATemplate } from "./templates/QandATemplate"
 import { sendGetLocalSettingMessage } from "@/pages/content-script/messageSenders"
 import { ContentTemplate } from "./templates/ContentTemplate"
+import { SuggestSubscribeTemplate } from "./templates/SuggestSubscribeTemplate"
+import { SuggestLoginTemplate } from "./templates/SuggestLoginTemplate"
 
 export async function getTemplate(type: string) {
   switch (type) {
@@ -36,8 +40,14 @@ export async function getTemplate(type: string) {
     case ItemTypes.Content.value:
       return renderToString(<ContentTemplate />)
 
+    case OtherItemTypes.NotLoggedIn.value:
+      return renderToString(<SuggestLoginTemplate />)
+
+    case OtherItemTypes.NotSubscribed.value:
+      return renderToString(<SuggestSubscribeTemplate />)
+
     default:
-      return renderToString(<FlashCardTemplate selectedFrontItem={""} selectedBackItem={""} />)
+      return renderToString(<SuggestSubscribeTemplate />)
   }
 }
 
@@ -47,6 +57,7 @@ export default class PageInjector {
   private parentSelector: string
   private newGeneratedElementSelectorParts: PageInjectorSiblingSelectorParts
   private siblingSelectorParts: PageInjectorSiblingSelectorParts
+  private newGeneratedElementSelector: string
   private siblingSelector: string
   private strict: boolean
   private waitTimeOutInMs: number
@@ -83,6 +94,8 @@ export default class PageInjector {
           id: "",
           attrs: [],
         } as PageInjectorSiblingSelectorParts)
+
+    this.newGeneratedElementSelector = newGeneratedElementSelector || ""
     this.newGeneratedElementSelectorParts = newGeneratedElementSelector
       ? this.parseSelector(newGeneratedElementSelector)
       : this.siblingSelectorParts
@@ -193,8 +206,14 @@ export default class PageInjector {
         getTemplate(typeItem || "").then((htmlTemplate) => {
           const htmlString = formatString(htmlTemplate, templateValue)
 
-          const siblingNode = node.querySelector(this.siblingSelector)
-          insertBefore(htmlStringToHtmlNode(htmlString), siblingNode || node)
+          const insertToChildren = this.newGeneratedElementSelector != "" && this.siblingSelector != ""
+          if (insertToChildren) {
+            const siblingNode = node.querySelector(this.siblingSelector)
+            const similarNode = node.querySelector(InjectWrapperClassName)
+            !similarNode && siblingNode && insertBefore(htmlStringToHtmlNode(htmlString), siblingNode)
+          } else {
+            insertBefore(htmlStringToHtmlNode(htmlString), node)
+          }
         })
       })
   }

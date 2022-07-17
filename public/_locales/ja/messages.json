@@ -417,5 +417,29 @@
   },
   "test_set_encourage_test": {
     "message": "あなたはほとんどそれを成し遂げました！あなたはテストを恐れる必要はありません、そのテストはあなたを恐れる必要があります。幸運を！ ❤️"
+  },
+  "suggestion_card_go_to_home": {
+    "message": "ホームページへ"
+  },
+  "suggestion_card_search_placeholder": {
+    "message": "何を勉強したいですか？"
+  },
+  "suggestion_card_suggestion_text": {
+    "message": "学習セットを登録していません。 学習を開始するためにもう1つのステップ、セットを見つけて登録しましょう！"
+  },
+  "suggestion_card_not_logged_in_text": {
+    "message": "こんにちは！ あなたが学ぶのを助けるために、まず、私はあなたが誰であるかを知りたいです。 ログインしましょう。数秒で完了します。"
+  },
+  "rich_text_upload_modal_title": {
+    "message": "写真を追加する"
+  },
+  "rich_text_insert_url_title": {
+    "message": "写真リンクを挿入"
+  },
+  "rich_text_upload_tab_title": {
+    "message": "写真をアップロード"
+  },
+  "rich_text_image_url": {
+    "message": "写真リンク"
   }
 }

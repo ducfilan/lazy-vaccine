@@ -1,5 +1,5 @@
-import * as React from "react"
-import { Layout, Button, Input, ConfigProvider, notification } from "antd"
+import React from "react"
+import { Layout, Button, Input, ConfigProvider, Skeleton, notification } from "antd"
 import enUS from "antd/lib/locale/en_US"
 
 import Navbar from "@/common/components/Navbar"
@@ -28,13 +28,14 @@ import CategorySetsPage from "./Pages/category-sets/CategorySets"
 import SeedDetailPage from "./Pages/seed-detail/SeedDetail"
 import TestSetPage from "./Pages/test-set/TestSet"
 import MarketPlacePage from "./Pages/marketplace/MarketPlacePage"
+import { BeforeLoginPage } from "./Pages/before-login/BeforeLoginPage"
 
 const { Content } = Layout
 
 const AppPage = () => {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [http, setHttp] = useState<Http>()
+  const [http, setHttp] = useState<Http | null>(null)
   const [locale, setLocale] = useState<Locale>(enUS)
 
   const navigate = useNavigate()
@@ -44,9 +45,16 @@ const AppPage = () => {
     try {
       setIsLoading(true)
 
-      getGoogleAuthToken().then((token: string) => {
-        setHttp(new Http(token, LoginTypes.google))
-      })
+      getGoogleAuthToken()
+        .then((token: string) => {
+          setHttp(new Http(token, LoginTypes.google))
+        })
+        .catch((error: any) => {
+          console.error(error)
+        })
+        .finally(() => {
+          setIsLoading(false)
+        })
     } catch (error) {
       // Not able to login with current token, ignore to show the first page to login.
       // TODO: Unauthorized resolution.
@@ -56,23 +64,26 @@ const AppPage = () => {
   useEffect(() => {
     if (!http) return
 
+    setIsLoading(true)
+
     getMyInfo(http)
       .then((userInfo) => {
         setUser(userInfo)
-        setIsLoading(false)
       })
       .catch((error) => {
-        setIsLoading(false)
         notification["error"]({
           message: i18n("error"),
           description: i18n("unexpected_error_message"),
           duration: null,
         })
       })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }, [http])
 
   return (
-    <GlobalContext.Provider value={{ user, setUser, http }}>
+    <GlobalContext.Provider value={{ user, setUser, http, setHttp }}>
       <ConfigProvider locale={locale}>
         <Layout>
           <Navbar
@@ -103,19 +114,27 @@ const AppPage = () => {
             <PagesNavigator path={location.pathname} />
             <Layout style={{ padding: 24 }}>
               <Content>
-                <Routes>
-                  <Route path={AppPages.Home.path} element={<HomePage />} />
-                  <Route path={AppPages.CreateSet.path} element={<CreateSetPage />} />
-                  <Route path={AppPages.EditSet.path} element={<CreateSetPage />} />
-                  <Route path={AppPages.Sets.path} element={<SearchResultPage />} />
-                  <Route path={AppPages.SetDetail.path} element={<SetDetailPage />} />
-                  <Route path={AppPages.UserProfile.path} element={<UserProfilePage />} />
-                  <Route path={AppPages.MySpace.path} element={<UserProfilePage />} />
-                  <Route path={AppPages.CategorySets.path} element={<CategorySetsPage />} />
-                  <Route path={AppPages.MarketPlace.path} element={<MarketPlacePage />} />
-                  <Route path={AppPages.SeedDetail.path} element={<SeedDetailPage />} />
-                  <Route path={AppPages.TestSet.path} element={<TestSetPage />} />
-                </Routes>
+                {!http ? (
+                  isLoading ? (
+                    <Skeleton active />
+                  ) : (
+                    <BeforeLoginPage />
+                  )
+                ) : (
+                  <Routes>
+                    <Route path={AppPages.Home.path} element={<HomePage />} />
+                    <Route path={AppPages.CreateSet.path} element={<CreateSetPage />} />
+                    <Route path={AppPages.EditSet.path} element={<CreateSetPage />} />
+                    <Route path={AppPages.Sets.path} element={<SearchResultPage />} />
+                    <Route path={AppPages.SetDetail.path} element={<SetDetailPage />} />
+                    <Route path={AppPages.UserProfile.path} element={<UserProfilePage />} />
+                    <Route path={AppPages.MySpace.path} element={<UserProfilePage />} />
+                    <Route path={AppPages.CategorySets.path} element={<CategorySetsPage />} />
+                    <Route path={AppPages.MarketPlace.path} element={<MarketPlacePage />} />
+                    <Route path={AppPages.SeedDetail.path} element={<SeedDetailPage />} />
+                    <Route path={AppPages.TestSet.path} element={<TestSetPage />} />
+                  </Routes>
+                )}
               </Content>
             </Layout>
           </Layout>

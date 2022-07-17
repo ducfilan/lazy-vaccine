@@ -3,6 +3,7 @@ import { Col, Row, Checkbox, Card, Divider } from "antd"
 import { useSetDetailContext } from "../contexts/SetDetailContext"
 import { i18n, ItemTypes } from "@/common/consts/constants"
 import RichTextEditor from "@/pages/app/components/RichTextEditor"
+import { isValidJson } from "@/common/utils/stringUtils"
 
 const Items = () => {
   const { setInfo } = useSetDetailContext()
@@ -32,7 +33,11 @@ const Items = () => {
           case ItemTypes.QnA.value:
             innerContent = (
               <>
-                <p className="set-detail--item-question">{item.question}</p>
+                {isValidJson(item.question) ? (
+                  <RichTextEditor readOnly value={item.question} />
+                ) : (
+                  <p className="set-detail--item-question">{item.question}</p>
+                )}
 
                 <Divider className="is-uppercase">{i18n("set_detail_answers")}</Divider>
                 {item.answers!.map((answer: any, ai: number) => (

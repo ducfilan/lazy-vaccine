@@ -1,0 +1,82 @@
+.lazy-vaccine {
+  .card--face {
+    display: grid;
+    gap: 10px;
+    grid-template-areas: "a b";
+    align-items: start;
+    margin-bottom: 20px;
+    font-size: 25px;
+
+    .shiba-img-wrapper {
+      text-align: right;
+
+      img {
+        width: 150px;
+        vertical-align: "top";
+      }
+    }
+
+    .right-part-wrapper {
+      max-width: 500px;
+    }
+
+    .talk-bubble {
+      display: inline-block;
+      position: relative;
+      height: auto;
+      background-color: $primary;
+      border-radius: 20px;
+    }
+
+    .tri-right.left-in:after {
+      content: " ";
+      position: absolute;
+      width: 0;
+      height: 0;
+      left: -20px;
+      right: auto;
+      top: 50px;
+      bottom: auto;
+      border: 12px solid;
+      border-color: $primary $primary transparent transparent;
+    }
+
+    .talk-text {
+      padding: 1em;
+      text-align: left;
+      line-height: 1.5em;
+
+      p {
+        /* remove webkit p margins */
+        -webkit-margin-before: 0em;
+        -webkit-margin-after: 0em;
+        color: $white;
+      }
+    }
+  }
+
+  .login-button-wrapper {
+    width: 100%;
+    margin-top: 20px;
+
+    .login-button {
+      @include box-shadow;
+
+      width: 100%;
+      height: 60px;
+      font-size: 24px;
+      color: $primary;
+      padding: 0 50px;
+
+      &:after {
+        border-color: transparent transparent #dbdbdb #dbdbdb !important;
+      }
+
+      .anticon {
+        color: $google-color;
+        font-size: 32px;
+        vertical-align: middle;
+      }
+    }
+  }
+}

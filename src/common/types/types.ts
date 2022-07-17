@@ -201,6 +201,8 @@ export type SetStatisticsResponse = {
   learntItemsCount: number,
 }
 
+export type InjectionTargetsResponse = { Title: string, MatchPattern: string; Targets: InjectionTarget[], Order: number }[]
+
 export type TestResult = {
   result: {
     total: number,
@@ -246,4 +248,14 @@ export type Mission = {
   _id: string,
   missionId: number,
   missionDetail: string
+}
+
+export type ImageElement = {
+  type: 'image'
+  url: string
+  children: EmptyText[]
+}
+
+export type EmptyText = {
+  text: string
 }

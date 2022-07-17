@@ -1,9 +1,9 @@
-import * as React from "react"
+import React from "react"
 import { useParams } from "react-router-dom"
 
 import { Col, notification, Row } from "antd"
 
-import PageHeader from "../../components/PageHeader"
+import PageHeader from "@/pages/app/components/PageHeader"
 import { SetInfo } from "@/common/types/types"
 import { getSetInfo } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"

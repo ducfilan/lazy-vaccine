@@ -1,5 +1,3 @@
-import { InjectionTarget } from "@/common/types/types"
-
 export const AppBasePath = "pages/lazy-vaccine.html#"
 
 export const AppPages = {
@@ -112,6 +110,10 @@ export const SupportingPages: { [brandName: string]: { key: string, title: strin
     key: "pinterest",
     title: "Pinterest",
   },
+  messenger: {
+    key: "messenger",
+    title: "FB Messenger",
+  },
 }
 
 export const CreateSetDescriptionMaxLength = 250
@@ -128,6 +130,12 @@ export const ItemTypes = {
   TermDef: { label: "Term - Definition", value: "term-def" },
   QnA: { label: "Question - Answers", value: "q&a" },
   Content: { label: "Content", value: "content" },
+}
+
+// Item types to use when cannot get the learning item.
+export const OtherItemTypes = {
+  NotLoggedIn: { value: "not-logged-in" },
+  NotSubscribed: { value: "not-subscribed" },
 }
 
 export const TabKeyCode = "Tab"
@@ -149,7 +157,8 @@ export const TestResultLevel = {
   Medium: 0.7,
 }
 
-export const StaticBaseUrl = "https://static.lazyvaccine.com"
+export const StaticBaseUrl = process.env.STATIC_ASSET_URL
+export const StaticApiBaseUrl = process.env.STATIC_API_BASE_URL
 
 export const InjectTypes = {
   FixedPosition: 1,
@@ -164,103 +173,6 @@ export const ChromeMessageTypeInteractItem = "interact-item"
 export const ChromeMessageTypeSetLocalSetting = "set-local-setting"
 export const ChromeMessageTypeGetLocalSetting = "get-local-setting"
 
-export const InjectionTargets = {
-  YoutubeHome: [
-    {
-      rate: 1,
-      selector: "#primary",
-      type: InjectTypes.FixedPosition
-    } as InjectionTarget,
-    {
-      rate: 0.1,
-      selector: "#contents",
-      type: InjectTypes.DynamicGenerated,
-      siblingSelector: ".style-scope.ytd-rich-grid-row"
-    } as InjectionTarget
-  ],
-  YoutubeVideoView: [
-    {
-      rate: 1,
-      selector: "#secondary.ytd-watch-flexy",
-      type: InjectTypes.FixedPosition
-    } as InjectionTarget
-  ],
-  FacebookHomePage: [
-    {
-      rate: 0.2,
-      selector: "[role='feed']",
-      type: InjectTypes.DynamicGenerated,
-      newGeneratedElementSelector: "div",
-      siblingSelector: "div:first-child",
-      strict: true,
-    } as InjectionTarget,
-    {
-      rate: 1,
-      selector: "[role=complementary]",
-      type: InjectTypes.FixedPosition
-    } as InjectionTarget
-  ],
-  FacebookWatch: [
-    {
-      rate: 1,
-      selector: ".hybvsw6c.cjfnh4rs",
-      type: InjectTypes.FixedPosition
-    } as InjectionTarget
-  ],
-  FacebookGaming: [
-    {
-      rate: 1,
-      selector: ".hybvsw6c.cjfnh4rs",
-      type: InjectTypes.FixedPosition
-    } as InjectionTarget
-  ],
-  GoogleHomePage: [
-    {
-      rate: 1,
-      selector: ".o3j99.qarstb",
-      type: InjectTypes.FixedPosition,
-    } as InjectionTarget
-  ],
-  TwitterHomePage: [
-    {
-      rate: 0.1,
-      selector: "[data-testid=primaryColumn]",
-      type: InjectTypes.DynamicGenerated,
-      newGeneratedElementSelector: "[data-testId=cellInnerDiv]",
-      siblingSelector: "div:first-child",
-    } as InjectionTarget,
-    {
-      rate: 1,
-      selector: ".r-1yadl64.r-1ifxtd0.r-1udh08x",
-      type: InjectTypes.FixedPosition,
-    } as InjectionTarget
-  ],
-  TwitterPostPage: [
-    {
-      rate: 0.1,
-      selector: "[data-testid=primaryColumn]",
-      type: InjectTypes.DynamicGenerated,
-      newGeneratedElementSelector: "[data-testId=cellInnerDiv]",
-      siblingSelector: "div:first-child",
-    } as InjectionTarget,
-    {
-      rate: 1,
-      selector: ".r-1yadl64.r-1ifxtd0.r-1udh08x",
-      type: InjectTypes.FixedPosition,
-    } as InjectionTarget
-  ],
-}
-
-export const RegexYoutubeHomePage = /^https:\/\/(www\.)*youtube\.com\/{0,1}.*$/
-export const RegexYoutubeVideoView = /^https:\/\/(www\.)*youtube\.com\/watch\?v=.*$/
-export const RegexYoutubeSearchResults = /^https:\/\/(www\.)*youtube\.com\/results\?search_query=(.*)$/
-export const RegexFacebookHomePage = /^https:\/\/(www\.)*facebook\.com\/{0,1}.*$/
-export const RegexFacebookWatch = /^https:\/\/(www\.)*facebook\.com\/watch{0,1}.*$/
-export const RegexFacebookGaming = /^https:\/\/(www\.)*facebook\.com\/gaming{0,1}.*$/
-export const RegexGoogleHomePage = /^https:\/\/(www\.)*google\.com*(\.\w*)*\/{0,1}.*$/
-export const RegexTwitterHomePage = /^https:\/\/(www\.)*twitter\.com\/home\/{0,1}.*$/
-export const RegexTwitterPostPage = /^https:\/\/(www\.)*twitter\.com\/.*?\/status\/\d+.*$/
-
 export const InteractionSubscribe = "subscribe"
 export const InteractionLike = "like"
 export const InteractionDislike = "dislike"
@@ -270,11 +182,13 @@ export const ColorPrimary = "#12b886"
 
 export const ItemsInteractionShow = 'show'
 export const ItemsInteractionNext = 'next'
+export const ItemsInteractionPrev = 'prev'
 export const ItemsInteractionIgnore = 'ignore'
 export const ItemsInteractionForcedDone = 'forced-done'
 export const ItemsInteractionAnswerCorrect = 'answer-correct'
 export const ItemsInteractionAnswerIncorrect = 'answer-incorrect'
 export const ItemsInteractionStar = 'star'
+export const ItemsInteractionFlip = 'flip'
 
 export const AchievementChartOrderIndex = {
   LearntItems: 0,
@@ -293,3 +207,5 @@ export const FlashCardOptions: { [key: string]: string } = {
   "term": i18n("common_term"),
   "definition": i18n("common_definition"),
 }
+
+export const InjectWrapperClassName = ".lazy-vaccine"
