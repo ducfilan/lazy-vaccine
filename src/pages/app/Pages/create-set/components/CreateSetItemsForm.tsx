@@ -325,7 +325,7 @@ export const CreateSetItemsForm = () => {
                               label={i18n("create_set_question_placeholder")}
                               rules={[RequiredRule]}
                             >
-                              <Input.TextArea placeholder={i18n("create_set_question_placeholder")} />
+                              <RichTextEditor value="" placeholder={i18n("create_set_question_placeholder")} />
                             </Form.Item>
                             <Form.List
                               name={[name, "answers"]}

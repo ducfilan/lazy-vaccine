@@ -3,7 +3,7 @@ import React from "react"
 import { hrefToSiteName } from "@/background/DomManipulator"
 import { ItemTypes, SettingKeyBackItem, SettingKeyFrontItem } from "@/common/consts/constants"
 import { SetInfoItem, KeyValuePair } from "@/common/types/types"
-import { encodeBase64 } from "@/common/utils/stringUtils"
+import { encodeBase64, isValidJson } from "@/common/utils/stringUtils"
 import { renderToString } from "react-dom/server"
 import RichTextEditor from "@/pages/app/components/RichTextEditor"
 import { getHref } from "./domHelpers"
@@ -34,6 +34,12 @@ async function mapItemTemplateValues(item: SetInfoItem): Promise<KeyValuePair[]>
 
       delete item.term
       delete item.definition
+      break
+
+    case ItemTypes.QnA.value:
+      item.question = isValidJson(item.question)
+        ? renderToString(<RichTextEditor readOnly value={item.question} />)
+        : item.question
       break
 
     case ItemTypes.Content.value:
