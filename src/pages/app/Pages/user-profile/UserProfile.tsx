@@ -159,10 +159,8 @@ const UserProfilePage = (props: any) => {
         if (!statistic) return
 
         labels.push(moment(statistic.date).format("MM/DD/YYYY"))
-        datasets[AchievementChartOrderIndex.LearntItems].data.push(statistic.interactions.show || 0)
-        datasets[AchievementChartOrderIndex.IncorrectItems].data.push(
-          statistic.interactions.incorrect || Math.floor(statistic.interactions.show / 4) // TODO: Hard-code, fix the logic.
-        )
+        datasets[AchievementChartOrderIndex.LearntItems].data.push(statistic.interactions.correct || 0)
+        datasets[AchievementChartOrderIndex.IncorrectItems].data.push(statistic.interactions.incorrect || 0)
         datasets[AchievementChartOrderIndex.StaredItems].data.push(statistic.interactions.star || 0)
       })
 

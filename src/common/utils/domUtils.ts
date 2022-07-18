@@ -1,5 +1,12 @@
-export const detectPageChanged = (callback: () => any, initialCall?: boolean) => {
-  var oldHref = document.location.href
+let observerConfig = {
+  childList: true,
+  subtree: true
+}
+
+export const detectPageChanged = (callback: () => any,
+  initialCall?: boolean,
+  equalFn: (oldHref: string, newHref: string) => boolean = (o: string, n: string) => o === n) => {
+  let oldHref = document.location.href
 
   window.onload = async function () {
     initialCall && (await callback())
@@ -11,19 +18,14 @@ export const detectPageChanged = (callback: () => any, initialCall?: boolean) =>
 
     const observer = new MutationObserver(function (mutations) {
       mutations.forEach(async function (_mutation) {
-        if (oldHref != document.location.href) {
+        if (!equalFn(oldHref, document.location.href)) {
           oldHref = document.location.href
           await callback()
         }
       })
     })
 
-    var config = {
-      childList: true,
-      subtree: true
-    }
-
-    observer.observe(bodyList, config)
+    observer.observe(bodyList, observerConfig)
   }
 }
 

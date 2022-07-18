@@ -42,6 +42,22 @@ import "@/background/templates/css/QandA.scss"
 import "@/background/templates/css/suggest-subscribe.scss"
 
 import { hrefToSiteName } from "./background/DomManipulator"
+import { getInjectionTargets } from "./common/repo/injection-targets"
+
+function hrefComparer(this: any, oldHref: string, newHref: string) {
+  for (const target of this?.targets || []) {
+    const oldId = oldHref.match(target.MatchPattern)?.groups?.id
+    const newId = newHref.match(target.MatchPattern)?.groups?.id
+
+    if (!oldId && !newId) {
+      continue
+    }
+
+    return oldId === newId
+  }
+
+  return oldHref === newHref
+}
 
 const getNotLoggedInTemplateValues = async () => {
   return [
@@ -67,7 +83,13 @@ let itemsInPageInteractionMap: {
 let isLoggedIn = false
 let havingSubscribedSets = false
 
-detectPageChanged(processInjection, true)
+getInjectionTargets()
+  .then((targets) => {
+    detectPageChanged(processInjection, true, hrefComparer.bind({ targets }))
+  })
+  .catch((err) => {
+    console.error(err)
+  })
 
 async function processInjection() {
   try {
