@@ -85,6 +85,8 @@ let itemsInPageInteractionMap: {
 let isLoggedIn = false
 let havingSubscribedSets = false
 
+let allInjectors: PageInjector[] | undefined = []
+
 getInjectionTargets()
   .then((targets) => {
     detectPageChanged(processInjection, true, hrefComparer.bind({ targets }))
@@ -94,6 +96,8 @@ getInjectionTargets()
   })
 
 async function processInjection() {
+  console.log("Debug: processInjection called")
+
   try {
     // Remove cache from background page (app's scope).
     await sendClearCachedRandomSetMessage()
@@ -102,11 +106,21 @@ async function processInjection() {
 
     removeOldCards()
 
-    await injectCards()
+    disconnectExistingObservers()
+    allInjectors = await injectCards()
   } catch (error) {
     console.error(error)
     console.error("error when injecting set item")
   }
+}
+
+function disconnectExistingObservers() {
+  if (!allInjectors) return
+
+  allInjectors.forEach((injector) => {
+    console.log("Debug: getAllObservers: " + injector.getAllObservers().length)
+    injector.getAllObservers().forEach((observer) => observer.stop())
+  })
 }
 
 registerFlashcardEvents()
@@ -145,20 +159,37 @@ function removeOldCards() {
   document.querySelectorAll(".lazy-vaccine").forEach((el) => el.remove())
 }
 
-async function injectCards() {
+async function injectCards(): Promise<PageInjector[]> {
   try {
     const injectionTargets = await new InjectionTargetFactory(getHref()).getTargets()
+    console.log("Debug: injectCards called, injectionTargets: " + injectionTargets.length)
+
+    let injectors: PageInjector[] = []
 
     injectionTargets.forEach(async ({ rate, type, selector, newGeneratedElementSelector, siblingSelector, strict }) => {
       const injector = new PageInjector(rate, type, selector, newGeneratedElementSelector, siblingSelector, strict)
       injector.waitInject(randomTemplateValues)
+
+      injectors.push(injector)
     })
+
+    return injectors
   } catch (error) {
     console.log(`unexpected error: ${JSON.stringify(error)}`)
+    return []
   }
 }
 
 const randomTemplateValues = async (increaseOnCall: boolean = false) => {
+  console.log(
+    "Debug: randomTemplateValues called, isLoggedIn: " +
+      isLoggedIn +
+      ", havingSubscribedSets: " +
+      havingSubscribedSets +
+      ", items count: " +
+      setInfo?.items?.length
+  )
+
   if (!isLoggedIn) {
     return getNotLoggedInTemplateValues()
   }
