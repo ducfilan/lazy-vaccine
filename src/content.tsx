@@ -49,6 +49,8 @@ function hrefComparer(this: any, oldHref: string, newHref: string) {
     const oldId = oldHref.match(target.MatchPattern)?.groups?.id
     const newId = newHref.match(target.MatchPattern)?.groups?.id
 
+    console.log(`Debug: oldHref: ${oldHref}, newHref: ${newHref}, oldId: ${oldId}, newId: ${newId}`)
+
     if (!oldId && !newId) {
       continue
     }
@@ -125,9 +127,13 @@ async function initValues() {
       })
     }
   } catch (error: any) {
-    if (error.type === "NotSubscribedError") {
+    if (error?.error?.type === "NotSubscribedError") {
+      console.log("Debug: NotSubscribedError")
       havingSubscribedSets = false
-    } else if (error.type === "NotLoggedInError") {
+      isLoggedIn = true
+    } else if (error?.error?.type === "NotLoggedInError") {
+      console.log("Debug: NotLoggedInError")
+      havingSubscribedSets = false
       isLoggedIn = false
     } else {
       console.error(error)

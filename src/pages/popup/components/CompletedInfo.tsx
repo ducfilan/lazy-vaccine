@@ -12,9 +12,9 @@ import Icon, {
   SmileOutlined,
 } from "@ant-design/icons"
 
-import { User } from "@/common/types/types"
+import { GeneralInfoCounts, User } from "@/common/types/types"
 import RegisterSteps from "@/common/consts/registerSteps"
-import { getSetsStatistics, getUserStatistics, updateUserInfo } from "@/common/repo/user"
+import { getGeneralInfoCounts, getLearningProgressInfo, updateUserInfo } from "@/common/repo/user"
 import { formatNumber } from "@/common/utils/stringUtils"
 
 import NextPrevButton from "./NextPrevButton"
@@ -69,11 +69,7 @@ function HeaderContent(props: { setsStatistics: any }) {
             </Col>
             <Col className="gutter-row" span={6}>
               {/* TODO: remove mock tree data */}
-              <Statistic
-                title={i18n("popup_stats_trees_plant")}
-                value={2}
-                prefix={<Icon component={TreeIcon} />}
-              />
+              <Statistic title={i18n("popup_stats_trees_plant")} value={2} prefix={<Icon component={TreeIcon} />} />
             </Col>
           </Row>
         </Card>
@@ -84,8 +80,8 @@ function HeaderContent(props: { setsStatistics: any }) {
 
 function CompletedInfo() {
   const { user, setUser, http } = useGlobalContext()
-  const [setsStatistics, setSetsStatistics] = useState<any>()
-  const [userStatistics, setUserStatistics] = useState<any>()
+  const [generalInfoCounts, setGeneralInfoCounts] = useState<GeneralInfoCounts>()
+  const [learningProgressInfo, setLearningProgressInfo] = useState<any>()
 
   useEffect(() => {
     user && getSetsStatisticsInfo()
@@ -97,10 +93,11 @@ function CompletedInfo() {
     try {
       const endDate = Date.now()
       const sevenDaysAgo: Date = new Date(endDate - 7 * 24 * 60 * 60 * 1000)
-      const [userStatistics, setStatistics] = await Promise.all([
-        getUserStatistics(http, moment(sevenDaysAgo).format("YYYY-MM-DD"), moment(endDate).format("YYYY-MM-DD")),
-        getSetsStatistics(http),
-      ])
+      const learningProgressInfoRaw = await getLearningProgressInfo(
+        http,
+        moment(sevenDaysAgo).format("YYYY-MM-DD"),
+        moment(endDate).format("YYYY-MM-DD")
+      )
       let labels: string[] = [],
         datasets: any = [
           {
@@ -119,7 +116,7 @@ function CompletedInfo() {
             data: [],
           },
         ]
-      userStatistics.forEach((statistic) => {
+      learningProgressInfoRaw.forEach((statistic) => {
         if (!statistic) return
 
         labels.push(moment(statistic.date).format("MM/DD/YYYY"))
@@ -128,8 +125,8 @@ function CompletedInfo() {
         datasets[AchievementChartOrderIndex.StaredItems].data.push(statistic.interactions.star || 0)
       })
 
-      setUserStatistics({ labels, datasets })
-      setSetsStatistics(setStatistics)
+      setLearningProgressInfo({ labels, datasets })
+      setGeneralInfoCounts(await getGeneralInfoCounts(http))
     } catch (error) {
       notification["error"]({
         message: i18n("error"),
@@ -168,9 +165,9 @@ function CompletedInfo() {
 
   return (
     <div className="completed-info--wrapper">
-      {setsStatistics && (
+      {generalInfoCounts && (
         <>
-          <PopupHeader content={<HeaderContent setsStatistics={setsStatistics} />} />
+          <PopupHeader content={<HeaderContent setsStatistics={generalInfoCounts} />} />
           <div className="completed-info--pages-list">
             <NextPrevButton direction={"left"} onPrev={goBack} />
             <Row gutter={[32, 16]} className="completed-info--button-list">
@@ -213,9 +210,9 @@ function CompletedInfo() {
           </div>
         </>
       )}
-      {userStatistics && (
+      {learningProgressInfo && (
         <div className="chart-wrapper">
-          <AchievementChart statistics={userStatistics} />
+          <AchievementChart statistics={learningProgressInfo} />
         </div>
       )}
     </div>

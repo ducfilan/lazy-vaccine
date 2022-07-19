@@ -1,31 +1,17 @@
 import CacheKeys from "./common/consts/cacheKeys"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomItem, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
 import { NotLoggedInError, NotSubscribedError } from "./common/consts/errors"
 import { getGoogleAuthToken } from "./common/facades/authFacade"
 import { Http } from "./common/facades/axiosFacade"
 import { interactToSetItem } from "./common/repo/set"
 import { getUserInteractionRandomSet } from "./common/repo/user"
-import { SetInfo, SetInfoItem } from "./common/types/types"
-import { randomIntFromInterval } from "./common/utils/numberUtils"
+import { SetInfo } from "./common/types/types"
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.type) {
     case ChromeMessageTypeToken:
       getGoogleAuthToken(request.arg || {}).then((token: string) => {
         sendResponse({ success: true, result: token })
-      }).catch(error => {
-        sendResponse({ success: false, error: toResponseError(error) })
-      })
-      break
-
-    case ChromeMessageTypeGetRandomItem:
-      getGoogleAuthToken().then((token: string) => {
-        const http = new Http(token, LoginTypes.google)
-        getRandomSubscribedItem(http).then((item: { type: string;[key: string]: any } | null) => {
-          sendResponse({ success: true, result: item })
-        }).catch(error => {
-          sendResponse({ success: false, error: toResponseError(error) })
-        })
       }).catch(error => {
         sendResponse({ success: false, error: toResponseError(error) })
       })
@@ -79,16 +65,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   return true
 })
-
-async function getRandomSubscribedItem(http: Http): Promise<SetInfoItem | null> {
-  const randomSetInfo = await getRandomSubscribedSet(http)
-
-  if (!randomSetInfo || !randomSetInfo.items || randomSetInfo.items.length === 0) return null
-  const randomPosition = randomIntFromInterval(0, randomSetInfo.items.length - 1)
-  const item = randomSetInfo.items[randomPosition]
-
-  return { ...item, setId: randomSetInfo._id, setTitle: randomSetInfo.name }
-}
 
 async function getRandomSubscribedSet(http: Http): Promise<SetInfo | null> {
   // TODO: Handle situation when set has edited, item ids got changed.

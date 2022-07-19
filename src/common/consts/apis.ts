@@ -16,7 +16,7 @@ const Apis = {
   getUserInteractionSets: (userId: string, interaction: string, skip: number, limit: number) => `${Apis.users}/${userId}/sets?interaction=${interaction}&skip=${skip}&limit=${limit}`,
   randomSet: (interaction: string) => `${Apis.me}/random-set?interaction=${interaction}`,
   itemsInteractions: (beginDate: string, endDate: string) => `items-statistics?beginDate=${beginDate}&endDate=${endDate}`,
-  setsInteractions: () => `sets-statistics`,
+  generalInfoCounts: "sets-statistics",
   uploadTestResult: (setId: string) => `/interactions/${setId}/upload-result`,
   getMissions: "/missions",
   getInjectionTargets: `${StaticApiBaseUrl}/injection-targets.json`,

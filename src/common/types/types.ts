@@ -185,7 +185,7 @@ export type SeedInfo = {
   price: number
 }
 
-export type UserStatisticsResponse = {
+export type LearningProgressInfo = {
   userId: string,
   _id: string,
   date: string,
@@ -194,7 +194,7 @@ export type UserStatisticsResponse = {
   }
 }
 
-export type SetStatisticsResponse = {
+export type GeneralInfoCounts = {
   _id: string,
   subscribedSetsCount: number,
   totalItemsCount: number,
