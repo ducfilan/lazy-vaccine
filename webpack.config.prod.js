@@ -140,6 +140,9 @@ module.exports = (_, { mode }) => {
           output: {
             ascii_only: true
           },
+          compress: {
+            drop_console: true,
+          },
         },
       })],
     },
