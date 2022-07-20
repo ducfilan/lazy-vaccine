@@ -1,10 +1,8 @@
-import * as React from "react"
+import React from "react"
 
 import { SetInfo } from "@/common/types/types"
-import { List, Skeleton, Typography } from "antd"
+import { List, Skeleton } from "antd"
 import SetItemCardSmall from "@/pages/app/components/SetItemCardSmall"
-
-const { useEffect } = React
 
 const SearchResultItems = (props: { sets: SetInfo[] }) => {
   return (

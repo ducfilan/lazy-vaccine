@@ -29,14 +29,12 @@ export function registerFlipCardEvent() {
     }
     const wrapperElement: HTMLElement = cardFace.closest(InjectWrapperClassName)!
 
-    sendInteractItemMessage(
-      wrapperElement.dataset["setId"]!,
-      wrapperElement.dataset["itemId"]!,
-      ItemsInteractionFlip
-    ).catch((error) => {
-      // TODO: handle error case.
-      console.error(error)
-    })
+    sendInteractItemMessage(wrapperElement.dataset.setid!, wrapperElement.dataset.itemid!, ItemsInteractionFlip).catch(
+      (error) => {
+        // TODO: handle error case.
+        console.error(error)
+      }
+    )
 
     e.stopPropagation()
 

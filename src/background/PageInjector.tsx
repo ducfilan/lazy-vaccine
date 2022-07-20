@@ -22,6 +22,8 @@ import { SuggestSubscribeTemplate } from "./templates/SuggestSubscribeTemplate"
 import { SuggestLoginTemplate } from "./templates/SuggestLoginTemplate"
 
 export async function getTemplate(type: string) {
+  console.log("Debug: getTemplate called, type: " + type)
+
   switch (type) {
     case ItemTypes.TermDef.value:
       const frontItemSettingKey = (await sendGetLocalSettingMessage(SettingKeyFrontItem)) || ""
@@ -65,6 +67,8 @@ export default class PageInjector {
 
   private dynamicNewNodesCount = 0
   private dynamicInjectedCount = 0
+
+  private allObservers: MutationObserverFacade[] = []
 
   /**
    *
@@ -220,6 +224,8 @@ export default class PageInjector {
 
   private inject(templateValueGetter: () => Promise<KeyValuePair[]>) {
     try {
+      console.log("Debug: inject called, this.type: " + this.type)
+
       if (this.type == InjectTypes.FixedPosition) {
         this.injectFixedPosition(templateValueGetter)
       } else if (this.type == InjectTypes.DynamicGenerated) {
@@ -265,7 +271,13 @@ export default class PageInjector {
       this.processAddedNodes.bind(this, { templateValueGetter })
     )
 
+    this.allObservers.push(observer)
+
     observer.observe()
+  }
+
+  getAllObservers(): MutationObserverFacade[] {
+    return this.allObservers
   }
 
   /**

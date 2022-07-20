@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios"
-import { SetInfo, SetStatisticsResponse, User, UserInteractionSetResponse, UserInteractionSetsResponse, UserStatisticsResponse } from "@/common/types/types"
+import { SetInfo, GeneralInfoCounts, User, UserInteractionSetResponse, UserInteractionSetsResponse, LearningProgressInfo } from "@/common/types/types"
 import Apis from "@consts/apis"
 import StatusCode from "@consts/statusCodes"
 import { Http } from "@facades/axiosFacade"
@@ -27,10 +27,19 @@ export async function getUserInfo(http: Http, userId: string): Promise<User> {
 export async function getUserInteractionSets(http: Http, userId: string, interaction: string, skip: number, limit: number): Promise<UserInteractionSetsResponse> {
   const response = await http.get<any, AxiosResponse<UserInteractionSetsResponse>>(Apis.getUserInteractionSets(userId, interaction, skip, limit));
 
-  const sets = response?.data
-  if (!sets) throw new NotSubscribedError("cannot get user interaction sets")
+  const result = response?.data
+  if (!result) {
+    throw new Error("cannot get user interaction sets")
+  }
 
-  sets.sets.forEach(({ set, actions }) => {
+  if (!result.sets) {
+    return {
+      total: 0,
+      sets: []
+    } as UserInteractionSetsResponse
+  }
+
+  result.sets.forEach(({ set, actions }) => {
     set.isSubscribed = actions?.includes(InteractionSubscribe)
     set.isLiked = actions?.includes(InteractionLike)
     set.isDisliked = actions?.includes(InteractionDislike)
@@ -38,14 +47,22 @@ export async function getUserInteractionSets(http: Http, userId: string, interac
     return set
   })
 
-  return sets
+  return result
 }
 
 export async function getUserInteractionRandomSet(http: Http, interaction: string): Promise<SetInfo> {
   const response = await http.get<any, AxiosResponse<UserInteractionSetResponse>>(Apis.randomSet(interaction))
 
-  const { actions, set } = response?.data
-  if (!set) throw new NotSubscribedError("cannot get user interaction sets")
+  const result = response?.data
+  if (!result) throw new Error("cannot get user interaction sets")
+
+  const { actions, set } = result
+
+  if (!set) {
+    if (interaction === InteractionSubscribe) {
+      throw new NotSubscribedError("not subscribed sets")
+    }
+  }
 
   set.isSubscribed = actions?.includes(InteractionSubscribe)
   set.isLiked = actions?.includes(InteractionLike)
@@ -60,20 +77,20 @@ export async function updateUserInfo(http: Http, data: Object): Promise<boolean>
   return status === StatusCode.Ok
 }
 
-export async function getUserStatistics(http: Http, beginDate: string, endDate: string): Promise<UserStatisticsResponse[]> {
-  const response = await http.get<any, AxiosResponse<UserStatisticsResponse[]>>(Apis.itemsInteractions(beginDate, endDate));
+export async function getLearningProgressInfo(http: Http, beginDate: string, endDate: string): Promise<LearningProgressInfo[]> {
+  const response = await http.get<any, AxiosResponse<LearningProgressInfo[]>>(Apis.itemsInteractions(beginDate, endDate));
 
-  const statistics = response?.data
-  if (!statistics) throw new Error("cannot get user statistics")
+  const learningProgressInfo = response?.data
+  if (!learningProgressInfo) throw new Error("cannot get user statistics")
 
-  return statistics
+  return learningProgressInfo
 }
 
-export async function getSetsStatistics(http: Http): Promise<SetStatisticsResponse> {
-  const response = await http.get<any, AxiosResponse<SetStatisticsResponse>>('sets-statistics');
+export async function getGeneralInfoCounts(http: Http): Promise<GeneralInfoCounts> {
+  const response = await http.get<any, AxiosResponse<GeneralInfoCounts | null>>(Apis.generalInfoCounts);
 
-  const setsStatistics = response?.data
-  if (!setsStatistics) throw new Error("cannot get user statistics")
+  const generalInfoCounts = response?.data
+  if (!generalInfoCounts) throw new Error("cannot get user statistics")
 
-  return setsStatistics
+  return generalInfoCounts
 }

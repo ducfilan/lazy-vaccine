@@ -1,7 +1,6 @@
 import React from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 
-import { useNavigate } from "react-router-dom"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
 import { UserProfileContext } from "./contexts/UserProfileContext"
@@ -16,8 +15,8 @@ import {
   InteractionSubscribe,
 } from "@/common/consts/constants"
 import UserProfileSider from "./components/UserProfileSider"
-import { SetInfo, User } from "@/common/types/types"
-import { getUserInfo, getUserInteractionSets, getUserStatistics, getSetsStatistics } from "@/common/repo/user"
+import { GeneralInfoCounts, SetInfo, User } from "@/common/types/types"
+import { getUserInfo, getUserInteractionSets, getLearningProgressInfo, getGeneralInfoCounts } from "@/common/repo/user"
 import SetItemCardLong from "@/pages/app/components/SetItemCardLong"
 import { formatNumber, formatString } from "@/common/utils/stringUtils"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -32,6 +31,14 @@ const { Content } = Layout
 
 const { useState, useEffect } = React
 
+const unexpectedErrorHandler = () => {
+  notification["error"]({
+    message: i18n("error"),
+    description: i18n("unexpected_error_message"),
+    duration: null,
+  })
+}
+
 const UserProfilePage = (props: any) => {
   const navigate = useNavigate()
   const { user, http } = useGlobalContext()
@@ -42,8 +49,8 @@ const UserProfilePage = (props: any) => {
   const [isSearching, setIsSearching] = useState<boolean>(true)
   const [totalSetsCount, setTotalSetsCount] = useState<number>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [userStatistics, setUserStatistics] = useState<any>()
-  const [setsStatistics, setSetsStatistics] = useState<any>()
+  const [learningProgressInfo, setLearningProgressInfo] = useState<any>()
+  const [generalInfoCounts, setGeneralInfoCounts] = useState<GeneralInfoCounts>()
 
   const limitItemsPerGet = 5
 
@@ -61,8 +68,8 @@ const UserProfilePage = (props: any) => {
     setUserInfo()
   }
 
-  function onTabChanged(selectedTab: string) {
-    setSelectedTab(selectedTab)
+  function onTabChanged(newTab: string) {
+    setSelectedTab(newTab)
     resetStates()
   }
 
@@ -85,15 +92,7 @@ const UserProfilePage = (props: any) => {
     } else {
       if (!http) return
 
-      getUserInfo(http, userId)
-        .then(setProfileUser)
-        .catch(() => {
-          notification["error"]({
-            message: i18n("error"),
-            description: i18n("unexpected_error_message"),
-            duration: null,
-          })
-        })
+      getUserInfo(http, userId).then(setProfileUser).catch(unexpectedErrorHandler)
     }
   }
 
@@ -111,13 +110,7 @@ const UserProfilePage = (props: any) => {
         setSkip(sets.length + resp.sets.length)
         setSets([...sets, ...resp.sets.map((s) => s.set)])
       })
-      .catch(() => {
-        notification["error"]({
-          message: i18n("error"),
-          description: i18n("unexpected_error_message"),
-          duration: null,
-        })
-      })
+      .catch(unexpectedErrorHandler)
   }
 
   const hasMore = () => !!totalSetsCount && sets.length < totalSetsCount
@@ -133,10 +126,11 @@ const UserProfilePage = (props: any) => {
     try {
       const endDate = Date.now()
       const sevenDaysAgo: Date = new Date(endDate - 7 * 24 * 60 * 60 * 1000)
-      const [userStatistics, setStatistics] = await Promise.all([
-        getUserStatistics(http, moment(sevenDaysAgo).format("YYYY-MM-DD"), moment(endDate).format("YYYY-MM-DD")),
-        getSetsStatistics(http),
-      ])
+      const learningProgressInfoRaw = await getLearningProgressInfo(
+        http,
+        moment(sevenDaysAgo).format("YYYY-MM-DD"),
+        moment(endDate).format("YYYY-MM-DD")
+      )
       let labels: string[] = [],
         datasets: any = [
           {
@@ -155,19 +149,17 @@ const UserProfilePage = (props: any) => {
             data: [],
           },
         ]
-      userStatistics.forEach((statistic) => {
+      learningProgressInfoRaw.forEach((statistic) => {
         if (!statistic) return
 
         labels.push(moment(statistic.date).format("MM/DD/YYYY"))
-        datasets[AchievementChartOrderIndex.LearntItems].data.push(statistic.interactions.show || 0)
-        datasets[AchievementChartOrderIndex.IncorrectItems].data.push(
-          statistic.interactions.incorrect || Math.floor(statistic.interactions.show / 4) // TODO: Hard-code, fix the logic.
-        )
+        datasets[AchievementChartOrderIndex.LearntItems].data.push(statistic.interactions.correct || 0)
+        datasets[AchievementChartOrderIndex.IncorrectItems].data.push(statistic.interactions.incorrect || 0)
         datasets[AchievementChartOrderIndex.StaredItems].data.push(statistic.interactions.star || 0)
       })
 
-      setUserStatistics({ labels, datasets })
-      setSetsStatistics(setStatistics)
+      setLearningProgressInfo({ labels, datasets })
+      setGeneralInfoCounts(await getGeneralInfoCounts(http))
     } catch (error) {
       notification["error"]({
         message: i18n("error"),
@@ -180,6 +172,7 @@ const UserProfilePage = (props: any) => {
   useEffect(() => {
     user && onPageLoaded()
   }, [http, user])
+
   useEffect(() => {
     profileUser && (selectedTab !== "myAchievement" ? setSetsInfo() : setAchievementInfo())
   }, [selectedTab, profileUser])
@@ -192,22 +185,22 @@ const UserProfilePage = (props: any) => {
           <Content>
             {selectedTab === "myAchievement" ? (
               <div className="top-12px">
-                {setsStatistics && (
+                {generalInfoCounts && (
                   <Card hoverable loading={isLoading} className="completed-info--stats ">
                     <Row gutter={[16, 0]}>
                       <Col className="gutter-row" span={8}>
                         <Statistic
                           title={i18n("popup_stats_sets")}
-                          value={setsStatistics?.subscribedSetsCount}
+                          value={generalInfoCounts?.subscribedSetsCount}
                           prefix={<BookOutlined />}
                         />
                       </Col>
                       <Col className="gutter-row" span={8}>
                         <Statistic
                           title={i18n("common_items")}
-                          value={setsStatistics?.learntItemsCount}
+                          value={generalInfoCounts?.learntItemsCount}
                           prefix={<OrderedListOutlined />}
-                          suffix={`/ ${formatNumber(setsStatistics?.totalItemsCount)}`}
+                          suffix={`/ ${formatNumber(generalInfoCounts?.totalItemsCount)}`}
                         />
                       </Col>
                       {/* TODO: remove mock tree data */}
@@ -221,12 +214,12 @@ const UserProfilePage = (props: any) => {
                     </Row>
                   </Card>
                 )}
-                {userStatistics && (
+                {learningProgressInfo && (
                   <>
                     <Typography.Title level={3} className="top-8px">
                       {i18n("my_space_how_changed")}
                     </Typography.Title>
-                    <AchievementChart statistics={userStatistics} />
+                    <AchievementChart statistics={learningProgressInfo} />
                   </>
                 )}
               </div>
@@ -251,16 +244,7 @@ const UserProfilePage = (props: any) => {
             ) : isSearching ? (
               <Skeleton avatar paragraph={{ rows: 3 }} active />
             ) : (
-              <Result icon={<img src={shibaEmptyBoxIcon} />} title={i18n("common_not_found")}>
-                <Typography.Paragraph>
-                  {formatString(i18n("search_result_not_found"), [
-                    {
-                      key: "keyword",
-                      value: props.keyword,
-                    },
-                  ])}
-                </Typography.Paragraph>
-              </Result>
+              <Result icon={<img src={shibaEmptyBoxIcon} />} title={i18n("common_not_found")}></Result>
             )}
           </Content>
         </Layout>

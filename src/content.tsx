@@ -42,6 +42,24 @@ import "@/background/templates/css/QandA.scss"
 import "@/background/templates/css/suggest-subscribe.scss"
 
 import { hrefToSiteName } from "./background/DomManipulator"
+import { getInjectionTargets } from "./common/repo/injection-targets"
+
+function hrefComparer(this: any, oldHref: string, newHref: string) {
+  for (const target of this?.targets || []) {
+    const oldId = oldHref.match(target.MatchPattern)?.groups?.id
+    const newId = newHref.match(target.MatchPattern)?.groups?.id
+
+    console.log(`Debug: oldHref: ${oldHref}, newHref: ${newHref}, oldId: ${oldId}, newId: ${newId}`)
+
+    if (!oldId && !newId) {
+      continue
+    }
+
+    return oldId === newId
+  }
+
+  return oldHref === newHref
+}
 
 const getNotLoggedInTemplateValues = async () => {
   return [
@@ -67,9 +85,19 @@ let itemsInPageInteractionMap: {
 let isLoggedIn = false
 let havingSubscribedSets = false
 
-detectPageChanged(processInjection, true)
+let allInjectors: PageInjector[] | undefined = []
+
+getInjectionTargets()
+  .then((targets) => {
+    detectPageChanged(processInjection, true, hrefComparer.bind({ targets }))
+  })
+  .catch((err) => {
+    console.error(err)
+  })
 
 async function processInjection() {
+  console.log("Debug: processInjection called")
+
   try {
     // Remove cache from background page (app's scope).
     await sendClearCachedRandomSetMessage()
@@ -78,11 +106,21 @@ async function processInjection() {
 
     removeOldCards()
 
-    await injectCards()
+    disconnectExistingObservers()
+    allInjectors = await injectCards()
   } catch (error) {
     console.error(error)
     console.error("error when injecting set item")
   }
+}
+
+function disconnectExistingObservers() {
+  if (!allInjectors) return
+
+  allInjectors.forEach((injector) => {
+    console.log("Debug: getAllObservers: " + injector.getAllObservers().length)
+    injector.getAllObservers().forEach((observer) => observer.stop())
+  })
 }
 
 registerFlashcardEvents()
@@ -103,9 +141,13 @@ async function initValues() {
       })
     }
   } catch (error: any) {
-    if (error.type === "NotSubscribedError") {
+    if (error?.error?.type === "NotSubscribedError") {
+      console.log("Debug: NotSubscribedError")
       havingSubscribedSets = false
-    } else if (error.type === "NotLoggedInError") {
+      isLoggedIn = true
+    } else if (error?.error?.type === "NotLoggedInError") {
+      console.log("Debug: NotLoggedInError")
+      havingSubscribedSets = false
       isLoggedIn = false
     } else {
       console.error(error)
@@ -117,20 +159,37 @@ function removeOldCards() {
   document.querySelectorAll(".lazy-vaccine").forEach((el) => el.remove())
 }
 
-async function injectCards() {
+async function injectCards(): Promise<PageInjector[]> {
   try {
     const injectionTargets = await new InjectionTargetFactory(getHref()).getTargets()
+    console.log("Debug: injectCards called, injectionTargets: " + injectionTargets.length)
+
+    let injectors: PageInjector[] = []
 
     injectionTargets.forEach(async ({ rate, type, selector, newGeneratedElementSelector, siblingSelector, strict }) => {
       const injector = new PageInjector(rate, type, selector, newGeneratedElementSelector, siblingSelector, strict)
       injector.waitInject(randomTemplateValues)
+
+      injectors.push(injector)
     })
+
+    return injectors
   } catch (error) {
     console.log(`unexpected error: ${JSON.stringify(error)}`)
+    return []
   }
 }
 
 const randomTemplateValues = async (increaseOnCall: boolean = false) => {
+  console.log(
+    "Debug: randomTemplateValues called, isLoggedIn: " +
+      isLoggedIn +
+      ", havingSubscribedSets: " +
+      havingSubscribedSets +
+      ", items count: " +
+      setInfo?.items?.length
+  )
+
   if (!isLoggedIn) {
     return getNotLoggedInTemplateValues()
   }
