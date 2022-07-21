@@ -80,6 +80,7 @@ export class TreeGrow extends React.Component<any, any> {
           viewBox={`0 0 ${this.width} ${this.height}`}
           xmlns="http://www.w3.org/2000/svg"
           preserveAspectRatio="xMidYMax slice"
+          style={{ paddingTop: 100, background: "#fff" }}
         >
           <rect x={0} y={0} height={this.height} width={this.width} fill={settings.colors.background} stroke={"none"} />
           {[...Array(this.plantCount)].map((e, i) => {
