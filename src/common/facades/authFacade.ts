@@ -32,53 +32,59 @@ export function getGoogleAuthToken(options: any = {}, tryAgainCount: number = 0)
 
 let _getAuthOptions = (isSignedOut: boolean) => isSignedOut ? ({ interactive: true }) : ({})
 
-export function signIn(this: any, type: string, callback: Function) {
-  const http = <Http>this.http
+export function signIn(this: any, type: string) {
+  const setHttp = <(http: Http | null) => void>this.setHttp
 
-  switch (type) {
-    case LoginTypes.google:
-      chrome.storage.sync.get([CacheKeys.isSignedOut], isSignedOut => {
-        const options = _getAuthOptions(!!isSignedOut)
+  return new Promise<User | null>((resolve, reject) => {
+    switch (type) {
+      case LoginTypes.google:
+        chrome.storage.sync.get([CacheKeys.isSignedOut], isSignedOut => {
+          const options = _getAuthOptions(isSignedOut ? isSignedOut[CacheKeys.isSignedOut] : false)
 
-        getGoogleAuthToken(options)
-          .then(async (serviceAccessToken: string) => {
-            const { data: userInfo } = await get<any, AxiosResponse<GoogleUserInfo>>(
-              `${GoogleApiUrls.getUserInfo}${serviceAccessToken}`
-            )
+          getGoogleAuthToken(options)
+            .then(async (token: string) => {
+              const { data: userInfo } = await get<any, AxiosResponse<GoogleUserInfo>>(
+                `${GoogleApiUrls.getUserInfo}${token}`
+              )
 
-            const { data: registeredUser } = await http.post<any, AxiosResponse<User>>(
-              `${process.env.API_BASE_URL}${Apis.users}`,
-              { type, serviceAccessToken, finishedRegisterStep: registerSteps.Register, ...userInfo }
-            )
+              const http = new Http(token, LoginTypes.google)
+              setHttp(http)
 
-            chrome.storage.sync.set({ [CacheKeys.isSignedOut]: false })
-            callback(registeredUser)
-          })
-          .catch(() => {
-            signOut.call({ http })
-            this.setIsShowLoginError(true)
-          })
-      })
-      break
+              const { data: registeredUser } = await http.post<any, AxiosResponse<User>>(
+                `${process.env.API_BASE_URL}${Apis.users}`,
+                { type, serviceAccessToken: token, finishedRegisterStep: registerSteps.Register, ...userInfo }
+              )
 
-    default:
-      break
-  }
+              chrome.storage.sync.set({ [CacheKeys.isSignedOut]: false })
+              resolve(registeredUser)
+            })
+            .catch((error) => {
+              signOut()
+
+              reject(error)
+            })
+        })
+        break
+
+      default:
+        resolve(null)
+        break
+    }
+  })
 }
 
-export function signOut(callback?: () => void) {
-  try {
-    getGoogleAuthToken()
-      .then((serviceAccessToken: string) => {
-        fetch(`${GoogleApiUrls.revokeToken}${serviceAccessToken}`).then(callback)
-        chrome.identity.removeCachedAuthToken({ token: serviceAccessToken }, callback)
-      })
+export function signOut(callback: () => void = () => { }) {
+  getGoogleAuthToken()
+    .then((token: string) => {
+      fetch(`${GoogleApiUrls.revokeToken}${token}`).then(callback).catch((error) => { console.error(error) })
+      chrome.identity.removeCachedAuthToken({ token: token }, callback)
+    })
+    .catch((error) => {
+      // TODO: Notice user.
+      console.error(error)
+    })
 
-    chrome.storage.sync.set({ [CacheKeys.isSignedOut]: true })
-  } catch (error) {
-    // TODO: Notice user.
-    console.error(error)
-  }
+  chrome.storage.sync.set({ [CacheKeys.isSignedOut]: true })
 }
 
 // TODO: Handle onSignInChanged https://developer.chrome.com/docs/extensions/reference/identity/#event-onSignInChanged

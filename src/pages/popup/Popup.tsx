@@ -49,11 +49,12 @@ const PopupPage = () => {
     getMyInfo(http)
       .then((userInfo) => {
         setUser(userInfo)
-        setIsLoading(false)
       })
       .catch((error) => {
+        // Not able to login with current token or the user is not registered, ignore to show the first page to login.
+      })
+      .finally(() => {
         setIsLoading(false)
-        // Not able to login with current token, ignore to show the first page to login.
       })
   }, [http])
 
