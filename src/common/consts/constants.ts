@@ -119,6 +119,7 @@ export const SupportingPages: { [brandName: string]: { key: string, title: strin
 export const CreateSetDescriptionMaxLength = 250
 
 export const RecaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY || ""
+export const GoogleClientId = process.env.GOOGLE_CLIENT_ID || ""
 
 export const LocalStorageKeyPrefix = "duc.lazy-vaccine."
 

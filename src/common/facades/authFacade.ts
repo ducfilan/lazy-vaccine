@@ -4,14 +4,24 @@ import Apis from "@consts/apis"
 import GoogleApiUrls from "@consts/googleApiUrls"
 import registerSteps from "@consts/registerSteps"
 import { NotLoggedInError } from "@consts/errors"
-import { LoginTypes, MaxTryAgainSignInCount } from "@consts/constants"
+import { GoogleClientId, LoginTypes, MaxTryAgainSignInCount } from "@consts/constants"
 import CacheKeys from "@consts/cacheKeys"
 import { GoogleUserInfo, User } from "@/common/types/types"
 import { get, Http } from "./axiosFacade"
 
 export function getGoogleAuthToken(options: any = {}, tryAgainCount: number = 0) {
   return new Promise<any>((resolve, reject) => {
-    chrome.identity.getAuthToken(options, async serviceAccessToken => {
+    const url = new URLSearchParams(Object.entries({
+      client_id: GoogleClientId,
+      redirect_uri: chrome.identity.getRedirectURL(),
+      response_type: "token",
+      scope: "profile email openid",
+      login_hint: "your_name@gmail.com",
+    }))
+
+    chrome.identity.launchWebAuthFlow({ url: "https://accounts.google.com/o/oauth2/auth?" + url.toString(), ...options }, function (redirectURL) {
+      const token = redirectURL?.match("#access_token=(.*?)&")?.at(1)
+
       const lastError = chrome.runtime.lastError
       if (lastError) {
         if (lastError.message?.includes("not granted or revoked") || lastError.message?.includes("not approve access")) {
@@ -19,10 +29,10 @@ export function getGoogleAuthToken(options: any = {}, tryAgainCount: number = 0)
         } else if (tryAgainCount >= MaxTryAgainSignInCount) {
           reject(lastError.message)
         } else {
-          return getGoogleAuthToken({ interactive: true }, tryAgainCount + 1)
+          getGoogleAuthToken({ interactive: true }, tryAgainCount + 1)
         }
-      } else if (serviceAccessToken) {
-        resolve(serviceAccessToken)
+      } else if (token) {
+        resolve(token)
       } else {
         reject("The OAuth Token was null")
       }
