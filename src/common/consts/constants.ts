@@ -158,6 +158,7 @@ export const TestResultLevel = {
   Medium: 0.7,
 }
 
+export const ApiBaseUrl = process.env.API_BASE_URL
 export const StaticBaseUrl = process.env.STATIC_ASSET_URL
 export const StaticApiBaseUrl = process.env.STATIC_API_BASE_URL
 

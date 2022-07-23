@@ -61,7 +61,14 @@ const PopupPage = () => {
   function renderPages() {
     popupHeightScrollIssueWorkaround()
 
-    if (isLoading) return <Loading />
+    if (isLoading)
+      return (
+        <div tabIndex={0}>
+          <Loading />
+        </div>
+      )
+
+    handleExternalPopupToLogin()
 
     const finishedRegisterStep = user?.finishedRegisterStep
 
@@ -73,7 +80,11 @@ const PopupPage = () => {
         return <FirstTime />
 
       case RegisterSteps.Register:
-        return <ChooseLanguages />
+        return (
+          <div tabIndex={0}>
+            <ChooseLanguages />
+          </div>
+        )
 
       case RegisterSteps.ChooseLanguages:
         return <ChoosePages />
@@ -83,6 +94,32 @@ const PopupPage = () => {
       // TODO: Network error/server error should be noticed.
       // TODO: Different login header while token is expired.
     }
+  }
+
+  function handleExternalPopupToLogin() {
+    const isExternalPopupWindow = new URLSearchParams(window.location.search).get("external")
+    if (!user && !isExternalPopupWindow) {
+      chrome.windows.create(
+        {
+          type: "popup",
+          url: `${chrome.runtime.getURL("pages/popup.html")}?external=true`,
+          width: 800,
+          height: 600,
+          focused: true,
+          left: window.screenLeft,
+          top: window.screenTop,
+        },
+        () => {
+          window.close()
+        }
+      )
+    }
+
+    chrome.windows.onFocusChanged.addListener(() => {
+      chrome.windows.getLastFocused({ windowTypes: ["popup"] }, (window) => {
+        window.id && user && chrome.windows.remove(window.id)
+      })
+    })
   }
 
   /**

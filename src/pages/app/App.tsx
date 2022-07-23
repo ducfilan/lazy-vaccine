@@ -114,7 +114,7 @@ const AppPage = () => {
             <PagesNavigator path={location.pathname} />
             <Layout style={{ padding: 24 }}>
               <Content>
-                {!http ? (
+                {!http || !user ? (
                   isLoading ? (
                     <Skeleton active />
                   ) : (

@@ -1,4 +1,5 @@
 import { AxiosResponse } from "axios"
+import { v4 as uuid } from "uuid"
 
 import Apis from "@consts/apis"
 import GoogleApiUrls from "@consts/googleApiUrls"
@@ -8,19 +9,70 @@ import { GoogleClientId, LoginTypes, MaxTryAgainSignInCount } from "@consts/cons
 import CacheKeys from "@consts/cacheKeys"
 import { GoogleUserInfo, User } from "@/common/types/types"
 import { get, Http } from "./axiosFacade"
+import StatusCode from "../consts/statusCodes"
 
 export function getGoogleAuthToken(options: any = {}, tryAgainCount: number = 0) {
   return new Promise<any>((resolve, reject) => {
+    chrome.storage.sync.get(CacheKeys.accessToken, obj => {
+      const accessToken = obj[CacheKeys.accessToken]
+      if (accessToken && !options.interactive) resolve(accessToken)
+      else {
+        launchAndGetToken(options, tryAgainCount).then(resolve).catch(reject)
+      }
+    })
+  })
+}
+
+export function refreshAccessToken() {
+  return new Promise<string>((resolve, reject) => {
+    chrome.storage.sync.get(CacheKeys.refreshToken, obj => {
+      const refreshToken = obj[CacheKeys.refreshToken]
+      if (refreshToken) {
+        get<any, AxiosResponse<{ access_token: string }>>(
+          `${Apis.refreshAccessToken(refreshToken)}`
+        )
+          .then((resp) => {
+            const access_token = resp.data.access_token
+
+            if (access_token) {
+              chrome.storage.sync.set({ [CacheKeys.accessToken]: access_token })
+              resolve(access_token)
+            } else {
+              launchAndGetToken().then(resolve).catch(reject)
+            }
+          })
+          .catch(error => {
+            reject(error)
+          })
+      } else {
+        launchAndGetToken().then(resolve).catch(reject)
+      }
+    })
+  })
+}
+
+function launchAndGetToken(options: any = {}, tryAgainCount: number = 0) {
+  return new Promise<any>((resolve, reject) => {
+    const initialState = uuid()
+
     const url = new URLSearchParams(Object.entries({
       client_id: GoogleClientId,
       redirect_uri: chrome.identity.getRedirectURL(),
-      response_type: "token",
+      response_type: "code",
       scope: "profile email openid",
-      login_hint: "your_name@gmail.com",
+      access_type: "offline",
+      prompt: "consent",
+      include_granted_scopes: "true",
+      state: initialState
     }))
 
-    chrome.identity.launchWebAuthFlow({ url: "https://accounts.google.com/o/oauth2/auth?" + url.toString(), ...options }, function (redirectURL) {
-      const token = redirectURL?.match("#access_token=(.*?)&")?.at(1)
+    chrome.identity.launchWebAuthFlow({ url: "https://accounts.google.com/o/oauth2/v2/auth?" + url.toString(), ...options }, function (redirectURL) {
+      const state = redirectURL?.match("state=(.*?)&")?.at(1)
+      const code = redirectURL?.match("code=(.*?)&")?.at(1)
+
+      if (state && initialState !== state) {
+        reject("Wrong response state")
+      }
 
       const lastError = chrome.runtime.lastError
       if (lastError) {
@@ -29,10 +81,19 @@ export function getGoogleAuthToken(options: any = {}, tryAgainCount: number = 0)
         } else if (tryAgainCount >= MaxTryAgainSignInCount) {
           reject(lastError.message)
         } else {
-          getGoogleAuthToken({ interactive: true }, tryAgainCount + 1)
+          launchAndGetToken({ interactive: true }, tryAgainCount + 1).then(resolve).catch(reject)
         }
-      } else if (token) {
-        resolve(token)
+      } else if (code) {
+        get<any, AxiosResponse<{ access_token: string, refresh_token: string }>>(
+          `${Apis.getTokenFromCode(code)}`
+        ).then((resp) => {
+          const { access_token, refresh_token } = resp.data
+
+          chrome.storage.sync.set({ [CacheKeys.accessToken]: access_token })
+          chrome.storage.sync.set({ [CacheKeys.refreshToken]: refresh_token })
+
+          resolve(resp.data.access_token)
+        }).catch(reject)
       } else {
         reject("The OAuth Token was null")
       }
@@ -48,8 +109,8 @@ export function signIn(this: any, type: string) {
   return new Promise<User | null>((resolve, reject) => {
     switch (type) {
       case LoginTypes.google:
-        chrome.storage.sync.get([CacheKeys.isSignedOut], isSignedOut => {
-          const options = _getAuthOptions(isSignedOut ? isSignedOut[CacheKeys.isSignedOut] : false)
+        chrome.storage.sync.get([CacheKeys.isSignedOut], obj => {
+          const options = _getAuthOptions(obj ? obj[CacheKeys.isSignedOut] : false)
 
           getGoogleAuthToken(options)
             .then(async (token: string) => {
@@ -61,7 +122,7 @@ export function signIn(this: any, type: string) {
               setHttp(http)
 
               const { data: registeredUser } = await http.post<any, AxiosResponse<User>>(
-                `${process.env.API_BASE_URL}${Apis.users}`,
+                Apis.users,
                 { type, serviceAccessToken: token, finishedRegisterStep: registerSteps.Register, ...userInfo }
               )
 
