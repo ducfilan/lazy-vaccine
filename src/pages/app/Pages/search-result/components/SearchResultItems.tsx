@@ -56,7 +56,7 @@ const SearchResultItems = (props: { keyword: string; languages: string[] }) => {
   return totalSetsCount > 0 ? (
     <>
       <div className="search-result--languages-container">
-        <p>In langues:</p>
+        <p>{i18n("search_result_in_languages")}:</p>
         <Select
           mode="multiple"
           showArrow
@@ -85,7 +85,7 @@ const SearchResultItems = (props: { keyword: string; languages: string[] }) => {
         />
       </div>
       <InfiniteScroll
-        dataLength={totalSetsCount}
+        dataLength={sets.length}
         next={handleLoadData}
         hasMore={sets.length < totalSetsCount}
         loader={<Skeleton avatar paragraph={{ rows: 3 }} active />}

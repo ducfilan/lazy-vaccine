@@ -447,5 +447,8 @@
   },
   "first_page_quote_2": {
     "message": "Duc invited me to try Lazy Vaccine, I created a learning set for my English lesson, then stated watching Youtube for awhile and realized that I remembered many words! It really works!"
+  },
+  "search_result_in_languages": {
+    "message": "In langues"
   }
 }

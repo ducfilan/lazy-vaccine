@@ -444,5 +444,8 @@
   },
   "first_page_quote_2": {
     "message": "Đức mời tôi dùng thử Lazy Vaccine, tôi đã tạo một bài học để học thêm từ vựng tiếng Anh, sau khi xem Youtube, Facebook một vài ngày và nhận ra rằng tôi đã nhớ được nhiều từ vựng! Nó thật sự có hiệu quả!"
+  },
+  "search_result_in_languages": {
+    "message": "Ngôn ngữ cho kết quả"
   }
 }
