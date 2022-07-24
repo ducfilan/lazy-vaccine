@@ -43,17 +43,12 @@ const AppPage = () => {
 
   useEffect(() => {
     try {
-      setIsLoading(true)
-
       getGoogleAuthToken()
         .then((token: string) => {
           setHttp(new Http(token, LoginTypes.google))
         })
         .catch((error: any) => {
           console.error(error)
-        })
-        .finally(() => {
-          setIsLoading(false)
         })
     } catch (error) {
       // Not able to login with current token, ignore to show the first page to login.

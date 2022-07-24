@@ -37,7 +37,7 @@ const SearchResultPage = () => {
     }
   }, [http, user])
 
-  return !user ? (
+  return !http || !user || !categories ? (
     <Skeleton active />
   ) : (
     <SearchResultContext.Provider value={{ categories, setCategories }}>
