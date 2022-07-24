@@ -37,9 +37,9 @@ export const BeforeLoginPage = () => {
                 onClick={() => {
                   setIsLoading(true)
 
-                  getGoogleAuthToken({ interactive: true })
+                  getGoogleAuthToken()
                     .then((token: string) => {
-                      setHttp!(new Http(token, LoginTypes.google))
+                      setHttp(new Http(token, LoginTypes.google))
                     })
                     .catch((error: any) => {
                       console.error(error)

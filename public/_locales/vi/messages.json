@@ -26,7 +26,7 @@
     "message": "Chúng ta dành quá nhiều thời gian trên Internet.\nĐúng vậy, không có gì phải bào chữa. Tuy nhiên bạn cần biết rằng 1 ngày luôn chỉ có 24 giờ. Từ giờ, tiện ích này sẽ giúp thời gian sử dụng Internet của bạn hiệu quả hơn. Hãy thử và xem kết quả nhé! 😊"
   },
   "popup_introduce_choose_lang_codes": {
-    "message": "Chào bạn, {user_name}! 🎉 Có vẻ ngôn ngữ chính của bạn là {first_language}, bạn còn muốn hiển thị nội dung từ ngôn ngữ khác mà bạn biết không?"
+    "message": "Chào bạn, :user_name! 🎉 Có vẻ ngôn ngữ chính của bạn là :first_language, bạn còn muốn hiển thị nội dung từ ngôn ngữ khác mà bạn biết không?"
   },
   "popup_introduce_choose_pages": {
     "message": "Tuyệt vời! 🤩 Chỉ còn 1 bước cuối cùng...\nBạn hãy chọn những trang web mà bạn thường xuyên truy cập. Chỉ cần vậy thôi!"

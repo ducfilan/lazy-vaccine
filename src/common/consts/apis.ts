@@ -1,4 +1,4 @@
-import { StaticApiBaseUrl } from "@consts/constants"
+import { ApiBaseUrl, StaticApiBaseUrl } from "@consts/constants"
 
 const Apis = {
   categories: (langCode: string) => `/categories?lang=${langCode}`,
@@ -20,6 +20,8 @@ const Apis = {
   uploadTestResult: (setId: string) => `/interactions/${setId}/upload-result`,
   getMissions: "/missions",
   getInjectionTargets: `${StaticApiBaseUrl}/injection-targets.json`,
+  getTokenFromCode: (code: string) => `${ApiBaseUrl}/token?code=${code}`,
+  refreshAccessToken: (refreshToken: string) => `${ApiBaseUrl}/token/refresh?refreshToken=${refreshToken}`,
 }
 
 export default Apis

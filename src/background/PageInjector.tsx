@@ -49,7 +49,7 @@ export async function getTemplate(type: string) {
       return renderToString(<SuggestSubscribeTemplate />)
 
     default:
-      return renderToString(<SuggestSubscribeTemplate />)
+      return ""
   }
 }
 

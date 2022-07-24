@@ -1,8 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 
 import StatusCode from "@consts/statusCodes"
-import { ApiTimeOut } from "@consts/constants"
-import { getGoogleAuthToken } from "./authFacade"
+import { ApiBaseUrl, ApiTimeOut } from "@consts/constants"
+import { getGoogleAuthToken, refreshAccessToken } from "./authFacade"
 
 const headers: Readonly<Record<string, string | boolean>> = {
   Accept: "application/json",
@@ -29,7 +29,7 @@ export class Http {
 
   initHttp() {
     const http = axios.create({
-      baseURL: process.env.API_BASE_URL,
+      baseURL: ApiBaseUrl,
       headers: {
         ...headers,
         'Authorization': `Bearer ${this.token}`,
@@ -90,7 +90,7 @@ export class Http {
   }
 
   private handleError(error: any) {
-    const { status } = error.response
+    const status = error?.response?.status
 
     switch (status) {
       case StatusCode.InternalServerError: {
@@ -104,8 +104,8 @@ export class Http {
       case StatusCode.Unauthorized: {
         if (this.retryCount >= this.maxAllowedRetries) return
 
-        return new Promise((resolve) => {
-          getGoogleAuthToken()
+        return new Promise((resolve, reject) => {
+          refreshAccessToken()
             .then((token: string) => {
               this.token = token
 
@@ -114,6 +114,7 @@ export class Http {
 
               resolve(this.http.request(error.config))
             })
+            .catch(reject)
         })
       }
 

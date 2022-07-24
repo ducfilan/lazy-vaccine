@@ -19,21 +19,24 @@ function FirstTime() {
   const [isLoading, setIsLoading] = useState(false)
   const [isShowLoginError, setIsShowLoginError] = useState(false)
 
-  const { setUser, http } = useGlobalContext()
+  const { setUser, setHttp } = useGlobalContext()
 
   function loginWithGoogle() {
     setIsLoading(true)
     setIsShowLoginError(false)
 
-    try {
-      signIn.call({ http, setIsShowLoginError }, LoginTypes.google, (user: User) => {
+    signIn
+      .call({ setHttp }, LoginTypes.google)
+      .then((user: User | null) => {
         setUser(user)
       })
-    } catch (error) {
-      setIsShowLoginError(true)
-    }
-
-    setIsLoading(false)
+      .catch((error) => {
+        console.error(error)
+        setIsShowLoginError(true)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }
 
   return (

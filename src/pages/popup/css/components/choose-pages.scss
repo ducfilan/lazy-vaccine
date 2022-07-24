@@ -88,6 +88,10 @@
         &.pinterest {
           background-image: linear-gradient(135deg, $pinterest-color 10%, $pinterest-color-light 100%);
         }
+
+        &.messenger {
+          background-image: linear-gradient(135deg, $messenger-color 10%, $messenger-color-light 100%);
+        }
       }
     }
   }

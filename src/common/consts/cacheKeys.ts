@@ -8,6 +8,8 @@ const CacheKeys = {
   selectedPages: "selected-pages",
   randomSet: "random-set",
   localSetting: "local-setting",
+  accessToken: "access-token",
+  refreshToken: "refresh-token",
 }
 
 export default CacheKeys

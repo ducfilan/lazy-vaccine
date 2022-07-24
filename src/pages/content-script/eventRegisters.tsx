@@ -429,13 +429,13 @@ export function registerSelectEvent() {
   addDynamicEventListener(document.body, "click", `.lazy-vaccine ${wrapperSelector} .option`, async (e: Event) => {
     const option = e.target as HTMLElement
 
-    let selectedOptionKey = option.dataset.key!
+    let selectedOptionKey = option.dataset.key
     let selectedOptionLabel = option.innerText
 
     let wrapper = option.closest(wrapperSelector) as HTMLElement
-    const settingKey = wrapper.dataset.settingKey!
+    const settingKey = wrapper.dataset.settingKey
 
-    sendSetLocalSettingMessage(settingKey, selectedOptionKey)
+    settingKey && selectedOptionKey && sendSetLocalSettingMessage(settingKey, selectedOptionKey)
     ;(wrapper?.querySelector(".sBtn-text") as HTMLElement).innerText = selectedOptionLabel
     wrapper?.classList.remove("active")
   })

@@ -10,41 +10,45 @@ import TwitterIcon from "@img/ui/fa/brands/twitter.svg"
 import RedditIcon from "@img/ui/fa/brands/reddit.svg"
 import GoogleIcon from "@img/ui/fa/brands/google.svg"
 import PinterestIcon from "@img/ui/fa/brands/pinterest.svg"
+import MessengerIcon from "@img/ui/fa/brands/messenger.svg"
 
 function BrandIcon({ brandName }: { brandName: string }) {
-  let BrandIcon: JSX.Element | undefined
+  let icon: JSX.Element | undefined
 
   switch (brandName) {
     case SupportingPages.facebook.key:
-      BrandIcon = <FacebookIcon />
+      icon = <FacebookIcon />
       break
     case SupportingPages.youtube.key:
-      BrandIcon = <YoutubeIcon />
+      icon = <YoutubeIcon />
       break
     case SupportingPages.amazon.key:
-      BrandIcon = <AmazonIcon />
+      icon = <AmazonIcon />
       break
     case SupportingPages.ebay.key:
-      BrandIcon = <EbayIcon />
+      icon = <EbayIcon />
       break
     case SupportingPages.twitter.key:
-      BrandIcon = <TwitterIcon />
+      icon = <TwitterIcon />
       break
     case SupportingPages.reddit.key:
-      BrandIcon = <RedditIcon />
+      icon = <RedditIcon />
       break
     case SupportingPages.google.key:
-      BrandIcon = <GoogleIcon />
+      icon = <GoogleIcon />
       break
     case SupportingPages.pinterest.key:
-      BrandIcon = <PinterestIcon />
+      icon = <PinterestIcon />
+      break
+    case SupportingPages.messenger.key:
+      icon = <MessengerIcon />
       break
 
     default:
       break
   }
 
-  return <>{BrandIcon ?? ""}</>
+  return <>{icon ?? ""}</>
 }
 
 export default BrandIcon
