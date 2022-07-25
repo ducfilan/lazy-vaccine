@@ -22,7 +22,7 @@ import { SuggestSubscribeTemplate } from "./templates/SuggestSubscribeTemplate"
 import { SuggestLoginTemplate } from "./templates/SuggestLoginTemplate"
 
 export async function getTemplate(type: string) {
-  console.log("Debug: getTemplate called, type: " + type)
+  console.debug("getTemplate called, type: " + type)
 
   switch (type) {
     case ItemTypes.TermDef.value:
@@ -224,7 +224,7 @@ export default class PageInjector {
 
   private inject(templateValueGetter: () => Promise<KeyValuePair[]>) {
     try {
-      console.log("Debug: inject called, this.type: " + this.type)
+      console.debug("inject called, this.type: " + this.type)
 
       if (this.type == InjectTypes.FixedPosition) {
         this.injectFixedPosition(templateValueGetter)

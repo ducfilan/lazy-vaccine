@@ -425,7 +425,7 @@
     "message": "Bạn chưa đăng ký nội dung học tập nào. Chỉ 1 bước nữa để bắt đầu, hãy tìm những bài học bạn đang quan tâm và đăng kí nhé!"
   },
   "suggestion_card_not_logged_in_text": {
-    "message": "Xin chào bạn! Để bắt đầu giúp bạn học tập, trước tiên mình muốn biết bạn là ai. Hãy đăng nhập, chỉ mất vài giây thôi!"
+    "message": "Xin chào bạn! Để bắt đầu giúp bạn học tập, trước tiên bạn cho mình biết tên được không? Hãy đăng nhập nhé, chỉ mất vài giây thôi!"
   },
   "rich_text_upload_modal_title": {
     "message": "Thêm ảnh"
@@ -447,5 +447,11 @@
   },
   "search_result_in_languages": {
     "message": "Ngôn ngữ cho kết quả"
+  },
+  "network_error_timeout": {
+    "message": "Mình đang bị ốm, rất tiếc vì không thể phục vụ bạn lần này. Vui lòng đợi một chút và thử lại nhé! \n(a.k.a. LỖI TIMEOUT)"
+  },
+  "network_error_offline": {
+    "message": "Mình cần sử dụng Internet để tìm kiến thức phục vụ bạn, nhưng có vẻ như Internet của bạn đang ngoại tuyến phải không? Bạn hãy đợi khi Internet của bạn trực tuyến và thử lại nhé."
   }
 }

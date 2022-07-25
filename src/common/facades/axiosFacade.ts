@@ -124,7 +124,7 @@ export class Http {
       }
     }
 
-    return Promise.reject(error.response)
+    return Promise.reject(error)
   }
 }
 

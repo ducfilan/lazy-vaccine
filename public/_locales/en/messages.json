@@ -428,7 +428,7 @@
     "message": "You didn't subscribed to any learning set. Just 1 more step to start learning, let's find some set to subscribe!"
   },
   "suggestion_card_not_logged_in_text": {
-    "message": "Hello! To help you learn, firstly, I want to know who you are. Let's log in. It will take a few seconds only!"
+    "message": "Hi there! To help you learn, firstly, May I know who you are? Let's log in. It will take a few seconds only!"
   },
   "rich_text_upload_modal_title": {
     "message": "Insert a new photo"
@@ -450,5 +450,11 @@
   },
   "search_result_in_languages": {
     "message": "In langues"
+  },
+  "network_error_timeout": {
+    "message": "I am tired, I am sorry that I cannot serve you this time. Please wait for a few seconds and try again. \n(a.k.a. TIMEOUT ERROR)"
+  },
+  "network_error_offline": {
+    "message": "I need Internet to get knowledge to serve you, but seems like you are offline. Please wait for a few seconds and try again when you're back online."
   }
 }

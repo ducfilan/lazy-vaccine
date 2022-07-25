@@ -450,5 +450,11 @@
   },
   "search_result_in_languages": {
     "message": "结果语言"
+  },
+  "network_error_timeout": {
+    "message": "我累了，很抱歉这次不能为您服务。 请等待几秒钟，然后再试一次。 \n（又名超时错误）"
+  },
+  "network_error_offline": {
+    "message": "我需要互联网来获取知识来为您服务，但您好像离线了。 请稍等片刻，直到您重新联机，然后重试。"
   }
 }

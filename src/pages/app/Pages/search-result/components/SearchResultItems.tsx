@@ -28,9 +28,7 @@ const SearchResultItems = (props: { keyword: string; languages: string[] }) => {
 
     searchSets(http, props.keyword, searchLanguages, skip || 0, limitItemsPerGet)
       .then((resp: SearchSetsResponse) => {
-        if (!resp || resp.sets.length === 0) return
-
-        setTotalSetsCount(resp.total)
+        setTotalSetsCount(resp.total || 0)
         setSkip(sets.length + resp.sets.length)
         setSets([...sets, ...resp.sets])
       })

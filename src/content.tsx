@@ -96,7 +96,7 @@ getInjectionTargets()
   })
 
 async function processInjection() {
-  console.log("Debug: processInjection called")
+  console.debug("processInjection called")
 
   try {
     // Remove cache from background page (app's scope).
@@ -118,7 +118,7 @@ function disconnectExistingObservers() {
   if (!allInjectors) return
 
   allInjectors.forEach((injector) => {
-    console.log("Debug: getAllObservers: " + injector.getAllObservers().length)
+    console.debug("getAllObservers: " + injector.getAllObservers().length)
     injector.getAllObservers().forEach((observer) => observer.stop())
   })
 }
@@ -142,11 +142,11 @@ async function initValues() {
     }
   } catch (error: any) {
     if (error?.error?.type === "NotSubscribedError") {
-      console.log("Debug: NotSubscribedError")
+      console.debug("NotSubscribedError")
       havingSubscribedSets = false
       isLoggedIn = true
     } else if (error?.error?.type === "NotLoggedInError") {
-      console.log("Debug: NotLoggedInError")
+      console.debug("NotLoggedInError")
       havingSubscribedSets = false
       isLoggedIn = false
     } else {
@@ -162,7 +162,7 @@ function removeOldCards() {
 async function injectCards(): Promise<PageInjector[]> {
   try {
     const injectionTargets = await new InjectionTargetFactory(getHref()).getTargets()
-    console.log("Debug: injectCards called, injectionTargets: " + injectionTargets.length)
+    console.debug("injectCards called, injectionTargets: " + injectionTargets.length)
 
     let injectors: PageInjector[] = []
 

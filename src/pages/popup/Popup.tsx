@@ -18,13 +18,15 @@ import { getMyInfo } from "@/common/repo/user"
 import { User } from "@/common/types/types"
 import { getGoogleAuthToken } from "@facades/authFacade"
 import { Http } from "@facades/axiosFacade"
-import { LoginTypes } from "@/common/consts/constants"
+import { i18n, LoginTypes } from "@/common/consts/constants"
 import { GlobalContext } from "@/common/contexts/GlobalContext"
+import NetworkError from "@/common/components/NetworkError"
 
 const PopupPage = () => {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [http, setHttp] = useState<Http | null>(null)
+  const [lastError, setLastError] = useState<any>(null)
 
   useEffect(() => {
     try {
@@ -37,6 +39,7 @@ const PopupPage = () => {
         .catch((error: any) => {
           setIsLoading(false)
           console.error(error)
+          setLastError(error)
         })
     } catch (error) {
       // Not able to login with current token, ignore to show the first page to login.
@@ -51,6 +54,7 @@ const PopupPage = () => {
         setUser(userInfo)
       })
       .catch((error) => {
+        setLastError(error)
         // Not able to login with current token or the user is not registered, ignore to show the first page to login.
       })
       .finally(() => {
@@ -61,9 +65,33 @@ const PopupPage = () => {
   function renderPages() {
     popupHeightScrollIssueWorkaround()
 
+    if (lastError) {
+      switch (lastError.code) {
+        case "ECONNABORTED":
+          if (lastError.message.startsWith("timeout of")) {
+            return (
+              <div>
+                <NetworkError errorText={i18n("network_error_timeout")} />
+              </div>
+            )
+          }
+          break
+
+        case "ERR_NETWORK":
+          return (
+            <div>
+              <NetworkError errorText={i18n("network_error_offline")} />
+            </div>
+          )
+
+        default:
+          break
+      }
+    }
+
     if (isLoading)
       return (
-        <div tabIndex={0}>
+        <div>
           <Loading />
         </div>
       )

@@ -1,6 +1,9 @@
 import React from "react"
 import { Layout, Button, Input, ConfigProvider, Skeleton, notification } from "antd"
 import enUS from "antd/lib/locale/en_US"
+import viVN from "antd/lib/locale/vi_VN"
+import jaJP from "antd/lib/locale/ja_JP"
+import zhCN from "antd/lib/locale/zh_CN"
 
 import Navbar from "@/common/components/Navbar"
 import { RocketOutlined, SearchOutlined } from "@ant-design/icons"
@@ -8,6 +11,7 @@ import { RocketOutlined, SearchOutlined } from "@ant-design/icons"
 const { useState, useEffect } = React
 
 import "./css/app.scss"
+
 import CreateSetPage from "./Pages/create-set/CreateSet"
 import SetDetailPage from "./Pages/set-detail/SetDetail"
 import HomePage from "./Pages/home/Home"
@@ -29,31 +33,39 @@ import SeedDetailPage from "./Pages/seed-detail/SeedDetail"
 import TestSetPage from "./Pages/test-set/TestSet"
 import MarketPlacePage from "./Pages/marketplace/MarketPlacePage"
 import { BeforeLoginPage } from "./Pages/before-login/BeforeLoginPage"
+import SupportingLanguages from "@/common/consts/supportingLanguages"
+import NetworkError from "@/common/components/NetworkError"
 
 const { Content } = Layout
+
+const langCodeToAntLocaleMap = {
+  [SupportingLanguages.Set.en.code]: enUS,
+  [SupportingLanguages.Set.vi.code]: viVN,
+  [SupportingLanguages.Set.ja.code]: jaJP,
+  [SupportingLanguages.Set.zh.code]: zhCN,
+}
+
+const defaultLocale = enUS
 
 const AppPage = () => {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [http, setHttp] = useState<Http | null>(null)
   const [locale, setLocale] = useState<Locale>(enUS)
+  const [lastError, setLastError] = useState<any>(null)
 
   const navigate = useNavigate()
   const location = useLocation()
 
   useEffect(() => {
-    try {
-      getGoogleAuthToken()
-        .then((token: string) => {
-          setHttp(new Http(token, LoginTypes.google))
-        })
-        .catch((error: any) => {
-          console.error(error)
-        })
-    } catch (error) {
-      // Not able to login with current token, ignore to show the first page to login.
-      // TODO: Unauthorized resolution.
-    }
+    getGoogleAuthToken()
+      .then((token: string) => {
+        setHttp(new Http(token, LoginTypes.google))
+      })
+      .catch((error: any) => {
+        console.error(error)
+        setLastError(error)
+      })
   }, [])
 
   useEffect(() => {
@@ -64,6 +76,7 @@ const AppPage = () => {
     getMyInfo(http)
       .then((userInfo) => {
         setUser(userInfo)
+        setLocale(langCodeToAntLocaleMap[userInfo.locale] || defaultLocale)
       })
       .catch((error) => {
         notification["error"]({
@@ -71,11 +84,42 @@ const AppPage = () => {
           description: i18n("unexpected_error_message"),
           duration: null,
         })
+
+        console.error(error)
+        setLastError(error)
       })
       .finally(() => {
         setIsLoading(false)
       })
   }, [http])
+
+  const getErrorView = () => {
+    if (lastError) {
+      switch (lastError.code) {
+        case "ECONNABORTED":
+          if (lastError.message.startsWith("timeout of")) {
+            return (
+              <div>
+                <NetworkError errorText={i18n("network_error_timeout")} />
+              </div>
+            )
+          }
+          break
+
+        case "ERR_NETWORK":
+          return (
+            <div>
+              <NetworkError errorText={i18n("network_error_offline")} />
+            </div>
+          )
+
+        default:
+          break
+      }
+    }
+
+    return <BeforeLoginPage />
+  }
 
   return (
     <GlobalContext.Provider value={{ user, setUser, http, setHttp }}>
@@ -113,7 +157,7 @@ const AppPage = () => {
                   isLoading ? (
                     <Skeleton active />
                   ) : (
-                    <BeforeLoginPage />
+                    getErrorView()
                   )
                 ) : (
                   <Routes>
