@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
-import { Row, Col, Badge, Typography, Card, Statistic, Button, notification } from "antd"
+import { Row, Col, Badge, Typography, Card, Statistic, Button, notification, Input } from "antd"
 import Icon, {
   BookOutlined,
   OrderedListOutlined,
@@ -206,6 +206,17 @@ function CompletedInfo() {
                   {i18n("popup_stats_settings")}
                 </Button>
               </Col>
+              <Input.Search
+                placeholder={i18n("suggestion_card_search_placeholder")}
+                style={{ padding: "0 16px" }}
+                enterButton
+                onSearch={(keyword) => {
+                  window.open(
+                    `${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`,
+                    "_blank"
+                  )
+                }}
+              />
             </Row>
           </div>
         </>
