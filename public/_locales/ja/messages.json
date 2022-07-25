@@ -59,7 +59,7 @@
     "message": "セット作成"
   },
   "create_set_search_place_holder": {
-    "message": "何でも検索できます..."
+    "message": "何でも検索できます、そして「Enter⏎」キーを押します"
   },
   "create_set_page_title": {
     "message": "セットを作成しましょう！"
