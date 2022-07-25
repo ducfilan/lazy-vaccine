@@ -262,6 +262,9 @@
   "search_result_not_found": {
     "message": "検索-「:keyword」-はどのドキュメントとも一致しませんでした。\n提案：\n-すべての単語のスペルが正しいことを確認してください。\n-別のキーワードを試してください。"
   },
+  "search_result_no_keyword_error": {
+    "message": "キーワードを入力してください。対応する学習コンテンツが見つかります。"
+  },
   "home_category_lookup": {
     "message": "カテゴリルックアップ"
   },

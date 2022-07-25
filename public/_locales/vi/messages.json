@@ -259,6 +259,9 @@
   "search_result_not_found": {
     "message": "Bạn đã tìm kiếm - \":keyword\" - nhưng không có kết quả.\nGợi ý:\n - Đảm bảo rằng các từ khóa không có sai sót.\n- Thử 1 từ khóa khác."
   },
+  "search_result_no_keyword_error": {
+    "message": "Bạn cho mình biết bạn muốn học gì, mình sẽ tìm nội dung học tập tương ứng cho bạn nha! Nhập từ khóa vào ô tìm kiếm và nhấn Enter nha!"
+  },
   "home_category_lookup": {
     "message": "Tìm kiếm phân loại"
   },

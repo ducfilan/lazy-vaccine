@@ -7,11 +7,20 @@ import { searchSets } from "@/common/repo/set"
 import SetItemCardLong from "@/pages/app/components/SetItemCardLong"
 import InfiniteScroll from "react-infinite-scroll-component"
 import shibaEmptyBoxIcon from "@img/emojis/shiba/box.png"
+import shibaWakeUpIcon from "@img/emojis/shiba/wake.png"
 import { formatString } from "@/common/utils/stringUtils"
 import { ColorPrimary, i18n } from "@/common/consts/constants"
 import SupportingLanguages from "@/common/consts/supportingLanguages"
 
 const SearchResultItems = (props: { keyword: string; languages: string[] }) => {
+  if (!props.keyword) {
+    return (
+      <Result icon={<img src={shibaWakeUpIcon} />} title={i18n("common_not_found")}>
+        <Typography.Title level={4}>{i18n("search_result_no_keyword_error")}</Typography.Title>
+      </Result>
+    )
+  }
+
   const { http } = useGlobalContext()
 
   const [sets, setSets] = useState<SetInfo[]>([])

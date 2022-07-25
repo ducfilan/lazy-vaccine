@@ -208,6 +208,9 @@
   "search_result_not_found": {
     "message": "您的搜索 - :keyword - 不匹配任何文档。\n建议：\n - 确保所有单词拼写正确。\n- 尝试不同的关键字。"
   },
+  "search_result_no_keyword_error": {
+    "message": "请提供一个关键字，我会为您找到相应的学习内容。"
+  },
   "home_category_lookup": {
     "message": "类别查找"
   },

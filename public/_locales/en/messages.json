@@ -208,6 +208,9 @@
   "search_result_not_found": {
     "message": "Your search - :keyword - did not match any documents.\nSuggestions:\n - Make sure that all words are spelled correctly.\n- Try different keywords."
   },
+  "search_result_no_keyword_error": {
+    "message": "Please provide a keyword then I will find the corresponding learning content for you."
+  },
   "home_category_lookup": {
     "message": "Category lookup"
   },
