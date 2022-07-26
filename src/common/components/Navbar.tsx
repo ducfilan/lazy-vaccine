@@ -8,10 +8,9 @@ import AppLogo from "@img/ui/logo.png"
 import { signOut } from "@facades/authFacade"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import AvatarImage from "./AvatarImage"
-import { Link } from "react-router-dom"
-import { AppPages, i18n } from "@consts/constants"
+import { AppBasePath, AppPages, i18n } from "@consts/constants"
 
-const DropdownMenu = (props: { isLoggedIn: boolean }) => {
+const DropdownMenu = (props: { isLoggedIn: boolean; target?: string }) => {
   const { user, setUser, setHttp } = useGlobalContext()
 
   return props.isLoggedIn ? (
@@ -22,7 +21,11 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
             {
               key: "name",
               icon: <RightCircleOutlined />,
-              label: <Link to={AppPages.MySpace.path}>{user?.name}</Link>,
+              label: (
+                <a href={AppPages.MySpace.path} target={props.target || ""}>
+                  {user?.name}
+                </a>
+              ),
             },
             {
               key: "logout",
@@ -68,26 +71,32 @@ const DropdownMenu = (props: { isLoggedIn: boolean }) => {
   )
 }
 
-function Navbar(props: { extraComponents?: React.ReactNode[]; centerComponent?: React.ReactNode }) {
+function Navbar(props: { extraComponents?: React.ReactNode[]; centerComponent?: React.ReactNode; target?: string }) {
   const { user } = useGlobalContext()
   const isLoggedIn = !!user
 
   return (
     <PageHeader
       title={
-        <Link to={"/home"} style={{ color: "white" }}>
+        <a
+          href={`${chrome.runtime.getURL(AppBasePath)}${AppPages.Home.path}`}
+          style={{ color: "white" }}
+          target={props.target || ""}
+        >
           {i18n("appName")}
-        </Link>
+        </a>
       }
       avatar={{ gap: 0, src: AppLogo, size: 48 }}
       extra={[
         ...(props.extraComponents || []),
         isLoggedIn ? (
-          <AvatarImage key="avatar" imageUrl={user?.pictureUrl} link={AppPages.MySpace.path} />
+          <a href={`${chrome.runtime.getURL(AppBasePath)}${AppPages.MySpace.path}`} target={props.target || ""}>
+            <AvatarImage key="avatar" imageUrl={user?.pictureUrl} />
+          </a>
         ) : (
           <div key="avatar"></div>
         ),
-        <DropdownMenu key="menu" isLoggedIn={isLoggedIn} />,
+        <DropdownMenu key="menu" isLoggedIn={isLoggedIn} target={props.target} />,
       ]}
     >
       {props.centerComponent}

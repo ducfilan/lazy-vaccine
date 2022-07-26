@@ -10,6 +10,7 @@ import Icon, {
   FileSearchOutlined,
   BarChartOutlined,
   SmileOutlined,
+  RocketOutlined,
 } from "@ant-design/icons"
 
 import { GeneralInfoCounts, User } from "@/common/types/types"
@@ -185,14 +186,16 @@ function CompletedInfo() {
               </Col>
               <Col span={12}>
                 <Button
-                  className="completed-info--button-my-profile"
+                  key="create-set"
                   size="large"
-                  icon={<SmileOutlined />}
+                  className="completed-info--button-create-set"
+                  icon={<RocketOutlined />}
                   block
-                  href={MySpacePageUrl}
-                  target="_blank"
+                  onClick={() =>
+                    window.open(`${chrome.runtime.getURL(AppBasePath)}${AppPages.CreateSet.path}`, "_blank")
+                  }
                 >
-                  {i18n("popup_stats_my_profile")}
+                  {i18n("create_set_button")}
                 </Button>
               </Col>
               {/* TODO: update full-stats, setting */}

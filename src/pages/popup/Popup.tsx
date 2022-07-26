@@ -167,7 +167,7 @@ const PopupPage = () => {
     <GlobalContext.Provider value={{ user, setUser, http, setHttp }}>
       <Router>
         <div className="App">
-          {!isLoading && <Navbar />}
+          {!isLoading && <Navbar target="_blank" />}
           {renderPages()}
         </div>
       </Router>
