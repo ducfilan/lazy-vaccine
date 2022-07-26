@@ -49,7 +49,7 @@ function hrefComparer(this: any, oldHref: string, newHref: string) {
     const oldId = oldHref.match(target.MatchPattern)?.groups?.id
     const newId = newHref.match(target.MatchPattern)?.groups?.id
 
-    console.log(`Debug: oldHref: ${oldHref}, newHref: ${newHref}, oldId: ${oldId}, newId: ${newId}`)
+    console.debug(`oldHref: ${oldHref}, newHref: ${newHref}, oldId: ${oldId}, newId: ${newId}`)
 
     if (!oldId && !newId) {
       continue
@@ -89,7 +89,9 @@ let allInjectors: PageInjector[] | undefined = []
 
 getInjectionTargets()
   .then((targets) => {
-    detectPageChanged(processInjection, true, hrefComparer.bind({ targets }))
+    processInjection().finally(() => {
+      detectPageChanged(processInjection, hrefComparer.bind({ targets }))
+    })
   })
   .catch((err) => {
     console.error(err)
@@ -168,10 +170,12 @@ async function injectCards(): Promise<PageInjector[]> {
 
     injectionTargets.forEach(async ({ rate, type, selector, newGeneratedElementSelector, siblingSelector, strict }) => {
       const injector = new PageInjector(rate, type, selector, newGeneratedElementSelector, siblingSelector, strict)
-      injector.waitInject(randomTemplateValues)
 
       injectors.push(injector)
     })
+
+    await Promise.all(injectors.map((i) => i.waitInject(randomTemplateValues)))
+    console.debug("all injection done!")
 
     return injectors
   } catch (error) {
@@ -181,8 +185,8 @@ async function injectCards(): Promise<PageInjector[]> {
 }
 
 const randomTemplateValues = async (increaseOnCall: boolean = false) => {
-  console.log(
-    "Debug: randomTemplateValues called, isLoggedIn: " +
+  console.debug(
+    "randomTemplateValues called, isLoggedIn: " +
       isLoggedIn +
       ", havingSubscribedSets: " +
       havingSubscribedSets +

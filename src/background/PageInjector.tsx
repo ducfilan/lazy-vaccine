@@ -84,7 +84,7 @@ export default class PageInjector {
     newGeneratedElementSelector?: string,
     siblingSelector?: string,
     strict?: boolean,
-    waitTimeOutInMs: number = 15000
+    waitTimeOutInMs: number = 30000
   ) {
     this.rate = rate
     this.type = type
@@ -283,26 +283,30 @@ export default class PageInjector {
   /**
    * Wait until the target node to be rendered then inject.
    */
-  waitInject(
+  async waitInject(
     templateValueGetter: () => Promise<KeyValuePair[]>,
     intervalInMs: number = 500,
     cleanupFn: () => void = () => {
       // Do nothing by default.
     }
-  ) {
-    const id = setInterval(() => {
-      const isSelectorRendered = document.querySelector(this.parentSelector)
+  ): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const id = setInterval(() => {
+        const isSelectorRendered = document.querySelector(this.parentSelector)
 
-      if (isSelectorRendered) {
-        clearInterval(id)
+        if (isSelectorRendered) {
+          clearInterval(id)
+          resolve()
 
-        this.inject(templateValueGetter)
-        cleanupFn()
-      }
+          this.inject(templateValueGetter)
+          cleanupFn()
+        }
 
-      if (intervalInMs * ++this.waitCount > this.waitTimeOutInMs) {
-        clearInterval(id)
-      }
-    }, intervalInMs)
+        if (intervalInMs * ++this.waitCount > this.waitTimeOutInMs) {
+          clearInterval(id)
+          resolve()
+        }
+      }, intervalInMs)
+    })
   }
 }
