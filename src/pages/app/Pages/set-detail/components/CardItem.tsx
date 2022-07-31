@@ -6,14 +6,16 @@ import { CardInteraction } from "./CardInteraction"
 import { useSetDetailContext } from "../contexts/SetDetailContext"
 import { i18n, ItemTypes, SettingKeyBackItem, SettingKeyFrontItem } from "@/common/consts/constants"
 import { Button, Skeleton } from "antd"
-import { formatString, isValidJson } from "@/common/utils/stringUtils"
+import { formatString, getMainContent, isValidJson } from "@/common/utils/stringUtils"
 import RichTextEditor from "@/pages/app/components/RichTextEditor"
 import { sendGetLocalSettingMessage } from "@/pages/content-script/messageSenders"
 import { CSSTransition } from "react-transition-group"
+import useAudio from "@/common/hooks/useAudio"
+import { SetInfo } from "@/common/types/types"
 
 const FlashCardFaces = {
-  front: 0,
-  back: 1,
+  front: "front",
+  back: "back",
 }
 
 export const CardItem = () => {
@@ -44,8 +46,21 @@ export const CardItem = () => {
   }, [])
 
   const [currentIndex, setCurrentIndex] = useState<number>(0)
-  const [flashCardDisplayFace, setFlashCardDisplayFace] = useState<number>(FlashCardFaces.front)
+  const [flashCardDisplayFace, setFlashCardDisplayFace] = useState<string>(FlashCardFaces.front)
   const [isAnimating, setIsAnimating] = useState<boolean>(false)
+
+  const getCurrentDisplayLang = (): string => {
+    if (!flashCardDisplayFace || !flashCardSettingKey) return ""
+
+    const flashCardFaceToLangMap = {
+      term: "fromLanguage",
+      definition: "toLanguage",
+    }
+
+    return setInfo[
+      (flashCardFaceToLangMap as any)[(flashCardSettingKey as any)[flashCardDisplayFace]] as keyof SetInfo
+    ] as string
+  }
 
   const renderCardFaceElement = () => {
     const item = setInfo.items?.at(currentIndex)
@@ -136,7 +151,7 @@ export const CardItem = () => {
 
   return (
     <div className="lazy-vaccine">
-      <TopBar currentIndex={currentIndex} />
+      <TopBar currentIndex={currentIndex} itemLang={getCurrentDisplayLang()} cardFace={flashCardDisplayFace} />
       {renderCardFaceElement()}
       <CardInteraction />
       <NextPrevButton
@@ -162,14 +177,37 @@ export const CardItem = () => {
   )
 }
 
-const TopBar = (props: { currentIndex: number }) => {
+const TopBar = (props: { currentIndex: number; itemLang: string; cardFace: string }) => {
   const { setInfo } = useSetDetailContext()
+
+  if (!setInfo) return <></>
+
+  const item = setInfo?.items?.at(props.currentIndex)
+  const getDisplayingItemProperty = () => {
+    switch (item?.type) {
+      case ItemTypes.Content.value:
+        return item.content
+
+      case ItemTypes.QnA.value:
+        return item.question
+
+      case ItemTypes.TermDef.value:
+        if (props.cardFace == FlashCardFaces.front) {
+          return item.term
+        } else {
+          return item.definition
+        }
+
+      default:
+        break
+    }
+  }
 
   return (
     <div className="card-item--top-bar-wrapper">
-      <Button type="primary" shape="circle" icon={<CustomerServiceOutlined />} />
+      <AudioPlayer url={getGoogleTtsUrl(props.itemLang, getMainContent(getDisplayingItemProperty()))} />
       <div className="card-item--top-bar-counter">
-        {props.currentIndex + 1} / {setInfo!.items!.length}
+        {props.currentIndex + 1} / {setInfo.items!.length}
       </div>
       <div className="card-item--top-bar-settings">
         <Button shape="circle" icon={<EllipsisOutlined />} />
@@ -177,3 +215,12 @@ const TopBar = (props: { currentIndex: number }) => {
     </div>
   )
 }
+
+const AudioPlayer = (props: { url: string }) => {
+  const [play] = useAudio(props.url)
+
+  return <Button type="primary" shape="circle" icon={<CustomerServiceOutlined />} onClick={() => play()} />
+}
+
+const getGoogleTtsUrl = (lang: string, text: string) =>
+  `https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${text}`
