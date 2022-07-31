@@ -27,7 +27,7 @@ export function sendSetLocalSettingMessage(settingKey: string, settingValue: str
 }
 
 export function sendGetLocalSettingMessage(settingKey: string) {
-  return new Promise<{ settingValue: string | null }>((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     sendMessage(ChromeMessageTypeGetLocalSetting, { settingKey }, resolve, reject)
   })
 }

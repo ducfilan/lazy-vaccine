@@ -12,7 +12,7 @@ import { KeyValuePair, PageInjectorSiblingSelectorParts } from "@/common/types/t
 import { formatString, trimQuotes } from "@/common/utils/stringUtils"
 import { MutationObserverFacade } from "@facades/mutationObserverFacade"
 import { renderToString } from "react-dom/server"
-import { FlashCardTemplate } from "./templates/FlashcardTemplate"
+import { FlashcardTemplate } from "./templates/FlashcardTemplate"
 import { htmlStringToHtmlNode, insertBefore } from "./DomManipulator"
 import React from "react"
 import { QnATemplate } from "./templates/QandATemplate"
@@ -29,11 +29,11 @@ export async function getTemplate(type: string) {
       const frontItemSettingKey = (await sendGetLocalSettingMessage(SettingKeyFrontItem)) || ""
       const backItemSettingKey = (await sendGetLocalSettingMessage(SettingKeyBackItem)) || ""
 
-      let settingFrontItem = FlashCardOptions[frontItemSettingKey.toString()] || i18n("select")
-      let settingBackItem = FlashCardOptions[backItemSettingKey.toString()] || i18n("select")
+      let settingFrontItem = FlashCardOptions[frontItemSettingKey] || i18n("select")
+      let settingBackItem = FlashCardOptions[backItemSettingKey] || i18n("select")
 
       return renderToString(
-        <FlashCardTemplate selectedFrontItem={settingFrontItem} selectedBackItem={settingBackItem} />
+        <FlashcardTemplate selectedFrontItem={settingFrontItem} selectedBackItem={settingBackItem} />
       )
 
     case ItemTypes.QnA.value:

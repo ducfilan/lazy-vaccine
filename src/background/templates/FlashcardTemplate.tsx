@@ -16,7 +16,7 @@ import {
 import { SelectBox } from "./common/SelectBox"
 import { CardInteraction } from "./common/CardInteraction"
 
-export const FlashCardTemplate = (props: { selectedFrontItem: string; selectedBackItem: string }) => {
+export const FlashcardTemplate = (props: { selectedFrontItem: string; selectedBackItem: string }) => {
   return (
     <div className="lazy-vaccine" data-setId=":setId" data-itemId=":itemId">
       <DisclaimerInfo />

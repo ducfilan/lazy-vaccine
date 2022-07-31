@@ -456,5 +456,8 @@
   },
   "network_error_offline": {
     "message": "I need Internet to get knowledge to serve you, but seems like you are offline. Please wait for a few seconds and try again when you're back online."
+  },
+  "learning_activities_review": {
+    "message": "Review"
   }
 }

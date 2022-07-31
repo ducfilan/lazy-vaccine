@@ -180,15 +180,6 @@ h3 {
   line-height: 1.35;
 }
 
-@keyframes bounce {
-  0% {
-    transform: translateY(3px);
-  }
-  100% {
-    transform: translateY(-3px);
-  }
-}
-
 .ant-typography {
   white-space: pre-line;
 }

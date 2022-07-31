@@ -45,7 +45,7 @@ const CreateSetPage = () => {
 
   useEffect(onPageLoaded, [http])
 
-  const renderContent = (currentStep: number) => {
+  const renderContent = () => {
     switch (currentStep) {
       case CreateSteps.SetInfo:
         return (
@@ -72,7 +72,7 @@ const CreateSetPage = () => {
 
   return (
     <CreateSetContext.Provider value={{ currentStep, setCurrentStep, setInfo, setSetInfo, isEdit }}>
-      <div className="create-set--wrapper">{renderContent(currentStep)}</div>
+      <div className="create-set--wrapper">{renderContent()}</div>
     </CreateSetContext.Provider>
   )
 }

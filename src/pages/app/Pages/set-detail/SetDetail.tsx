@@ -10,6 +10,7 @@ import Items from "./components/Items"
 import { SetDetailContext } from "./contexts/SetDetailContext"
 import { notification, Skeleton } from "antd"
 import { i18n } from "@/common/consts/constants"
+import LearningActivities from "./components/LearningActivities"
 
 const { useState, useEffect } = React
 
@@ -37,11 +38,14 @@ const SetDetailPage = () => {
   useEffect(onPageLoaded, [http])
   useEffect(() => setInfo && setLoading(false), [setInfo])
 
+  console.log("rendering page...")
+
   return (
     <SetDetailContext.Provider value={{ setInfo }}>
       <Skeleton active loading={loading}>
         <Header />
         <Interactions />
+        <LearningActivities />
         <Items />
       </Skeleton>
     </SetDetailContext.Provider>
