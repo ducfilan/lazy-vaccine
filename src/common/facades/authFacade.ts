@@ -32,7 +32,7 @@ export function refreshAccessToken() {
           `${Apis.refreshAccessToken(refreshToken)}`
         )
           .then((resp) => {
-            const access_token = resp.data.access_token
+            const access_token = resp?.data?.access_token
 
             if (access_token) {
               chrome.storage.sync.set({ [CacheKeys.accessToken]: access_token })
@@ -87,12 +87,14 @@ function launchAndGetToken(options: any = {}, tryAgainCount: number = 0) {
         get<any, AxiosResponse<{ access_token: string, refresh_token: string }>>(
           `${Apis.getTokenFromCode(code)}`
         ).then((resp) => {
-          const { access_token, refresh_token } = resp.data
+          const { access_token, refresh_token } = resp?.data || {}
+
+          if (!access_token || !refresh_token) reject("no access token or refresh token")
 
           chrome.storage.sync.set({ [CacheKeys.accessToken]: access_token })
           chrome.storage.sync.set({ [CacheKeys.refreshToken]: refresh_token })
 
-          resolve(resp.data.access_token)
+          resolve(access_token)
         }).catch(reject)
       } else {
         reject("The OAuth Token was null")

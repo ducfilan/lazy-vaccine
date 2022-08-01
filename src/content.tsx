@@ -101,7 +101,7 @@ let allInjectors: PageInjector[] | undefined = []
 injectFixedWidgetBubble()
 getInjectionTargets()
   .then((targets) => {
-    if (isSiteSupportedInjection(targets, getHref())) return
+    if (!isSiteSupportedInjection(targets, getHref())) return
 
     processInjection().finally(() => {
       detectPageChanged(processInjection, hrefComparer.bind({ targets }))
