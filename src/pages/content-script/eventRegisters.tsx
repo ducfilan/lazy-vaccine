@@ -247,6 +247,28 @@ export function registerMorePopoverEvent() {
   })
 }
 
+export function registerHoverBubblePopoverEvent() {
+  addDynamicEventListener(document.body, "mouseover", ".lazy-vaccine-bubble .bubble-img", (e: Event) => {
+    e.stopPropagation()
+
+    const moreButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement = moreButton.closest(".lazy-vaccine-bubble")!
+    toggleHiddenPopover(wrapperElement)
+
+    wrapperElement.style.zIndex = isPopoverHidden(wrapperElement) ? "2" : "9999"
+  })
+
+  document.addEventListener("mouseup", function (e: MouseEvent) {
+    const target = e.target as HTMLElement
+    const wrapperElements: NodeListOf<HTMLElement> = document.querySelectorAll(".ant-popover")
+    wrapperElements.forEach((wrapperElement) => {
+      if (!wrapperElement.contains(target) && !isMoreButton(target)) {
+        hidePopover(wrapperElement.closest(".lazy-vaccine-bubble"))
+      }
+    })
+  })
+}
+
 const isMoreButton = (element: HTMLElement) =>
   element.classList.contains("inject-card-more-button") || element.closest(".inject-card-more-button")
 

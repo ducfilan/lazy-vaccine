@@ -4,7 +4,15 @@ import { CustomerServiceOutlined, EllipsisOutlined } from "@ant-design/icons"
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
 import { CardInteraction } from "./CardInteraction"
 import { useSetDetailContext } from "../contexts/SetDetailContext"
-import { i18n, ItemTypes, SettingKeyBackItem, SettingKeyFrontItem } from "@/common/consts/constants"
+import {
+  i18n,
+  ItemsInteractionFlip,
+  ItemsInteractionNext,
+  ItemsInteractionPrev,
+  ItemTypes,
+  SettingKeyBackItem,
+  SettingKeyFrontItem,
+} from "@/common/consts/constants"
 import { Button, Skeleton } from "antd"
 import { formatString, getMainContent, isValidJson } from "@/common/utils/stringUtils"
 import RichTextEditor from "@/pages/app/components/RichTextEditor"
@@ -12,6 +20,8 @@ import { sendGetLocalSettingMessage } from "@/pages/content-script/messageSender
 import { CSSTransition } from "react-transition-group"
 import useAudio from "@/common/hooks/useAudio"
 import { SetInfo } from "@/common/types/types"
+import { useGlobalContext } from "@/common/contexts/GlobalContext"
+import { interactToSetItem } from "@/common/repo/set"
 
 const FlashCardFaces = {
   front: "front",
@@ -20,6 +30,7 @@ const FlashCardFaces = {
 
 export const CardItem = () => {
   const { setInfo } = useSetDetailContext()
+  const { http } = useGlobalContext()
 
   if (!setInfo) {
     return <></>
@@ -62,6 +73,14 @@ export const CardItem = () => {
     ] as string
   }
 
+  const interactItem = (itemId: string | undefined, action: string) => {
+    if (!http || !itemId) return
+
+    interactToSetItem(http, setInfo._id, itemId, action).catch((error) => {
+      console.error(error)
+    })
+  }
+
   const renderCardFaceElement = () => {
     const item = setInfo.items?.at(currentIndex)
 
@@ -79,13 +98,19 @@ export const CardItem = () => {
               <div className="card-face">
                 <div
                   className="card--face card--face--front"
-                  onClick={() => setFlashCardDisplayFace(FlashCardFaces.back)}
+                  onClick={() => {
+                    interactItem(item._id, ItemsInteractionFlip)
+                    setFlashCardDisplayFace(FlashCardFaces.back)
+                  }}
                 >
                   <p className="card--content">{item[flashCardSettingKey?.front || "term"]}</p>
                 </div>
                 <div
                   className="card--face card--face--back"
-                  onClick={() => setFlashCardDisplayFace(FlashCardFaces.front)}
+                  onClick={() => {
+                    interactItem(item._id, ItemsInteractionFlip)
+                    setFlashCardDisplayFace(FlashCardFaces.front)
+                  }}
                 >
                   <p className="card--content">{item[flashCardSettingKey?.back || "definition"]}</p>
                 </div>
@@ -153,13 +178,14 @@ export const CardItem = () => {
     <div className="lazy-vaccine">
       <TopBar currentIndex={currentIndex} itemLang={getCurrentDisplayLang()} cardFace={flashCardDisplayFace} />
       {renderCardFaceElement()}
-      <CardInteraction />
+      <CardInteraction currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
       <NextPrevButton
         direction={
           currentIndex > 0 && currentIndex < setInfo.items!.length - 1 ? "both" : currentIndex > 0 ? "left" : "right"
         }
         onNext={() => {
           if (currentIndex < setInfo.items!.length - 1) {
+            interactItem(setInfo.items?.at(currentIndex)?._id, ItemsInteractionNext)
             setIsAnimating(true)
             setCurrentIndex(currentIndex + 1)
             flashCardDisplayFace !== FlashCardFaces.front && setFlashCardDisplayFace(FlashCardFaces.front)
@@ -167,6 +193,7 @@ export const CardItem = () => {
         }}
         onPrev={() => {
           if (currentIndex > 0) {
+            interactItem(setInfo.items?.at(currentIndex)?._id, ItemsInteractionPrev)
             setIsAnimating(true)
             setCurrentIndex(currentIndex - 1)
             flashCardDisplayFace !== FlashCardFaces.front && setFlashCardDisplayFace(FlashCardFaces.front)

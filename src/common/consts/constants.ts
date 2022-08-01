@@ -126,6 +126,7 @@ export const LocalStorageKeyPrefix = "duc.lazy-vaccine."
 export const LiteralDurationsExtractRegex = /^((?<days>\d+)d\w*?)* *((?<hours>\d+)h\w*)* *((?<minutes>\d+)m\w*)* *((?<seconds>\d+)s\w*)*$/
 
 export const RequestToAddCategoryLink = "https://forms.gle/D6wa49fG4aUg3fHg8"
+export const ContactFeedbackLink = "https://forms.gle/Czqrgp9xNDJ4rRg58"
 
 export const ItemTypes = {
   TermDef: { label: "Term - Definition", value: "term-def" },

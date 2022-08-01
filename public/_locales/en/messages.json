@@ -459,5 +459,11 @@
   },
   "learning_activities_review": {
     "message": "Review"
+  },
+  "bubble_widget_send_feedback": {
+    "message": "Send feedback"
+  },
+  "bubble_widget_title": {
+    "message": "What can I help you?"
   }
 }

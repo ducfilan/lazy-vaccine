@@ -456,5 +456,11 @@
   },
   "network_error_offline": {
     "message": "私はあなたに役立つ知識を得るためにインターネットが必要ですが、あなたはオフラインのようです。 オンラインに戻るまでしばらく待ってから、もう一度お試しください。"
+  },
+  "bubble_widget_send_feedback": {
+    "message": "フィードバックの送信"
+  },
+  "bubble_widget_title": {
+    "message": "何を手伝えますか？"
   }
 }

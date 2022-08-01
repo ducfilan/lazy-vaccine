@@ -21,9 +21,11 @@ export const FlashcardTemplate = (props: { selectedFrontItem: string; selectedBa
     <div className="lazy-vaccine" data-setId=":setId" data-itemId=":itemId">
       <DisclaimerInfo />
       <Popover
-        top={20}
-        right={-10}
-        paddingLeft={20}
+        styles={{
+          top: 10,
+          right: -5,
+          paddingLeft: 20,
+        }}
         title={":setTitle"}
         content={
           <>

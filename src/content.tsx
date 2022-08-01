@@ -1,3 +1,5 @@
+import React from "react"
+
 import "./background/templates/css/antd-wrapped.less"
 
 import PageInjector from "./background/PageInjector"
@@ -23,8 +25,9 @@ import {
   registerSelectEvent,
   registerSuggestionSearchButtonClickEvent,
   registerSuggestionLoginButtonClickEvent,
+  registerHoverBubblePopoverEvent,
 } from "./pages/content-script/eventRegisters"
-import { getHref } from "./pages/content-script/domHelpers"
+import { getHref, isSiteSupportedInjection } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
 import { generateTemplateExtraValues, toTemplateValues } from "./pages/content-script/templateHelpers"
 import {
@@ -40,9 +43,12 @@ import "@/background/templates/css/content.scss"
 import "@/background/templates/css/flashcard.scss"
 import "@/background/templates/css/QandA.scss"
 import "@/background/templates/css/suggest-subscribe.scss"
+import "@/background/templates/css/bubble.scss"
 
-import { hrefToSiteName } from "./background/DomManipulator"
+import { hrefToSiteName, htmlStringToHtmlNode } from "./background/DomManipulator"
 import { getInjectionTargets } from "./common/repo/injection-targets"
+import { renderToString } from "react-dom/server"
+import { FixedWidget } from "./background/templates/FixedWidget"
 
 function hrefComparer(this: any, oldHref: string, newHref: string) {
   for (const target of this?.targets || []) {
@@ -75,6 +81,11 @@ const getNotSubscribedTemplateValues = async () => {
   ]
 }
 
+const injectFixedWidgetBubble = () => {
+  const node = htmlStringToHtmlNode(renderToString(<FixedWidget />))
+  document.querySelector("body")?.prepend(node)
+}
+
 let randomItemIndexVisitMap: number[] = []
 let setInfo: SetInfo | null
 let currentItemPointer = 0
@@ -87,8 +98,11 @@ let havingSubscribedSets = false
 
 let allInjectors: PageInjector[] | undefined = []
 
+injectFixedWidgetBubble()
 getInjectionTargets()
   .then((targets) => {
+    if (isSiteSupportedInjection(targets, getHref())) return
+
     processInjection().finally(() => {
       detectPageChanged(processInjection, hrefComparer.bind({ targets }))
     })
@@ -287,6 +301,8 @@ function registerFlashcardEvents() {
     itemGetter,
     setGetter
   )
+
+  registerHoverBubblePopoverEvent()
 
   registerMorePopoverEvent()
 

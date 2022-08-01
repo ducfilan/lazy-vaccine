@@ -453,5 +453,11 @@
   },
   "network_error_offline": {
     "message": "Mình cần sử dụng Internet để tìm kiến thức phục vụ bạn, nhưng có vẻ như Internet của bạn đang ngoại tuyến phải không? Bạn hãy đợi khi Internet của bạn trực tuyến và thử lại nhé."
+  },
+  "bubble_widget_send_feedback": {
+    "message": "Gửi phản hồi"
+  },
+  "bubble_widget_title": {
+    "message": "Mình có thể giúp gì cho bạn?"
   }
 }

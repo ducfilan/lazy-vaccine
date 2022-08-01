@@ -453,5 +453,11 @@
   },
   "network_error_offline": {
     "message": "我需要互联网来获取知识来为您服务，但您好像离线了。 请稍等片刻，直到您重新联机，然后重试。"
+  },
+  "bubble_widget_send_feedback": {
+    "message": "发送反馈"
+  },
+  "bubble_widget_title": {
+    "message": "我可以帮你什么？"
   }
 }

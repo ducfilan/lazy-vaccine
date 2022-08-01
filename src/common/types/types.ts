@@ -87,6 +87,11 @@ export type Interaction = {
   actions: string[]
 }
 
+export type ItemInteraction = {
+  _id: string
+  interactionCount: { [key: string]: number }
+}
+
 export type PreSignedUrlResponse = {
   url: string
 }

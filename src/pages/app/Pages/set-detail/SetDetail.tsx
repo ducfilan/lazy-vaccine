@@ -38,8 +38,6 @@ const SetDetailPage = () => {
   useEffect(onPageLoaded, [http])
   useEffect(() => setInfo && setLoading(false), [setInfo])
 
-  console.log("rendering page...")
-
   return (
     <SetDetailContext.Provider value={{ setInfo }}>
       <Skeleton active loading={loading}>
