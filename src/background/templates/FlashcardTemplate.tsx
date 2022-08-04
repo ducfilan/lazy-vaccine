@@ -40,7 +40,7 @@ export const FlashcardTemplate = (props: { selectedFrontItem: string; selectedBa
                 </a>
               </p>
               <p>
-                <a href="#" className="flash-card-next-set-link">
+                <a href="#" className="inject-card-next-set-link">
                   {i18n("flashcard_next_set")}
                 </a>
               </p>

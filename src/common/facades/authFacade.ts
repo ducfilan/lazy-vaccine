@@ -9,7 +9,6 @@ import { GoogleClientId, LoginTypes, MaxTryAgainSignInCount } from "@consts/cons
 import CacheKeys from "@consts/cacheKeys"
 import { GoogleUserInfo, User } from "@/common/types/types"
 import { get, Http } from "./axiosFacade"
-import StatusCode from "../consts/statusCodes"
 
 export function getGoogleAuthToken(options: any = {}, tryAgainCount: number = 0) {
   return new Promise<any>((resolve, reject) => {
@@ -106,7 +105,7 @@ function launchAndGetToken(options: any = {}, tryAgainCount: number = 0) {
 let _getAuthOptions = (isSignedOut: boolean) => isSignedOut ? ({ interactive: true }) : ({})
 
 export function signIn(this: any, type: string) {
-  const setHttp = <(http: Http | null) => void>this.setHttp
+  const setHttp = this ? <(http: Http | null) => void>this.setHttp : null
 
   return new Promise<User | null>((resolve, reject) => {
     switch (type) {
@@ -121,7 +120,7 @@ export function signIn(this: any, type: string) {
               )
 
               const http = new Http(token, LoginTypes.google)
-              setHttp(http)
+              setHttp && setHttp(http)
 
               const { data: registeredUser } = await http.post<any, AxiosResponse<User>>(
                 Apis.users,

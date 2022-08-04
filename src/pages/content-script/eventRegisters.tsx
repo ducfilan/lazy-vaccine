@@ -273,7 +273,7 @@ const isMoreButton = (element: HTMLElement) =>
   element.classList.contains("inject-card-more-button") || element.closest(".inject-card-more-button")
 
 export function registerNextSetEvent(preProcess: () => Promise<void>) {
-  addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card-next-set-link", async (e: Event) => {
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine .inject-card-next-set-link", async (e: Event) => {
     e.preventDefault()
     e.stopPropagation()
 

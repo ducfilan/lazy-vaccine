@@ -31,7 +31,7 @@ export const QnATemplate = () => {
               </a>
             </p>
             <p>
-              <a href="#" className="flash-card-next-set-link">
+              <a href="#" className="inject-card-next-set-link">
                 {i18n("flashcard_next_set")}
               </a>
             </p>
