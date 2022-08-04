@@ -1,11 +1,11 @@
 import CacheKeys from "./common/consts/cacheKeys"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
 import { NotLoggedInError, NotSubscribedError } from "./common/consts/errors"
-import { getGoogleAuthToken } from "./common/facades/authFacade"
+import { getGoogleAuthToken, signIn } from "./common/facades/authFacade"
 import { Http } from "./common/facades/axiosFacade"
 import { interactToSetItem } from "./common/repo/set"
 import { getUserInteractionRandomSet } from "./common/repo/user"
-import { SetInfo } from "./common/types/types"
+import { SetInfo, User } from "./common/types/types"
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.type) {
@@ -15,6 +15,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }).catch(error => {
         sendResponse({ success: false, error: toResponseError(error) })
       })
+      break
+
+    case ChromeMessageTypeSignUp:
+      signIn
+        .call(null, LoginTypes.google)
+        .then((user: User | null) => {
+          sendResponse({ success: true, result: user })
+        })
+        .catch((error) => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+
       break
 
     case ChromeMessageTypeGetRandomSet:

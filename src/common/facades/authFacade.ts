@@ -105,7 +105,7 @@ function launchAndGetToken(options: any = {}, tryAgainCount: number = 0) {
 let _getAuthOptions = (isSignedOut: boolean) => isSignedOut ? ({ interactive: true }) : ({})
 
 export function signIn(this: any, type: string) {
-  const setHttp = this ? <(http: Http | null) => void>this.setHttp : null
+  const setHttp = this && this.setHttp ? <(http: Http | null) => void>this.setHttp : null
 
   return new Promise<User | null>((resolve, reject) => {
     switch (type) {
@@ -146,6 +146,8 @@ export function signIn(this: any, type: string) {
 }
 
 export function signOut(callback: () => void = () => { }) {
+  chrome.storage.sync.remove([CacheKeys.accessToken, CacheKeys.refreshToken])
+
   getGoogleAuthToken()
     .then((token: string) => {
       fetch(`${GoogleApiUrls.revokeToken}${token}`).then(callback).catch((error) => { console.error(error) })

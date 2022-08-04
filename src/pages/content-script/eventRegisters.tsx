@@ -2,7 +2,7 @@ import { addDynamicEventListener, htmlStringToHtmlNode } from "@/background/DomM
 import { decodeBase64, formatString } from "@/common/utils/stringUtils"
 import { generateTemplateExtraValues, toTemplateValues } from "./templateHelpers"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
-import { sendGetGoogleTokenMessage, sendInteractItemMessage, sendSetLocalSettingMessage } from "./messageSenders"
+import { sendInteractItemMessage, sendSetLocalSettingMessage, sendSignUpMessage } from "./messageSenders"
 import {
   AppBasePath,
   AppPages,
@@ -503,7 +503,7 @@ export function registerSuggestionLoginButtonClickEvent(callback: () => Promise<
     const button = e.target as HTMLInputElement
     button.disabled = true
 
-    sendGetGoogleTokenMessage()
+    sendSignUpMessage()
       .then(callback)
       .catch((error) => {
         console.error(error)
