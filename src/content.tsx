@@ -237,7 +237,11 @@ const randomTemplateValues = async (increaseOnCall: boolean = false) => {
   )
 
   if (lastError) {
-    return getNetworkErrorTemplateValues()
+    const networkErrorValues = await getNetworkErrorTemplateValues()
+
+    if (networkErrorValues && networkErrorValues.length > 0) {
+      return networkErrorValues
+    }
   }
 
   if (!isLoggedIn) {
