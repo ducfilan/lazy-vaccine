@@ -104,7 +104,7 @@ function setLocalSetting(settingKey: string, settingValue: string) {
   return localStorage.setItem(`${LocalStorageKeyPrefix}${CacheKeys.localSetting}.${settingKey}`, settingValue)
 }
 
-function toResponseError(error: Error) {
+function toResponseError(error: any) {
   let type = "Error"
 
   if (error instanceof NotLoggedInError) {
@@ -113,5 +113,5 @@ function toResponseError(error: Error) {
     type = "NotSubscribedError"
   }
 
-  return { success: false, error: { type: type, message: error.message } }
+  return { success: false, error: { type: type, message: error.message, code: error.code } }
 }

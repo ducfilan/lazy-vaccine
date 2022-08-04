@@ -20,6 +20,7 @@ import { sendGetLocalSettingMessage } from "@/pages/content-script/messageSender
 import { ContentTemplate } from "./templates/ContentTemplate"
 import { SuggestSubscribeTemplate } from "./templates/SuggestSubscribeTemplate"
 import { SuggestLoginTemplate } from "./templates/SuggestLoginTemplate"
+import { NetworkErrorTemplate } from "./templates/NetworkErrorTemplate"
 
 export async function getTemplate(type: string) {
   console.debug("getTemplate called, type: " + type)
@@ -47,6 +48,10 @@ export async function getTemplate(type: string) {
 
     case OtherItemTypes.NotSubscribed.value:
       return renderToString(<SuggestSubscribeTemplate />)
+
+    case OtherItemTypes.NetworkTimeout.value:
+    case OtherItemTypes.NetworkOffline.value:
+      return renderToString(<NetworkErrorTemplate />)
 
     default:
       return ""

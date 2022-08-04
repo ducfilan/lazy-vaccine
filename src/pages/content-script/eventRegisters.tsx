@@ -253,7 +253,7 @@ export function registerHoverBubblePopoverEvent() {
 
     const moreButton = e.target as HTMLElement
     const wrapperElement: HTMLElement = moreButton.closest(".lazy-vaccine-bubble")!
-    toggleHiddenPopover(wrapperElement)
+    showPopover(wrapperElement)
 
     wrapperElement.style.zIndex = isPopoverHidden(wrapperElement) ? "2" : "9999"
   })
@@ -293,6 +293,10 @@ function toggleHiddenPopover(wrapperElement: HTMLElement | null) {
 
 function hidePopover(wrapperElement: HTMLElement | null) {
   wrapperElement?.querySelector(".ant-popover")?.classList.add("ant-popover-hidden")
+}
+
+function showPopover(wrapperElement: HTMLElement | null) {
+  wrapperElement?.querySelector(".ant-popover")?.classList.remove("ant-popover-hidden")
 }
 
 const isPopoverHidden = (wrapperElement: HTMLElement) =>

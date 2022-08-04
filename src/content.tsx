@@ -31,6 +31,7 @@ import { getHref, isSiteSupportedInjection } from "./pages/content-script/domHel
 import { shuffleArray } from "./common/utils/arrayUtils"
 import { generateTemplateExtraValues, toTemplateValues } from "./pages/content-script/templateHelpers"
 import {
+  i18n,
   ItemsInteractionForcedDone,
   ItemsInteractionIgnore,
   ItemsInteractionShow,
@@ -81,6 +82,30 @@ const getNotSubscribedTemplateValues = async () => {
   ]
 }
 
+const getNetworkErrorTemplateValues = async () => {
+  switch (lastError?.error?.code) {
+    case "ECONNABORTED":
+      if (lastError?.error?.message?.startsWith("timeout of")) {
+        return [
+          { key: "type", value: OtherItemTypes.NetworkTimeout.value },
+          { key: "website", value: await hrefToSiteName(getHref()) },
+          { key: "errorText", value: i18n("network_error_timeout") },
+        ]
+      }
+      return []
+
+    case "ERR_NETWORK":
+      return [
+        { key: "type", value: OtherItemTypes.NetworkOffline.value },
+        { key: "website", value: await hrefToSiteName(getHref()) },
+        { key: "errorText", value: i18n("network_error_offline") },
+      ]
+
+    default:
+      return []
+  }
+}
+
 const injectFixedWidgetBubble = () => {
   const node = htmlStringToHtmlNode(renderToString(<FixedWidget />))
   document.querySelector("body")?.prepend(node)
@@ -95,6 +120,7 @@ let itemsInPageInteractionMap: {
 
 let isLoggedIn = false
 let havingSubscribedSets = false
+let lastError: any = null
 
 let allInjectors: PageInjector[] | undefined = []
 
@@ -145,6 +171,7 @@ async function initValues() {
   try {
     currentItemPointer = 0
     havingSubscribedSets = false
+    lastError = null
 
     setInfo = await sendGetRandomSubscribedSetMessage()
     if (setInfo) {
@@ -166,6 +193,7 @@ async function initValues() {
       havingSubscribedSets = false
       isLoggedIn = false
     } else {
+      lastError = error
       console.error(error)
     }
   }
@@ -207,6 +235,10 @@ const randomTemplateValues = async (increaseOnCall: boolean = false) => {
       ", items count: " +
       setInfo?.items?.length
   )
+
+  if (lastError) {
+    return getNetworkErrorTemplateValues()
+  }
 
   if (!isLoggedIn) {
     return getNotLoggedInTemplateValues()

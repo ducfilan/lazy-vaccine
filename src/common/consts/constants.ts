@@ -138,6 +138,8 @@ export const ItemTypes = {
 export const OtherItemTypes = {
   NotLoggedIn: { value: "not-logged-in" },
   NotSubscribed: { value: "not-subscribed" },
+  NetworkTimeout: { value: "network-timeout" },
+  NetworkOffline: { value: "network-offline" },
 }
 
 export const TabKeyCode = "Tab"
