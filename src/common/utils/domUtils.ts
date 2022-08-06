@@ -2,7 +2,7 @@ let observerConfig = {
   childList: true,
 }
 
-export const detectPageChanged = (callback: () => any,
+export const detectPageChangedMutationObserver = (callback: () => any,
   equalFn: (oldHref: string, newHref: string) => boolean = (o: string, n: string) => o === n) => {
   let oldHref = document.location.href
 
@@ -23,6 +23,18 @@ export const detectPageChanged = (callback: () => any,
   })
 
   observer.observe(bodyList, observerConfig)
+}
+
+export const detectPageChanged = (callback: () => any,
+  equalFn: (oldHref: string, newHref: string) => boolean = (o: string, n: string) => o === n) => {
+  let oldHref = document.location.href
+
+  setInterval(async () => {
+    if (!equalFn(oldHref, document.location.href)) {
+      oldHref = document.location.href
+      await callback()
+    }
+  }, 1000)
 }
 
 export const redirectToUrlInNewTab = (url: string) => {
