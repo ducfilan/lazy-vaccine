@@ -42,8 +42,18 @@ $black: #000;
       display: grid;
       grid-template-areas: "a b c";
       padding: 10px 50px;
+      position: absolute;
       width: 100%;
       min-height: unset !important;
+
+      div {
+        height: 0;
+      }
+
+      .btn-flip-wrapper {
+        display: flex;
+        justify-content: flex-end;
+      }
     }
   }
 
