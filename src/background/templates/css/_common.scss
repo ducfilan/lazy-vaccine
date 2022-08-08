@@ -38,6 +38,10 @@ $black: #000;
   }
 
   .card--face {
+    & > div:first-child {
+      min-height: 100px;
+    }
+
     .card-item--top-bar-wrapper {
       display: grid;
       grid-template-areas: "a b c";
