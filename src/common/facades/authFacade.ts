@@ -22,6 +22,18 @@ export function getGoogleAuthToken(options: any = {}, tryAgainCount: number = 0)
   })
 }
 
+export function getGoogleAuthTokenSilent() {
+  return new Promise<any>((resolve, reject) => {
+    chrome.storage.sync.get(CacheKeys.accessToken, obj => {
+      const accessToken = obj[CacheKeys.accessToken]
+      if (accessToken) resolve(accessToken)
+      else {
+        reject(new NotLoggedInError("No access token found"))
+      }
+    })
+  })
+}
+
 export function refreshAccessToken() {
   return new Promise<string>((resolve, reject) => {
     chrome.storage.sync.get(CacheKeys.refreshToken, obj => {

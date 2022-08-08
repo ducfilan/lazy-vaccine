@@ -8,7 +8,7 @@ import { SetInfo } from "./common/types/types"
 import { detectPageChanged } from "./common/utils/domUtils"
 import {
   sendClearCachedRandomSetMessage,
-  sendGetRandomSubscribedSetMessage,
+  sendGetRandomSubscribedSetSilentMessage,
   sendInteractItemMessage,
 } from "./pages/content-script/messageSenders"
 import {
@@ -174,7 +174,7 @@ async function initValues() {
     havingSubscribedSets = false
     lastError = null
 
-    setInfo = await sendGetRandomSubscribedSetMessage()
+    setInfo = await sendGetRandomSubscribedSetSilentMessage()
     if (setInfo) {
       randomItemIndexVisitMap = shuffleArray(Array.from(Array(setInfo.items?.length || 0).keys()))
       isLoggedIn = true

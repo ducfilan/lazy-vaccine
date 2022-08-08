@@ -422,7 +422,7 @@
     "message": "Go to homepage"
   },
   "suggestion_card_search_placeholder": {
-    "message": "What do you want to learn?"
+    "message": "Type in what you want to learn (e.g. IELTS, Japanese etc.), and press ENTER ⏎"
   },
   "suggestion_card_suggestion_text": {
     "message": "You didn't subscribed to any learning set. Just 1 more step to start learning, let's find some set to subscribe!"

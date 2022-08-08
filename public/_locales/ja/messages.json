@@ -422,7 +422,7 @@
     "message": "ホームページへ"
   },
   "suggestion_card_search_placeholder": {
-    "message": "何を勉強したいですか？"
+    "message": "学びたいこと (例: IELTS、englishなど) を入力し、ENTER ⏎ を押して下さい。"
   },
   "suggestion_card_suggestion_text": {
     "message": "学習セットを登録していません。 学習を開始するためにもう1つのステップ、セットを見つけて登録しましょう！"

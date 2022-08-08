@@ -1,8 +1,8 @@
 import { pronounceTextApi } from "./common/consts/apis"
 import CacheKeys from "./common/consts/cacheKeys"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
 import { NotLoggedInError, NotSubscribedError } from "./common/consts/errors"
-import { getGoogleAuthToken, signIn } from "./common/facades/authFacade"
+import { getGoogleAuthToken, getGoogleAuthTokenSilent, signIn } from "./common/facades/authFacade"
 import { Http } from "./common/facades/axiosFacade"
 import { interactToSetItem } from "./common/repo/set"
 import { getUserInteractionRandomSet } from "./common/repo/user"
@@ -32,6 +32,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case ChromeMessageTypeGetRandomSet:
       getGoogleAuthToken().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        getRandomSubscribedSet(http).then((set) => {
+          sendResponse({ success: true, result: set })
+        }).catch(error => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+      }).catch((error: Error) => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
+      break
+
+    case ChromeMessageTypeGetRandomSetSilent:
+      getGoogleAuthTokenSilent().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
         getRandomSubscribedSet(http).then((set) => {
           sendResponse({ success: true, result: set })

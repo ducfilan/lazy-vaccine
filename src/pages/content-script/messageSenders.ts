@@ -1,5 +1,5 @@
 import { sendMessage } from "@/background/MessagingFacade"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken } from "@/common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken } from "@/common/consts/constants"
 import { SetInfo } from "@/common/types/types"
 
 export function sendClearCachedRandomSetMessage() {
@@ -8,9 +8,12 @@ export function sendClearCachedRandomSetMessage() {
   })
 }
 
-export function sendGetRandomSubscribedSetMessage() {
+/**
+ * Get the subscribed set randomly without showing login popup when no token is cached.
+ */
+export function sendGetRandomSubscribedSetSilentMessage() {
   return new Promise<SetInfo | null>((resolve, reject) => {
-    sendMessage(ChromeMessageTypeGetRandomSet, null, resolve, reject)
+    sendMessage(ChromeMessageTypeGetRandomSetSilent, null, resolve, reject)
   })
 }
 
