@@ -40,3 +40,5 @@ export const detectPageChanged = (callback: () => any,
 export const redirectToUrlInNewTab = (url: string) => {
   window?.open(url, "_blank")?.focus()
 }
+
+export const isVisible = (elem: HTMLElement): boolean => !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length)

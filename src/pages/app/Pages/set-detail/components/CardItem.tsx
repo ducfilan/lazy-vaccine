@@ -22,6 +22,7 @@ import useAudio from "@/common/hooks/useAudio"
 import { SetInfo } from "@/common/types/types"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { interactToSetItem } from "@/common/repo/set"
+import { pronounceTextApi } from "@/common/consts/apis"
 
 const FlashCardFaces = {
   front: "front",
@@ -207,7 +208,7 @@ export const CardItem = () => {
 const TopBar = (props: { currentIndex: number; itemLang: string; cardFace: string }) => {
   const { setInfo } = useSetDetailContext()
 
-  if (!setInfo) return <></>
+  if (!setInfo || !props.itemLang) return <></>
 
   const item = setInfo?.items?.at(props.currentIndex)
   const getDisplayingItemProperty = () => {
@@ -232,7 +233,7 @@ const TopBar = (props: { currentIndex: number; itemLang: string; cardFace: strin
 
   return (
     <div className="card-item--top-bar-wrapper">
-      <AudioPlayer url={getGoogleTtsUrl(props.itemLang, getMainContent(getDisplayingItemProperty()))} />
+      <AudioPlayer url={pronounceTextApi(getMainContent(getDisplayingItemProperty()), props.itemLang)} />
       <div className="card-item--top-bar-counter">
         {props.currentIndex + 1} / {setInfo.items!.length}
       </div>
@@ -244,10 +245,29 @@ const TopBar = (props: { currentIndex: number; itemLang: string; cardFace: strin
 }
 
 const AudioPlayer = (props: { url: string }) => {
-  const [play] = useAudio(props.url)
+  const { http } = useGlobalContext()
+  const [audioUrl, setAudioUrl] = useState<string | undefined>(undefined)
 
-  return <Button type="primary" shape="circle" icon={<CustomerServiceOutlined />} onClick={() => play()} />
+  useEffect(() => {
+    if (!http) return
+
+    http
+      .get(props.url, {
+        responseType: "arraybuffer",
+        headers: {
+          "Content-Type": "audio/mpeg",
+        },
+      })
+      .then((result) => {
+        const blob = new Blob([result.data], {
+          type: "audio/mpeg",
+        })
+
+        setAudioUrl(URL.createObjectURL(blob))
+      })
+  }, [http, props.url])
+
+  const [play] = useAudio(audioUrl)
+
+  return <Button type="primary" shape="circle" icon={<CustomerServiceOutlined />} onClick={() => play && play()} />
 }
-
-const getGoogleTtsUrl = (lang: string, text: string) =>
-  `https://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&client=tw-ob&q=${text}`

@@ -21,6 +21,7 @@ import { ContentTemplate } from "./templates/ContentTemplate"
 import { SuggestSubscribeTemplate } from "./templates/SuggestSubscribeTemplate"
 import { SuggestLoginTemplate } from "./templates/SuggestLoginTemplate"
 import { NetworkErrorTemplate } from "./templates/NetworkErrorTemplate"
+import { isVisible } from "@/common/utils/domUtils"
 
 export async function getTemplate(type: string) {
   console.debug("getTemplate called, type: " + type)
@@ -256,12 +257,14 @@ export default class PageInjector {
     getTemplate(typeItem || "").then((htmlTemplate) => {
       const htmlString = formatString(htmlTemplate, templateValue)
 
-      const node = htmlStringToHtmlNode(htmlString)
-      if (!node) {
-        throw new Error("invalid htmlTemplate")
-      }
+      document.querySelectorAll(this.parentSelector).forEach((elem) => {
+        const node = htmlStringToHtmlNode(htmlString)
+        if (!node) {
+          throw new Error("invalid htmlTemplate")
+        }
 
-      document.querySelector(this.parentSelector)?.prepend(node)
+        elem.prepend(node)
+      })
     })
   }
 
@@ -297,9 +300,11 @@ export default class PageInjector {
   ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const id = setInterval(() => {
-        const isSelectorRendered = document.querySelector(this.parentSelector)
+        const element = document.querySelector(this.parentSelector) as HTMLElement
 
-        if (isSelectorRendered) {
+        console.debug("this.parentSelector: " + this.parentSelector)
+
+        if (element && isVisible(element)) {
           clearInterval(id)
           resolve()
 

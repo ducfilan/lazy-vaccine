@@ -200,6 +200,7 @@ async function initValues() {
 }
 
 function removeOldCards() {
+  console.debug("Removing old cards...")
   document.querySelectorAll(".lazy-vaccine").forEach((el) => el.remove())
 }
 

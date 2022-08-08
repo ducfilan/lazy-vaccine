@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useState } from "react"
 
-const useAudio = (url: string): [() => void, () => void, boolean] => {
+const useAudio = (url: string | undefined): [() => void, () => void, boolean] => {
   const audio = useMemo(() => new Audio(url), [url])
   const [playing, setPlaying] = useState(false)
 

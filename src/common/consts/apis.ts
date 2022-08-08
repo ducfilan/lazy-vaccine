@@ -22,6 +22,9 @@ const Apis = {
   getInjectionTargets: `${StaticApiBaseUrl}/injection-targets.json`,
   getTokenFromCode: (code: string) => `${ApiBaseUrl}/token?code=${code}`,
   refreshAccessToken: (refreshToken: string) => `${ApiBaseUrl}/token/refresh?refreshToken=${refreshToken}`,
+  pronounceText: (text: string, langCode: string) => `${ApiBaseUrl}/audio/pronounce?text=${text}&langCode=${langCode}`,
 }
+
+export const pronounceTextApi = Apis.pronounceText
 
 export default Apis

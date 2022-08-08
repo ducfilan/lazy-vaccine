@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 
 import StatusCode from "@consts/statusCodes"
 import { ApiBaseUrl, ApiTimeOut } from "@consts/constants"
-import { getGoogleAuthToken, refreshAccessToken } from "./authFacade"
+import { refreshAccessToken } from "./authFacade"
 
 const headers: Readonly<Record<string, string | boolean>> = {
   Accept: "application/json",
