@@ -1,5 +1,6 @@
+import { pronounceTextApi } from "./common/consts/apis"
 import CacheKeys from "./common/consts/cacheKeys"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
 import { NotLoggedInError, NotSubscribedError } from "./common/consts/errors"
 import { getGoogleAuthToken, signIn } from "./common/facades/authFacade"
 import { Http } from "./common/facades/axiosFacade"
@@ -69,6 +70,32 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case ChromeMessageTypeGetLocalSetting:
       const setting = getLocalSetting(request.arg.settingKey)
       sendResponse({ success: true, result: setting })
+      break
+
+    case ChromeMessageTypePlayAudio:
+      getGoogleAuthToken().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        http
+          .get(pronounceTextApi(request.arg.text, request.arg.langCode), {
+            responseType: "arraybuffer",
+            headers: {
+              "Content-Type": "audio/mpeg",
+            },
+          })
+          .then((result) => {
+            const blob = new Blob([result.data], {
+              type: "audio/mpeg",
+            })
+
+            new Audio(URL.createObjectURL(blob)).play()
+          })
+          .catch((error) => {
+            console.debug(error)
+          })
+        sendResponse({ success: true })
+      }).catch((error: Error) => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
       break
 
     default:

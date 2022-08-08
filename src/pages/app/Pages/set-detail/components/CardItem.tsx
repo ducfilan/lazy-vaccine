@@ -265,6 +265,9 @@ const AudioPlayer = (props: { url: string }) => {
 
         setAudioUrl(URL.createObjectURL(blob))
       })
+      .catch((error) => {
+        console.debug(error)
+      })
   }, [http, props.url])
 
   const [play] = useAudio(audioUrl)

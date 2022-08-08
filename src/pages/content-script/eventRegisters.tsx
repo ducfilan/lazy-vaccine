@@ -1,8 +1,13 @@
 import { addDynamicEventListener, htmlStringToHtmlNode } from "@/background/DomManipulator"
-import { decodeBase64, formatString } from "@/common/utils/stringUtils"
+import { decodeBase64, formatString, getMainContent } from "@/common/utils/stringUtils"
 import { generateTemplateExtraValues, toTemplateValues } from "./templateHelpers"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
-import { sendInteractItemMessage, sendSetLocalSettingMessage, sendSignUpMessage } from "./messageSenders"
+import {
+  sendInteractItemMessage,
+  sendPronounceMessage,
+  sendSetLocalSettingMessage,
+  sendSignUpMessage,
+} from "./messageSenders"
 import {
   AppBasePath,
   AppPages,
@@ -22,33 +27,40 @@ import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/util
 import { redirectToUrlInNewTab } from "@/common/utils/domUtils"
 
 export function registerFlipCardEvent() {
-  addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card .card--face", (e: Event) => {
-    let cardFace = e.target as HTMLElement
-    if (!cardFace.classList.contains("card--face")) {
-      cardFace = cardFace.parentElement as HTMLElement
-    }
-    const wrapperElement: HTMLElement = cardFace.closest(InjectWrapperClassName)!
+  addDynamicEventListener(
+    document.body,
+    "click",
+    ".lazy-vaccine .flash-card .card--face .card--content",
+    (e: Event) => {
+      let cardFace = e.target as HTMLElement
+      if (!cardFace.classList.contains("card--face")) {
+        cardFace = cardFace.parentElement as HTMLElement
+      }
+      const wrapperElement: HTMLElement = cardFace.closest(InjectWrapperClassName)!
 
-    sendInteractItemMessage(wrapperElement.dataset.setid!, wrapperElement.dataset.itemid!, ItemsInteractionFlip).catch(
-      (error) => {
+      sendInteractItemMessage(
+        wrapperElement.dataset.setid!,
+        wrapperElement.dataset.itemid!,
+        ItemsInteractionFlip
+      ).catch((error) => {
         // TODO: handle error case.
         console.error(error)
-      }
-    )
+      })
 
-    e.stopPropagation()
+      e.stopPropagation()
 
-    const faceToDisplayClass = cardFace.classList.contains("card--face--front")
-      ? ".card--face--back"
-      : ".card--face--front"
+      const faceToDisplayClass = cardFace.classList.contains("card--face--front")
+        ? ".card--face--back"
+        : ".card--face--front"
 
-    cardFace.parentElement?.style.setProperty(
-      "height",
-      cardFace.parentElement?.querySelector(faceToDisplayClass)?.clientHeight + "px"
-    )
+      cardFace.parentElement?.style.setProperty(
+        "height",
+        cardFace.parentElement?.querySelector(faceToDisplayClass)?.clientHeight + "px"
+      )
 
-    cardFace.closest(".flash-card-wrapper")?.classList.toggle("is-flipped")
-  })
+      cardFace.closest(".flash-card-wrapper")?.classList.toggle("is-flipped")
+    }
+  )
 }
 
 export function registerNextItemEvent(
@@ -512,4 +524,28 @@ export function registerSuggestionLoginButtonClickEvent(callback: () => Promise<
         button.disabled = false
       })
   })
+}
+
+export function registerPronounceButtonClickEvent() {
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `.lazy-vaccine .card-item--top-bar-wrapper .btn-pronounce`,
+    async (e: Event) => {
+      e.stopPropagation()
+
+      const button = e.target as HTMLInputElement
+      const cardContentElem = button.closest(".card--face")?.querySelector(".card--content") as HTMLElement
+      const text = getMainContent(cardContentElem.innerText)
+      const langCode = cardContentElem.dataset.lang
+
+      text &&
+        langCode &&
+        sendPronounceMessage(text, langCode)
+          .then()
+          .catch((error) => {
+            console.error(error)
+          })
+    }
+  )
 }

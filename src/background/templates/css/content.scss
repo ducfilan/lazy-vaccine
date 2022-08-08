@@ -1,13 +1,18 @@
 $primary: #12b886;
 $white: #fff;
 
-.lazy-vaccine, .lazy-vaccine-bubble {
+.lazy-vaccine,
+.lazy-vaccine-bubble {
   .content-card-wrapper {
     width: 100%;
     margin-bottom: 20px;
     cursor: pointer;
     position: relative;
     z-index: 1;
+
+    & > div:first-child {
+      min-height: 100px;
+    }
 
     .card--face {
       width: 100%;

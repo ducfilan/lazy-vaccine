@@ -1,5 +1,5 @@
 import { sendMessage } from "@/background/MessagingFacade"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken } from "@/common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken } from "@/common/consts/constants"
 import { SetInfo } from "@/common/types/types"
 
 export function sendClearCachedRandomSetMessage() {
@@ -41,5 +41,11 @@ export function sendGetGoogleTokenMessage() {
 export function sendSignUpMessage() {
   return new Promise<{ token: string }>((resolve, reject) => {
     sendMessage(ChromeMessageTypeSignUp, null, resolve, reject)
+  })
+}
+
+export function sendPronounceMessage(text: string, langCode: string) {
+  return new Promise<any>((resolve, reject) => {
+    sendMessage(ChromeMessageTypePlayAudio, { text, langCode }, resolve, reject)
   })
 }

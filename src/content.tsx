@@ -26,6 +26,7 @@ import {
   registerSuggestionSearchButtonClickEvent,
   registerSuggestionLoginButtonClickEvent,
   registerHoverBubblePopoverEvent,
+  registerPronounceButtonClickEvent,
 } from "./pages/content-script/eventRegisters"
 import { getHref, isSiteSupportedInjection } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
@@ -352,6 +353,7 @@ function registerFlashcardEvents() {
 
   registerSuggestionSearchButtonClickEvent()
   registerSuggestionLoginButtonClickEvent(processInjection)
+  registerPronounceButtonClickEvent()
 }
 
 /**
@@ -375,6 +377,8 @@ const getItemAtPointer = (pointerPosition: number, skipStep: number = 1): any =>
         setId: setInfo?._id || "",
         setTitle: setInfo?.name || "",
         isStared: itemsInPageInteractionMap[rawItem._id]?.includes("star") ? "stared" : "",
+        fromLanguage: setInfo?.fromLanguage,
+        toLanguage: setInfo?.toLanguage,
       }
     : null
 }

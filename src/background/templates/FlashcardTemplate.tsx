@@ -1,7 +1,8 @@
 import React from "react"
 
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
-import { Divider } from "antd"
+import { Button, Divider } from "antd"
+import { CustomerServiceOutlined } from "@ant-design/icons"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
 import { Popover } from "./common/Popover"
@@ -15,6 +16,14 @@ import {
 } from "@/common/consts/constants"
 import { SelectBox } from "./common/SelectBox"
 import { CardInteraction } from "./common/CardInteraction"
+
+const TopBar = () => {
+  return (
+    <div className="card-item--top-bar-wrapper">
+      <Button type="primary" shape="circle" icon={<CustomerServiceOutlined />} className="btn-pronounce" />
+    </div>
+  )
+}
 
 export const FlashcardTemplate = (props: { selectedFrontItem: string; selectedBackItem: string }) => {
   return (
@@ -70,10 +79,16 @@ export const FlashcardTemplate = (props: { selectedFrontItem: string; selectedBa
       />
       <div className="flash-card flash-card-wrapper">
         <div className="card--face card--face--front">
-          <p className="card--content">{":front_content"}</p>
+          <TopBar />
+          <p className="card--content" data-lang=":langCodeFront">
+            {":front_content"}
+          </p>
         </div>
         <div className="card--face card--face--back">
-          <p className="card--content">{":back_content"}</p>
+          <TopBar />
+          <p className="card--content" data-lang=":langCodeBack">
+            {":back_content"}
+          </p>
         </div>
       </div>
       <CardInteraction />

@@ -171,6 +171,7 @@ export const InjectTypes = {
 }
 
 export const ChromeMessageTypeToken = "get-chrome-token"
+export const ChromeMessageTypePlayAudio = "play-audio"
 export const ChromeMessageTypeSignUp = "sign-up-first-time"
 export const ChromeMessageClearRandomSetCache = "clear-random-set-cache"
 export const ChromeMessageTypeGetRandomItem = "get-random-item"

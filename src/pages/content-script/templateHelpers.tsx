@@ -32,8 +32,19 @@ async function mapItemTemplateValues(item: SetInfoItem): Promise<KeyValuePair[]>
       item.front_content = item[settingFrontItem]
       item.back_content = item[settingBackItem]
 
+      const displayFaceToLangCodeMap = {
+        term: item.fromLanguage,
+        definition: item.toLanguage,
+      } as { [key: string]: string }
+
+      item.langCodeFront = displayFaceToLangCodeMap[settingFrontItem]
+      item.langCodeBack = displayFaceToLangCodeMap[settingBackItem]
+
       delete item.term
       delete item.definition
+      delete item.fromLanguage
+      delete item.toLanguage
+
       break
 
     case ItemTypes.QnA.value:
