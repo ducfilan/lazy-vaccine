@@ -16,7 +16,7 @@ import RegisterSteps from "@consts/registerSteps"
 
 import { getMyInfo } from "@/common/repo/user"
 import { User } from "@/common/types/types"
-import { getGoogleAuthToken } from "@facades/authFacade"
+import { getGoogleAuthTokenSilent } from "@facades/authFacade"
 import { Http } from "@facades/axiosFacade"
 import { i18n, LoginTypes } from "@/common/consts/constants"
 import { GlobalContext } from "@/common/contexts/GlobalContext"
@@ -32,7 +32,7 @@ const PopupPage = () => {
     try {
       setIsLoading(true)
 
-      getGoogleAuthToken()
+      getGoogleAuthTokenSilent()
         .then((token: string) => {
           setHttp(new Http(token, LoginTypes.google))
         })
