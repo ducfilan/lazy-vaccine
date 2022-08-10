@@ -131,6 +131,8 @@ export function signIn(this: any, type: string) {
                 `${GoogleApiUrls.getUserInfo}${token}`
               )
 
+              userInfo.locale = userInfo.locale.substring(0, 2)
+
               const http = new Http(token, LoginTypes.google)
               setHttp && setHttp(http)
 
