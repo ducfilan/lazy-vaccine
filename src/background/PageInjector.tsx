@@ -263,6 +263,9 @@ export default class PageInjector {
           throw new Error("invalid htmlTemplate")
         }
 
+        elem.querySelectorAll(InjectWrapperClassName).forEach((child) => {
+          child.remove()
+        })
         elem.prepend(node)
       })
     })
