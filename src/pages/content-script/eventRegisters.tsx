@@ -548,7 +548,7 @@ export function registerPronounceButtonClickEvent() {
 
       const button = e.target as HTMLInputElement
       const cardContentElem = button.closest(".card--face")?.querySelector(".card--content") as HTMLElement
-      const text = getMainContent(takeFirstLine(cardContentElem.innerText))
+      const text = takeFirstLine(getMainContent(cardContentElem.innerText))
       const langCode = cardContentElem.dataset.lang
 
       text &&

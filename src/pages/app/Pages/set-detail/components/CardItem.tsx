@@ -233,7 +233,7 @@ const TopBar = (props: { currentIndex: number; itemLang: string; cardFace: strin
 
   return (
     <div className="card-item--top-bar-wrapper">
-      <AudioPlayer url={pronounceTextApi(getMainContent(takeFirstLine(getDisplayingItemProperty())), props.itemLang)} />
+      <AudioPlayer url={pronounceTextApi(takeFirstLine(getMainContent(getDisplayingItemProperty())), props.itemLang)} />
       <div className="card-item--top-bar-counter">
         {props.currentIndex + 1} / {setInfo.items!.length}
       </div>

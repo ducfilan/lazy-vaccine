@@ -45,5 +45,9 @@
     "exclude": [
         "node_modules",
         "dist"
-    ]
+    ],
+    "types": [
+        "node",
+        "jest"
+    ],
 }
