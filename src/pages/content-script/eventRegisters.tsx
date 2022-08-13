@@ -456,31 +456,41 @@ export function registerCheckAnswerEvent() {
 export function registerSelectEvent() {
   const wrapperSelector = ".select-menu"
 
-  addDynamicEventListener(document.body, "click", `.lazy-vaccine ${wrapperSelector} .select-btn`, async (e: Event) => {
-    const selectBtn = e.target as Element
-    selectBtn.closest(wrapperSelector)!.classList.toggle("active")
-  })
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `${InjectWrapperClassName} ${wrapperSelector} .select-btn`,
+    async (e: Event) => {
+      const selectBtn = e.target as Element
+      selectBtn.closest(wrapperSelector)!.classList.toggle("active")
+    }
+  )
 
-  addDynamicEventListener(document.body, "click", `.lazy-vaccine ${wrapperSelector} .option`, async (e: Event) => {
-    const option = e.target as HTMLElement
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `${InjectWrapperClassName} ${wrapperSelector} .option`,
+    async (e: Event) => {
+      const option = e.target as HTMLElement
 
-    let selectedOptionKey = option.dataset.key
-    let selectedOptionLabel = option.innerText
+      let selectedOptionKey = option.dataset.key
+      let selectedOptionLabel = option.innerText
 
-    let wrapper = option.closest(wrapperSelector) as HTMLElement
-    const settingKey = wrapper.dataset.settingKey
+      let wrapper = option.closest(wrapperSelector) as HTMLElement
+      const settingKey = wrapper.dataset.settingKey
 
-    settingKey && selectedOptionKey && sendSetLocalSettingMessage(settingKey, selectedOptionKey)
-    ;(wrapper?.querySelector(".sBtn-text") as HTMLElement).innerText = selectedOptionLabel
-    wrapper?.classList.remove("active")
-  })
+      settingKey && selectedOptionKey && sendSetLocalSettingMessage(settingKey, selectedOptionKey)
+      ;(wrapper?.querySelector(".sBtn-text") as HTMLElement).innerText = selectedOptionLabel
+      wrapper?.classList.remove("active")
+    }
+  )
 }
 
 export function registerSuggestionSearchButtonClickEvent() {
   addDynamicEventListener(
     document.body,
     "click",
-    `.lazy-vaccine .suggestion-card .ant-input-search-button`,
+    `${InjectWrapperClassName} .suggestion-card .ant-input-search-button`,
     async (e: Event) => {
       const button = e.target as HTMLInputElement
       const keyword = (button.closest(".ant-input-wrapper")?.querySelector(".ant-input") as HTMLInputElement).value
@@ -494,7 +504,7 @@ export function registerSuggestionSearchButtonClickEvent() {
   addDynamicEventListener(
     document.body,
     "keydown",
-    `.lazy-vaccine .suggestion-card .ant-input`,
+    `${InjectWrapperClassName} .suggestion-card .ant-input`,
     async (e: KeyboardEvent) => {
       if (e.key === "Enter") {
         const keyword = (e.target as HTMLInputElement).value
@@ -508,26 +518,31 @@ export function registerSuggestionSearchButtonClickEvent() {
 }
 
 export function registerSuggestionLoginButtonClickEvent(callback: () => Promise<void>) {
-  addDynamicEventListener(document.body, "click", `.lazy-vaccine .suggestion-card .login-button`, async (e: Event) => {
-    const button = e.target as HTMLInputElement
-    button.disabled = true
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `${InjectWrapperClassName} .suggestion-card .login-button`,
+    async (e: Event) => {
+      const button = e.target as HTMLInputElement
+      button.disabled = true
 
-    sendSignUpMessage()
-      .then(callback)
-      .catch((error) => {
-        console.error(error)
-      })
-      .finally(() => {
-        button.disabled = false
-      })
-  })
+      sendSignUpMessage()
+        .then(callback)
+        .catch((error) => {
+          console.error(error)
+        })
+        .finally(() => {
+          button.disabled = false
+        })
+    }
+  )
 }
 
 export function registerPronounceButtonClickEvent() {
   addDynamicEventListener(
     document.body,
     "click",
-    `.lazy-vaccine .card-item--top-bar-wrapper .btn-pronounce`,
+    `${InjectWrapperClassName} .card-item--top-bar-wrapper .btn-pronounce`,
     async (e: Event) => {
       e.stopPropagation()
 
@@ -543,6 +558,20 @@ export function registerPronounceButtonClickEvent() {
           .catch((error) => {
             console.error(error)
           })
+    }
+  )
+}
+
+export function registerRemoveCardButtonClickEvent() {
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `${InjectWrapperClassName} .disclaimer-info .buttons .close`,
+    async (e: Event) => {
+      e.stopPropagation()
+
+      const button = e.target as HTMLInputElement
+      button.closest(InjectWrapperClassName)?.remove()
     }
   )
 }

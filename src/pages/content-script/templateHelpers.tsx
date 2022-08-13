@@ -1,12 +1,10 @@
 import React from "react"
 
-import { hrefToSiteName } from "@/background/DomManipulator"
 import { ItemTypes, SettingKeyBackItem, SettingKeyFrontItem } from "@/common/consts/constants"
 import { SetInfoItem, KeyValuePair } from "@/common/types/types"
 import { encodeBase64, isValidJson } from "@/common/utils/stringUtils"
 import { renderToString } from "react-dom/server"
 import RichTextEditor from "@/pages/app/components/RichTextEditor"
-import { getHref } from "./domHelpers"
 import { sendGetLocalSettingMessage } from "./messageSenders"
 
 export const toTemplateValues = async (
@@ -17,7 +15,6 @@ export const toTemplateValues = async (
 
   const itemKeyValue = await mapItemTemplateValues(item)
   let otherKeyValue = Object.entries(otherKeyValueItems).map(([key, value]) => ({ key, value } as KeyValuePair))
-  otherKeyValue = [...otherKeyValue, { key: "website", value: await hrefToSiteName(getHref()) }]
 
   return [...itemKeyValue, ...otherKeyValue]
 }

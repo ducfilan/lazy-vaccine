@@ -27,6 +27,7 @@ import {
   registerSuggestionLoginButtonClickEvent,
   registerHoverBubblePopoverEvent,
   registerPronounceButtonClickEvent,
+  registerRemoveCardButtonClickEvent,
 } from "./pages/content-script/eventRegisters"
 import { getHref, isSiteSupportedInjection } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
@@ -47,7 +48,7 @@ import "@/background/templates/css/QandA.scss"
 import "@/background/templates/css/suggest-subscribe.scss"
 import "@/background/templates/css/bubble.scss"
 
-import { hrefToSiteName, htmlStringToHtmlNode } from "./background/DomManipulator"
+import { htmlStringToHtmlNode } from "./background/DomManipulator"
 import { getInjectionTargets } from "./common/repo/injection-targets"
 import { renderToString } from "react-dom/server"
 import { FixedWidget } from "./background/templates/FixedWidget"
@@ -72,14 +73,12 @@ function hrefComparer(this: any, oldHref: string, newHref: string) {
 const getNotLoggedInTemplateValues = async () => {
   return [
     { key: "type", value: OtherItemTypes.NotLoggedIn.value },
-    { key: "website", value: await hrefToSiteName(getHref()) },
   ]
 }
 
 const getNotSubscribedTemplateValues = async () => {
   return [
     { key: "type", value: OtherItemTypes.NotSubscribed.value },
-    { key: "website", value: await hrefToSiteName(getHref()) },
   ]
 }
 
@@ -89,7 +88,6 @@ const getNetworkErrorTemplateValues = async () => {
       if (lastError?.error?.message?.startsWith("timeout of")) {
         return [
           { key: "type", value: OtherItemTypes.NetworkTimeout.value },
-          { key: "website", value: await hrefToSiteName(getHref()) },
           { key: "errorText", value: i18n("network_error_timeout") },
         ]
       }
@@ -98,7 +96,6 @@ const getNetworkErrorTemplateValues = async () => {
     case "ERR_NETWORK":
       return [
         { key: "type", value: OtherItemTypes.NetworkOffline.value },
-        { key: "website", value: await hrefToSiteName(getHref()) },
         { key: "errorText", value: i18n("network_error_offline") },
       ]
 
@@ -354,6 +351,7 @@ function registerFlashcardEvents() {
   registerSuggestionSearchButtonClickEvent()
   registerSuggestionLoginButtonClickEvent(processInjection)
   registerPronounceButtonClickEvent()
+  registerRemoveCardButtonClickEvent()
 }
 
 /**

@@ -305,7 +305,7 @@
     "message": "Edit image"
   },
   "common_inject_card_disclaimer": {
-    "message": "⚠ This content is not part of :website, this belongs to Lazy Vaccine"
+    "message": "⚠ This content belongs to Lazy Vaccine"
   },
   "common_save_changes": {
     "message": "Save changes"

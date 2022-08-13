@@ -329,7 +329,7 @@
     "message": "画像を編集する"
   },
   "common_inject_card_disclaimer": {
-    "message": "⚠このコンテンツは:websiteの一部ではなく、LazyVaccineに属しています"
+    "message": "⚠このコンテンツはLazyVaccineに属しています"
   },
   "common_save_changes": {
     "message": "変更を保存"

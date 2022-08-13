@@ -305,7 +305,7 @@
     "message": "编辑图片"
   },
   "common_inject_card_disclaimer": {
-    "message": "⚠ 此内容不属于:website，属于Lazy Vaccine"
+    "message": "⚠ 此内容属于Lazy Vaccine"
   },
   "common_save_changes": {
     "message": "保存更改"
