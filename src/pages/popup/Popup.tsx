@@ -9,7 +9,6 @@ import Navbar from "@/common/components/Navbar"
 import Loading from "@/common/components/Loading"
 import FirstTime from "./components/FirstTime"
 import ChooseLanguages from "./components/ChooseLanguages"
-import ChoosePages from "./components/ChoosePages"
 import CompletedInfo from "./components/CompletedInfo"
 
 import RegisterSteps from "@consts/registerSteps"
@@ -101,7 +100,7 @@ const PopupPage = () => {
     const finishedRegisterStep = user?.finishedRegisterStep
 
     switch (finishedRegisterStep) {
-      case RegisterSteps.ChoosePages:
+      case RegisterSteps.ChooseLanguages:
         return <CompletedInfo />
 
       case RegisterSteps.Install:
@@ -114,13 +113,8 @@ const PopupPage = () => {
           </div>
         )
 
-      case RegisterSteps.ChooseLanguages:
-        return <ChoosePages />
-
       default:
         return <FirstTime />
-      // TODO: Network error/server error should be noticed.
-      // TODO: Different login header while token is expired.
     }
   }
 

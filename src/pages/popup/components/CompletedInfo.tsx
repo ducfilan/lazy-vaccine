@@ -9,7 +9,6 @@ import Icon, {
   SettingOutlined,
   FileSearchOutlined,
   BarChartOutlined,
-  SmileOutlined,
   RocketOutlined,
 } from "@ant-design/icons"
 
@@ -29,7 +28,6 @@ import AchievementChart from "@/pages/app/Pages/user-profile/components/Achievem
 const { Text } = Typography
 
 const HomePageUrl = `${chrome.runtime.getURL(AppBasePath)}/home`
-const MySpacePageUrl = `${chrome.runtime.getURL(AppBasePath)}${AppPages.MySpace.path}`
 
 function HeaderContent(props: { setsStatistics: any }) {
   const { user } = useGlobalContext()
