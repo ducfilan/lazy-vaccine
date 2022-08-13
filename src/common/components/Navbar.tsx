@@ -22,7 +22,7 @@ const DropdownMenu = (props: { isLoggedIn: boolean; target?: string }) => {
               key: "name",
               icon: <RightCircleOutlined />,
               label: (
-                <a href={AppPages.MySpace.path} target={props.target || ""}>
+                <a href={`${chrome.runtime.getURL(AppBasePath)}${AppPages.MySpace.path}`} target={props.target || ""}>
                   {user?.name}
                 </a>
               ),
