@@ -32,7 +32,7 @@
     "message": "很高兴认识你，:user_name！ 🎉 我看到你的第一语言是:first_language，你想用其他语言显示内容吗？"
   },
   "popup_introduce_choose_pages": {
-    "message": "伟大的！ 🤩 最后一步...\n您可以选择您最常访问的网站开始。 而已！"
+    "message": "您可以自定义您最常访问的网站以注入内容"
   },
   "popup_select_a_language": {
     "message": "选择语言"
@@ -358,6 +358,9 @@
   "common_check": {
     "message": "查看"
   },
+  "common_success": {
+    "message": "成功"
+  },
   "seed_growing_conditions": {
     "message": "生长条件"
   },
@@ -459,5 +462,8 @@
   },
   "bubble_widget_title": {
     "message": "我可以帮你什么？"
+  },
+  "user_profile_update_pages_success": {
+    "message": "您的偏好已成功更新！"
   }
 }

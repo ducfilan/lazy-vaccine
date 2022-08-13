@@ -217,3 +217,9 @@ export const FlashCardOptions: { [key: string]: string } = {
 }
 
 export const InjectWrapperClassName = ".lazy-vaccine"
+
+export const UserProfileTabMyAchievements = "myAchievement"
+export const UserProfileTabSubscribed = "subscribed"
+export const UserProfileTabLiked = "liked"
+export const UserProfileTabCreated = "created"
+export const UserProfileTabSettingPages = "settingPages"

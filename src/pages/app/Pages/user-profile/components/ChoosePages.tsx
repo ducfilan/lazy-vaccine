@@ -1,53 +1,46 @@
-import * as React from "react"
+import React from "react"
 
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
-import { Card, Space, Checkbox, notification } from "antd"
+import { Card, Space, Checkbox, notification, Button } from "antd"
 import { CheckCircleFilled } from "@ant-design/icons"
 
 import { i18n, SupportingPages } from "@consts/constants"
-import NextPrevButton from "./NextPrevButton"
 import { User } from "@/common/types/types"
-import RegisterSteps from "@/common/consts/registerSteps"
 import { updateUserInfo } from "@/common/repo/user"
 
 import BrandIcon from "@/common/components/BrandIcon"
-import PopupHeader from "./Header"
 
 const { useState } = React
 
 function ChoosePages() {
   const { user, setUser, http } = useGlobalContext()
 
-  const [chosePages, setChosePages] = useState<string[]>(user?.pages || [SupportingPages.facebook.key])
+  const [chosePages, setChosePages] = useState<string[]>(
+    user?.pages || Object.values(SupportingPages).map((p) => p.key)
+  )
 
   const headerText = i18n("popup_introduce_choose_pages")
 
-  const goForward = async () => {
-    const nextStep = user ? RegisterSteps.next(user.finishedRegisterStep) : null
-    nextStep && (await goToStep(nextStep))
-  }
-
-  const goBack = async () => {
-    const prevStep = user ? RegisterSteps.prev(user.finishedRegisterStep) : null
-    prevStep && (await goToStep(prevStep))
-  }
-
-  const goToStep = async (step: number) => {
+  const saveChanges = async () => {
     try {
       if (!user) return
 
       const updatedUserInfo: User = {
         ...user,
-        finishedRegisterStep: step,
         pages: chosePages,
       }
 
-      http && (await updateUserInfo(http, { finishedRegisterStep: step, pages: chosePages }))
+      http && (await updateUserInfo(http, { pages: chosePages }))
 
       setUser(updatedUserInfo)
+
+      notification["success"]({
+        message: i18n("common_success"),
+        description: i18n("user_profile_update_pages_success"),
+        duration: 5,
+      })
     } catch (error) {
-      // TODO: Handle more types of error: Server/Timeout/Network etc..
       notification["error"]({
         message: i18n("error"),
         description: i18n("unexpected_error_message"),
@@ -56,8 +49,12 @@ function ChoosePages() {
     }
   }
 
-  const selectPage = (page: string) => {
-    setChosePages([...chosePages, page])
+  const toggleSelectPage = (page: string) => {
+    if (chosePages.includes(page)) {
+      setChosePages(chosePages.filter((p) => p !== page))
+    } else {
+      setChosePages([...chosePages, page])
+    }
   }
 
   const selectAllPages = (e: { target: { checked: boolean } }) => {
@@ -69,11 +66,9 @@ function ChoosePages() {
 
   return (
     <div className="choose-pages--wrapper">
-      <PopupHeader content={headerText} />
+      <h3 className="ant-typography top-25px">{headerText}</h3>
 
       <div className="choose-pages--pages-list">
-        <NextPrevButton direction={"both"} onNext={goForward} onPrev={goBack} />
-
         <Space align="end" style={{ marginRight: 18 }}>
           <Checkbox onChange={selectAllPages}>{i18n("select_all")}</Checkbox>
         </Space>
@@ -84,7 +79,7 @@ function ChoosePages() {
               <div
                 className={`choose-pages--page-item has-text-white has-text-centered ${page} 
                   ${isPageSelected(page) ? "selected" : ""}`}
-                onClick={() => selectPage(page)}
+                onClick={() => toggleSelectPage(page)}
               >
                 <CheckCircleFilled className="choose-pages--selected-icon" />
                 <div className="choose-pages--icon">{<BrandIcon brandName={page} />}</div>
@@ -94,6 +89,10 @@ function ChoosePages() {
           ))}
         </Card>
       </div>
+
+      <Button type="primary" size="large" block onClick={saveChanges}>
+        {i18n("common_save_changes")}
+      </Button>
     </div>
   )
 }

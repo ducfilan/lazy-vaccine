@@ -13,12 +13,14 @@ import {
   InteractionCreate,
   InteractionLike,
   InteractionSubscribe,
+  UserProfileTabMyAchievements,
+  UserProfileTabSettingPages,
 } from "@/common/consts/constants"
 import UserProfileSider from "./components/UserProfileSider"
 import { GeneralInfoCounts, SetInfo, User } from "@/common/types/types"
 import { getUserInfo, getUserInteractionSets, getLearningProgressInfo, getGeneralInfoCounts } from "@/common/repo/user"
 import SetItemCardLong from "@/pages/app/components/SetItemCardLong"
-import { formatNumber, formatString } from "@/common/utils/stringUtils"
+import { formatNumber } from "@/common/utils/stringUtils"
 import InfiniteScroll from "react-infinite-scroll-component"
 import shibaEmptyBoxIcon from "@img/emojis/shiba/box.png"
 import { isElementAtBottom } from "@/pages/content-script/domHelpers"
@@ -26,6 +28,7 @@ import Icon, { BookOutlined, OrderedListOutlined } from "@ant-design/icons"
 import TreeIcon from "@img/ui/fa/tree-solid.svg"
 import AchievementChart from "./components/AchievementChart"
 import moment from "moment"
+import ChoosePages from "./components/ChoosePages"
 
 const { Content } = Layout
 
@@ -44,7 +47,7 @@ const UserProfilePage = (props: any) => {
   const { user, http } = useGlobalContext()
   const [profileUser, setProfileUser] = useState<User>()
   const [sets, setSets] = useState<SetInfo[]>([])
-  const [selectedTab, setSelectedTab] = useState<string>("myAchievement")
+  const [selectedTab, setSelectedTab] = useState<string>(UserProfileTabMyAchievements)
   const [skip, setSkip] = useState<number>()
   const [isSearching, setIsSearching] = useState<boolean>(true)
   const [totalSetsCount, setTotalSetsCount] = useState<number>()
@@ -174,79 +177,104 @@ const UserProfilePage = (props: any) => {
   }, [http, user])
 
   useEffect(() => {
-    profileUser && (selectedTab !== "myAchievement" ? setSetsInfo() : setAchievementInfo())
+    if (!profileUser) return
+
+    switch (selectedTab) {
+      case UserProfileTabMyAchievements:
+        setAchievementInfo()
+        break
+
+      case UserProfileTabSettingPages:
+        // TODO
+        break
+
+      default:
+        setSetsInfo()
+        break
+    }
   }, [selectedTab, profileUser])
+
+  function renderTabContent() {
+    switch (selectedTab) {
+      case UserProfileTabMyAchievements:
+        return (
+          <div className="top-12px">
+            {generalInfoCounts && (
+              <Card hoverable loading={isLoading} className="completed-info--stats ">
+                <Row gutter={[16, 0]}>
+                  <Col className="gutter-row" span={8}>
+                    <Statistic
+                      title={i18n("popup_stats_sets")}
+                      value={generalInfoCounts?.subscribedSetsCount}
+                      prefix={<BookOutlined />}
+                    />
+                  </Col>
+                  <Col className="gutter-row" span={8}>
+                    <Statistic
+                      title={i18n("common_items")}
+                      value={generalInfoCounts?.learntItemsCount}
+                      prefix={<OrderedListOutlined />}
+                      suffix={`/ ${formatNumber(generalInfoCounts?.totalItemsCount)}`}
+                    />
+                  </Col>
+                  {/* TODO: remove mock tree data */}
+                  <Col className="gutter-row" span={8}>
+                    <Statistic
+                      title={i18n("popup_stats_trees_plant")}
+                      value={2}
+                      prefix={<Icon component={TreeIcon} />}
+                    />
+                  </Col>
+                </Row>
+              </Card>
+            )}
+            {learningProgressInfo && (
+              <>
+                <Typography.Title level={3} className="top-8px">
+                  {i18n("my_space_how_changed")}
+                </Typography.Title>
+                <AchievementChart statistics={learningProgressInfo} />
+              </>
+            )}
+          </div>
+        )
+
+      case UserProfileTabSettingPages:
+        return <ChoosePages />
+
+      default:
+        return totalSetsCount ? (
+          <InfiniteScroll
+            next={() => {}}
+            dataLength={totalSetsCount}
+            hasMore={hasMore()}
+            loader={<Skeleton avatar paragraph={{ rows: 3 }} active />}
+            endMessage={<Divider plain>{i18n("common_end_list_result")}</Divider>}
+            onScroll={onSetsListScroll}
+          >
+            <List
+              dataSource={sets}
+              renderItem={(set) => (
+                <List.Item key={set._id}>
+                  <SetItemCardLong set={set} />
+                </List.Item>
+              )}
+            />
+          </InfiniteScroll>
+        ) : isSearching ? (
+          <Skeleton avatar paragraph={{ rows: 3 }} active />
+        ) : (
+          <Result icon={<img src={shibaEmptyBoxIcon} />} title={i18n("common_not_found")}></Result>
+        )
+    }
+  }
 
   return (
     <UserProfileContext.Provider value={{ user: profileUser, onTabChanged }}>
       <Layout className="body-content">
         <UserProfileSider width={250} path={""} />
         <Layout style={{ paddingLeft: 24, marginTop: -12 }}>
-          <Content>
-            {selectedTab === "myAchievement" ? (
-              <div className="top-12px">
-                {generalInfoCounts && (
-                  <Card hoverable loading={isLoading} className="completed-info--stats ">
-                    <Row gutter={[16, 0]}>
-                      <Col className="gutter-row" span={8}>
-                        <Statistic
-                          title={i18n("popup_stats_sets")}
-                          value={generalInfoCounts?.subscribedSetsCount}
-                          prefix={<BookOutlined />}
-                        />
-                      </Col>
-                      <Col className="gutter-row" span={8}>
-                        <Statistic
-                          title={i18n("common_items")}
-                          value={generalInfoCounts?.learntItemsCount}
-                          prefix={<OrderedListOutlined />}
-                          suffix={`/ ${formatNumber(generalInfoCounts?.totalItemsCount)}`}
-                        />
-                      </Col>
-                      {/* TODO: remove mock tree data */}
-                      <Col className="gutter-row" span={8}>
-                        <Statistic
-                          title={i18n("popup_stats_trees_plant")}
-                          value={2}
-                          prefix={<Icon component={TreeIcon} />}
-                        />
-                      </Col>
-                    </Row>
-                  </Card>
-                )}
-                {learningProgressInfo && (
-                  <>
-                    <Typography.Title level={3} className="top-8px">
-                      {i18n("my_space_how_changed")}
-                    </Typography.Title>
-                    <AchievementChart statistics={learningProgressInfo} />
-                  </>
-                )}
-              </div>
-            ) : totalSetsCount ? (
-              <InfiniteScroll
-                next={() => {}}
-                dataLength={totalSetsCount}
-                hasMore={hasMore()}
-                loader={<Skeleton avatar paragraph={{ rows: 3 }} active />}
-                endMessage={<Divider plain>{i18n("common_end_list_result")}</Divider>}
-                onScroll={onSetsListScroll}
-              >
-                <List
-                  dataSource={sets}
-                  renderItem={(set) => (
-                    <List.Item key={set._id}>
-                      <SetItemCardLong set={set} />
-                    </List.Item>
-                  )}
-                />
-              </InfiniteScroll>
-            ) : isSearching ? (
-              <Skeleton avatar paragraph={{ rows: 3 }} active />
-            ) : (
-              <Result icon={<img src={shibaEmptyBoxIcon} />} title={i18n("common_not_found")}></Result>
-            )}
-          </Content>
+          <Content>{renderTabContent()}</Content>
         </Layout>
       </Layout>
     </UserProfileContext.Provider>

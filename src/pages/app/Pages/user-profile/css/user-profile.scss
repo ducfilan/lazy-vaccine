@@ -6,3 +6,102 @@
     border-right: none !important;
   }
 }
+
+.choose-pages--wrapper {
+  .choose-pages--pages-list {
+    padding: 0 2em;
+
+    .ant-card {
+      background-color: transparent;
+
+      .ant-card-grid {
+        box-shadow: none;
+        padding: 16px;
+      }
+    }
+
+    .choose-pages--page-item {
+      position: relative;
+      padding: 1em;
+      border-radius: 20px;
+      background: $grey-light;
+
+      * {
+        pointer-events: none;
+      }
+
+      .choose-pages--icon {
+        height: 3em;
+
+        svg {
+          width: 40px;
+        }
+      }
+
+      &:hover {
+        cursor: pointer;
+        transition: transform 0.2s ease-in-out;
+        transform: scale(1.05);
+      }
+
+      .choose-pages--selected-icon {
+        position: absolute;
+        top: -8px;
+        right: -4px;
+        display: none;
+        color: $green;
+
+        svg {
+          border-radius: 50%;
+          font-size: 4em;
+          width: 24px;
+          height: auto;
+          background-color: $white;
+        }
+      }
+
+      &.selected,
+      &:hover {
+        .choose-pages--selected-icon {
+          display: block;
+        }
+
+        &.facebook {
+          background-image: linear-gradient(135deg, $facebook-color 10%, $facebook-color-light 100%);
+        }
+
+        &.youtube {
+          background-image: linear-gradient(135deg, $youtube-color 10%, $youtube-color-light 100%);
+        }
+
+        &.amazon {
+          background-image: linear-gradient(135deg, $amazon-color 10%, $amazon-color-light 100%);
+        }
+
+        &.ebay {
+          background-image: linear-gradient(135deg, $ebay-color 10%, $ebay-color-light 100%);
+        }
+
+        &.twitter {
+          background-image: linear-gradient(135deg, $twitter-color 10%, $twitter-color-light 100%);
+        }
+
+        &.reddit {
+          background-image: linear-gradient(135deg, $reddit-color 10%, $reddit-color-light 100%);
+        }
+
+        &.google {
+          background-image: linear-gradient(135deg, $google-color 10%, $google-color-light 100%);
+        }
+
+        &.pinterest {
+          background-image: linear-gradient(135deg, $pinterest-color 10%, $pinterest-color-light 100%);
+        }
+
+        &.messenger {
+          background-image: linear-gradient(135deg, $messenger-color 10%, $messenger-color-light 100%);
+        }
+      }
+    }
+  }
+}

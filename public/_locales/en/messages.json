@@ -32,7 +32,7 @@
     "message": "Nice to meet you, :user_name! 🎉 I see your first language is :first_language, do you want to show content in other languages?"
   },
   "popup_introduce_choose_pages": {
-    "message": "Great! 🤩 One last step...\nYou can select your most visited websites to start. That's it!"
+    "message": "You can customize your most visited websites to inject content"
   },
   "popup_select_a_language": {
     "message": "Select a language"
@@ -361,6 +361,9 @@
   "common_check": {
     "message": "Check"
   },
+  "common_success": {
+    "message": "Success"
+  },
   "seed_growing_conditions": {
     "message": "Growing conditions"
   },
@@ -465,5 +468,8 @@
   },
   "bubble_widget_title": {
     "message": "What can I help you?"
+  },
+  "user_profile_update_pages_success": {
+    "message": "Your preferences have been updated successfully!"
   }
 }
