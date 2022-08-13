@@ -88,6 +88,6 @@ export const isValidJson = (jsonString: string) => {
   return false
 }
 
-export const getMainContent = (s: string): string => {
-  return s.replace(/\([^)]*\)|（[^（]*）|【[^【]*】|《[^《]*》|＜[^＜]*＞|「[^「]*」|\[[^\[]*\]|\<[^<]*\>/g, "").trim()
-}
+export const getMainContent = (s: string): string => s.replace(/\([^)]*\)|（[^（]*）|【[^【]*】|《[^《]*》|＜[^＜]*＞|「[^「]*」|\[[^\[]*\]|\<[^<]*\>/g, "").trim()
+
+export const takeFirstLine = (s: string): string => s.split("\n")[0]

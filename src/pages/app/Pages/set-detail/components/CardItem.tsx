@@ -14,7 +14,7 @@ import {
   SettingKeyFrontItem,
 } from "@/common/consts/constants"
 import { Button, Skeleton } from "antd"
-import { formatString, getMainContent, isValidJson } from "@/common/utils/stringUtils"
+import { formatString, getMainContent, isValidJson, takeFirstLine } from "@/common/utils/stringUtils"
 import RichTextEditor from "@/pages/app/components/RichTextEditor"
 import { sendGetLocalSettingMessage } from "@/pages/content-script/messageSenders"
 import { CSSTransition } from "react-transition-group"
@@ -233,7 +233,7 @@ const TopBar = (props: { currentIndex: number; itemLang: string; cardFace: strin
 
   return (
     <div className="card-item--top-bar-wrapper">
-      <AudioPlayer url={pronounceTextApi(getMainContent(getDisplayingItemProperty()), props.itemLang)} />
+      <AudioPlayer url={pronounceTextApi(getMainContent(takeFirstLine(getDisplayingItemProperty())), props.itemLang)} />
       <div className="card-item--top-bar-counter">
         {props.currentIndex + 1} / {setInfo.items!.length}
       </div>
@@ -248,7 +248,11 @@ const AudioPlayer = (props: { url: string }) => {
   const { http } = useGlobalContext()
   const [audioUrl, setAudioUrl] = useState<string | undefined>(undefined)
 
+  const [play, pause] = useAudio(audioUrl)
+
   useEffect(() => {
+    pause()
+
     if (!http) return
 
     http
@@ -262,15 +266,12 @@ const AudioPlayer = (props: { url: string }) => {
         const blob = new Blob([result.data], {
           type: "audio/mpeg",
         })
-
         setAudioUrl(URL.createObjectURL(blob))
       })
       .catch((error) => {
         console.debug(error)
       })
   }, [http, props.url])
-
-  const [play] = useAudio(audioUrl)
 
   return <Button type="primary" shape="circle" icon={<CustomerServiceOutlined />} onClick={() => play && play()} />
 }

@@ -8,6 +8,8 @@ import { interactToSetItem } from "./common/repo/set"
 import { getUserInteractionRandomSet } from "./common/repo/user"
 import { SetInfo, User } from "./common/types/types"
 
+let lastAudio: HTMLAudioElement
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.type) {
     case ChromeMessageTypeToken:
@@ -100,7 +102,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
               type: "audio/mpeg",
             })
 
-            new Audio(URL.createObjectURL(blob)).play()
+            lastAudio && lastAudio.pause()
+            lastAudio = new Audio(URL.createObjectURL(blob))
+            lastAudio.play()
           })
           .catch((error) => {
             console.debug(error)

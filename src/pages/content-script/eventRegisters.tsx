@@ -1,5 +1,5 @@
 import { addDynamicEventListener, htmlStringToHtmlNode } from "@/background/DomManipulator"
-import { decodeBase64, formatString, getMainContent } from "@/common/utils/stringUtils"
+import { decodeBase64, formatString, getMainContent, takeFirstLine } from "@/common/utils/stringUtils"
 import { generateTemplateExtraValues, toTemplateValues } from "./templateHelpers"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
 import {
@@ -548,7 +548,7 @@ export function registerPronounceButtonClickEvent() {
 
       const button = e.target as HTMLInputElement
       const cardContentElem = button.closest(".card--face")?.querySelector(".card--content") as HTMLElement
-      const text = getMainContent(cardContentElem.innerText)
+      const text = getMainContent(takeFirstLine(cardContentElem.innerText))
       const langCode = cardContentElem.dataset.lang
 
       text &&

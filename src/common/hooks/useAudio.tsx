@@ -1,11 +1,12 @@
 import { useMemo, useEffect, useState } from "react"
 
-const useAudio = (url: string | undefined): [() => void, () => void, boolean] => {
+const useAudio = (url: string | undefined): [() => void, () => void, boolean, () => void] => {
   const audio = useMemo(() => new Audio(url), [url])
   const [playing, setPlaying] = useState(false)
 
   const toggle = () => setPlaying(!playing)
   const play = () => audio.play()
+  const pause = () => audio.pause()
 
   useEffect(() => {
     playing ? audio.play() : audio.pause()
@@ -18,7 +19,7 @@ const useAudio = (url: string | undefined): [() => void, () => void, boolean] =>
     }
   }, [])
 
-  return [play, toggle, playing]
+  return [play, pause, playing, toggle]
 }
 
 export default useAudio
