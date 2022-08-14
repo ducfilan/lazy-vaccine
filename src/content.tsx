@@ -120,12 +120,16 @@ let lastError: any = null
 
 let allInjectors: PageInjector[] | undefined = []
 
-getRestrictedKeywords().then((keywords: string[]) => {
-  const href = getHref()
-  if (keywords.every((keyword: string) => !href.includes(keyword))) {
-    injectFixedWidgetBubble()
-  }
-})
+getRestrictedKeywords()
+  .then((keywords: string[]) => {
+    const href = getHref()
+    if (keywords.every((keyword: string) => !href.includes(keyword))) {
+      injectFixedWidgetBubble()
+    }
+  })
+  .catch((err) => {
+    console.error(err)
+  })
 
 getInjectionTargets()
   .then((targets) => {
