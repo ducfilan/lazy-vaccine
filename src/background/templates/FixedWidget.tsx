@@ -1,6 +1,7 @@
 import React from "react"
 
 import ShibaTailImg from "@img/emojis/shiba/tail.png"
+import ShibaWanImg from "@img/emojis/shiba/wan.png"
 import { Popover } from "./common/Popover"
 import { AppBasePath, AppPages, ContactFeedbackLink, i18n } from "@/common/consts/constants"
 
@@ -36,6 +37,11 @@ export const FixedWidget = () => {
         src={chrome.runtime.getURL(`${ShibaTailImg}`)}
         style={{ width: 60, verticalAlign: "top" }}
         className="bubble-img"
+      />
+      <img
+        src={chrome.runtime.getURL(`${ShibaWanImg}`)}
+        style={{ width: 70, verticalAlign: "top", marginRight: 10 }}
+        className="bubble-img-wan lazy-vaccine-hidden"
       />
     </div>
   )

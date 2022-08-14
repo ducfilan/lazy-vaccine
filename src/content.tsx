@@ -28,6 +28,7 @@ import {
   registerHoverBubblePopoverEvent,
   registerPronounceButtonClickEvent,
   registerRemoveCardButtonClickEvent,
+  registerHoverCardEvent,
 } from "./pages/content-script/eventRegisters"
 import { getHref, isSiteSupportedInjection } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
@@ -71,15 +72,11 @@ function hrefComparer(this: any, oldHref: string, newHref: string) {
 }
 
 const getNotLoggedInTemplateValues = async () => {
-  return [
-    { key: "type", value: OtherItemTypes.NotLoggedIn.value },
-  ]
+  return [{ key: "type", value: OtherItemTypes.NotLoggedIn.value }]
 }
 
 const getNotSubscribedTemplateValues = async () => {
-  return [
-    { key: "type", value: OtherItemTypes.NotSubscribed.value },
-  ]
+  return [{ key: "type", value: OtherItemTypes.NotSubscribed.value }]
 }
 
 const getNetworkErrorTemplateValues = async () => {
@@ -352,6 +349,7 @@ function registerFlashcardEvents() {
   registerSuggestionLoginButtonClickEvent(processInjection)
   registerPronounceButtonClickEvent()
   registerRemoveCardButtonClickEvent()
+  registerHoverCardEvent()
 }
 
 /**

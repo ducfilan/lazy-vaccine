@@ -575,3 +575,17 @@ export function registerRemoveCardButtonClickEvent() {
     }
   )
 }
+
+export function registerHoverCardEvent() {
+  addDynamicEventListener(document.body, "mouseover", InjectWrapperClassName, async (e: Event) => {
+    e.stopPropagation()
+    document.querySelector(".lazy-vaccine-bubble .bubble-img")?.classList.add("lazy-vaccine-hidden")
+    document.querySelector(".lazy-vaccine-bubble .bubble-img-wan")?.classList.remove("lazy-vaccine-hidden")
+  })
+
+  addDynamicEventListener(document.body, "mouseout", InjectWrapperClassName, async (e: Event) => {
+    e.stopPropagation()
+    document.querySelector(".lazy-vaccine-bubble .bubble-img")?.classList.remove("lazy-vaccine-hidden")
+    document.querySelector(".lazy-vaccine-bubble .bubble-img-wan")?.classList.add("lazy-vaccine-hidden")
+  })
+}
