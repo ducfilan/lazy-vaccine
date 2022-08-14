@@ -16,6 +16,7 @@ export const FixedWidget = () => {
         }}
         title={i18n("bubble_widget_title")}
         position="topRight"
+        showMoreButton={false}
         content={
           <>
             <div className="popover-links">

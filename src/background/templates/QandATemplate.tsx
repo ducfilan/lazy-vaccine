@@ -48,7 +48,7 @@ export const QnATemplate = () => {
           </>
         }
       />
-      <div className="qna-card qna-card-wrapper" data-answers={":listOfAnswers"}>
+      <div className="qna-card qna-card-wrapper card-wrapper" data-answers={":listOfAnswers"}>
         <div className="card--content">
           <p className="card--question">{":question"}</p>
           <p>{i18n("inject_card_select")}</p>

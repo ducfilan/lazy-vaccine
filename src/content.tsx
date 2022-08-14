@@ -27,7 +27,7 @@ import {
   registerSuggestionLoginButtonClickEvent,
   registerHoverBubblePopoverEvent,
   registerPronounceButtonClickEvent,
-  registerRemoveCardButtonClickEvent,
+  registerTopBarCardButtonsClickEvent,
   registerHoverCardEvent,
 } from "./pages/content-script/eventRegisters"
 import { getHref, isSiteSupportedInjection } from "./pages/content-script/domHelpers"
@@ -186,6 +186,10 @@ async function initValues() {
       havingSubscribedSets = true
 
       setInfo.itemsInteractions?.map((itemInteractions) => {
+        if ((itemInteractions.interactionCount.star || 0) % 2 == 0) {
+          delete itemInteractions.interactionCount.star
+        }
+
         itemsInPageInteractionMap[itemInteractions.itemId] = Object.keys(itemInteractions.interactionCount)
       })
     }
@@ -359,7 +363,7 @@ function registerFlashcardEvents() {
   registerSuggestionSearchButtonClickEvent()
   registerSuggestionLoginButtonClickEvent(processInjection)
   registerPronounceButtonClickEvent()
-  registerRemoveCardButtonClickEvent()
+  registerTopBarCardButtonsClickEvent()
   registerHoverCardEvent()
 }
 

@@ -82,7 +82,7 @@ export const FlashcardTemplate = (props: { selectedFrontItem: string; selectedBa
           </>
         }
       />
-      <div className="flash-card flash-card-wrapper">
+      <div className="flash-card flash-card-wrapper card-wrapper">
         <div className="card--face card--face--front">
           <TopBar />
           <p className="card--content" data-lang=":langCodeFront">

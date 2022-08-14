@@ -12,7 +12,7 @@ export const SuggestSubscribeTemplate = () => {
   return (
     <div className="lazy-vaccine">
       <DisclaimerInfo />
-      <div className="suggestion-card suggestion-card-wrapper">
+      <div className="suggestion-card suggestion-card-wrapper card-wrapper">
         <div className="card--face">
           <img src={chrome.runtime.getURL(`${ShibaBoxImg}`)} style={{ width: 100, verticalAlign: "top" }} />
           <div className="talk-bubble tri-right left-in">

@@ -8,7 +8,7 @@ export const NetworkErrorTemplate = () => {
   return (
     <div className="lazy-vaccine">
       <DisclaimerInfo />
-      <div className="suggestion-card suggestion-card-wrapper">
+      <div className="suggestion-card suggestion-card-wrapper card-wrapper">
         <div className="card--face">
           <img src={chrome.runtime.getURL(`${shibaSleepIcon}`)} style={{ width: 169, verticalAlign: "top" }} />
           <div className="talk-bubble tri-right left-in">

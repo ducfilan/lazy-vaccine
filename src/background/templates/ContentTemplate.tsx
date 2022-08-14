@@ -45,7 +45,7 @@ export const ContentTemplate = () => {
           </>
         }
       />
-      <div className="content-card content-card-wrapper">
+      <div className="content-card content-card-wrapper card-wrapper">
         <div className="card--face card--face--front">
           {":content"}
           <CardInteraction />

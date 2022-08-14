@@ -368,7 +368,7 @@ export function registerStarEvent(
 ) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--star", async (e: Event) => {
     e.stopPropagation()
-    const starBtn = e.target as Element
+    const starBtn = (e.target as HTMLElement).closest("button")
     starBtn?.classList.toggle("stared")
 
     const item = itemGetter()
@@ -562,7 +562,7 @@ export function registerPronounceButtonClickEvent() {
   )
 }
 
-export function registerRemoveCardButtonClickEvent() {
+export function registerTopBarCardButtonsClickEvent() {
   addDynamicEventListener(
     document.body,
     "click",
@@ -572,6 +572,35 @@ export function registerRemoveCardButtonClickEvent() {
 
       const button = e.target as HTMLInputElement
       button.closest(InjectWrapperClassName)?.remove()
+    }
+  )
+
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `${InjectWrapperClassName} .disclaimer-info .buttons .maximize`,
+    async (e: Event) => {
+      e.stopPropagation()
+      const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
+
+      const setId = wrapperElement.dataset.setid!
+
+      redirectToUrlInNewTab(`${chrome.runtime.getURL(AppBasePath)}${AppPages.SetDetail.path}`.replace(":setId", setId))
+    }
+  )
+
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `${InjectWrapperClassName} .disclaimer-info .buttons .minimize`,
+    async (e: Event) => {
+      e.stopPropagation()
+      const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
+
+      const hiddenClassName = "lazy-vaccine-hidden"
+      wrapperElement.querySelector(".card-wrapper")?.classList.toggle(hiddenClassName)
+      wrapperElement.querySelector(".card--interactions")?.classList.toggle(hiddenClassName)
+      wrapperElement.querySelector(".next-prev-buttons--wrapper")?.classList.toggle(hiddenClassName)
     }
   )
 }
