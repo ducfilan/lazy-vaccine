@@ -40,6 +40,7 @@ export const FlashcardTemplate = (props: { selectedFrontItem: string; selectedBa
           paddingLeft: 20,
         }}
         title={":setTitle"}
+        showMoreButton={true}
         content={
           <>
             <div className="popover-links">

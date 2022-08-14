@@ -19,6 +19,7 @@ export const QnATemplate = () => {
           paddingLeft: 20,
         }}
         title={":setTitle"}
+        showMoreButton={true}
         content={
           <>
             <p>

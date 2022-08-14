@@ -162,17 +162,19 @@ export function signIn(this: any, type: string) {
 export function signOut(callback: () => void = () => { }) {
   chrome.storage.sync.remove([CacheKeys.accessToken, CacheKeys.refreshToken])
 
-  getGoogleAuthToken()
+  getGoogleAuthTokenSilent()
     .then((token: string) => {
-      fetch(`${GoogleApiUrls.revokeToken}${token}`).then(callback).catch((error) => { console.error(error) })
-      chrome.identity.removeCachedAuthToken({ token: token }, callback)
+      fetch(`${GoogleApiUrls.revokeToken}${token}`).catch((error) => { console.error(error) }).finally(() => {
+        chrome.identity.removeCachedAuthToken({ token: token }, callback)
+      })
     })
     .catch((error) => {
       // TODO: Notice user.
       console.error(error)
+    }).finally(() => {
+      callback()
+      chrome.storage.sync.set({ [CacheKeys.isSignedOut]: true })
     })
-
-  chrome.storage.sync.set({ [CacheKeys.isSignedOut]: true })
 }
 
 // TODO: Handle onSignInChanged https://developer.chrome.com/docs/extensions/reference/identity/#event-onSignInChanged

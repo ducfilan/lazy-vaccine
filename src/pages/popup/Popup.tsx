@@ -22,27 +22,28 @@ import { GlobalContext } from "@/common/contexts/GlobalContext"
 import NetworkError from "@/common/components/NetworkError"
 
 const PopupPage = () => {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [http, setHttp] = useState<Http | null>(null)
+  const [http, setHttp] = useState<Http | null>()
   const [lastError, setLastError] = useState<any>(null)
+  const [contentElement, setContentElement] = useState<any>(
+    <div>
+      <Loading />
+    </div>
+  )
 
   useEffect(() => {
-    try {
-      setIsLoading(true)
+    setIsLoading(true)
 
-      getGoogleAuthTokenSilent()
-        .then((token: string) => {
-          setHttp(new Http(token, LoginTypes.google))
-        })
-        .catch((error: any) => {
-          setIsLoading(false)
-          console.error(error)
-          setLastError(error)
-        })
-    } catch (error) {
-      // Not able to login with current token, ignore to show the first page to login.
-    }
+    getGoogleAuthTokenSilent()
+      .then((token: string) => {
+        setHttp(new Http(token, LoginTypes.google))
+      })
+      .catch((error: any) => {
+        setHttp(null)
+        setIsLoading(false)
+        setLastError(error)
+      })
   }, [])
 
   useEffect(() => {
@@ -54,6 +55,7 @@ const PopupPage = () => {
       })
       .catch((error) => {
         setLastError(error)
+        setUser(null)
         // Not able to login with current token or the user is not registered, ignore to show the first page to login.
       })
       .finally(() => {
@@ -61,86 +63,108 @@ const PopupPage = () => {
       })
   }, [http])
 
-  function renderPages() {
+  useEffect(() => {
     popupHeightScrollIssueWorkaround()
 
-    if (lastError) {
-      switch (lastError.code) {
-        case "ECONNABORTED":
-          if (lastError.message.startsWith("timeout of")) {
-            return (
-              <div>
-                <NetworkError errorText={i18n("network_error_timeout")} />
-              </div>
-            )
-          }
-          break
-
-        case "ERR_NETWORK":
-          return (
-            <div>
-              <NetworkError errorText={i18n("network_error_offline")} />
-            </div>
-          )
-
-        default:
-          break
-      }
-    }
+    handleNetworkError()
 
     if (isLoading)
-      return (
+      setContentElement(
         <div>
           <Loading />
         </div>
       )
 
     handleExternalPopupToLogin()
+      .catch(() => {})
+      .finally(() => {
+        const finishedRegisterStep = user?.finishedRegisterStep
 
-    const finishedRegisterStep = user?.finishedRegisterStep
+        switch (finishedRegisterStep) {
+          case RegisterSteps.ChooseLanguages:
+            setContentElement(<CompletedInfo />)
+            break
 
-    switch (finishedRegisterStep) {
-      case RegisterSteps.ChooseLanguages:
-        return <CompletedInfo />
+          case RegisterSteps.Install:
+            setContentElement(<FirstTime />)
+            break
 
-      case RegisterSteps.Install:
-        return <FirstTime />
+          case RegisterSteps.Register:
+            setContentElement(
+              <div tabIndex={0}>
+                <ChooseLanguages />
+              </div>
+            )
+            break
 
-      case RegisterSteps.Register:
-        return (
-          <div tabIndex={0}>
-            <ChooseLanguages />
+          default:
+            setContentElement(<FirstTime />)
+            break
+        }
+      })
+  }, [http, user])
+
+  function handleNetworkError() {
+    if (!lastError) return
+
+    switch (lastError.code) {
+      case "ECONNABORTED":
+        if (lastError.message.startsWith("timeout of")) {
+          setContentElement(
+            <div>
+              <NetworkError errorText={i18n("network_error_timeout")} />
+            </div>
+          )
+        }
+        break
+
+      case "ERR_NETWORK":
+        setContentElement(
+          <div>
+            <NetworkError errorText={i18n("network_error_offline")} />
           </div>
         )
+        break
 
       default:
-        return <FirstTime />
+        break
     }
   }
 
   function handleExternalPopupToLogin() {
-    const isExternalPopupWindow = new URLSearchParams(window.location.search).get("external")
-    if (!user && !isExternalPopupWindow) {
-      chrome.windows.create(
-        {
-          type: "popup",
-          url: `${chrome.runtime.getURL("pages/popup.html")}?external=true`,
-          width: 800,
-          height: 600,
-          focused: true,
-          left: window.screenLeft,
-          top: window.screenTop,
-        },
-        () => {
-          window.close()
-        }
-      )
-    }
+    return new Promise<void>((resolve, reject) => {
+      const isExternalPopupWindow = new URLSearchParams(window.location.search).get("external")
 
-    chrome.windows.onFocusChanged.addListener(() => {
-      chrome.windows.getLastFocused({ windowTypes: ["popup"] }, (window) => {
-        window.id && user && chrome.windows.remove(window.id)
-      })
+      const needToShowExternalPopup = (http === null || user === null) && !isExternalPopupWindow
+
+      if (needToShowExternalPopup) {
+        console.debug("showing login popup window")
+        setTimeout(() => {
+          chrome.windows.onFocusChanged.addListener(() => {
+            chrome.windows.getLastFocused({ windowTypes: ["popup"] }, (window) => {
+              window?.id && user && chrome.windows.remove(window.id)
+            })
+          })
+
+          chrome.windows.create(
+            {
+              type: "popup",
+              url: `${chrome.runtime.getURL("pages/popup.html")}?external=true`,
+              width: 783,
+              height: 600,
+              focused: true,
+              left: window.screenLeft,
+              top: window.screenTop,
+            },
+            () => {
+              window.close()
+              resolve()
+            }
+          )
+        }, 100)
+      } else {
+        reject()
+      }
     })
   }
 
@@ -162,7 +186,7 @@ const PopupPage = () => {
       <Router>
         <div className="App">
           {!isLoading && <Navbar target="_blank" />}
-          {renderPages()}
+          {contentElement}
         </div>
       </Router>
     </GlobalContext.Provider>

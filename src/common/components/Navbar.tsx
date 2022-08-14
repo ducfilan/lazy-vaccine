@@ -79,6 +79,7 @@ function Navbar(props: { extraComponents?: React.ReactNode[]; centerComponent?: 
     <PageHeader
       title={
         <a
+          key={AppPages.Home.path}
           href={`${chrome.runtime.getURL(AppBasePath)}${AppPages.Home.path}`}
           style={{ color: "white" }}
           target={props.target || ""}
@@ -90,7 +91,11 @@ function Navbar(props: { extraComponents?: React.ReactNode[]; centerComponent?: 
       extra={[
         ...(props.extraComponents || []),
         isLoggedIn ? (
-          <a href={`${chrome.runtime.getURL(AppBasePath)}${AppPages.MySpace.path}`} target={props.target || ""}>
+          <a
+            key={AppPages.MySpace.path}
+            href={`${chrome.runtime.getURL(AppBasePath)}${AppPages.MySpace.path}`}
+            target={props.target || ""}
+          >
             <AvatarImage key="avatar" imageUrl={user?.pictureUrl} />
           </a>
         ) : (

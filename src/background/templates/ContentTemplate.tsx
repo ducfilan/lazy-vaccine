@@ -18,6 +18,7 @@ export const ContentTemplate = () => {
           paddingLeft: 20,
         }}
         title={":setTitle"}
+        showMoreButton={true}
         content={
           <>
             <div className="popover-links">

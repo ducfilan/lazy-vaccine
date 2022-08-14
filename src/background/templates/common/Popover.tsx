@@ -7,6 +7,7 @@ export const Popover = ({
   content,
   styles,
   position,
+  showMoreButton,
 }: {
   title: string
   content: React.ReactElement
@@ -19,16 +20,19 @@ export const Popover = ({
     paddingLeft?: number
   }
   position?: string
+  showMoreButton: boolean
 }) => {
   return (
     <>
-      <Button
-        type="text"
-        shape="circle"
-        icon={<MoreOutlined style={{ color: "white" }} />}
-        style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}
-        className="inject-card-more-button"
-      />
+      {showMoreButton && (
+        <Button
+          type="text"
+          shape="circle"
+          icon={<MoreOutlined style={{ color: "white" }} />}
+          style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}
+          className="inject-card-more-button"
+        />
+      )}
 
       <div style={{ position: "absolute", ...styles, width: styles.width || "100%" }}>
         <div>
