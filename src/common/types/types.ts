@@ -208,6 +208,8 @@ export type GeneralInfoCounts = {
 
 export type InjectionTargetsResponse = { Title: string, MatchPattern: string; Targets: InjectionTarget[], Order: number }[]
 
+export type RestrictedKeywordsResponse = { restrictedKeywords: string[] }
+
 export type TestResult = {
   result: {
     total: number,

@@ -20,6 +20,7 @@ const Apis = {
   uploadTestResult: (setId: string) => `/interactions/${setId}/upload-result`,
   getMissions: "/missions",
   getInjectionTargets: `${StaticApiBaseUrl}/injection-targets.json`,
+  getRestrictedKeywords: `${StaticApiBaseUrl}/restricted-keywords.json`,
   getTokenFromCode: (code: string) => `${ApiBaseUrl}/token?code=${code}`,
   refreshAccessToken: (refreshToken: string) => `${ApiBaseUrl}/token/refresh?refreshToken=${refreshToken}`,
   pronounceText: (text: string, langCode: string) => `${ApiBaseUrl}/audio/pronounce?text=${text}&langCode=${langCode}`,

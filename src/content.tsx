@@ -53,6 +53,7 @@ import { htmlStringToHtmlNode } from "./background/DomManipulator"
 import { getInjectionTargets } from "./common/repo/injection-targets"
 import { renderToString } from "react-dom/server"
 import { FixedWidget } from "./background/templates/FixedWidget"
+import { getRestrictedKeywords } from "./common/repo/restricted-keywords"
 
 function hrefComparer(this: any, oldHref: string, newHref: string) {
   for (const target of this?.targets || []) {
@@ -119,7 +120,13 @@ let lastError: any = null
 
 let allInjectors: PageInjector[] | undefined = []
 
-injectFixedWidgetBubble()
+getRestrictedKeywords().then((keywords: string[]) => {
+  const href = getHref()
+  if (keywords.every((keyword: string) => !href.includes(keyword))) {
+    injectFixedWidgetBubble()
+  }
+})
+
 getInjectionTargets()
   .then((targets) => {
     if (!isSiteSupportedInjection(targets, getHref())) return
