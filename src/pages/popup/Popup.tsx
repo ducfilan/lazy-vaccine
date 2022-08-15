@@ -26,11 +26,6 @@ const PopupPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [http, setHttp] = useState<Http | null>()
   const [lastError, setLastError] = useState<any>(null)
-  const [contentElement, setContentElement] = useState<any>(
-    <div>
-      <Loading />
-    </div>
-  )
 
   useEffect(() => {
     setIsLoading(true)
@@ -63,54 +58,46 @@ const PopupPage = () => {
       })
   }, [http])
 
-  useEffect(() => {
+  function renderContent() {
     popupHeightScrollIssueWorkaround()
 
-    handleNetworkError()
+    if (lastError) return handleNetworkError()
 
     if (isLoading)
-      setContentElement(
+      return (
         <div>
           <Loading />
         </div>
       )
 
-    handleExternalPopupToLogin()
-      .catch(() => {})
-      .finally(() => {
-        const finishedRegisterStep = user?.finishedRegisterStep
+    const finishedRegisterStep = user?.finishedRegisterStep
 
-        switch (finishedRegisterStep) {
-          case RegisterSteps.ChooseLanguages:
-            setContentElement(<CompletedInfo />)
-            break
+    switch (finishedRegisterStep) {
+      case RegisterSteps.ChooseLanguages:
+        return <CompletedInfo />
 
-          case RegisterSteps.Install:
-            setContentElement(<FirstTime />)
-            break
+      case RegisterSteps.Install:
+        return <FirstTime />
 
-          case RegisterSteps.Register:
-            setContentElement(
-              <div tabIndex={0}>
-                <ChooseLanguages />
-              </div>
-            )
-            break
+      case RegisterSteps.Register:
+        return (
+          <div tabIndex={0}>
+            <ChooseLanguages />
+          </div>
+        )
 
-          default:
-            setContentElement(<FirstTime />)
-            break
-        }
-      })
-  }, [http, user])
+      default:
+        return <FirstTime />
+    }
+  }
 
   function handleNetworkError() {
-    if (!lastError) return
+    setLastError(null)
 
-    switch (lastError.code) {
+    switch (lastError?.code) {
       case "ECONNABORTED":
         if (lastError.message.startsWith("timeout of")) {
-          setContentElement(
+          return (
             <div>
               <NetworkError errorText={i18n("network_error_timeout")} />
             </div>
@@ -119,57 +106,17 @@ const PopupPage = () => {
         break
 
       case "ERR_NETWORK":
-        setContentElement(
+        return (
           <div>
             <NetworkError errorText={i18n("network_error_offline")} />
           </div>
         )
-        break
 
       default:
         break
     }
-  }
 
-  function handleExternalPopupToLogin() {
-    return new Promise<void>((resolve, reject) => {
-      const isExternalPopupWindow = new URLSearchParams(window.location.search).get("external")
-
-      const needToShowExternalPopup = (http === null || user === null) && !isExternalPopupWindow
-
-      if (needToShowExternalPopup) {
-        console.debug("showing login popup window")
-        let intervalId = setInterval(() => {
-          if (document.querySelector(".first-time-intro--login-button") !== null) {
-            clearInterval(intervalId)
-
-            chrome.windows.onFocusChanged.addListener(() => {
-              chrome.windows.getLastFocused({ windowTypes: ["popup"] }, (window) => {
-                window?.id && user && chrome.windows.remove(window.id)
-              })
-            })
-
-            chrome.windows.create(
-              {
-                type: "popup",
-                url: `${chrome.runtime.getURL("pages/popup.html")}?external=true`,
-                width: 783,
-                height: 600,
-                focused: true,
-                left: window.screenLeft,
-                top: window.screenTop,
-              },
-              () => {
-                window.close()
-                resolve()
-              }
-            )
-          }
-        }, 200)
-      } else {
-        reject()
-      }
-    })
+    return <FirstTime />
   }
 
   /**
@@ -190,7 +137,7 @@ const PopupPage = () => {
       <Router>
         <div className="App">
           {!isLoading && <Navbar target="_blank" />}
-          {contentElement}
+          {renderContent()}
         </div>
       </Router>
     </GlobalContext.Provider>

@@ -4,9 +4,9 @@ import { Http } from "@facades/axiosFacade"
 
 type Context = {
   user: User | null | undefined
-  setUser: (user: User | null) => void
+  setUser: (user: User | null | undefined) => void
   http?: Http | null | undefined
-  setHttp: (http: Http | null) => void
+  setHttp: (http: Http | null | undefined) => void
 }
 
 export const GlobalContext = createContext<Context>({

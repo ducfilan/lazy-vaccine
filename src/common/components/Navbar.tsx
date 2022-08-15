@@ -34,8 +34,8 @@ const DropdownMenu = (props: { isLoggedIn: boolean; target?: string }) => {
                   type="link"
                   onClick={() => {
                     signOut(() => {
-                      setUser(null)
-                      setHttp(null)
+                      setUser(undefined)
+                      setHttp(undefined)
                     })
                   }}
                 >

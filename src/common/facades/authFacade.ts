@@ -160,20 +160,20 @@ export function signIn(this: any, type: string) {
 }
 
 export function signOut(callback: () => void = () => { }) {
-  chrome.storage.sync.remove([CacheKeys.accessToken, CacheKeys.refreshToken])
-
   getGoogleAuthTokenSilent()
     .then((token: string) => {
       fetch(`${GoogleApiUrls.revokeToken}${token}`).catch((error) => { console.error(error) }).finally(() => {
-        chrome.identity.removeCachedAuthToken({ token: token }, callback)
+        chrome.identity.removeCachedAuthToken({ token: token })
       })
     })
     .catch((error) => {
       // TODO: Notice user.
       console.error(error)
     }).finally(() => {
-      callback()
+      chrome.storage.sync.remove([CacheKeys.accessToken, CacheKeys.refreshToken])
       chrome.storage.sync.set({ [CacheKeys.isSignedOut]: true })
+    
+      callback()
     })
 }
 
