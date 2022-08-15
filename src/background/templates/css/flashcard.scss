@@ -10,6 +10,10 @@ $white: #fff;
     position: relative;
     z-index: 1;
 
+    & > div:nth-child(2) {
+      min-height: 100px;
+    }
+
     &.is-flipped {
       transform: rotateY(180deg);
     }

@@ -17,7 +17,7 @@ export async function editSet(http?: Http, setInfo?: SetInfo): Promise<string> {
   if (!http || !setInfo) throw new ParamError()
 
   // Remove unnecessary info.
-  const { creatorId, creatorName, lastUpdated, actions, isLiked, isDisliked, isSubscribed, ...setInfoMinimized } = setInfo
+  const { creatorId, creatorName, lastUpdated, actions, itemsInteractions, isLiked, isDisliked, isSubscribed, ...setInfoMinimized } = setInfo
 
   await http.patch<any, AxiosResponse<string>>(Apis.sets, setInfoMinimized)
 

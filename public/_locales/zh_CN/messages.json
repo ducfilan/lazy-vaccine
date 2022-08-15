@@ -4,7 +4,7 @@
     "description": "The name of the application"
   },
   "appDescription": {
-    "message": "帮助减少在线分心，推动人们重新学习并激励人们分享知识",
+    "message": "帮助减少在线干扰，节省上网时间，促使人们重新学习并激励人们分享知识。",
     "description": "The description of the application"
   },
   "error": {
@@ -32,7 +32,7 @@
     "message": "很高兴认识你，:user_name！ 🎉 我看到你的第一语言是:first_language，你想用其他语言显示内容吗？"
   },
   "popup_introduce_choose_pages": {
-    "message": "伟大的！ 🤩 最后一步...\n您可以选择您最常访问的网站开始。 而已！"
+    "message": "您可以自定义您最常访问的网站以注入内容"
   },
   "popup_select_a_language": {
     "message": "选择语言"
@@ -52,9 +52,6 @@
   "popup_stats_full_stats": {
     "message": "完整统计"
   },
-  "popup_stats_my_profile": {
-    "message": "我的简介"
-  },
   "create_set_button": {
     "message": "创建一组"
   },
@@ -62,7 +59,7 @@
     "message": "检查我的结果"
   },
   "create_set_search_place_holder": {
-    "message": "搜索您想学习的任何内容..."
+    "message": "搜索您想学习的任何内容，然后按 ENTER ⏎"
   },
   "create_set_page_title": {
     "message": "创建一个新组"
@@ -208,6 +205,9 @@
   "search_result_not_found": {
     "message": "您的搜索 - :keyword - 不匹配任何文档。\n建议：\n - 确保所有单词拼写正确。\n- 尝试不同的关键字。"
   },
+  "search_result_no_keyword_error": {
+    "message": "请提供一个关键字，我会为您找到相应的学习内容。"
+  },
   "home_category_lookup": {
     "message": "类别查找"
   },
@@ -305,7 +305,7 @@
     "message": "编辑图片"
   },
   "common_inject_card_disclaimer": {
-    "message": "⚠ 此内容不属于:website，属于Lazy Vaccine"
+    "message": "⚠ 此内容属于Lazy Vaccine"
   },
   "common_save_changes": {
     "message": "保存更改"
@@ -360,6 +360,9 @@
   },
   "common_check": {
     "message": "查看"
+  },
+  "common_success": {
+    "message": "成功"
   },
   "seed_growing_conditions": {
     "message": "生长条件"
@@ -422,7 +425,7 @@
     "message": "去首页"
   },
   "suggestion_card_search_placeholder": {
-    "message": "你想学什么？"
+    "message": "输入您想学习的内容（例如雅思、日语等），然后按 ENTER ⏎"
   },
   "suggestion_card_suggestion_text": {
     "message": "您还没有订阅任何学习组。只需再走1步即可开始学习，让我们找到一些X订阅！"
@@ -441,5 +444,29 @@
   },
   "rich_text_image_url": {
     "message": "图片网址"
+  },
+  "first_page_quote_1": {
+    "message": "轻松学习不再是夸大其词，使用 Lazy Vaccine 并订阅学习集，自己看看不同之处。 我试过了，成功了！"
+  },
+  "first_page_quote_2": {
+    "message": "杜克先生邀请我尝试 Lazy Vaccine，我为我的英语课创建了一个学习集，然后开始观看 Youtube 并意识到我记住了很多单词！ 它真的有效！"
+  },
+  "search_result_in_languages": {
+    "message": "结果语言"
+  },
+  "network_error_timeout": {
+    "message": "我累了，很抱歉这次不能为您服务。 请等待几秒钟，然后再试一次。 \n（又名超时错误）"
+  },
+  "network_error_offline": {
+    "message": "我需要互联网来获取知识来为您服务，但您好像离线了。 请稍等片刻，直到您重新联机，然后重试。"
+  },
+  "bubble_widget_send_feedback": {
+    "message": "发送反馈"
+  },
+  "bubble_widget_title": {
+    "message": "我可以帮你什么？"
+  },
+  "user_profile_update_pages_success": {
+    "message": "您的偏好已成功更新！"
   }
 }

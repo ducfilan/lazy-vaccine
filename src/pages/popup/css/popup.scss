@@ -8,7 +8,6 @@
 @import "~@/common/css/components/_common/next-prev-buttons";
 
 @import "./components/first-time-intro";
-@import "./components/choose-pages";
 @import "./components/choose-languages";
 @import "./components/completed-info";
 @import "./components/popup-header";
@@ -24,4 +23,5 @@ body {
   color: $text-black;
   padding-bottom: 7em;
   min-height: 601px;
+  overflow-x: hidden !important;
 }

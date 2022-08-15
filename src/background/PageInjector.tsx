@@ -12,7 +12,7 @@ import { KeyValuePair, PageInjectorSiblingSelectorParts } from "@/common/types/t
 import { formatString, trimQuotes } from "@/common/utils/stringUtils"
 import { MutationObserverFacade } from "@facades/mutationObserverFacade"
 import { renderToString } from "react-dom/server"
-import { FlashCardTemplate } from "./templates/FlashcardTemplate"
+import { FlashcardTemplate } from "./templates/FlashcardTemplate"
 import { htmlStringToHtmlNode, insertBefore } from "./DomManipulator"
 import React from "react"
 import { QnATemplate } from "./templates/QandATemplate"
@@ -20,20 +20,22 @@ import { sendGetLocalSettingMessage } from "@/pages/content-script/messageSender
 import { ContentTemplate } from "./templates/ContentTemplate"
 import { SuggestSubscribeTemplate } from "./templates/SuggestSubscribeTemplate"
 import { SuggestLoginTemplate } from "./templates/SuggestLoginTemplate"
+import { NetworkErrorTemplate } from "./templates/NetworkErrorTemplate"
+import { isVisible } from "@/common/utils/domUtils"
 
 export async function getTemplate(type: string) {
-  console.log("Debug: getTemplate called, type: " + type)
+  console.debug("getTemplate called, type: " + type)
 
   switch (type) {
     case ItemTypes.TermDef.value:
       const frontItemSettingKey = (await sendGetLocalSettingMessage(SettingKeyFrontItem)) || ""
       const backItemSettingKey = (await sendGetLocalSettingMessage(SettingKeyBackItem)) || ""
 
-      let settingFrontItem = FlashCardOptions[frontItemSettingKey.toString()] || i18n("select")
-      let settingBackItem = FlashCardOptions[backItemSettingKey.toString()] || i18n("select")
+      let settingFrontItem = FlashCardOptions[frontItemSettingKey] || i18n("select")
+      let settingBackItem = FlashCardOptions[backItemSettingKey] || i18n("select")
 
       return renderToString(
-        <FlashCardTemplate selectedFrontItem={settingFrontItem} selectedBackItem={settingBackItem} />
+        <FlashcardTemplate selectedFrontItem={settingFrontItem} selectedBackItem={settingBackItem} />
       )
 
     case ItemTypes.QnA.value:
@@ -47,6 +49,10 @@ export async function getTemplate(type: string) {
 
     case OtherItemTypes.NotSubscribed.value:
       return renderToString(<SuggestSubscribeTemplate />)
+
+    case OtherItemTypes.NetworkTimeout.value:
+    case OtherItemTypes.NetworkOffline.value:
+      return renderToString(<NetworkErrorTemplate />)
 
     default:
       return ""
@@ -84,7 +90,7 @@ export default class PageInjector {
     newGeneratedElementSelector?: string,
     siblingSelector?: string,
     strict?: boolean,
-    waitTimeOutInMs: number = 15000
+    waitTimeOutInMs: number = 30000
   ) {
     this.rate = rate
     this.type = type
@@ -224,7 +230,7 @@ export default class PageInjector {
 
   private inject(templateValueGetter: () => Promise<KeyValuePair[]>) {
     try {
-      console.log("Debug: inject called, this.type: " + this.type)
+      console.debug("inject called, this.type: " + this.type)
 
       if (this.type == InjectTypes.FixedPosition) {
         this.injectFixedPosition(templateValueGetter)
@@ -251,12 +257,17 @@ export default class PageInjector {
     getTemplate(typeItem || "").then((htmlTemplate) => {
       const htmlString = formatString(htmlTemplate, templateValue)
 
-      const node = htmlStringToHtmlNode(htmlString)
-      if (!node) {
-        throw new Error("invalid htmlTemplate")
-      }
+      document.querySelectorAll(this.parentSelector).forEach((elem) => {
+        const node = htmlStringToHtmlNode(htmlString)
+        if (!node) {
+          throw new Error("invalid htmlTemplate")
+        }
 
-      document.querySelector(this.parentSelector)?.prepend(node)
+        elem.querySelectorAll(InjectWrapperClassName).forEach((child) => {
+          child.remove()
+        })
+        elem.prepend(node)
+      })
     })
   }
 
@@ -283,26 +294,32 @@ export default class PageInjector {
   /**
    * Wait until the target node to be rendered then inject.
    */
-  waitInject(
+  async waitInject(
     templateValueGetter: () => Promise<KeyValuePair[]>,
     intervalInMs: number = 500,
     cleanupFn: () => void = () => {
       // Do nothing by default.
     }
-  ) {
-    const id = setInterval(() => {
-      const isSelectorRendered = document.querySelector(this.parentSelector)
+  ): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const id = setInterval(() => {
+        const element = document.querySelector(this.parentSelector) as HTMLElement
 
-      if (isSelectorRendered) {
-        clearInterval(id)
+        console.debug("this.parentSelector: " + this.parentSelector)
 
-        this.inject(templateValueGetter)
-        cleanupFn()
-      }
+        if (element && isVisible(element)) {
+          clearInterval(id)
+          resolve()
 
-      if (intervalInMs * ++this.waitCount > this.waitTimeOutInMs) {
-        clearInterval(id)
-      }
-    }, intervalInMs)
+          this.inject(templateValueGetter)
+          cleanupFn()
+        }
+
+        if (intervalInMs * ++this.waitCount > this.waitTimeOutInMs) {
+          clearInterval(id)
+          resolve()
+        }
+      }, intervalInMs)
+    })
   }
 }

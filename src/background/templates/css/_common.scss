@@ -37,6 +37,30 @@ $black: #000;
     transition: color 0.3s ease;
   }
 
+  .card--face {
+    & > div:first-child {
+      min-height: 100px;
+    }
+
+    .card-item--top-bar-wrapper {
+      display: grid;
+      grid-template-areas: "a b c";
+      padding: 10px 50px;
+      position: absolute;
+      width: 100%;
+      min-height: unset !important;
+
+      div {
+        height: 0;
+      }
+
+      .btn-flip-wrapper {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+  }
+
   .card--interactions {
     display: flex;
     padding: 10px 16px;
@@ -79,9 +103,9 @@ $black: #000;
   }
 
   .next-prev-buttons--wrapper {
-    height: calc(100% - 60px);
+    height: calc(100% - 90px);
     position: absolute;
-    top: 0;
+    top: 30px;
     width: 100%;
 
     button {
@@ -116,4 +140,8 @@ $black: #000;
       border-bottom-left-radius: 13px !important;
     }
   }
+}
+
+.lazy-vaccine-hidden {
+  display: none !important;
 }

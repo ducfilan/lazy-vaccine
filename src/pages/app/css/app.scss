@@ -19,6 +19,7 @@
 @import "../Pages/marketplace/css/marketplace";
 @import "../Pages/seed-detail/css/seed-detail";
 @import "../Pages/test-set/css/test-set";
+@import "../Pages/search-result/css/search-result";
 
 body {
   min-height: 100vh;
@@ -177,15 +178,6 @@ h2 {
 h3 {
   font-size: 24px;
   line-height: 1.35;
-}
-
-@keyframes bounce {
-  0% {
-    transform: translateY(3px);
-  }
-  100% {
-    transform: translateY(-3px);
-  }
 }
 
 .ant-typography {

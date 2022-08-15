@@ -11,7 +11,6 @@ import { User } from "@/common/types/types"
 import WanImg from "@img/emojis/shiba/wan.png"
 import PopupHeader from "./Header"
 import BlockQuote from "@/common/components/BlockQuote"
-import { quotes } from "@/common/consts/quotes"
 
 const { useState } = React
 
@@ -60,7 +59,10 @@ function FirstTime() {
           style={{ display: isShowLoginError ? "flex" : "none" }}
         />
         <Carousel autoplay>
-          {quotes.map(({ quote, author }, i) => (
+          {[
+            { quote: i18n("first_page_quote_1"), author: "Duc Hoang" },
+            { quote: i18n("first_page_quote_2"), author: "Lona" },
+          ].map(({ quote, author }, i) => (
             <BlockQuote key={i} quote={quote} author={`- ${author}`} />
           ))}
         </Carousel>

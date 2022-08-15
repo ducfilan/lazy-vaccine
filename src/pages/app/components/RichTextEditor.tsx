@@ -54,10 +54,13 @@ const RichTextEditor = ({ readOnly, placeholder, onChange, value, ...restProps }
   const renderLeaf = useCallback((props: any) => <Leaf {...props} />, [])
   const editor = useMemo(() => withImages(withHistory(withReact(createEditor() as ReactEditor))), [])
 
+  value = typeof value === "object" ? value : JSON.parse(value || null) || initialEditorValue
+  editor.children = value
+
   return (
     <Slate
       editor={editor}
-      value={typeof value === "object" ? value : JSON.parse(value || null) || initialEditorValue}
+      value={value}
       {...restProps}
       onChange={(newValue) => {
         const isAstChange = editor.operations.some((op: any) => "set_selection" !== op.type)
@@ -232,9 +235,9 @@ const Element = (props: any) => {
 
     default:
       return (
-        <p style={style} {...attributes}>
+        <span style={style} {...attributes}>
           {children}
-        </p>
+        </span>
       )
   }
 }

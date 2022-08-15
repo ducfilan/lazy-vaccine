@@ -4,7 +4,7 @@
     "description": "The name of the application"
   },
   "appDescription": {
-    "message": "Help reduce online distractions, drive people back to learn and motivate people to share knowledge",
+    "message": "Help reduce online distractions, save time on Internet, drive people back to learn and motivate people to share knowledge",
     "description": "The description of the application"
   },
   "error": {
@@ -32,7 +32,7 @@
     "message": "Nice to meet you, :user_name! 🎉 I see your first language is :first_language, do you want to show content in other languages?"
   },
   "popup_introduce_choose_pages": {
-    "message": "Great! 🤩 One last step...\nYou can select your most visited websites to start. That's it!"
+    "message": "You can customize your most visited websites to inject content"
   },
   "popup_select_a_language": {
     "message": "Select a language"
@@ -52,9 +52,6 @@
   "popup_stats_full_stats": {
     "message": "Full stats"
   },
-  "popup_stats_my_profile": {
-    "message": "My profile"
-  },
   "create_set_button": {
     "message": "Create set"
   },
@@ -62,7 +59,7 @@
     "message": "Check My Result"
   },
   "create_set_search_place_holder": {
-    "message": "Search for anything you want to learn..."
+    "message": "Search for anything you want to learn, and press ENTER ⏎"
   },
   "create_set_page_title": {
     "message": "Create a new set"
@@ -208,6 +205,9 @@
   "search_result_not_found": {
     "message": "Your search - :keyword - did not match any documents.\nSuggestions:\n - Make sure that all words are spelled correctly.\n- Try different keywords."
   },
+  "search_result_no_keyword_error": {
+    "message": "Please provide a keyword then I will find the corresponding learning content for you."
+  },
   "home_category_lookup": {
     "message": "Category lookup"
   },
@@ -305,7 +305,7 @@
     "message": "Edit image"
   },
   "common_inject_card_disclaimer": {
-    "message": "⚠ This content is not part of :website, this belongs to Lazy Vaccine"
+    "message": "⚠ This content belongs to Lazy Vaccine"
   },
   "common_save_changes": {
     "message": "Save changes"
@@ -360,6 +360,9 @@
   },
   "common_check": {
     "message": "Check"
+  },
+  "common_success": {
+    "message": "Success"
   },
   "seed_growing_conditions": {
     "message": "Growing conditions"
@@ -422,13 +425,13 @@
     "message": "Go to homepage"
   },
   "suggestion_card_search_placeholder": {
-    "message": "What do you want to learn?"
+    "message": "Type in what you want to learn (e.g. IELTS, Japanese etc.), and press ENTER ⏎"
   },
   "suggestion_card_suggestion_text": {
     "message": "You didn't subscribed to any learning set. Just 1 more step to start learning, let's find some set to subscribe!"
   },
   "suggestion_card_not_logged_in_text": {
-    "message": "Hello! To help you learn, firstly, I want to know who you are. Let's log in. It will take a few seconds only!"
+    "message": "Hi there! To help you learn, firstly, May I know who you are? Let's log in. It will take a few seconds only!"
   },
   "rich_text_upload_modal_title": {
     "message": "Insert a new photo"
@@ -441,5 +444,32 @@
   },
   "rich_text_image_url": {
     "message": "Image url"
+  },
+  "first_page_quote_1": {
+    "message": "Effortless learning is no more an exaggerated story, using Lazy Vaccine and subscribe to a learning set to see the difference by yourself. I promise!"
+  },
+  "first_page_quote_2": {
+    "message": "Duc invited me to try Lazy Vaccine, I created a learning set for my English lesson, then stated watching Youtube for awhile and realized that I remembered many words! It really works!"
+  },
+  "search_result_in_languages": {
+    "message": "In langues"
+  },
+  "network_error_timeout": {
+    "message": "I am tired, I am sorry that I cannot serve you this time. Please wait for a few seconds and try again. \n(a.k.a. TIMEOUT ERROR)"
+  },
+  "network_error_offline": {
+    "message": "I need Internet to get knowledge to serve you, but seems like you are offline. Please wait for a few seconds and try again when you're back online."
+  },
+  "learning_activities_review": {
+    "message": "Review"
+  },
+  "bubble_widget_send_feedback": {
+    "message": "Send feedback"
+  },
+  "bubble_widget_title": {
+    "message": "What can I help you?"
+  },
+  "user_profile_update_pages_success": {
+    "message": "Your preferences have been updated successfully!"
   }
 }

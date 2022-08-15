@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react"
 
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
-import { Row, Col, Badge, Typography, Card, Statistic, Button, notification } from "antd"
+import { Row, Col, Badge, Typography, Card, Statistic, Button, notification, Input } from "antd"
 import Icon, {
   BookOutlined,
   OrderedListOutlined,
   SettingOutlined,
   FileSearchOutlined,
   BarChartOutlined,
-  SmileOutlined,
+  RocketOutlined,
 } from "@ant-design/icons"
 
 import { GeneralInfoCounts, User } from "@/common/types/types"
@@ -28,7 +28,6 @@ import AchievementChart from "@/pages/app/Pages/user-profile/components/Achievem
 const { Text } = Typography
 
 const HomePageUrl = `${chrome.runtime.getURL(AppBasePath)}/home`
-const MySpacePageUrl = `${chrome.runtime.getURL(AppBasePath)}${AppPages.MySpace.path}`
 
 function HeaderContent(props: { setsStatistics: any }) {
   const { user } = useGlobalContext()
@@ -185,14 +184,16 @@ function CompletedInfo() {
               </Col>
               <Col span={12}>
                 <Button
-                  className="completed-info--button-my-profile"
+                  key="create-set"
                   size="large"
-                  icon={<SmileOutlined />}
+                  className="completed-info--button-create-set"
+                  icon={<RocketOutlined />}
                   block
-                  href={MySpacePageUrl}
-                  target="_blank"
+                  onClick={() =>
+                    window.open(`${chrome.runtime.getURL(AppBasePath)}${AppPages.CreateSet.path}`, "_blank")
+                  }
                 >
-                  {i18n("popup_stats_my_profile")}
+                  {i18n("create_set_button")}
                 </Button>
               </Col>
               {/* TODO: update full-stats, setting */}
@@ -206,6 +207,17 @@ function CompletedInfo() {
                   {i18n("popup_stats_settings")}
                 </Button>
               </Col>
+              <Input.Search
+                placeholder={i18n("suggestion_card_search_placeholder")}
+                style={{ padding: "0 16px" }}
+                enterButton
+                onSearch={(keyword) => {
+                  window.open(
+                    `${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`,
+                    "_blank"
+                  )
+                }}
+              />
             </Row>
           </div>
         </>

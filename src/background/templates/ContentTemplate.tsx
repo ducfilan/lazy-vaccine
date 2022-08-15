@@ -9,13 +9,16 @@ import { CardInteraction } from "./common/CardInteraction"
 
 export const ContentTemplate = () => {
   return (
-    <div className="lazy-vaccine" data-setId=":setId" data-itemId=":itemId">
+    <div className="lazy-vaccine" data-setid=":setId" data-itemid=":itemId">
       <DisclaimerInfo />
       <Popover
-        top={20}
-        right={-10}
-        paddingLeft={20}
+        styles={{
+          top: 10,
+          right: -5,
+          paddingLeft: 20,
+        }}
         title={":setTitle"}
+        showMoreButton={true}
         content={
           <>
             <div className="popover-links">
@@ -29,7 +32,7 @@ export const ContentTemplate = () => {
                 </a>
               </p>
               <p>
-                <a href="#" className="content-card-next-set-link">
+                <a href="#" className="inject-card-next-set-link">
                   {i18n("flashcard_next_set")}
                 </a>
               </p>
@@ -42,7 +45,7 @@ export const ContentTemplate = () => {
           </>
         }
       />
-      <div className="content-card content-card-wrapper">
+      <div className="content-card content-card-wrapper card-wrapper">
         <div className="card--face card--face--front">
           {":content"}
           <CardInteraction />

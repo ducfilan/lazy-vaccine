@@ -1,11 +1,14 @@
+import { pronounceTextApi } from "./common/consts/apis"
 import CacheKeys from "./common/consts/cacheKeys"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
 import { NotLoggedInError, NotSubscribedError } from "./common/consts/errors"
-import { getGoogleAuthToken } from "./common/facades/authFacade"
+import { getGoogleAuthToken, getGoogleAuthTokenSilent, signIn } from "./common/facades/authFacade"
 import { Http } from "./common/facades/axiosFacade"
 import { interactToSetItem } from "./common/repo/set"
 import { getUserInteractionRandomSet } from "./common/repo/user"
-import { SetInfo } from "./common/types/types"
+import { SetInfo, User } from "./common/types/types"
+
+let lastAudio: HTMLAudioElement
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.type) {
@@ -17,8 +20,33 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       })
       break
 
+    case ChromeMessageTypeSignUp:
+      signIn
+        .call(null, LoginTypes.google)
+        .then((user: User | null) => {
+          sendResponse({ success: true, result: user })
+        })
+        .catch((error) => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+
+      break
+
     case ChromeMessageTypeGetRandomSet:
       getGoogleAuthToken().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        getRandomSubscribedSet(http).then((set) => {
+          sendResponse({ success: true, result: set })
+        }).catch(error => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+      }).catch((error: Error) => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
+      break
+
+    case ChromeMessageTypeGetRandomSetSilent:
+      getGoogleAuthTokenSilent().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
         getRandomSubscribedSet(http).then((set) => {
           sendResponse({ success: true, result: set })
@@ -57,6 +85,34 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case ChromeMessageTypeGetLocalSetting:
       const setting = getLocalSetting(request.arg.settingKey)
       sendResponse({ success: true, result: setting })
+      break
+
+    case ChromeMessageTypePlayAudio:
+      getGoogleAuthToken().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        http
+          .get(pronounceTextApi(request.arg.text, request.arg.langCode), {
+            responseType: "arraybuffer",
+            headers: {
+              "Content-Type": "audio/mpeg",
+            },
+          })
+          .then((result) => {
+            const blob = new Blob([result.data], {
+              type: "audio/mpeg",
+            })
+
+            lastAudio && lastAudio.pause()
+            lastAudio = new Audio(URL.createObjectURL(blob))
+            lastAudio.play()
+          })
+          .catch((error) => {
+            console.debug(error)
+          })
+        sendResponse({ success: true })
+      }).catch((error: Error) => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
       break
 
     default:
@@ -104,7 +160,7 @@ function setLocalSetting(settingKey: string, settingValue: string) {
   return localStorage.setItem(`${LocalStorageKeyPrefix}${CacheKeys.localSetting}.${settingKey}`, settingValue)
 }
 
-function toResponseError(error: Error) {
+function toResponseError(error: any) {
   let type = "Error"
 
   if (error instanceof NotLoggedInError) {
@@ -113,5 +169,5 @@ function toResponseError(error: Error) {
     type = "NotSubscribedError"
   }
 
-  return { success: false, error: { type: type, message: error.message } }
+  return { success: false, error: { type: type, message: error.message, code: error.code } }
 }

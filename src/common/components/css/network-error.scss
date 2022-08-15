@@ -1,0 +1,55 @@
+$primary: #12b886;
+$white: #fff;
+
+.network-error-card-wrapper {
+  font-size: 20px;
+  z-index: 1;
+  display: flex;
+  vertical-align: middle;
+  height: calc(100vh - 160px);
+  align-items: center;
+
+  .card--face {
+    display: grid;
+    gap: 10px;
+    grid-template-areas: "a b";
+    align-items: start;
+    margin-bottom: 20px;
+    width: 500px;
+    margin: 0 auto;
+  }
+
+  .talk-bubble {
+    display: inline-block;
+    position: relative;
+    height: auto;
+    background-color: $primary;
+    border-radius: 20px;
+  }
+
+  .tri-right.left-in:after {
+    content: " ";
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -20px;
+    right: auto;
+    top: 38px;
+    bottom: auto;
+    border: 12px solid;
+    border-color: $primary $primary transparent transparent;
+  }
+
+  .talk-text {
+    padding: 1em;
+    text-align: left;
+    line-height: 1.5em;
+
+    p {
+      /* remove webkit p margins */
+      -webkit-margin-before: 0em;
+      -webkit-margin-after: 0em;
+      color: $white;
+    }
+  }
+}

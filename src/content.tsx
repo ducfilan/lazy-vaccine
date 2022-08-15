@@ -1,3 +1,5 @@
+import React from "react"
+
 import "./background/templates/css/antd-wrapped.less"
 
 import PageInjector from "./background/PageInjector"
@@ -6,7 +8,7 @@ import { SetInfo } from "./common/types/types"
 import { detectPageChanged } from "./common/utils/domUtils"
 import {
   sendClearCachedRandomSetMessage,
-  sendGetRandomSubscribedSetMessage,
+  sendGetRandomSubscribedSetSilentMessage,
   sendInteractItemMessage,
 } from "./pages/content-script/messageSenders"
 import {
@@ -23,11 +25,16 @@ import {
   registerSelectEvent,
   registerSuggestionSearchButtonClickEvent,
   registerSuggestionLoginButtonClickEvent,
+  registerHoverBubblePopoverEvent,
+  registerPronounceButtonClickEvent,
+  registerTopBarCardButtonsClickEvent,
+  registerHoverCardEvent,
 } from "./pages/content-script/eventRegisters"
-import { getHref } from "./pages/content-script/domHelpers"
+import { getHref, isSiteSupportedInjection } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
 import { generateTemplateExtraValues, toTemplateValues } from "./pages/content-script/templateHelpers"
 import {
+  i18n,
   ItemsInteractionForcedDone,
   ItemsInteractionIgnore,
   ItemsInteractionShow,
@@ -40,16 +47,20 @@ import "@/background/templates/css/content.scss"
 import "@/background/templates/css/flashcard.scss"
 import "@/background/templates/css/QandA.scss"
 import "@/background/templates/css/suggest-subscribe.scss"
+import "@/background/templates/css/bubble.scss"
 
-import { hrefToSiteName } from "./background/DomManipulator"
+import { htmlStringToHtmlNode } from "./background/DomManipulator"
 import { getInjectionTargets } from "./common/repo/injection-targets"
+import { renderToString } from "react-dom/server"
+import { FixedWidget } from "./background/templates/FixedWidget"
+import { getRestrictedKeywords } from "./common/repo/restricted-keywords"
 
 function hrefComparer(this: any, oldHref: string, newHref: string) {
   for (const target of this?.targets || []) {
     const oldId = oldHref.match(target.MatchPattern)?.groups?.id
     const newId = newHref.match(target.MatchPattern)?.groups?.id
 
-    console.log(`Debug: oldHref: ${oldHref}, newHref: ${newHref}, oldId: ${oldId}, newId: ${newId}`)
+    console.debug(`oldHref: ${oldHref}, newHref: ${newHref}, oldId: ${oldId}, newId: ${newId}`)
 
     if (!oldId && !newId) {
       continue
@@ -62,17 +73,38 @@ function hrefComparer(this: any, oldHref: string, newHref: string) {
 }
 
 const getNotLoggedInTemplateValues = async () => {
-  return [
-    { key: "type", value: OtherItemTypes.NotLoggedIn.value },
-    { key: "website", value: await hrefToSiteName(getHref()) },
-  ]
+  return [{ key: "type", value: OtherItemTypes.NotLoggedIn.value }]
 }
 
 const getNotSubscribedTemplateValues = async () => {
-  return [
-    { key: "type", value: OtherItemTypes.NotSubscribed.value },
-    { key: "website", value: await hrefToSiteName(getHref()) },
-  ]
+  return [{ key: "type", value: OtherItemTypes.NotSubscribed.value }]
+}
+
+const getNetworkErrorTemplateValues = async () => {
+  switch (lastError?.error?.code) {
+    case "ECONNABORTED":
+      if (lastError?.error?.message?.startsWith("timeout of")) {
+        return [
+          { key: "type", value: OtherItemTypes.NetworkTimeout.value },
+          { key: "errorText", value: i18n("network_error_timeout") },
+        ]
+      }
+      return []
+
+    case "ERR_NETWORK":
+      return [
+        { key: "type", value: OtherItemTypes.NetworkOffline.value },
+        { key: "errorText", value: i18n("network_error_offline") },
+      ]
+
+    default:
+      return []
+  }
+}
+
+const injectFixedWidgetBubble = () => {
+  const node = htmlStringToHtmlNode(renderToString(<FixedWidget />))
+  document.querySelector("body")?.prepend(node)
 }
 
 let randomItemIndexVisitMap: number[] = []
@@ -84,19 +116,35 @@ let itemsInPageInteractionMap: {
 
 let isLoggedIn = false
 let havingSubscribedSets = false
+let lastError: any = null
 
 let allInjectors: PageInjector[] | undefined = []
 
+getRestrictedKeywords()
+  .then((keywords: string[]) => {
+    const href = getHref()
+    if (keywords.every((keyword: string) => !href.includes(keyword))) {
+      injectFixedWidgetBubble()
+    }
+  })
+  .catch((err) => {
+    console.error(err)
+  })
+
 getInjectionTargets()
   .then((targets) => {
-    detectPageChanged(processInjection, true, hrefComparer.bind({ targets }))
+    if (!isSiteSupportedInjection(targets, getHref())) return
+
+    processInjection().finally(() => {
+      detectPageChanged(processInjection, hrefComparer.bind({ targets }))
+    })
   })
   .catch((err) => {
     console.error(err)
   })
 
 async function processInjection() {
-  console.log("Debug: processInjection called")
+  console.debug("processInjection called")
 
   try {
     // Remove cache from background page (app's scope).
@@ -118,7 +166,7 @@ function disconnectExistingObservers() {
   if (!allInjectors) return
 
   allInjectors.forEach((injector) => {
-    console.log("Debug: getAllObservers: " + injector.getAllObservers().length)
+    console.debug("getAllObservers: " + injector.getAllObservers().length)
     injector.getAllObservers().forEach((observer) => observer.stop())
   })
 }
@@ -129,49 +177,58 @@ async function initValues() {
   try {
     currentItemPointer = 0
     havingSubscribedSets = false
+    lastError = null
 
-    setInfo = await sendGetRandomSubscribedSetMessage()
+    setInfo = await sendGetRandomSubscribedSetSilentMessage()
     if (setInfo) {
       randomItemIndexVisitMap = shuffleArray(Array.from(Array(setInfo.items?.length || 0).keys()))
       isLoggedIn = true
       havingSubscribedSets = true
 
       setInfo.itemsInteractions?.map((itemInteractions) => {
+        if ((itemInteractions.interactionCount.star || 0) % 2 == 0) {
+          delete itemInteractions.interactionCount.star
+        }
+
         itemsInPageInteractionMap[itemInteractions.itemId] = Object.keys(itemInteractions.interactionCount)
       })
     }
   } catch (error: any) {
     if (error?.error?.type === "NotSubscribedError") {
-      console.log("Debug: NotSubscribedError")
+      console.debug("NotSubscribedError")
       havingSubscribedSets = false
       isLoggedIn = true
     } else if (error?.error?.type === "NotLoggedInError") {
-      console.log("Debug: NotLoggedInError")
+      console.debug("NotLoggedInError")
       havingSubscribedSets = false
       isLoggedIn = false
     } else {
+      lastError = error
       console.error(error)
     }
   }
 }
 
 function removeOldCards() {
+  console.debug("Removing old cards...")
   document.querySelectorAll(".lazy-vaccine").forEach((el) => el.remove())
 }
 
 async function injectCards(): Promise<PageInjector[]> {
   try {
     const injectionTargets = await new InjectionTargetFactory(getHref()).getTargets()
-    console.log("Debug: injectCards called, injectionTargets: " + injectionTargets.length)
+    console.debug("injectCards called, injectionTargets: " + injectionTargets.length)
 
     let injectors: PageInjector[] = []
 
     injectionTargets.forEach(async ({ rate, type, selector, newGeneratedElementSelector, siblingSelector, strict }) => {
       const injector = new PageInjector(rate, type, selector, newGeneratedElementSelector, siblingSelector, strict)
-      injector.waitInject(randomTemplateValues)
 
       injectors.push(injector)
     })
+
+    await Promise.all(injectors.map((i) => i.waitInject(randomTemplateValues)))
+    console.debug("all injection done!")
 
     return injectors
   } catch (error) {
@@ -181,14 +238,22 @@ async function injectCards(): Promise<PageInjector[]> {
 }
 
 const randomTemplateValues = async (increaseOnCall: boolean = false) => {
-  console.log(
-    "Debug: randomTemplateValues called, isLoggedIn: " +
+  console.debug(
+    "randomTemplateValues called, isLoggedIn: " +
       isLoggedIn +
       ", havingSubscribedSets: " +
       havingSubscribedSets +
       ", items count: " +
       setInfo?.items?.length
   )
+
+  if (lastError) {
+    const networkErrorValues = await getNetworkErrorTemplateValues()
+
+    if (networkErrorValues && networkErrorValues.length > 0) {
+      return networkErrorValues
+    }
+  }
 
   if (!isLoggedIn) {
     return getNotLoggedInTemplateValues()
@@ -284,6 +349,8 @@ function registerFlashcardEvents() {
     setGetter
   )
 
+  registerHoverBubblePopoverEvent()
+
   registerMorePopoverEvent()
 
   registerSelectEvent()
@@ -295,6 +362,9 @@ function registerFlashcardEvents() {
 
   registerSuggestionSearchButtonClickEvent()
   registerSuggestionLoginButtonClickEvent(processInjection)
+  registerPronounceButtonClickEvent()
+  registerTopBarCardButtonsClickEvent()
+  registerHoverCardEvent()
 }
 
 /**
@@ -318,6 +388,8 @@ const getItemAtPointer = (pointerPosition: number, skipStep: number = 1): any =>
         setId: setInfo?._id || "",
         setTitle: setInfo?.name || "",
         isStared: itemsInPageInteractionMap[rawItem._id]?.includes("star") ? "stared" : "",
+        fromLanguage: setInfo?.fromLanguage,
+        toLanguage: setInfo?.toLanguage,
       }
     : null
 }

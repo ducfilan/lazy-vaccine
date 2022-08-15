@@ -10,6 +10,7 @@ import Items from "./components/Items"
 import { SetDetailContext } from "./contexts/SetDetailContext"
 import { notification, Skeleton } from "antd"
 import { i18n } from "@/common/consts/constants"
+import LearningActivities from "./components/LearningActivities"
 
 const { useState, useEffect } = React
 
@@ -42,6 +43,7 @@ const SetDetailPage = () => {
       <Skeleton active loading={loading}>
         <Header />
         <Interactions />
+        <LearningActivities />
         <Items />
       </Skeleton>
     </SetDetailContext.Provider>

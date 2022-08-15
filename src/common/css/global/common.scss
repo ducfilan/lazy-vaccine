@@ -4,6 +4,15 @@
   color: $grey-light;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: $primary;
+  border-radius: 20px;
+}
+
 .divider {
   position: relative;
   display: block;
@@ -14,6 +23,10 @@
 
 .is-full-height {
   height: 100%;
+}
+
+.hidden {
+  display: none;
 }
 
 a *,
@@ -68,6 +81,10 @@ button * {
 
 .top--25px {
   margin-top: -24px;
+}
+
+.top-25px {
+  margin-top: 25px;
 }
 
 .bot-16px {

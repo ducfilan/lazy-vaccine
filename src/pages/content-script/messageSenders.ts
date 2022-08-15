@@ -1,5 +1,5 @@
 import { sendMessage } from "@/background/MessagingFacade"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeInteractItem, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeToken } from "@/common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken } from "@/common/consts/constants"
 import { SetInfo } from "@/common/types/types"
 
 export function sendClearCachedRandomSetMessage() {
@@ -8,9 +8,12 @@ export function sendClearCachedRandomSetMessage() {
   })
 }
 
-export function sendGetRandomSubscribedSetMessage() {
+/**
+ * Get the subscribed set randomly without showing login popup when no token is cached.
+ */
+export function sendGetRandomSubscribedSetSilentMessage() {
   return new Promise<SetInfo | null>((resolve, reject) => {
-    sendMessage(ChromeMessageTypeGetRandomSet, null, resolve, reject)
+    sendMessage(ChromeMessageTypeGetRandomSetSilent, null, resolve, reject)
   })
 }
 
@@ -27,7 +30,7 @@ export function sendSetLocalSettingMessage(settingKey: string, settingValue: str
 }
 
 export function sendGetLocalSettingMessage(settingKey: string) {
-  return new Promise<{ settingValue: string | null }>((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     sendMessage(ChromeMessageTypeGetLocalSetting, { settingKey }, resolve, reject)
   })
 }
@@ -35,5 +38,17 @@ export function sendGetLocalSettingMessage(settingKey: string) {
 export function sendGetGoogleTokenMessage() {
   return new Promise<{ token: string }>((resolve, reject) => {
     sendMessage(ChromeMessageTypeToken, { interactive: true }, resolve, reject)
+  })
+}
+
+export function sendSignUpMessage() {
+  return new Promise<{ token: string }>((resolve, reject) => {
+    sendMessage(ChromeMessageTypeSignUp, null, resolve, reject)
+  })
+}
+
+export function sendPronounceMessage(text: string, langCode: string) {
+  return new Promise<any>((resolve, reject) => {
+    sendMessage(ChromeMessageTypePlayAudio, { text, langCode }, resolve, reject)
   })
 }

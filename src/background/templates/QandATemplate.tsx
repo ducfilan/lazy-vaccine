@@ -10,13 +10,16 @@ import { CardInteraction } from "./common/CardInteraction"
 
 export const QnATemplate = () => {
   return (
-    <div className="lazy-vaccine" data-setId=":setId" data-itemId=":itemId" data-answered="false">
+    <div className="lazy-vaccine" data-setid=":setId" data-itemid=":itemId" data-answered="false">
       <DisclaimerInfo />
       <Popover
-        top={20}
-        right={-4.4}
-        paddingLeft={20}
+        styles={{
+          top: 10,
+          right: -5,
+          paddingLeft: 20,
+        }}
         title={":setTitle"}
+        showMoreButton={true}
         content={
           <>
             <p>
@@ -29,7 +32,7 @@ export const QnATemplate = () => {
               </a>
             </p>
             <p>
-              <a href="#" className="flash-card-next-set-link">
+              <a href="#" className="inject-card-next-set-link">
                 {i18n("flashcard_next_set")}
               </a>
             </p>
@@ -45,7 +48,7 @@ export const QnATemplate = () => {
           </>
         }
       />
-      <div className="qna-card qna-card-wrapper" data-answers={":listOfAnswers"}>
+      <div className="qna-card qna-card-wrapper card-wrapper" data-answers={":listOfAnswers"}>
         <div className="card--content">
           <p className="card--question">{":question"}</p>
           <p>{i18n("inject_card_select")}</p>

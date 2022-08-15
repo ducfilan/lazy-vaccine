@@ -5,12 +5,12 @@ import ShibaTailImg from "@img/emojis/shiba/tail.png"
 import { Button } from "antd"
 import { GoogleOutlined } from "@ant-design/icons"
 
-import { getGoogleAuthToken } from "@/common/facades/authFacade"
-import { Http } from "@/common/facades/axiosFacade"
+import { signIn } from "@/common/facades/authFacade"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
+import { User } from "@/common/types/types"
 
 export const BeforeLoginPage = () => {
-  const { setHttp } = useGlobalContext()
+  const { setHttp, setUser } = useGlobalContext()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   return (
@@ -37,9 +37,10 @@ export const BeforeLoginPage = () => {
                 onClick={() => {
                   setIsLoading(true)
 
-                  getGoogleAuthToken()
-                    .then((token: string) => {
-                      setHttp(new Http(token, LoginTypes.google))
+                  signIn
+                    .call({ setHttp }, LoginTypes.google)
+                    .then((user: User | null) => {
+                      setUser(user)
                     })
                     .catch((error: any) => {
                       console.error(error)

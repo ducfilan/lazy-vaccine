@@ -4,7 +4,7 @@
     "description": "The name of the application"
   },
   "appDescription": {
-    "message": "Một nền tảng học tập trên blockchain giúp giảm thiểu sự phân tâm để tập trung khi trực tuyến và thúc đẩy mọi người chia sẻ kiến thức",
+    "message": "Một nền tảng học tập giúp giảm thiểu sự phân tâm để tập trung, tiết kiệm thời gian khi trực tuyến và thúc đẩy mọi người chia sẻ kiến thức",
     "description": "The description of the application"
   },
   "error": {
@@ -29,7 +29,7 @@
     "message": "Chào bạn, :user_name! 🎉 Có vẻ ngôn ngữ chính của bạn là :first_language, bạn còn muốn hiển thị nội dung từ ngôn ngữ khác mà bạn biết không?"
   },
   "popup_introduce_choose_pages": {
-    "message": "Tuyệt vời! 🤩 Chỉ còn 1 bước cuối cùng...\nBạn hãy chọn những trang web mà bạn thường xuyên truy cập. Chỉ cần vậy thôi!"
+    "message": "Bạn có thể tùy biến những trang web mà bạn thường xuyên truy cập để hiển thị nội dung"
   },
   "popup_select_a_language": {
     "message": "Chọn ngôn ngữ"
@@ -49,14 +49,11 @@
   "popup_stats_more_sets": {
     "message": "Thêm bài"
   },
-  "popup_stats_my_profile": {
-    "message": "Trang cá nhân"
-  },
   "create_set_button": {
     "message": "Tạo bài"
   },
   "create_set_search_place_holder": {
-    "message": "Tìm bất cứ bài nào bạn muốn học..."
+    "message": "Tìm bất cứ bài nào bạn muốn học, sau đó bấm phím ENTER⏎"
   },
   "create_set_page_title": {
     "message": "Tạo một bài mới"
@@ -259,6 +256,9 @@
   "search_result_not_found": {
     "message": "Bạn đã tìm kiếm - \":keyword\" - nhưng không có kết quả.\nGợi ý:\n - Đảm bảo rằng các từ khóa không có sai sót.\n- Thử 1 từ khóa khác."
   },
+  "search_result_no_keyword_error": {
+    "message": "Bạn cho mình biết bạn muốn học gì, mình sẽ tìm nội dung học tập tương ứng cho bạn nha! Nhập từ khóa vào ô tìm kiếm và nhấn Enter nha!"
+  },
   "home_category_lookup": {
     "message": "Tìm kiếm phân loại"
   },
@@ -326,7 +326,7 @@
     "message": "Thay đổi ảnh"
   },
   "common_inject_card_disclaimer": {
-    "message": "⚠ Nội dung này không thuộc về :website, mà thuộc về Lazy Vaccine"
+    "message": "⚠ Nội dung này thuộc về Lazy Vaccine"
   },
   "common_save_changes": {
     "message": "Lưu thay dổi"
@@ -372,6 +372,9 @@
   },
   "common_check": {
     "message": "Kiểm tra"
+  },
+  "common_success": {
+    "message": "Thành công"
   },
   "seed_growing_conditions": {
     "message": "Điều kiện phát triển"
@@ -419,13 +422,13 @@
     "message": "Đi đến trang chủ"
   },
   "suggestion_card_search_placeholder": {
-    "message": "Bạn muốn học gì đây?"
+    "message": "Nhập nội dung bạn muốn học (ví dụ: IELTS, tiếng Anh, v.v.) và nhấn ENTER ⏎"
   },
   "suggestion_card_suggestion_text": {
     "message": "Bạn chưa đăng ký nội dung học tập nào. Chỉ 1 bước nữa để bắt đầu, hãy tìm những bài học bạn đang quan tâm và đăng kí nhé!"
   },
   "suggestion_card_not_logged_in_text": {
-    "message": "Xin chào bạn! Để bắt đầu giúp bạn học tập, trước tiên mình muốn biết bạn là ai. Hãy đăng nhập, chỉ mất vài giây thôi!"
+    "message": "Xin chào bạn! Để bắt đầu giúp bạn học tập, trước tiên bạn cho mình biết tên được không? Hãy đăng nhập nhé, chỉ mất vài giây thôi!"
   },
   "rich_text_upload_modal_title": {
     "message": "Thêm ảnh"
@@ -438,5 +441,29 @@
   },
   "rich_text_image_url": {
     "message": "Link ảnh"
+  },
+  "first_page_quote_1": {
+    "message": "Effortless learning không còn là chuyện phóng đại, hãy sử dụng Lazy Vaccine và đăng ký một bài học bạn quan tâm để tự mình thấy sự khác biệt. Mình đã thử và thành công!"
+  },
+  "first_page_quote_2": {
+    "message": "Đức mời tôi dùng thử Lazy Vaccine, tôi đã tạo một bài học để học thêm từ vựng tiếng Anh, sau khi xem Youtube, Facebook một vài ngày và nhận ra rằng tôi đã nhớ được nhiều từ vựng! Nó thật sự có hiệu quả!"
+  },
+  "search_result_in_languages": {
+    "message": "Ngôn ngữ cho kết quả"
+  },
+  "network_error_timeout": {
+    "message": "Mình đang bị ốm, rất tiếc vì không thể phục vụ bạn lần này. Vui lòng đợi một chút và thử lại nhé! \n(a.k.a. LỖI TIMEOUT)"
+  },
+  "network_error_offline": {
+    "message": "Mình cần sử dụng Internet để tìm kiến thức phục vụ bạn, nhưng có vẻ như Internet của bạn đang ngoại tuyến phải không? Bạn hãy đợi khi Internet của bạn trực tuyến và thử lại nhé."
+  },
+  "bubble_widget_send_feedback": {
+    "message": "Gửi phản hồi"
+  },
+  "bubble_widget_title": {
+    "message": "Mình có thể giúp gì cho bạn?"
+  },
+  "user_profile_update_pages_success": {
+    "message": "Thay đổi của bạn đã được cập nhật thành công!"
   }
 }

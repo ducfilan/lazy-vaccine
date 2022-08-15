@@ -116,7 +116,7 @@ export const SupportingPages: { [brandName: string]: { key: string, title: strin
   },
 }
 
-export const CreateSetDescriptionMaxLength = 250
+export const CreateSetDescriptionMaxLength = 500
 
 export const RecaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY || ""
 export const GoogleClientId = process.env.GOOGLE_CLIENT_ID || ""
@@ -126,6 +126,7 @@ export const LocalStorageKeyPrefix = "duc.lazy-vaccine."
 export const LiteralDurationsExtractRegex = /^((?<days>\d+)d\w*?)* *((?<hours>\d+)h\w*)* *((?<minutes>\d+)m\w*)* *((?<seconds>\d+)s\w*)*$/
 
 export const RequestToAddCategoryLink = "https://forms.gle/D6wa49fG4aUg3fHg8"
+export const ContactFeedbackLink = "https://forms.gle/Czqrgp9xNDJ4rRg58"
 
 export const ItemTypes = {
   TermDef: { label: "Term - Definition", value: "term-def" },
@@ -137,6 +138,8 @@ export const ItemTypes = {
 export const OtherItemTypes = {
   NotLoggedIn: { value: "not-logged-in" },
   NotSubscribed: { value: "not-subscribed" },
+  NetworkTimeout: { value: "network-timeout" },
+  NetworkOffline: { value: "network-offline" },
 }
 
 export const TabKeyCode = "Tab"
@@ -168,9 +171,12 @@ export const InjectTypes = {
 }
 
 export const ChromeMessageTypeToken = "get-chrome-token"
+export const ChromeMessageTypePlayAudio = "play-audio"
+export const ChromeMessageTypeSignUp = "sign-up-first-time"
 export const ChromeMessageClearRandomSetCache = "clear-random-set-cache"
 export const ChromeMessageTypeGetRandomItem = "get-random-item"
 export const ChromeMessageTypeGetRandomSet = "get-random-set"
+export const ChromeMessageTypeGetRandomSetSilent = "get-random-set-silent"
 export const ChromeMessageTypeInteractItem = "interact-item"
 export const ChromeMessageTypeSetLocalSetting = "set-local-setting"
 export const ChromeMessageTypeGetLocalSetting = "get-local-setting"
@@ -211,3 +217,9 @@ export const FlashCardOptions: { [key: string]: string } = {
 }
 
 export const InjectWrapperClassName = ".lazy-vaccine"
+
+export const UserProfileTabMyAchievements = "myAchievement"
+export const UserProfileTabSubscribed = "subscribed"
+export const UserProfileTabLiked = "liked"
+export const UserProfileTabCreated = "created"
+export const UserProfileTabSettingPages = "settingPages"

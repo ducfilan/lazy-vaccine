@@ -1,7 +1,8 @@
 import React from "react"
 
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
-import { Divider } from "antd"
+import { Button, Divider } from "antd"
+import { CustomerServiceOutlined, RedoOutlined } from "@ant-design/icons"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
 import { Popover } from "./common/Popover"
@@ -16,15 +17,30 @@ import {
 import { SelectBox } from "./common/SelectBox"
 import { CardInteraction } from "./common/CardInteraction"
 
-export const FlashCardTemplate = (props: { selectedFrontItem: string; selectedBackItem: string }) => {
+const TopBar = () => {
   return (
-    <div className="lazy-vaccine" data-setId=":setId" data-itemId=":itemId">
+    <div className="card-item--top-bar-wrapper">
+      <Button type="primary" shape="circle" icon={<CustomerServiceOutlined />} className="btn-pronounce" />
+      <div />
+      <div className="btn-flip-wrapper">
+        <Button shape="circle" icon={<RedoOutlined />} className="btn-flip" />
+      </div>
+    </div>
+  )
+}
+
+export const FlashcardTemplate = (props: { selectedFrontItem: string; selectedBackItem: string }) => {
+  return (
+    <div className="lazy-vaccine" data-setid=":setId" data-itemid=":itemId">
       <DisclaimerInfo />
       <Popover
-        top={20}
-        right={-10}
-        paddingLeft={20}
+        styles={{
+          top: 10,
+          right: -5,
+          paddingLeft: 20,
+        }}
         title={":setTitle"}
+        showMoreButton={true}
         content={
           <>
             <div className="popover-links">
@@ -38,7 +54,7 @@ export const FlashCardTemplate = (props: { selectedFrontItem: string; selectedBa
                 </a>
               </p>
               <p>
-                <a href="#" className="flash-card-next-set-link">
+                <a href="#" className="inject-card-next-set-link">
                   {i18n("flashcard_next_set")}
                 </a>
               </p>
@@ -66,12 +82,18 @@ export const FlashCardTemplate = (props: { selectedFrontItem: string; selectedBa
           </>
         }
       />
-      <div className="flash-card flash-card-wrapper">
+      <div className="flash-card flash-card-wrapper card-wrapper">
         <div className="card--face card--face--front">
-          <p className="card--content">{":front_content"}</p>
+          <TopBar />
+          <p className="card--content" data-lang=":langCodeFront">
+            {":front_content"}
+          </p>
         </div>
         <div className="card--face card--face--back">
-          <p className="card--content">{":back_content"}</p>
+          <TopBar />
+          <p className="card--content" data-lang=":langCodeBack">
+            {":back_content"}
+          </p>
         </div>
       </div>
       <CardInteraction />
