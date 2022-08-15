@@ -139,29 +139,33 @@ const PopupPage = () => {
 
       if (needToShowExternalPopup) {
         console.debug("showing login popup window")
-        setTimeout(() => {
-          chrome.windows.onFocusChanged.addListener(() => {
-            chrome.windows.getLastFocused({ windowTypes: ["popup"] }, (window) => {
-              window?.id && user && chrome.windows.remove(window.id)
-            })
-          })
+        let intervalId = setInterval(() => {
+          if (document.querySelector(".first-time-intro--login-button") !== null) {
+            clearInterval(intervalId)
 
-          chrome.windows.create(
-            {
-              type: "popup",
-              url: `${chrome.runtime.getURL("pages/popup.html")}?external=true`,
-              width: 783,
-              height: 600,
-              focused: true,
-              left: window.screenLeft,
-              top: window.screenTop,
-            },
-            () => {
-              window.close()
-              resolve()
-            }
-          )
-        }, 100)
+            chrome.windows.onFocusChanged.addListener(() => {
+              chrome.windows.getLastFocused({ windowTypes: ["popup"] }, (window) => {
+                window?.id && user && chrome.windows.remove(window.id)
+              })
+            })
+
+            chrome.windows.create(
+              {
+                type: "popup",
+                url: `${chrome.runtime.getURL("pages/popup.html")}?external=true`,
+                width: 783,
+                height: 600,
+                focused: true,
+                left: window.screenLeft,
+                top: window.screenTop,
+              },
+              () => {
+                window.close()
+                resolve()
+              }
+            )
+          }
+        }, 200)
       } else {
         reject()
       }
