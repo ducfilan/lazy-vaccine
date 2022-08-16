@@ -20,6 +20,7 @@
     background-size: cover, contain;
 
     .popup-header--title {
+      position: relative;
       line-height: 1.5;
       color: $white;
       text-align: justify;

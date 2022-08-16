@@ -20,11 +20,12 @@ import { Http } from "@facades/axiosFacade"
 import { i18n, LoginTypes } from "@/common/consts/constants"
 import { GlobalContext } from "@/common/contexts/GlobalContext"
 import NetworkError from "@/common/components/NetworkError"
+import { getErrorView } from "../app/App"
 
 const PopupPage = () => {
-  const [user, setUser] = useState<User | null>()
+  const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [http, setHttp] = useState<Http | null>()
+  const [http, setHttp] = useState<Http | null>(null)
   const [lastError, setLastError] = useState<any>(null)
 
   useEffect(() => {
@@ -61,7 +62,7 @@ const PopupPage = () => {
   function renderContent() {
     popupHeightScrollIssueWorkaround()
 
-    if (lastError) return handleNetworkError()
+    if (lastError) return getErrorView(lastError, setLastError, <FirstTime />)
 
     if (isLoading)
       return (
@@ -89,34 +90,6 @@ const PopupPage = () => {
       default:
         return <FirstTime />
     }
-  }
-
-  function handleNetworkError() {
-    setLastError(null)
-
-    switch (lastError?.code) {
-      case "ECONNABORTED":
-        if (lastError.message.startsWith("timeout of")) {
-          return (
-            <div>
-              <NetworkError errorText={i18n("network_error_timeout")} />
-            </div>
-          )
-        }
-        break
-
-      case "ERR_NETWORK":
-        return (
-          <div>
-            <NetworkError errorText={i18n("network_error_offline")} />
-          </div>
-        )
-
-      default:
-        break
-    }
-
-    return <FirstTime />
   }
 
   /**

@@ -1,35 +1,23 @@
-import React, { useEffect } from "react"
+import React, { useState } from "react"
 
-import { useGlobalContext } from "@/common/contexts/GlobalContext"
-
-import { Button, Alert, Carousel } from "antd"
-import { GoogleOutlined } from "@ant-design/icons"
-import { signIn } from "@facades/authFacade"
-import { AppBasePath, AppPages, i18n, LoginTypes } from "@consts/constants"
-import { User } from "@/common/types/types"
-
+import { i18n, LoginTypes } from "@/common/consts/constants"
 import WanImg from "@img/emojis/shiba/wan.png"
 import GoodImg from "@img/emojis/shiba/good.png"
-import PopupHeader from "./Header"
+import { Alert, Button, Carousel } from "antd"
+import { GoogleOutlined } from "@ant-design/icons"
+
 import BlockQuote from "@/common/components/BlockQuote"
-import { redirectToUrlInNewTab } from "@/common/utils/domUtils"
+import PopupHeader from "@/pages/popup/components/Header"
+import { useGlobalContext } from "@/common/contexts/GlobalContext"
+import { signIn } from "@/common/facades/authFacade"
+import { User } from "@/common/types/types"
 
-const { useState } = React
-
-function FirstTime() {
+export default function FirstTime() {
   const [isLoading, setIsLoading] = useState(false)
   const [isShowLoginError, setIsShowLoginError] = useState(false)
   const [shibImg, setShibImg] = useState(WanImg)
 
   const { setUser, setHttp } = useGlobalContext()
-
-  useEffect(() => {
-    const needToShowExternalPopup = new URLSearchParams(window.location.search).get("external") == null
-
-    if (needToShowExternalPopup) {
-      redirectToUrlInNewTab(`${chrome.runtime.getURL(AppBasePath)}${AppPages.GettingStarted.path}?source=popup`)
-    }
-  }, [])
 
   function loginWithGoogle() {
     setIsLoading(true)
@@ -89,5 +77,3 @@ function FirstTime() {
     </>
   )
 }
-
-export default FirstTime

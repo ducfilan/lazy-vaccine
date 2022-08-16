@@ -31,6 +31,9 @@
   "popup_introduce_choose_pages": {
     "message": "Bạn có thể tùy biến những trang web mà bạn thường xuyên truy cập để hiển thị nội dung"
   },
+  "popup_introduce_finished": {
+    "message": "Tốt rồi, :user_name!👏\nChúng ta lại thân nhau thêm 1 chút nữa, bạn của tôi! Bây giờ hãy tìm một bài học và học cùng mình nhé!"
+  },
   "popup_select_a_language": {
     "message": "Chọn ngôn ngữ"
   },
@@ -429,6 +432,12 @@
   },
   "suggestion_card_not_logged_in_text": {
     "message": "Xin chào bạn! Để bắt đầu giúp bạn học tập, trước tiên bạn cho mình biết tên được không? Hãy đăng nhập nhé, chỉ mất vài giây thôi!"
+  },
+  "i_love_you": {
+    "message": "Mình thích bạn! ❤️"
+  },
+  "suggestion_pin_extension": {
+    "message": "Mình gợi ý là bạn hãy ghim tiện ích này để có thể theo dõi quá trình của mình dễ dàng hơn."
   },
   "rich_text_upload_modal_title": {
     "message": "Thêm ảnh"

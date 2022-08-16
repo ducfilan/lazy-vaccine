@@ -34,6 +34,9 @@
   "popup_introduce_choose_pages": {
     "message": "您可以自定义您最常访问的网站以注入内容"
   },
+  "popup_introduce_finished": {
+    "message": "干得好，:user_name！👏\n亲爱的朋友，我们现在离我们更近了一步！ 找点东西跟我一起学吧！"
+  },
   "popup_select_a_language": {
     "message": "选择语言"
   },
@@ -432,6 +435,12 @@
   },
   "suggestion_card_not_logged_in_text": {
     "message": "你好！ 为了帮助你学习，首先，我想知道你是谁。 让我们登录吧。只需几秒钟！"
+  },
+  "i_love_you": {
+    "message": "我喜欢你! ❤️"
+  },
+  "suggestion_pin_extension": {
+    "message": "我建议您固定 Lazy Vaccine 以更快地访问您的进度！"
   },
   "rich_text_upload_modal_title": {
     "message": "插入一张新照片"

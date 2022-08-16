@@ -1,0 +1,58 @@
+.getting-started-modal-wrapper {
+  .ant-modal-body {
+    padding: 0;
+    background-color: $white-ter;
+    max-height: 800px;
+    overflow: auto;
+  }
+
+  .popup-header--title-wrapper {
+    padding-top: 3em;
+  }
+
+  .talk-bubble {
+    display: inline-block;
+    position: relative;
+    height: auto;
+    background-color: $primary;
+    border-radius: 20px;
+  }
+
+  .tri-right.left-in:after {
+    content: " ";
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -20px;
+    right: auto;
+    top: 38px;
+    bottom: auto;
+    border: 12px solid;
+    border-color: $primary $primary transparent transparent;
+  }
+
+  .talk-text {
+    padding: 1em;
+    text-align: left;
+    line-height: 1.5em;
+
+    p {
+      /* remove webkit p margins */
+      -webkit-margin-before: 0em;
+      -webkit-margin-after: 0em;
+      color: $white;
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+
+    img {
+      width: 500px;
+      margin: 0 auto;
+      border-radius: 5px;
+    }
+  }
+
+  .ant-carousel .slick-dots-bottom {
+    bottom: 5px;
+  }
+}

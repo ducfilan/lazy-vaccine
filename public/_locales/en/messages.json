@@ -34,6 +34,9 @@
   "popup_introduce_choose_pages": {
     "message": "You can customize your most visited websites to inject content"
   },
+  "popup_introduce_finished": {
+    "message": "Well done, :user_name!👏\nWe are now 1 step closer, my dear friend! Let's find something to learn with me!"
+  },
   "popup_select_a_language": {
     "message": "Select a language"
   },
@@ -432,6 +435,12 @@
   },
   "suggestion_card_not_logged_in_text": {
     "message": "Hi there! To help you learn, firstly, May I know who you are? Let's log in. It will take a few seconds only!"
+  },
+  "i_love_you": {
+    "message": "I like you! ❤️"
+  },
+  "suggestion_pin_extension": {
+    "message": "I suggest you to pin Lazy Vaccine to access your progress faster!"
   },
   "rich_text_upload_modal_title": {
     "message": "Insert a new photo"

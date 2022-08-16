@@ -7,12 +7,12 @@ import { Select, Row, Col, notification } from "antd"
 import { DefaultLangCode, i18n } from "@consts/constants"
 import SupportingLanguages from "@consts/supportingLanguages"
 import { formatString, langCodeToName } from "@/common/utils/stringUtils"
-import LanguageItem from "./LanguageItem"
-import NextPrevButton from "./NextPrevButton"
 import { User } from "@/common/types/types"
 import RegisterSteps from "@/common/consts/registerSteps"
 import { updateUserInfo } from "@/common/repo/user"
-import PopupHeader from "./Header"
+import NextPrevButton from "@/pages/popup/components/NextPrevButton"
+import LanguageItem from "@/common/components/LanguageItem"
+import PopupHeader from "@/pages/popup/components/Header"
 
 const { useState } = React
 const { Option } = Select

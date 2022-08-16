@@ -34,6 +34,9 @@
   "popup_introduce_choose_pages": {
     "message": "よくアクセスするウェブサイトをカスタマイズしてコンテンツを挿入できます"
   },
+  "popup_introduce_finished": {
+    "message": "よくやった、:user_name!👏\nこれで 1 歩近づいた、ねえ、私の親友! 私と一緒に学びたいことを探しましょう！"
+  },
   "popup_select_a_language": {
     "message": "言語選択"
   },
@@ -432,6 +435,12 @@
   },
   "suggestion_card_not_logged_in_text": {
     "message": "こんにちは！ あなたが学ぶのを助けるために、まず、私はあなたが誰であるかを知りたいです。 ログインしましょう。数秒で完了します。"
+  },
+  "i_love_you": {
+    "message": "私はあなたが好き！ ❤️"
+  },
+  "suggestion_pin_extension": {
+    "message": "Lazy Vaccine をピン留めして、進行状況にすばやくアクセスすることをお勧めします!"
   },
   "rich_text_upload_modal_title": {
     "message": "写真を追加する"

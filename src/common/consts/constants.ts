@@ -67,6 +67,12 @@ export const AppPages = {
     path: "/test-set/:setId",
     isSideNav: false,
   },
+  GettingStarted: {
+    key: "getting-started",
+    name: "Getting started",
+    path: "/getting-started",
+    isSideNav: false,
+  },
 }
 
 export const LoginTypes = {
