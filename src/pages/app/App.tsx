@@ -103,11 +103,12 @@ const AppPage = () => {
             setLocale(langCodeToAntLocaleMap[userInfo.locale] || defaultLocale)
           })
           .catch((error) => {
-            notification["error"]({
-              message: i18n("error"),
-              description: i18n("unexpected_error_message"),
-              duration: null,
-            })
+            source !== "popup" &&
+              notification["error"]({
+                message: i18n("error"),
+                description: i18n("unexpected_error_message"),
+                duration: null,
+              })
 
             console.error(error)
             setLastError(error)
