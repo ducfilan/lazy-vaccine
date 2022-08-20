@@ -10,7 +10,7 @@ export const FixedWidget = () => {
     <div className="lazy-vaccine-bubble">
       <Popover
         styles={{
-          bottom: 200,
+          bottom: 225,
           right: 5,
           width: 220,
         }}
@@ -28,6 +28,11 @@ export const FixedWidget = () => {
               <p>
                 <a href={`${chrome.runtime.getURL(AppBasePath)}${AppPages.Home.path}`} target={"_blank"}>
                   {i18n("suggestion_card_go_to_home")}
+                </a>
+              </p>
+              <p>
+                <a href={`${chrome.runtime.getURL(AppBasePath)}${AppPages.CreateSet.path}`} target={"_blank"}>
+                  {i18n("create_set_button")}
                 </a>
               </p>
             </div>
