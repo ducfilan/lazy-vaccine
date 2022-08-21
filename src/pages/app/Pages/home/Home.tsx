@@ -24,6 +24,10 @@ const HomePage = (props: any) => {
     if (!http) return
   }
 
+  useEffect(() => {
+    window.heap.track("Open home page")
+  }, [])
+
   useEffect(onPageLoaded, [http])
   useEffect(() => setLoading(false), [])
   useEffect(() => {

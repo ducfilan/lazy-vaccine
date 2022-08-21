@@ -28,6 +28,10 @@ const TestSetPage = (props: any) => {
   let trueFalseCardRefs = useRef<any>([])
   let multipleChoiceCardRefs = useRef<any>([])
 
+  useEffect(() => {
+    window.heap.track("Open test page")
+  }, [])
+
   const { setId } = useParams()
   const navigate = useNavigate()
 

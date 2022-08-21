@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 
 import { i18n, LoginTypes } from "@/common/consts/constants"
 import ShibaTailImg from "@img/emojis/shiba/tail.png"
@@ -12,6 +12,10 @@ import { User } from "@/common/types/types"
 export const BeforeLoginPage = () => {
   const { setHttp, setUser } = useGlobalContext()
   const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    window.heap.track("Open before login page")
+  }, [])
 
   return (
     <div className="lazy-vaccine">

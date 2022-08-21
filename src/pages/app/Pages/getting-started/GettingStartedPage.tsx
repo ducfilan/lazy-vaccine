@@ -22,6 +22,10 @@ export const GettingStartedPage = () => {
   const { user, setUser, setHttp } = useGlobalContext()
 
   useEffect(() => {
+    window.heap.track("Open getting started page")
+  }, [])
+
+  useEffect(() => {
     setIsLoading(true)
 
     getGoogleAuthTokenSilent()
