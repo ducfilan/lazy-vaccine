@@ -172,7 +172,9 @@ export function signOut(callback: () => void = () => { }) {
     }).finally(() => {
       chrome.storage.sync.remove([CacheKeys.accessToken, CacheKeys.refreshToken])
       chrome.storage.sync.set({ [CacheKeys.isSignedOut]: true })
-    
+
+      window.heap.resetIdentity()
+
       callback()
     })
 }

@@ -266,3 +266,9 @@ export type ImageElement = {
 export type EmptyText = {
   text: string
 }
+
+declare global {
+  interface Window { heap: any }
+}
+
+window.heap = window.heap || {}

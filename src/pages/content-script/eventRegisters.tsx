@@ -7,6 +7,7 @@ import {
   sendPronounceMessage,
   sendSetLocalSettingMessage,
   sendSignUpMessage,
+  sendTrackingMessage,
 } from "./messageSenders"
 import {
   AppBasePath,
@@ -238,6 +239,8 @@ export function registerMorePopoverEvent() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .inject-card-more-button", (e: Event) => {
     e.stopPropagation()
 
+    sendTrackingMessage("Click more button on inject card", null)
+
     const moreButton = e.target as HTMLElement
     const wrapperElement: HTMLElement = moreButton.closest(InjectWrapperClassName)!
     toggleHiddenPopover(wrapperElement)
@@ -257,7 +260,11 @@ export function registerMorePopoverEvent() {
 }
 
 export function registerHoverBubblePopoverEvent() {
+  let isHovered = false
+
   addDynamicEventListener(document.body, "mouseover", ".lazy-vaccine-bubble .bubble-img", (e: Event) => {
+    !isHovered && sendTrackingMessage("Hover inject bubble", null)
+    isHovered = true
     e.stopPropagation()
 
     const moreButton = e.target as HTMLElement
@@ -273,6 +280,7 @@ export function registerHoverBubblePopoverEvent() {
     wrapperElements.forEach((wrapperElement) => {
       if (!wrapperElement.contains(target) && !isMoreButton(target)) {
         hidePopover(wrapperElement.closest(".lazy-vaccine-bubble"))
+        isHovered = false
       }
     })
   })
@@ -290,6 +298,11 @@ export function registerNextSetEvent(preProcess: () => Promise<void>) {
 
     const nextSetButton = e.target as HTMLElement
     const wrapperElement: HTMLElement | null = nextSetButton.closest(InjectWrapperClassName)
+
+    sendTrackingMessage("Click next set link", {
+      setId: wrapperElement?.dataset.setid,
+      itemId: wrapperElement?.dataset.itemid,
+    })
 
     toggleHiddenPopover(wrapperElement)
     clickNextItemButton(wrapperElement)
@@ -570,6 +583,12 @@ export function registerTopBarCardButtonsClickEvent() {
     async (e: Event) => {
       e.stopPropagation()
 
+      const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
+      const setId = wrapperElement.dataset.setid!
+      const itemId = wrapperElement.dataset.itemId!
+
+      sendTrackingMessage("Click close card button", { setId, itemId })
+
       const button = e.target as HTMLInputElement
       button.closest(InjectWrapperClassName)?.remove()
     }
@@ -584,6 +603,9 @@ export function registerTopBarCardButtonsClickEvent() {
       const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
 
       const setId = wrapperElement.dataset.setid!
+      const itemId = wrapperElement.dataset.itemId!
+
+      sendTrackingMessage("Click maximize card button", { setId, itemId })
 
       redirectToUrlInNewTab(`${chrome.runtime.getURL(AppBasePath)}${AppPages.SetDetail.path}`.replace(":setId", setId))
     }
@@ -596,6 +618,11 @@ export function registerTopBarCardButtonsClickEvent() {
     async (e: Event) => {
       e.stopPropagation()
       const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
+
+      const setId = wrapperElement.dataset.setid!
+      const itemId = wrapperElement.dataset.itemId!
+
+      sendTrackingMessage("Click minimize card button", { setId, itemId })
 
       const hiddenClassName = "lazy-vaccine-hidden"
       wrapperElement.querySelector(".card-wrapper")?.classList.toggle(hiddenClassName)

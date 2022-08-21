@@ -1,5 +1,5 @@
 import { sendMessage } from "@/background/MessagingFacade"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken } from "@/common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking } from "@/common/consts/constants"
 import { SetInfo } from "@/common/types/types"
 
 export function sendClearCachedRandomSetMessage() {
@@ -50,5 +50,17 @@ export function sendSignUpMessage() {
 export function sendPronounceMessage(text: string, langCode: string) {
   return new Promise<any>((resolve, reject) => {
     sendMessage(ChromeMessageTypePlayAudio, { text, langCode }, resolve, reject)
+  })
+}
+
+export function sendIdentityUserMessage() {
+  return new Promise<any>((resolve, reject) => {
+    sendMessage(ChromeMessageTypeIdentifyUser, null, resolve, reject)
+  })
+}
+
+export function sendTrackingMessage(name: string, metadata?: { [key: string]: any } | null) {
+  return new Promise<any>((resolve, reject) => {
+    sendMessage(ChromeMessageTypeTracking, { name, metadata }, resolve, reject)
   })
 }

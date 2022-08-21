@@ -186,6 +186,8 @@ export const ChromeMessageTypeGetRandomSetSilent = "get-random-set-silent"
 export const ChromeMessageTypeInteractItem = "interact-item"
 export const ChromeMessageTypeSetLocalSetting = "set-local-setting"
 export const ChromeMessageTypeGetLocalSetting = "get-local-setting"
+export const ChromeMessageTypeIdentifyUser = "identify-user"
+export const ChromeMessageTypeTracking = "tracking"
 
 export const InteractionSubscribe = "subscribe"
 export const InteractionLike = "like"

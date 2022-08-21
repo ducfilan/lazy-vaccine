@@ -9,6 +9,7 @@ import { detectPageChanged } from "./common/utils/domUtils"
 import {
   sendClearCachedRandomSetMessage,
   sendGetRandomSubscribedSetSilentMessage,
+  sendIdentityUserMessage,
   sendInteractItemMessage,
 } from "./pages/content-script/messageSenders"
 import {
@@ -120,27 +121,31 @@ let lastError: any = null
 
 let allInjectors: PageInjector[] | undefined = []
 
-getRestrictedKeywords()
-  .then((keywords: string[]) => {
-    const href = getHref()
-    if (keywords.every((keyword: string) => !href.includes(keyword))) {
-      injectFixedWidgetBubble()
-    }
-  })
-  .catch((err) => {
-    console.error(err)
-  })
+sendIdentityUserMessage()
+  .catch((e) => console.error(e))
+  .finally(() => {
+    getRestrictedKeywords()
+      .then((keywords: string[]) => {
+        const href = getHref()
+        if (keywords.every((keyword: string) => !href.includes(keyword))) {
+          injectFixedWidgetBubble()
+        }
+      })
+      .catch((err) => {
+        console.error(err)
+      })
 
-getInjectionTargets()
-  .then((targets) => {
-    if (!isSiteSupportedInjection(targets, getHref())) return
+    getInjectionTargets()
+      .then((targets) => {
+        if (!isSiteSupportedInjection(targets, getHref())) return
 
-    processInjection().finally(() => {
-      detectPageChanged(processInjection, hrefComparer.bind({ targets }))
-    })
-  })
-  .catch((err) => {
-    console.error(err)
+        processInjection().finally(() => {
+          detectPageChanged(processInjection, hrefComparer.bind({ targets }))
+        })
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   })
 
 async function processInjection() {

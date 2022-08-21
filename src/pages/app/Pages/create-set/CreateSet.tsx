@@ -45,6 +45,10 @@ const CreateSetPage = () => {
 
   useEffect(onPageLoaded, [http])
 
+  useEffect(() => {
+    window.heap.track("Open create set page")
+  }, [])
+
   const renderContent = () => {
     switch (currentStep) {
       case CreateSteps.SetInfo:

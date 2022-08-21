@@ -17,9 +17,8 @@ import { getMyInfo } from "@/common/repo/user"
 import { User } from "@/common/types/types"
 import { getGoogleAuthTokenSilent } from "@facades/authFacade"
 import { Http } from "@facades/axiosFacade"
-import { i18n, LoginTypes } from "@/common/consts/constants"
+import { LoginTypes } from "@/common/consts/constants"
 import { GlobalContext } from "@/common/contexts/GlobalContext"
-import NetworkError from "@/common/components/NetworkError"
 import { getErrorView } from "../app/App"
 
 const PopupPage = () => {
@@ -43,11 +42,18 @@ const PopupPage = () => {
   }, [])
 
   useEffect(() => {
+    window.heap.track("Open popup")
+  }, [])
+
+  useEffect(() => {
     if (!http) return
 
     getMyInfo(http)
       .then((userInfo) => {
         setUser(userInfo)
+
+        window.heap.identify(userInfo.email)
+        window.heap.addUserProperties({ finished_register_step: userInfo.finishedRegisterStep })
       })
       .catch((error) => {
         setLastError(error)

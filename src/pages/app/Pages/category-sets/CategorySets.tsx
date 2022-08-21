@@ -58,6 +58,10 @@ const CategorySetsPage = (props: any) => {
     setSets([])
   }
 
+  useEffect(() => {
+    window.heap.track("Open category sets page", { categoryId })
+  }, [])
+
   useEffect(onPageLoaded, [http])
   useEffect(() => setLoading(false), [])
   useEffect(() => {

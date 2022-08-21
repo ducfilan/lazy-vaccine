@@ -32,6 +32,9 @@ export const GettingStartedPage = () => {
         getMyInfo(newHttp)
           .then((userInfo) => {
             setUser(userInfo)
+
+            window.heap.identify(userInfo.email)
+            window.heap.addUserProperties({ "finished_register_step": userInfo.finishedRegisterStep })
           })
           .catch((error) => {
             setLastError(error)

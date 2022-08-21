@@ -25,6 +25,10 @@ const SearchResultPage = () => {
   const [searchParams] = useSearchParams()
 
   useEffect(() => {
+    window.heap.track("Open search result page")
+  }, [])
+
+  useEffect(() => {
     if (!http || !user) return
 
     if (cachedCategories) {

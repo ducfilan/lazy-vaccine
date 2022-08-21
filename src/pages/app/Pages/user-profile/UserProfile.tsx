@@ -72,6 +72,8 @@ const UserProfilePage = (props: any) => {
   }
 
   function onTabChanged(newTab: string) {
+    window.heap.track("My space, selecting tab", { tab: newTab })
+
     setSelectedTab(newTab)
     resetStates()
   }
@@ -171,6 +173,10 @@ const UserProfilePage = (props: any) => {
       })
     }
   }
+
+  useEffect(() => {
+    window.heap.track("Open my space page")
+  }, [])
 
   useEffect(() => {
     user && onPageLoaded()

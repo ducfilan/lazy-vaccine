@@ -1,14 +1,16 @@
 import { pronounceTextApi } from "./common/consts/apis"
 import CacheKeys from "./common/consts/cacheKeys"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
 import { NotLoggedInError, NotSubscribedError } from "./common/consts/errors"
 import { getGoogleAuthToken, getGoogleAuthTokenSilent, signIn } from "./common/facades/authFacade"
 import { Http } from "./common/facades/axiosFacade"
 import { interactToSetItem } from "./common/repo/set"
-import { getUserInteractionRandomSet } from "./common/repo/user"
+import { getMyInfo, getUserInteractionRandomSet } from "./common/repo/user"
 import { SetInfo, User } from "./common/types/types"
 
 let lastAudio: HTMLAudioElement
+
+includeHeapAnalytics()
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.type) {
@@ -20,15 +22,44 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       })
       break
 
+    case ChromeMessageTypeIdentifyUser:
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        getMyInfo(http).then((user: User) => {
+          window.heap.identify(user?.email)
+          window.heap.addUserProperties({ "finished_register_step": user?.finishedRegisterStep })
+          sendResponse({ success: true })
+        }).catch(() => {
+          sendResponse({ success: false })
+        })
+      }).catch(() => {
+        sendResponse({ success: false })
+      })
+      break
+
     case ChromeMessageTypeSignUp:
+      window.heap.track("Signup from injected card")
       signIn
         .call(null, LoginTypes.google)
         .then((user: User | null) => {
+          window.heap.identify(user?.email)
+          window.heap.addUserProperties({ "finished_register_step": user?.finishedRegisterStep })
           sendResponse({ success: true, result: user })
         })
         .catch((error) => {
           sendResponse({ success: false, error: toResponseError(error) })
         })
+
+      break
+
+    case ChromeMessageTypeTracking:
+      if (!request.arg.name) return
+
+      if (!request.arg.metadata) {
+        window.heap.track(request.arg.name)
+      } else {
+        window.heap.track(request.arg.name, request.arg.metadata)
+      }
 
       break
 
@@ -66,6 +97,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case ChromeMessageTypeInteractItem:
       getGoogleAuthToken().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
+        window.heap.track("Interact item", { interaction: request.arg.action, itemId: request.arg.itemId })
         interactItem(http, request.arg.setId, request.arg.itemId, request.arg.action).then(() => {
           sendResponse({ success: true })
         }).catch(error => {
@@ -88,6 +120,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break
 
     case ChromeMessageTypePlayAudio:
+      window.heap.track("Play audio", { langCode: request.arg.langCode })
       getGoogleAuthToken().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
         http
@@ -170,4 +203,9 @@ function toResponseError(error: any) {
   }
 
   return { success: false, error: { type: type, message: error.message, code: error.code } }
+}
+
+function includeHeapAnalytics() {
+  window.heap = window.heap || [], window.heap.load = function (e: any, t: any) { window.heap.appid = e, window.heap.config = t = t || {}; let r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; let a = document.getElementsByTagName("script")[0]; a.parentNode!.insertBefore(r, a); for (let n = function (e: any) { return function () { window.heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)window.heap[p[o]] = n(p[o]) }
+  window.heap.load("1265225250")
 }

@@ -35,6 +35,10 @@ const SetDetailPage = () => {
       })
   }
 
+  useEffect(() => {
+    window.heap.track("Open set detail page")
+  }, [])
+
   useEffect(onPageLoaded, [http])
   useEffect(() => setInfo && setLoading(false), [setInfo])
 
