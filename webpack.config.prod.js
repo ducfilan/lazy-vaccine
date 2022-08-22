@@ -9,7 +9,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 
 const path = require("path");
 
-module.exports = (_, { mode }) => {
+module.exports = ({ heapId }, { mode }) => {
   const isDevelopment = mode === "development";
 
   return {
@@ -118,7 +118,14 @@ module.exports = (_, { mode }) => {
         path: isDevelopment ? "./.env" : "./prod.env"
       }),
       new CopyPlugin({
-        patterns: [{ from: "public", to: "." }],
+        patterns: [{
+          from: "public",
+          to: ".",
+          transform(content, absoluteFrom) {
+            if (absoluteFrom.endsWith("heap.js")) return content.toString().replace("$HEAP_IO_ID", heapId)
+            return content
+          },
+        }],
       }),
       new webpack.HotModuleReplacementPlugin(),
       new ReactRefreshWebpackPlugin(),
