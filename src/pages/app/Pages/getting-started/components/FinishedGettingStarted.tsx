@@ -30,6 +30,7 @@ export default function FinishedGettingStarted() {
           size="large"
           enterButton
           onSearch={(keyword) => {
+            window.heap.track("Done activation")
             window.open(
               `${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`,
               "_self"

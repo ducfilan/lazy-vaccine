@@ -25,7 +25,7 @@ const SearchResultPage = () => {
   const [searchParams] = useSearchParams()
 
   useEffect(() => {
-    window.heap.track("Open search result page")
+    window.heap.track("Open search result page", { keyword: searchParams.get("keyword") })
   }, [])
 
   useEffect(() => {

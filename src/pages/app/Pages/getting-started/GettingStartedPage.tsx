@@ -70,12 +70,14 @@ export const GettingStartedPage = () => {
 
     switch (finishedRegisterStep) {
       case RegisterSteps.ChooseLanguages:
+        window.heap.track("Finished language selection")
         return <FinishedGettingStarted />
 
       case RegisterSteps.Install:
         return <FirstTime />
 
       case RegisterSteps.Register:
+        window.heap.track("Finished login")
         return (
           <div tabIndex={0}>
             <ChooseLanguages />

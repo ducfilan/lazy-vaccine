@@ -1,6 +1,6 @@
 import { pronounceTextApi } from "./common/consts/apis"
 import CacheKeys from "./common/consts/cacheKeys"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, HeapIoId, InteractionSubscribe, ItemsInteractionShow, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
 import { NotLoggedInError, NotSubscribedError } from "./common/consts/errors"
 import { getGoogleAuthToken, getGoogleAuthTokenSilent, signIn } from "./common/facades/authFacade"
 import { Http } from "./common/facades/axiosFacade"
@@ -97,7 +97,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case ChromeMessageTypeInteractItem:
       getGoogleAuthToken().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
-        window.heap.track("Interact item", { interaction: request.arg.action, itemId: request.arg.itemId })
+        window.heap.track(request.arg.action === ItemsInteractionShow ? "Show item" : "Interact item", { interaction: request.arg.action, itemId: request.arg.itemId })
         interactItem(http, request.arg.setId, request.arg.itemId, request.arg.action).then(() => {
           sendResponse({ success: true })
         }).catch(error => {
@@ -207,5 +207,5 @@ function toResponseError(error: any) {
 
 function includeHeapAnalytics() {
   window.heap = window.heap || [], window.heap.load = function (e: any, t: any) { window.heap.appid = e, window.heap.config = t = t || {}; let r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; let a = document.getElementsByTagName("script")[0]; a.parentNode!.insertBefore(r, a); for (let n = function (e: any) { return function () { window.heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)window.heap[p[o]] = n(p[o]) }
-  window.heap.load("1265225250")
+  window.heap.load(HeapIoId)
 }

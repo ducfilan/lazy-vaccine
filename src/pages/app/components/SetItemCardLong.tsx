@@ -102,6 +102,7 @@ const SetItemCardLong = (props: { set: SetInfo }) => {
                     shape="circle"
                     size="large"
                     onClick={() => {
+                      window.heap.track(isLiked ? "Unlike set" : "Like set", { setId: props.set._id })
                       handleInteract(isLiked, setIsLiked, likeCount, setLikeCount, InteractionLike)
                       !isLiked &&
                         isDisliked &&
@@ -120,6 +121,7 @@ const SetItemCardLong = (props: { set: SetInfo }) => {
                     shape="circle"
                     size="large"
                     onClick={() => {
+                      window.heap.track(isDisliked ? "Undislike set" : "Dislike set", { setId: props.set._id })
                       handleInteract(isDisliked, setIsDisliked, dislikeCount, setDislikeCount, InteractionDislike)
                       !isDisliked && isLiked && undoInteract(setIsLiked, likeCount, setLikeCount, InteractionLike)
                     }}
@@ -162,6 +164,7 @@ const SetItemCardLong = (props: { set: SetInfo }) => {
               icon={<AimOutlined />}
               loading={isLoading}
               onClick={() => {
+                window.heap.track(isSubscribed ? "Unsubscribe to set" : "Subscribe to set", { setId: props.set._id })
                 handleInteract(isSubscribed, setIsSubscribed, null, null, InteractionSubscribe)
               }}
             >

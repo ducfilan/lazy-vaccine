@@ -6,7 +6,13 @@ import { SetInfo } from "@/common/types/types"
 import { Link } from "react-router-dom"
 import { interactToSet, undoInteractToSet } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
-import { ColorPrimary, i18n, InteractionDislike, InteractionLike, InteractionSubscribe } from "@/common/consts/constants"
+import {
+  ColorPrimary,
+  i18n,
+  InteractionDislike,
+  InteractionLike,
+  InteractionSubscribe,
+} from "@/common/consts/constants"
 
 const { useCallback, useState } = React
 
@@ -58,6 +64,7 @@ const SetItemCardSmall = (props: { set: SetInfo }) => {
           icon={<AimOutlined />}
           loading={isLoading}
           onClick={() => {
+            window.heap.track(isSubscribed ? "Unsubscribe to set" : "Subscribe to set", { setId: props.set._id })
             handleInteract(isSubscribed, setIsSubscribed, InteractionSubscribe)
           }}
         >
@@ -69,6 +76,7 @@ const SetItemCardSmall = (props: { set: SetInfo }) => {
             shape="circle"
             size="large"
             onClick={() => {
+              window.heap.track(isLiked ? "Unlike set" : "Like set", { setId: props.set._id })
               handleInteract(isLiked, setIsLiked, InteractionLike)
               !isLiked && isDisliked && undoInteract(setIsDisliked, InteractionDislike)
             }}
@@ -79,6 +87,7 @@ const SetItemCardSmall = (props: { set: SetInfo }) => {
             shape="circle"
             size="large"
             onClick={() => {
+              window.heap.track(isDisliked ? "Undislike set" : "Dislike set", { setId: props.set._id })
               handleInteract(isDisliked, setIsDisliked, InteractionDislike)
               !isDisliked && isLiked && undoInteract(setIsLiked, InteractionLike)
             }}
