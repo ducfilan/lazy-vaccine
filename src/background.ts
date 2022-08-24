@@ -120,7 +120,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break
 
     case ChromeMessageTypePlayAudio:
-      window.heap.track("Play audio", { langCode: request.arg.langCode })
+      window.heap.track("Play audio", { langCode: request.arg.langCode, text: request.arg.text })
       getGoogleAuthToken().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
         http

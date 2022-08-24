@@ -79,7 +79,13 @@ export function registerNextItemEvent(
       })
     }
 
-    const nextItem = await nextItemGetter()
+    let nextItem: SetInfoItem | null = null
+    try {
+      nextItem = await nextItemGetter()
+    } catch (error) {
+      console.error(error)
+    }
+
     if (!nextItem) return // TODO: Notice problem.
 
     const nextButton = e.target as HTMLElement
@@ -92,11 +98,15 @@ export function registerNextItemEvent(
 
     toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay))
       .then((templateValues) => {
-        getTemplate(itemToDisplay.type).then((template) => {
-          const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
+        getTemplate(itemToDisplay.type)
+          .then((template) => {
+            const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
 
-          wrapperElement?.replaceWith(newItemNode)
-        })
+            wrapperElement?.replaceWith(newItemNode)
+          })
+          .catch((error) => {
+            console.error(error)
+          })
       })
       .catch((error) => {
         // There is some error when getting the next item, trigger next item.
@@ -222,11 +232,15 @@ export function registerPrevItemEvent(
 
     toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay))
       .then((templateValues) => {
-        getTemplate(itemToDisplay.type).then((template) => {
-          const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
+        getTemplate(itemToDisplay.type)
+          .then((template) => {
+            const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
 
-          wrapperElement?.replaceWith(newItemNode)
-        })
+            wrapperElement?.replaceWith(newItemNode)
+          })
+          .catch((error) => {
+            console.error(error)
+          })
       })
       .catch((error) => {
         // There is some error when getting the next item, trigger next item.
@@ -239,7 +253,9 @@ export function registerMorePopoverEvent() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .inject-card-more-button", (e: Event) => {
     e.stopPropagation()
 
-    sendTrackingMessage("Click more button on inject card", null)
+    sendTrackingMessage("Click more button on inject card", null).catch((error) => {
+      console.error(error)
+    })
 
     const moreButton = e.target as HTMLElement
     const wrapperElement: HTMLElement = moreButton.closest(InjectWrapperClassName)!
@@ -263,7 +279,10 @@ export function registerHoverBubblePopoverEvent() {
   let isHovered = false
 
   addDynamicEventListener(document.body, "mouseover", ".lazy-vaccine-bubble .bubble-img", (e: Event) => {
-    !isHovered && sendTrackingMessage("Hover inject bubble", null)
+    !isHovered &&
+      sendTrackingMessage("Hover inject bubble", null).catch((error) => {
+        console.error(error)
+      })
     isHovered = true
     e.stopPropagation()
 
@@ -294,7 +313,12 @@ export function registerNextSetEvent(preProcess: () => Promise<void>) {
     e.preventDefault()
     e.stopPropagation()
 
-    await preProcess()
+    try {
+      await preProcess()
+    } catch (error) {
+      console.error(error)
+      return
+    }
 
     const nextSetButton = e.target as HTMLElement
     const wrapperElement: HTMLElement | null = nextSetButton.closest(InjectWrapperClassName)
@@ -302,6 +326,8 @@ export function registerNextSetEvent(preProcess: () => Promise<void>) {
     sendTrackingMessage("Click next set link", {
       setId: wrapperElement?.dataset.setid,
       itemId: wrapperElement?.dataset.itemid,
+    }).catch((error) => {
+      console.error(error)
     })
 
     toggleHiddenPopover(wrapperElement)
@@ -492,7 +518,11 @@ export function registerSelectEvent() {
       let wrapper = option.closest(wrapperSelector) as HTMLElement
       const settingKey = wrapper.dataset.settingKey
 
-      settingKey && selectedOptionKey && sendSetLocalSettingMessage(settingKey, selectedOptionKey)
+      settingKey &&
+        selectedOptionKey &&
+        sendSetLocalSettingMessage(settingKey, selectedOptionKey).catch((error) => {
+          console.error(error)
+        })
       ;(wrapper?.querySelector(".sBtn-text") as HTMLElement).innerText = selectedOptionLabel
       wrapper?.classList.remove("active")
     }
@@ -587,7 +617,9 @@ export function registerTopBarCardButtonsClickEvent() {
       const setId = wrapperElement.dataset.setid!
       const itemId = wrapperElement.dataset.itemId!
 
-      sendTrackingMessage("Click close card button", { setId, itemId })
+      sendTrackingMessage("Click close card button", { setId, itemId }).catch((error) => {
+        console.error(error)
+      })
 
       const button = e.target as HTMLInputElement
       button.closest(InjectWrapperClassName)?.remove()
@@ -605,7 +637,9 @@ export function registerTopBarCardButtonsClickEvent() {
       const setId = wrapperElement.dataset.setid!
       const itemId = wrapperElement.dataset.itemId!
 
-      sendTrackingMessage("Click maximize card button", { setId, itemId })
+      sendTrackingMessage("Click maximize card button", { setId, itemId }).catch((error) => {
+        console.error(error)
+      })
 
       redirectToUrlInNewTab(`${chrome.runtime.getURL(AppBasePath)}${AppPages.SetDetail.path}`.replace(":setId", setId))
     }
@@ -622,7 +656,9 @@ export function registerTopBarCardButtonsClickEvent() {
       const setId = wrapperElement.dataset.setid!
       const itemId = wrapperElement.dataset.itemId!
 
-      sendTrackingMessage("Click minimize card button", { setId, itemId })
+      sendTrackingMessage("Click minimize card button", { setId, itemId }).catch((error) => {
+        console.error(error)
+      })
 
       const hiddenClassName = "lazy-vaccine-hidden"
       wrapperElement.querySelector(".card-wrapper")?.classList.toggle(hiddenClassName)

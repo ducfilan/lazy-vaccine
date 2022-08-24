@@ -289,7 +289,11 @@ const randomTemplateValues = async (increaseOnCall: boolean = false) => {
         console.error(error)
       })
 
-  return item ? toTemplateValues(item, generateTemplateExtraValues(item)) : []
+  return item
+    ? toTemplateValues(item, generateTemplateExtraValues(item)).catch((error) => {
+        console.error(error)
+      })
+    : []
 }
 
 const isDisplayedAllItemsInSet = () => currentItemPointer + 1 === setInfo?.items?.length

@@ -213,18 +213,22 @@ export default class PageInjector {
         if (!templateValue || templateValue.length === 0) return
 
         const typeItem = templateValue.find((item) => item.key === "type")?.value
-        getTemplate(typeItem || "").then((htmlTemplate) => {
-          const htmlString = formatString(htmlTemplate, templateValue)
+        getTemplate(typeItem || "")
+          .then((htmlTemplate) => {
+            const htmlString = formatString(htmlTemplate, templateValue)
 
-          const insertToChildren = this.newGeneratedElementSelector != "" && this.siblingSelector != ""
-          if (insertToChildren) {
-            const siblingNode = node.querySelector(this.siblingSelector)
-            const similarNode = node.querySelector(InjectWrapperClassName)
-            !similarNode && siblingNode && insertBefore(htmlStringToHtmlNode(htmlString), siblingNode)
-          } else {
-            insertBefore(htmlStringToHtmlNode(htmlString), node)
-          }
-        })
+            const insertToChildren = this.newGeneratedElementSelector != "" && this.siblingSelector != ""
+            if (insertToChildren) {
+              const siblingNode = node.querySelector(this.siblingSelector)
+              const similarNode = node.querySelector(InjectWrapperClassName)
+              !similarNode && siblingNode && insertBefore(htmlStringToHtmlNode(htmlString), siblingNode)
+            } else {
+              insertBefore(htmlStringToHtmlNode(htmlString), node)
+            }
+          })
+          .catch((error) => {
+            console.error(error)
+          })
       })
   }
 
@@ -254,21 +258,25 @@ export default class PageInjector {
     if (!templateValue || templateValue.length === 0) return
 
     const typeItem = templateValue.find((item) => item.key === "type")?.value
-    getTemplate(typeItem || "").then((htmlTemplate) => {
-      const htmlString = formatString(htmlTemplate, templateValue)
+    getTemplate(typeItem || "")
+      .then((htmlTemplate) => {
+        const htmlString = formatString(htmlTemplate, templateValue)
 
-      document.querySelectorAll(this.parentSelector).forEach((elem) => {
-        const node = htmlStringToHtmlNode(htmlString)
-        if (!node) {
-          throw new Error("invalid htmlTemplate")
-        }
+        document.querySelectorAll(this.parentSelector).forEach((elem) => {
+          const node = htmlStringToHtmlNode(htmlString)
+          if (!node) {
+            throw new Error("invalid htmlTemplate")
+          }
 
-        elem.querySelectorAll(InjectWrapperClassName).forEach((child) => {
-          child.remove()
+          elem.querySelectorAll(InjectWrapperClassName).forEach((child) => {
+            child.remove()
+          })
+          elem.prepend(node)
         })
-        elem.prepend(node)
       })
-    })
+      .catch((error) => {
+        console.error(error)
+      })
   }
 
   private injectDynamicPosition(templateValueGetter: () => Promise<KeyValuePair[]>) {
