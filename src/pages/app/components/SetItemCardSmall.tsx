@@ -13,6 +13,9 @@ import {
   InteractionLike,
   InteractionSubscribe,
 } from "@/common/consts/constants"
+import { pickRandomFlatColor } from "@/common/utils/arrayUtils"
+
+import "../css/set-item-card-small.scss"
 
 const { useCallback, useState } = React
 
@@ -54,7 +57,15 @@ const SetItemCardSmall = (props: { set: SetInfo }) => {
     <Card
       className="card-set-item-small"
       style={{ width: 300 }}
-      cover={<img alt={props.set.name} src={props.set.imgUrl} />}
+      cover={
+        props.set.imgUrl ? (
+          <img alt={props.set.name} src={props.set.imgUrl} />
+        ) : (
+          <div className="empty-img" style={{ backgroundColor: pickRandomFlatColor() }}>
+            <p>{props.set.name[0]}</p>
+          </div>
+        )
+      }
       actions={[
         <Button
           key="subscribe"

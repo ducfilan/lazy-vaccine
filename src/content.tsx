@@ -4,7 +4,7 @@ import "./background/templates/css/antd-wrapped.less"
 
 import PageInjector from "./background/PageInjector"
 import InjectionTargetFactory from "./background/InjectionTargetFactory"
-import { SetInfo } from "./common/types/types"
+import { KeyValuePair, SetInfo } from "./common/types/types"
 import { detectPageChanged } from "./common/utils/domUtils"
 import {
   sendClearCachedRandomSetMessage,
@@ -289,11 +289,16 @@ const randomTemplateValues = async (increaseOnCall: boolean = false) => {
         console.error(error)
       })
 
-  return item
-    ? toTemplateValues(item, generateTemplateExtraValues(item)).catch((error) => {
-        console.error(error)
-      })
-    : []
+  let templateValues: KeyValuePair[] = []
+  if (item) {
+    try {
+      templateValues = await toTemplateValues(item, generateTemplateExtraValues(item))
+    } catch (error) {
+      console.error(templateValues)
+    }
+  }
+
+  return templateValues
 }
 
 const isDisplayedAllItemsInSet = () => currentItemPointer + 1 === setInfo?.items?.length
