@@ -1,11 +1,11 @@
 import { pronounceTextApi } from "./common/consts/apis"
 import CacheKeys from "./common/consts/cacheKeys"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, HeapIoId, InteractionSubscribe, ItemsInteractionShow, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, HeapIoId, InteractionSubscribe, ItemsInteractionShow, LocalStorageKeyPrefix, LoginTypes, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet } from "./common/consts/constants"
 import { NotLoggedInError, NotSubscribedError } from "./common/consts/errors"
 import { getGoogleAuthToken, getGoogleAuthTokenSilent, signIn } from "./common/facades/authFacade"
 import { Http } from "./common/facades/axiosFacade"
-import { interactToSetItem } from "./common/repo/set"
-import { getMyInfo, getUserInteractionRandomSet } from "./common/repo/user"
+import { interactToSet, interactToSetItem, undoInteractToSet } from "./common/repo/set"
+import { getMyInfo, getUserInteractionRandomSet, suggestSets } from "./common/repo/user"
 import { SetInfo, User } from "./common/types/types"
 
 let lastAudio: HTMLAudioElement
@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         getMyInfo(http).then((user: User) => {
           window.heap.identify(user?.email)
           window.heap.addUserProperties({ "finished_register_step": user?.finishedRegisterStep })
-          sendResponse({ success: true })
+          sendResponse({ success: true, user })
         }).catch(() => {
           sendResponse({ success: false })
         })
@@ -95,7 +95,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break
 
     case ChromeMessageTypeInteractItem:
-      getGoogleAuthToken().then((token: string) => {
+      getGoogleAuthTokenSilent().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
         window.heap.track(request.arg.action === ItemsInteractionShow ? "Show item" : "Interact item", { interaction: request.arg.action, itemId: request.arg.itemId })
         interactItem(http, request.arg.setId, request.arg.itemId, request.arg.action).then(() => {
@@ -107,6 +107,34 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse({ success: false, error: toResponseError(error) })
       })
       sendResponse({ success: true })
+      break
+
+    case ChromeMessageTypeInteractSet:
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+
+        interactToSet(http, request.arg.setId, request.arg.action).then(() => {
+          sendResponse({ success: true })
+        }).catch(error => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+      }).catch(error => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
+      break
+
+    case ChromeMessageTypeUndoInteractSet:
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+
+        undoInteractToSet(http, request.arg.setId, request.arg.action).then(() => {
+          sendResponse({ success: true })
+        }).catch(error => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+      }).catch(error => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
       break
 
     case ChromeMessageTypeSetLocalSetting:
@@ -121,7 +149,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case ChromeMessageTypePlayAudio:
       window.heap.track("Play audio", { langCode: request.arg.langCode, text: request.arg.text })
-      getGoogleAuthToken().then((token: string) => {
+      getGoogleAuthTokenSilent().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
         http
           .get(pronounceTextApi(request.arg.text, request.arg.langCode), {
@@ -143,6 +171,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             console.debug(error)
           })
         sendResponse({ success: true })
+      }).catch((error: Error) => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
+      break
+
+    case ChromeMessageTypeSuggestSets:
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        suggestSets(http, request.arg.keyword, request.arg.languages, request.arg.skip, request.arg.limit).then((res) => {
+          sendResponse({ success: true, result: res })
+        }).catch(error => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
       }).catch((error: Error) => {
         sendResponse({ success: false, error: toResponseError(error) })
       })

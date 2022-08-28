@@ -31,7 +31,7 @@ const TopBar = () => {
 
 export const FlashcardTemplate = (props: { selectedFrontItem: string; selectedBackItem: string }) => {
   return (
-    <div className="lazy-vaccine" data-setid=":setId" data-itemid=":itemId">
+    <div className="lazy-vaccine" data-set-id=":setId" data-item-id=":itemId">
       <DisclaimerInfo />
       <Popover
         styles={{

@@ -1,0 +1,46 @@
+$primary: #12b886;
+$white: #fff;
+
+.lazy-vaccine {
+  .talking-shib-wrapper {
+    display: grid;
+    gap: 10px;
+    grid-template-areas: "a b";
+    align-items: start;
+    margin-bottom: 20px;
+
+    .talk-bubble {
+      display: inline-block;
+      position: relative;
+      height: auto;
+      background-color: $primary;
+      border-radius: 20px;
+    }
+
+    .tri-right.left-in:after {
+      content: " ";
+      position: absolute;
+      width: 0;
+      height: 0;
+      left: -20px;
+      right: auto;
+      top: 30px;
+      bottom: auto;
+      border: 12px solid;
+      border-color: $primary $primary transparent transparent;
+    }
+
+    .talk-text {
+      padding: 1em;
+      text-align: left;
+      line-height: 1.5em;
+
+      p {
+        /* remove webkit p margins */
+        -webkit-margin-before: 0em;
+        -webkit-margin-after: 0em;
+        color: $white;
+      }
+    }
+  }
+}

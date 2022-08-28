@@ -1,18 +1,29 @@
 import { addDynamicEventListener, htmlStringToHtmlNode } from "@/background/DomManipulator"
 import { decodeBase64, formatString, getMainContent, takeFirstLine } from "@/common/utils/stringUtils"
-import { generateTemplateExtraValues, toTemplateValues } from "./templateHelpers"
+import {
+  generateTemplateExtraValues,
+  getRecommendationTemplateValues,
+  getTemplateFromType,
+  toTemplateValues,
+} from "./templateHelpers"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
 import {
   sendInteractItemMessage,
+  sendInteractSetMessage,
   sendPronounceMessage,
   sendSetLocalSettingMessage,
   sendSignUpMessage,
   sendTrackingMessage,
+  sendUndoInteractSetMessage,
 } from "./messageSenders"
 import {
   AppBasePath,
   AppPages,
+  i18n,
   InjectWrapperClassName,
+  InteractionDislike,
+  InteractionLike,
+  InteractionSubscribe,
   ItemsInteractionAnswerCorrect,
   ItemsInteractionAnswerIncorrect,
   ItemsInteractionFlip,
@@ -22,8 +33,8 @@ import {
   ItemsInteractionPrev,
   ItemsInteractionStar,
   ItemTypes,
+  OtherItemTypes,
 } from "@/common/consts/constants"
-import { getTemplate } from "@/background/PageInjector"
 import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
 import { redirectToUrlInNewTab } from "@/common/utils/domUtils"
 
@@ -35,7 +46,7 @@ export function registerFlipCardEvent() {
     }
     const wrapperElement: HTMLElement = cardFace.closest(InjectWrapperClassName)!
 
-    sendInteractItemMessage(wrapperElement.dataset.setid!, wrapperElement.dataset.itemid!, ItemsInteractionFlip).catch(
+    sendInteractItemMessage(wrapperElement.dataset.setId!, wrapperElement.dataset.itemId!, ItemsInteractionFlip).catch(
       (error) => {
         // TODO: handle error case.
         console.error(error)
@@ -64,7 +75,8 @@ export function registerFlipCardEvent() {
 export function registerNextItemEvent(
   nextItemGetter: () => Promise<SetInfoItem | null>,
   itemGetter: () => SetInfoItem | null,
-  setGetter: () => SetInfo | null
+  setGetter: () => SetInfo | null,
+  extraValues: { [key: string]: any }
 ) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--next-button", async (e: Event) => {
     e.stopPropagation()
@@ -96,9 +108,23 @@ export function registerNextItemEvent(
 
     const itemToDisplay = itemToDisplayItem(nextItem, currentSet)
 
-    toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay))
+    const getTemplateValues = () => {
+      if (extraValues.isNeedRecommendationGetter()) {
+        return getRecommendationTemplateValues(currentSet, extraValues.identityGetter())
+      }
+
+      return toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay))
+    }
+
+    getTemplateValues()
       .then((templateValues) => {
-        getTemplate(itemToDisplay.type)
+        let type = itemToDisplay.type
+
+        if (extraValues.isNeedRecommendationGetter()) {
+          type = OtherItemTypes.SuggestionSets.value
+        }
+
+        getTemplateFromType(type)
           .then((template) => {
             const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
 
@@ -232,7 +258,7 @@ export function registerPrevItemEvent(
 
     toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay))
       .then((templateValues) => {
-        getTemplate(itemToDisplay.type)
+        getTemplateFromType(itemToDisplay.type)
           .then((template) => {
             const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
 
@@ -324,8 +350,8 @@ export function registerNextSetEvent(preProcess: () => Promise<void>) {
     const wrapperElement: HTMLElement | null = nextSetButton.closest(InjectWrapperClassName)
 
     sendTrackingMessage("Click next set link", {
-      setId: wrapperElement?.dataset.setid,
-      itemId: wrapperElement?.dataset.itemid,
+      setId: wrapperElement?.dataset.setId,
+      itemId: wrapperElement?.dataset.itemId,
     }).catch((error) => {
       console.error(error)
     })
@@ -357,13 +383,21 @@ function clickNextItemButton(wrapperElement: HTMLElement | null) {
 
 export function registerIgnoreEvent(
   itemGetter: () => SetInfoItem | null,
+  recommendationSetter: (value: boolean) => void,
   updateItemInteraction: (itemId: string) => void
 ) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--ignore", async (e: Event) => {
     e.stopPropagation()
 
+    const ignoreButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement | null = ignoreButton.closest(InjectWrapperClassName)
+
     const item = itemGetter()
-    if (!item) return // TODO: Notice problem.
+    if (!item) {
+      recommendationSetter(true)
+      clickNextItemButton(wrapperElement)
+      return
+    }
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionIgnore)
       .then(() => updateItemInteraction(item._id))
@@ -371,22 +405,27 @@ export function registerIgnoreEvent(
         // TODO: handle error case.
         console.error(error)
       })
-
-    const ignoreButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = ignoreButton.closest(InjectWrapperClassName)
     clickNextItemButton(wrapperElement)
   })
 }
 
 export function registerGotItemEvent(
   itemGetter: () => SetInfoItem | null,
+  recommendationSetter: (value: boolean) => void,
   updateItemInteraction: (itemId: string) => void
 ) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--got-it", async (e: Event) => {
     e.stopPropagation()
 
+    const gotItemButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement | null = gotItemButton.closest(InjectWrapperClassName)
+
     const item = itemGetter()
-    if (!item) return // TODO: Notice problem.
+    if (!item) {
+      recommendationSetter(true)
+      clickNextItemButton(wrapperElement)
+      return
+    }
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionForcedDone)
       .then(() => updateItemInteraction(item._id))
@@ -394,9 +433,6 @@ export function registerGotItemEvent(
         // TODO: handle error case.
         console.error(error)
       })
-
-    const gotItemButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = gotItemButton.closest(InjectWrapperClassName)
     clickNextItemButton(wrapperElement)
   })
 }
@@ -465,11 +501,11 @@ export function registerCheckAnswerEvent() {
     const isAnswered = wrapperElement.dataset.answered === "true"
 
     !isAnswered &&
-      wrapperElement.dataset.setid &&
-      wrapperElement.dataset.itemid &&
+      wrapperElement.dataset.setId &&
+      wrapperElement.dataset.itemId &&
       sendInteractItemMessage(
-        wrapperElement.dataset.setid!,
-        wrapperElement.dataset.itemid!,
+        wrapperElement.dataset.setId!,
+        wrapperElement.dataset.itemId!,
         isAnsweredCorrect ? ItemsInteractionAnswerCorrect : ItemsInteractionAnswerIncorrect
       )
         .then(() => {
@@ -614,7 +650,7 @@ export function registerTopBarCardButtonsClickEvent() {
       e.stopPropagation()
 
       const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
-      const setId = wrapperElement.dataset.setid!
+      const setId = wrapperElement.dataset.setId!
       const itemId = wrapperElement.dataset.itemId!
 
       sendTrackingMessage("Click close card button", { setId, itemId }).catch((error) => {
@@ -634,7 +670,7 @@ export function registerTopBarCardButtonsClickEvent() {
       e.stopPropagation()
       const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
 
-      const setId = wrapperElement.dataset.setid!
+      const setId = wrapperElement.dataset.setId!
       const itemId = wrapperElement.dataset.itemId!
 
       sendTrackingMessage("Click maximize card button", { setId, itemId }).catch((error) => {
@@ -653,7 +689,7 @@ export function registerTopBarCardButtonsClickEvent() {
       e.stopPropagation()
       const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
 
-      const setId = wrapperElement.dataset.setid!
+      const setId = wrapperElement.dataset.setId!
       const itemId = wrapperElement.dataset.itemId!
 
       sendTrackingMessage("Click minimize card button", { setId, itemId }).catch((error) => {
@@ -664,6 +700,8 @@ export function registerTopBarCardButtonsClickEvent() {
       wrapperElement.querySelector(".card-wrapper")?.classList.toggle(hiddenClassName)
       wrapperElement.querySelector(".card--interactions")?.classList.toggle(hiddenClassName)
       wrapperElement.querySelector(".next-prev-buttons--wrapper")?.classList.toggle(hiddenClassName)
+      wrapperElement.querySelector(".card-set-item-small")?.classList.toggle(hiddenClassName)
+      wrapperElement.querySelector(".talking-shib-wrapper")?.classList.toggle(hiddenClassName)
     }
   )
 }
@@ -680,4 +718,141 @@ export function registerHoverCardEvent() {
     document.querySelector(".lazy-vaccine-bubble .bubble-img")?.classList.remove("lazy-vaccine-hidden")
     document.querySelector(".lazy-vaccine-bubble .bubble-img-wan")?.classList.add("lazy-vaccine-hidden")
   })
+}
+
+export function registerSubscribeEvent(callback: Function) {
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `${InjectWrapperClassName} .card-set-item-small .subscribe-button`,
+    async (e: Event) => {
+      e.stopPropagation()
+      const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
+
+      const setId = wrapperElement.dataset.setId!
+      const isSubscribed = (e.target as HTMLElement).closest("button")?.innerText === i18n("common_subscribe")
+
+      if (isSubscribed) {
+        ;(wrapperElement.querySelector(".subscribe-button > span:nth-child(2)") as HTMLElement).innerText =
+          i18n("common_subscribe")
+        sendTrackingMessage("Unsubscribe set from suggestion", { setId }).catch((error) => {
+          console.error(error)
+        })
+
+        sendUndoInteractSetMessage(setId, InteractionSubscribe)
+          .then(() => callback())
+          .catch((error) => {
+            // TODO: handle error case.
+            console.error(error)
+          })
+      } else {
+        ;(wrapperElement.querySelector(".subscribe-button > span:nth-child(2)") as HTMLElement).innerText =
+          i18n("common_unsubscribe")
+        sendTrackingMessage("Subscribe set from suggestion", { setId }).catch((error) => {
+          console.error(error)
+        })
+
+        sendInteractSetMessage(setId, InteractionSubscribe)
+          .then(() => callback())
+          .catch((error) => {
+            // TODO: handle error case.
+            console.error(error)
+          })
+      }
+    }
+  )
+}
+
+export function registerLikeEvent(callback: Function) {
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `${InjectWrapperClassName} .card-set-item-small .like-button`,
+    async (e: Event) => {
+      e.stopPropagation()
+      const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
+
+      const setId = wrapperElement.dataset.setId!
+      const isLiked = String(wrapperElement.dataset.isLiked?.toLowerCase()) == "true"
+      const isDisliked = String(wrapperElement.dataset.isDislike?.toLowerCase()) == "true"
+
+      wrapperElement.querySelectorAll(".dislike-button .anticon").forEach((el) => el.classList.remove("is-primary"))
+      ;(e.target as HTMLElement).closest("button")?.querySelector(".anticon")?.classList.toggle("is-primary")
+
+      if (isLiked) {
+        sendTrackingMessage("Unlike set from suggestion", { setId }).catch((error) => {
+          console.error(error)
+        })
+
+        sendUndoInteractSetMessage(setId, InteractionLike)
+          .then(() => callback())
+          .catch((error) => {
+            // TODO: handle error case.
+            console.error(error)
+          })
+      } else {
+        sendTrackingMessage("Like set from suggestion", { setId }).catch((error) => {
+          console.error(error)
+        })
+
+        if (isDisliked) await sendUndoInteractSetMessage(setId, InteractionDislike)
+
+        sendInteractSetMessage(setId, InteractionLike)
+          .then(() => callback())
+          .catch((error) => {
+            // TODO: handle error case.
+            console.error(error)
+          })
+      }
+
+      wrapperElement.dataset.isLiked = (!isLiked).toString()
+    }
+  )
+}
+
+export function registerDislikeEvent(callback: Function) {
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `${InjectWrapperClassName} .card-set-item-small .dislike-button`,
+    async (e: Event) => {
+      e.stopPropagation()
+      const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
+
+      const setId = wrapperElement.dataset.setId!
+      const isLiked = String(wrapperElement.dataset.isLiked?.toLowerCase()) == "true"
+      const isDisliked = String(wrapperElement.dataset.isDislike?.toLowerCase()) == "true"
+
+      wrapperElement.querySelectorAll(".like-button .anticon").forEach((el) => el.classList.remove("is-primary"))
+      ;(e.target as HTMLElement).closest("button")?.querySelector(".anticon")?.classList.toggle("is-primary")
+
+      if (isDisliked) {
+        sendTrackingMessage("UnDislike set from suggestion", { setId }).catch((error) => {
+          console.error(error)
+        })
+
+        sendUndoInteractSetMessage(setId, InteractionDislike)
+          .then(() => callback())
+          .catch((error) => {
+            // TODO: handle error case.
+            console.error(error)
+          })
+      } else {
+        sendTrackingMessage("Dislike set from suggestion", { setId }).catch((error) => {
+          console.error(error)
+        })
+
+        if (isLiked) await sendUndoInteractSetMessage(setId, InteractionLike)
+
+        sendInteractSetMessage(setId, InteractionDislike)
+          .then(() => callback())
+          .catch((error) => {
+            // TODO: handle error case.
+            console.error(error)
+          })
+      }
+
+      wrapperElement.dataset.isDislike = (!isDisliked).toString()
+    }
+  )
 }

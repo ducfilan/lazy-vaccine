@@ -2,7 +2,7 @@ import React from "react"
 
 import { Card, Avatar, Button, Space, Typography } from "antd"
 import { UserOutlined, AimOutlined, LikeFilled, DislikeFilled } from "@ant-design/icons"
-import { Link } from "react-router-dom"
+import { AppBasePath } from "@/common/consts/constants"
 
 const SetItemCardSmall = () => {
   return (
@@ -10,15 +10,22 @@ const SetItemCardSmall = () => {
       className="card-set-item-small"
       cover={<img alt=":set_name" src=":set_imgUrl" />}
       actions={[
-        <Button key="subscribe" type="primary" className="is-uppercase" size="large" icon={<AimOutlined />}>
+        <Button type="primary" className="subscribe-button is-uppercase" size="large" icon={<AimOutlined />}>
           :subscribe_text
         </Button>,
         <Space key="interactions" size="large">
-          <Button type="text" shape="circle" size="large" icon={<LikeFilled style={{ color: ":like_color" }} />} />
           <Button
             type="text"
             shape="circle"
             size="large"
+            className="like-button"
+            icon={<LikeFilled style={{ color: ":like_color" }} />}
+          />
+          <Button
+            type="text"
+            shape="circle"
+            size="large"
+            className="dislike-button"
             icon={<DislikeFilled style={{ color: ":dislike_color" }} />}
           />
         </Space>,
@@ -27,15 +34,16 @@ const SetItemCardSmall = () => {
       <Card.Meta
         avatar={<Avatar src=":set_creatorImageUrl" icon={<UserOutlined />} />}
         title={
-          <Link className="page-header--title" to={`/set-detail/:set__id`} title=":set_name">
+          <a
+            className="page-header--title"
+            href={`${chrome.runtime.getURL(AppBasePath)}/set-detail/:set__id`}
+            title=":set_name"
+            target="_blank"
+          >
             :set_name
-          </Link>
+          </a>
         }
-        description={
-          <Typography.Paragraph ellipsis={{ rows: 2 }} style={{ minHeight: "3.143em" }}>
-            :set_description
-          </Typography.Paragraph>
-        }
+        description={<Typography.Paragraph ellipsis={{ rows: 2 }}>:set_description</Typography.Paragraph>}
       />
     </Card>
   )

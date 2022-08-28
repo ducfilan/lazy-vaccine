@@ -140,6 +140,14 @@ $black: #000;
       border-bottom-left-radius: 13px !important;
     }
   }
+
+  .is-uppercase {
+    text-transform: uppercase;
+  }
+
+  .is-primary {
+    color: $primary !important;
+  }
 }
 
 .lazy-vaccine-hidden {

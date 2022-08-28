@@ -442,6 +442,9 @@
   "suggestion_pin_extension": {
     "message": "I suggest you to pin Lazy Vaccine to access your progress faster!"
   },
+  "suggestion_subscribe_set": {
+    "message": "I think you might like this set, let's SUBSCRIBE!"
+  },
   "rich_text_upload_modal_title": {
     "message": "Insert a new photo"
   },

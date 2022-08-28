@@ -4,7 +4,7 @@ import "./background/templates/css/antd-wrapped.less"
 
 import PageInjector from "./background/PageInjector"
 import InjectionTargetFactory from "./background/InjectionTargetFactory"
-import { KeyValuePair, SetInfo } from "./common/types/types"
+import { InjectionTargetsResponse, KeyValuePair, SetInfo, User } from "./common/types/types"
 import { detectPageChanged } from "./common/utils/domUtils"
 import {
   sendClearCachedRandomSetMessage,
@@ -30,31 +30,35 @@ import {
   registerPronounceButtonClickEvent,
   registerTopBarCardButtonsClickEvent,
   registerHoverCardEvent,
+  registerSubscribeEvent,
+  registerLikeEvent,
+  registerDislikeEvent,
 } from "./pages/content-script/eventRegisters"
 import { getHref, isSiteSupportedInjection } from "./pages/content-script/domHelpers"
 import { shuffleArray } from "./common/utils/arrayUtils"
-import { generateTemplateExtraValues, toTemplateValues } from "./pages/content-script/templateHelpers"
 import {
-  i18n,
+  generateTemplateExtraValues,
+  getNetworkErrorTemplateValues,
+  getNotLoggedInTemplateValues,
+  getNotSubscribedTemplateValues,
+  getRecommendationTemplateValues,
+  toTemplateValues,
+} from "./pages/content-script/templateHelpers"
+import {
   ItemsInteractionForcedDone,
   ItemsInteractionIgnore,
   ItemsInteractionShow,
   ItemsInteractionStar,
-  OtherItemTypes,
 } from "./common/consts/constants"
 
-import "@/background/templates/css/_common.scss"
 import "@/background/templates/css/content.scss"
-import "@/background/templates/css/flashcard.scss"
-import "@/background/templates/css/QandA.scss"
-import "@/background/templates/css/suggest-subscribe.scss"
-import "@/background/templates/css/bubble.scss"
 
 import { htmlStringToHtmlNode } from "./background/DomManipulator"
 import { getInjectionTargets } from "./common/repo/injection-targets"
 import { renderToString } from "react-dom/server"
 import { FixedWidget } from "./background/templates/FixedWidget"
 import { getRestrictedKeywords } from "./common/repo/restricted-keywords"
+import { appearInPercent } from "./common/utils/utils"
 
 function hrefComparer(this: any, oldHref: string, newHref: string) {
   for (const target of this?.targets || []) {
@@ -73,36 +77,6 @@ function hrefComparer(this: any, oldHref: string, newHref: string) {
   return oldHref === newHref
 }
 
-const getNotLoggedInTemplateValues = async () => {
-  return [{ key: "type", value: OtherItemTypes.NotLoggedIn.value }]
-}
-
-const getNotSubscribedTemplateValues = async () => {
-  return [{ key: "type", value: OtherItemTypes.NotSubscribed.value }]
-}
-
-const getNetworkErrorTemplateValues = async () => {
-  switch (lastError?.error?.code) {
-    case "ECONNABORTED":
-      if (lastError?.error?.message?.startsWith("timeout of")) {
-        return [
-          { key: "type", value: OtherItemTypes.NetworkTimeout.value },
-          { key: "errorText", value: i18n("network_error_timeout") },
-        ]
-      }
-      return []
-
-    case "ERR_NETWORK":
-      return [
-        { key: "type", value: OtherItemTypes.NetworkOffline.value },
-        { key: "errorText", value: i18n("network_error_offline") },
-      ]
-
-    default:
-      return []
-  }
-}
-
 const injectFixedWidgetBubble = () => {
   const node = htmlStringToHtmlNode(renderToString(<FixedWidget />))
   document.querySelector("body")?.prepend(node)
@@ -118,10 +92,16 @@ let itemsInPageInteractionMap: {
 let isLoggedIn = false
 let havingSubscribedSets = false
 let lastError: any = null
+let isNeedRecommendation = false
+let identity: User
 
 let allInjectors: PageInjector[] | undefined = []
+let allInjectionTargets: InjectionTargetsResponse
 
 sendIdentityUserMessage()
+  .then((user: User) => {
+    identity = user
+  })
   .catch((e) => console.error(e))
   .finally(() => {
     getRestrictedKeywords()
@@ -137,6 +117,7 @@ sendIdentityUserMessage()
 
     getInjectionTargets()
       .then((targets) => {
+        allInjectionTargets = targets
         if (!isSiteSupportedInjection(targets, getHref())) return
 
         processInjection().finally(() => {
@@ -197,6 +178,8 @@ async function initValues() {
 
         itemsInPageInteractionMap[itemInteractions.itemId] = Object.keys(itemInteractions.interactionCount)
       })
+
+      determineIsNeedRecommendation()
     }
   } catch (error: any) {
     if (error?.error?.type === "NotSubscribedError") {
@@ -212,6 +195,22 @@ async function initValues() {
       console.error(error)
     }
   }
+}
+
+/**
+ * If the set got interacted more than 80 percent, then 30% of the time this set is displayed, will show a similar set to recommendation.
+ * @returns true if the recommendation card should be displayed in the page.
+ */
+function determineIsNeedRecommendation() {
+  if (isNeedRecommendation) return
+
+  if (!setInfo) return
+
+  setInfo.itemsInteractions?.forEach((i) => delete i.interactionCount[ItemsInteractionStar])
+  setInfo.itemsInteractions = setInfo.itemsInteractions?.filter((i) => Object.keys(i).length > 0)
+
+  const isInteractedMoreThan80Percent = (setInfo.itemsInteractions?.length || 0) > (setInfo.items?.length || 0) * 0.8
+  isNeedRecommendation = isInteractedMoreThan80Percent && appearInPercent(0.3)
 }
 
 function removeOldCards() {
@@ -242,7 +241,7 @@ async function injectCards(): Promise<PageInjector[]> {
   }
 }
 
-const randomTemplateValues = async (increaseOnCall: boolean = false) => {
+const randomTemplateValues = async (increaseOnCall: boolean = false): Promise<KeyValuePair[]> => {
   console.debug(
     "randomTemplateValues called, isLoggedIn: " +
       isLoggedIn +
@@ -253,7 +252,7 @@ const randomTemplateValues = async (increaseOnCall: boolean = false) => {
   )
 
   if (lastError) {
-    const networkErrorValues = await getNetworkErrorTemplateValues()
+    const networkErrorValues = await getNetworkErrorTemplateValues(lastError)
 
     if (networkErrorValues && networkErrorValues.length > 0) {
       return networkErrorValues
@@ -268,30 +267,33 @@ const randomTemplateValues = async (increaseOnCall: boolean = false) => {
     return getNotSubscribedTemplateValues()
   }
 
+  if (isNeedRecommendation) {
+    isNeedRecommendation = false
+    return getRecommendationTemplateValues(setInfo, identity)
+  }
+
   const item = getItemAtPointer(currentItemPointer)
   if (increaseOnCall) {
     currentItemPointer++
 
-    // TODO: Possible infinity loop check.
+    // TODO: Possible infinite loop check.
     if (isDisplayedAllItemsInSet()) {
       await sendClearCachedRandomSetMessage()
       await initValues()
+
+      isNeedRecommendation = true
     }
   }
 
-  item &&
-    sendInteractItemMessage(setInfo?._id || "", item?._id || "", ItemsInteractionShow)
-      .then(() => {
-        itemsInPageInteractionMap[item?._id] = [...(itemsInPageInteractionMap[item?._id] || []), ItemsInteractionShow]
-      })
-      .catch((error) => {
-        // TODO: handle error case.
-        console.error(error)
-      })
-
   let templateValues: KeyValuePair[] = []
-  if (item) {
+  if (!item) {
+    isNeedRecommendation = true
+    processInjection()
+  } else {
     try {
+      await sendInteractItemMessage(setInfo?._id || "", item?._id || "", ItemsInteractionShow)
+      itemsInPageInteractionMap[item?._id] = [...(itemsInPageInteractionMap[item?._id] || []), ItemsInteractionShow]
+
       templateValues = await toTemplateValues(item, generateTemplateExtraValues(item))
     } catch (error) {
       console.error(templateValues)
@@ -308,6 +310,7 @@ function registerFlashcardEvents() {
     if (isDisplayedAllItemsInSet()) {
       await sendClearCachedRandomSetMessage()
       await initValues()
+      isNeedRecommendation = true
       return getItemAtPointer(currentItemPointer++)
     }
 
@@ -322,34 +325,30 @@ function registerFlashcardEvents() {
     return setInfo
   }
 
+  const recommendationSetter = (value: boolean) => (isNeedRecommendation = value)
+
   registerFlipCardEvent()
 
   registerSelectAnswerEvent()
 
   registerCheckAnswerEvent()
 
-  registerIgnoreEvent(itemGetter, (itemId: string) => {
+  registerIgnoreEvent(itemGetter, recommendationSetter, (itemId: string) => {
     itemsInPageInteractionMap[itemId] = [...(itemsInPageInteractionMap[itemId] || []), ItemsInteractionIgnore]
-    filterItemList(itemId)
   })
 
-  registerGotItemEvent(itemGetter, (itemId: string) => {
+  registerGotItemEvent(itemGetter, recommendationSetter, (itemId: string) => {
     itemsInPageInteractionMap[itemId] = [...(itemsInPageInteractionMap[itemId] || []), ItemsInteractionForcedDone]
-    filterItemList(itemId)
   })
-
-  const filterItemList = (itemId: string) => {
-    setInfo = setInfo && {
-      ...setInfo,
-      items: setInfo?.items?.filter((item) => item._id !== itemId),
-    }
-  }
 
   registerStarEvent(itemGetter, (itemId: string) => {
     itemsInPageInteractionMap[itemId] = [...(itemsInPageInteractionMap[itemId] || []), ItemsInteractionStar]
   })
 
-  registerNextItemEvent(nextItemGetter, itemGetter, setGetter)
+  registerNextItemEvent(nextItemGetter, itemGetter, setGetter, {
+    isNeedRecommendationGetter: () => isNeedRecommendation,
+    identityGetter: () => identity,
+  })
 
   registerPrevItemEvent(
     () => {
@@ -379,6 +378,23 @@ function registerFlashcardEvents() {
   registerPronounceButtonClickEvent()
   registerTopBarCardButtonsClickEvent()
   registerHoverCardEvent()
+
+  const suggestionInteractCallback = () => {
+    setTimeout(async () => {
+      if (!allInjectionTargets) return
+      isNeedRecommendation = false
+
+      await sendClearCachedRandomSetMessage()
+      await initValues()
+
+      processInjection().finally(() => {
+        detectPageChanged(processInjection, hrefComparer.bind({ allInjectionTargets }))
+      })
+    }, 5000)
+  }
+  registerSubscribeEvent(suggestionInteractCallback)
+  registerLikeEvent(suggestionInteractCallback)
+  registerDislikeEvent(suggestionInteractCallback)
 }
 
 /**
@@ -388,6 +404,9 @@ function registerFlashcardEvents() {
  * @returns item
  */
 const getItemAtPointer = (pointerPosition: number, skipStep: number = 1): any => {
+  // Out of bound.
+  if (pointerPosition >= randomItemIndexVisitMap.length) return null
+
   let rawItem = setInfo?.items && setInfo?.items[randomItemIndexVisitMap[pointerPosition]]
 
   if (!rawItem) return null

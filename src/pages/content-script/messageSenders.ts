@@ -1,5 +1,5 @@
 import { sendMessage } from "@/background/MessagingFacade"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking } from "@/common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet } from "@/common/consts/constants"
 import { SetInfo } from "@/common/types/types"
 
 export function sendClearCachedRandomSetMessage() {
@@ -20,6 +20,18 @@ export function sendGetRandomSubscribedSetSilentMessage() {
 export function sendInteractItemMessage(setId: string, itemId: string, action: string) {
   return new Promise<{ success: boolean }>((resolve, reject) => {
     sendMessage(ChromeMessageTypeInteractItem, { setId, itemId, action }, resolve, reject)
+  })
+}
+
+export function sendInteractSetMessage(setId: string, action: string) {
+  return new Promise<{ success: boolean }>((resolve, reject) => {
+    sendMessage(ChromeMessageTypeInteractSet, { setId, action }, resolve, reject)
+  })
+}
+
+export function sendUndoInteractSetMessage(setId: string, action: string) {
+  return new Promise<{ success: boolean }>((resolve, reject) => {
+    sendMessage(ChromeMessageTypeUndoInteractSet, { setId, action }, resolve, reject)
   })
 }
 
@@ -62,5 +74,11 @@ export function sendIdentityUserMessage() {
 export function sendTrackingMessage(name: string, metadata?: { [key: string]: any } | null) {
   return new Promise<any>((resolve, reject) => {
     sendMessage(ChromeMessageTypeTracking, { name, metadata }, resolve, reject)
+  })
+}
+
+export function sendGetRecommendationsMessage(keyword: string, languages: string[], skip: number, limit: number) {
+  return new Promise<any>((resolve, reject) => {
+    sendMessage(ChromeMessageTypeSuggestSets, { keyword, languages, skip, limit }, resolve, reject)
   })
 }

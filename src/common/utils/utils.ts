@@ -21,3 +21,12 @@ export function deepClone(obj: any, hash = new WeakMap()) {
   }
   return cloneObj
 }
+
+/**
+ * True at percent / total of the times.
+ * @param percent percentage of appearance (0-1)
+ * @returns true / false randomly based on percentage.
+ */
+export function appearInPercent(percent: number): boolean {
+  return Math.random() < percent
+}

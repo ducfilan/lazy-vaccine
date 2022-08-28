@@ -1,63 +1,13 @@
 import {
-  FlashCardOptions,
-  i18n,
   InjectTypes,
   InjectWrapperClassName,
-  ItemTypes,
-  OtherItemTypes,
-  SettingKeyBackItem,
-  SettingKeyFrontItem,
 } from "@/common/consts/constants"
 import { KeyValuePair, PageInjectorSiblingSelectorParts } from "@/common/types/types"
 import { formatString, trimQuotes } from "@/common/utils/stringUtils"
 import { MutationObserverFacade } from "@facades/mutationObserverFacade"
-import { renderToString } from "react-dom/server"
-import { FlashcardTemplate } from "./templates/FlashcardTemplate"
 import { htmlStringToHtmlNode, insertBefore } from "./DomManipulator"
-import React from "react"
-import { QnATemplate } from "./templates/QandATemplate"
-import { sendGetLocalSettingMessage } from "@/pages/content-script/messageSenders"
-import { ContentTemplate } from "./templates/ContentTemplate"
-import { SuggestSubscribeTemplate } from "./templates/SuggestSubscribeTemplate"
-import { SuggestLoginTemplate } from "./templates/SuggestLoginTemplate"
-import { NetworkErrorTemplate } from "./templates/NetworkErrorTemplate"
 import { isVisible } from "@/common/utils/domUtils"
-
-export async function getTemplate(type: string) {
-  console.debug("getTemplate called, type: " + type)
-
-  switch (type) {
-    case ItemTypes.TermDef.value:
-      const frontItemSettingKey = (await sendGetLocalSettingMessage(SettingKeyFrontItem)) || ""
-      const backItemSettingKey = (await sendGetLocalSettingMessage(SettingKeyBackItem)) || ""
-
-      let settingFrontItem = FlashCardOptions[frontItemSettingKey] || i18n("select")
-      let settingBackItem = FlashCardOptions[backItemSettingKey] || i18n("select")
-
-      return renderToString(
-        <FlashcardTemplate selectedFrontItem={settingFrontItem} selectedBackItem={settingBackItem} />
-      )
-
-    case ItemTypes.QnA.value:
-      return renderToString(<QnATemplate />)
-
-    case ItemTypes.Content.value:
-      return renderToString(<ContentTemplate />)
-
-    case OtherItemTypes.NotLoggedIn.value:
-      return renderToString(<SuggestLoginTemplate />)
-
-    case OtherItemTypes.NotSubscribed.value:
-      return renderToString(<SuggestSubscribeTemplate />)
-
-    case OtherItemTypes.NetworkTimeout.value:
-    case OtherItemTypes.NetworkOffline.value:
-      return renderToString(<NetworkErrorTemplate />)
-
-    default:
-      return ""
-  }
-}
+import { getTemplateFromType } from "@/pages/content-script/templateHelpers"
 
 export default class PageInjector {
   private rate: number
@@ -213,7 +163,7 @@ export default class PageInjector {
         if (!templateValue || templateValue.length === 0) return
 
         const typeItem = templateValue.find((item) => item.key === "type")?.value
-        getTemplate(typeItem || "")
+        getTemplateFromType(typeItem || "")
           .then((htmlTemplate) => {
             const htmlString = formatString(htmlTemplate, templateValue)
 
@@ -258,7 +208,7 @@ export default class PageInjector {
     if (!templateValue || templateValue.length === 0) return
 
     const typeItem = templateValue.find((item) => item.key === "type")?.value
-    getTemplate(typeItem || "")
+    getTemplateFromType(typeItem || "")
       .then((htmlTemplate) => {
         const htmlString = formatString(htmlTemplate, templateValue)
 

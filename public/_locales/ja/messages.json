@@ -442,6 +442,9 @@
   "suggestion_pin_extension": {
     "message": "Lazy Vaccine をピン留めして、進行状況にすばやくアクセスすることをお勧めします!"
   },
+  "suggestion_subscribe_set": {
+    "message": "このセットを気に入っていただけると思います。登録してみましょう!"
+  },
   "rich_text_upload_modal_title": {
     "message": "写真を追加する"
   },

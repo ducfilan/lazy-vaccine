@@ -442,6 +442,9 @@
   "suggestion_pin_extension": {
     "message": "我建议您固定 Lazy Vaccine 以更快地访问您的进度！"
   },
+  "suggestion_subscribe_set": {
+    "message": "我想你可能会喜欢这个组，请订阅！"
+  },
   "rich_text_upload_modal_title": {
     "message": "插入一张新照片"
   },

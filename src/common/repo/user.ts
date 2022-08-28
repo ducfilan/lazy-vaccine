@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios"
-import { SetInfo, GeneralInfoCounts, User, UserInteractionSetResponse, UserInteractionSetsResponse, LearningProgressInfo } from "@/common/types/types"
+import { SetInfo, GeneralInfoCounts, User, UserInteractionSetResponse, UserInteractionSetsResponse, LearningProgressInfo, SearchSetsResponse } from "@/common/types/types"
 import Apis from "@consts/apis"
 import StatusCode from "@consts/statusCodes"
 import { Http } from "@facades/axiosFacade"
@@ -93,4 +93,23 @@ export async function getGeneralInfoCounts(http: Http): Promise<GeneralInfoCount
   if (!generalInfoCounts) throw new Error("cannot get user statistics")
 
   return generalInfoCounts
+}
+
+export async function suggestSets(http: Http, keyword: string, languages: string[], skip: number, limit: number) {
+  const response = await http.get<any, AxiosResponse<SearchSetsResponse>>(`${Apis.suggestSets}?keyword=${keyword}&languages=${languages.join(",")}&skip=${skip}&limit=${limit}`)
+
+  if (!response?.data) throw new Error(`cannot search sets with keyword: ${keyword}`)
+
+  let resp = response?.data
+
+  resp.sets.forEach((set) => {
+    if (resp.interactions) {
+      const actions = resp.interactions.find(interaction => interaction.setId === set._id)?.actions
+      set.isSubscribed = actions?.includes(InteractionSubscribe)
+      set.isLiked = actions?.includes(InteractionLike)
+      set.isDisliked = actions?.includes(InteractionDislike)
+    }
+  })
+
+  return resp
 }

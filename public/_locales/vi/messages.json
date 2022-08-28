@@ -439,6 +439,9 @@
   "suggestion_pin_extension": {
     "message": "Mình gợi ý là bạn hãy ghim tiện ích này để có thể theo dõi quá trình của mình dễ dàng hơn."
   },
+  "suggestion_subscribe_set": {
+    "message": "Mình nghĩ là bạn sẽ thích bài này đây! Hãy ĐĂNG KÍ để tiếp tục học nhé!"
+  },
   "rich_text_upload_modal_title": {
     "message": "Thêm ảnh"
   },

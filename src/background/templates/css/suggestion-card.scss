@@ -1,0 +1,28 @@
+.lazy-vaccine {
+  .ant-typography-ellipsis {
+    min-height: 3.143em;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .ant-card-cover {
+    height: 300px;
+  }
+
+  .ant-card-actions {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .card-set-item-small {
+    .ant-card-actions > li:nth-child(1) {
+      width: 60% !important;
+    }
+
+    .ant-card-actions > li:nth-child(2) {
+      width: 40% !important;
+    }
+  }
+}

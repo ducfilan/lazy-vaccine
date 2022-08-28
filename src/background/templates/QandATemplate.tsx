@@ -10,7 +10,7 @@ import { CardInteraction } from "./common/CardInteraction"
 
 export const QnATemplate = () => {
   return (
-    <div className="lazy-vaccine" data-setid=":setId" data-itemid=":itemId" data-answered="false">
+    <div className="lazy-vaccine" data-set-id=":setId" data-item-id=":itemId" data-answered="false">
       <DisclaimerInfo />
       <Popover
         styles={{

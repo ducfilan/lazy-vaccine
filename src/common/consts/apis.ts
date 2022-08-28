@@ -8,6 +8,7 @@ const Apis = {
   itemInteraction: (setId: string, itemId: string, action: string) => `/items-interactions/${setId}/items-interactions/${itemId}/?action=${action}`,
   users: "/users",
   sets: "/sets",
+  suggestSets: "/users/me/suggestions",
   topSets: (langCode: string) => `/top-sets?lang=${langCode}`,
   items: "/items",
   login: "/users/login",
