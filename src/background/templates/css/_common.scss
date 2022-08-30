@@ -148,6 +148,11 @@ $black: #000;
   .is-primary {
     color: $primary !important;
   }
+
+  .ant-skeleton {
+    padding: 20px 50px;
+    background: white;
+  }
 }
 
 .lazy-vaccine-hidden {

@@ -276,7 +276,6 @@ const randomTemplateValues = async (increaseOnCall: boolean = false): Promise<Ke
   if (increaseOnCall) {
     currentItemPointer++
 
-    // TODO: Possible infinite loop check.
     if (isDisplayedAllItemsInSet()) {
       await sendClearCachedRandomSetMessage()
       await initValues()

@@ -81,6 +81,12 @@ export function registerNextItemEvent(
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--next-button", async (e: Event) => {
     e.stopPropagation()
 
+    const nextButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement | null = nextButton.closest(InjectWrapperClassName)
+
+    wrapperElement?.querySelector(".ant-skeleton")?.classList.remove("lazy-vaccine-hidden")
+    wrapperElement?.querySelector(".card-wrapper")?.classList.add("lazy-vaccine-hidden")
+
     if (e.isTrusted) {
       const currentItem = itemGetter()
       if (!currentItem) return // TODO: Notice problem.
@@ -99,9 +105,6 @@ export function registerNextItemEvent(
     }
 
     if (!nextItem) return // TODO: Notice problem.
-
-    const nextButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = nextButton.closest(InjectWrapperClassName)
 
     const currentSet = setGetter()
     if (!currentSet) throw new Error("cannot get set")
@@ -241,6 +244,9 @@ export function registerPrevItemEvent(
     const prevButton = e.target as HTMLElement
     const wrapperElement: HTMLElement | null = prevButton.closest(InjectWrapperClassName)
 
+    wrapperElement?.querySelector(".ant-skeleton")?.classList.remove("lazy-vaccine-hidden")
+    wrapperElement?.querySelector(".card-wrapper")?.classList.add("lazy-vaccine-hidden")
+
     const prevItem = prevItemGetter()
     if (!prevItem) return
 
@@ -339,15 +345,18 @@ export function registerNextSetEvent(preProcess: () => Promise<void>) {
     e.preventDefault()
     e.stopPropagation()
 
+    const nextSetButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement | null = nextSetButton.closest(InjectWrapperClassName)
+
+    wrapperElement?.querySelector(".ant-skeleton")?.classList.remove("lazy-vaccine-hidden")
+    wrapperElement?.querySelector(".card-wrapper")?.classList.add("lazy-vaccine-hidden")
+
     try {
       await preProcess()
     } catch (error) {
       console.error(error)
       return
     }
-
-    const nextSetButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = nextSetButton.closest(InjectWrapperClassName)
 
     sendTrackingMessage("Click next set link", {
       setId: wrapperElement?.dataset.setId,

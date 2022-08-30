@@ -17,6 +17,9 @@
   }
 
   .card-set-item-small {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
     .ant-card-actions > li:nth-child(1) {
       width: 60% !important;
     }

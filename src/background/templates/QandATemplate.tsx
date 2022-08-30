@@ -1,7 +1,7 @@
 import React from "react"
 
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
-import { Button } from "antd"
+import { Button, Skeleton } from "antd"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
 import { Popover } from "./common/Popover"
@@ -48,6 +48,7 @@ export const QnATemplate = () => {
           </>
         }
       />
+      <Skeleton active loading className="lazy-vaccine-hidden" />
       <div className="qna-card qna-card-wrapper card-wrapper" data-answers={":listOfAnswers"}>
         <div className="card--content">
           <p className="card--question">{":question"}</p>

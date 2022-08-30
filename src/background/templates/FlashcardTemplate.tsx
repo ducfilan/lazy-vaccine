@@ -1,7 +1,7 @@
 import React from "react"
 
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
-import { Button, Divider } from "antd"
+import { Button, Divider, Skeleton } from "antd"
 import { CustomerServiceOutlined, RedoOutlined } from "@ant-design/icons"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
@@ -82,6 +82,7 @@ export const FlashcardTemplate = (props: { selectedFrontItem: string; selectedBa
           </>
         }
       />
+      <Skeleton active loading className="lazy-vaccine-hidden" />
       <div className="flash-card flash-card-wrapper card-wrapper">
         <div className="card--face card--face--front">
           <TopBar />

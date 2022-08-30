@@ -6,6 +6,7 @@ import { DisclaimerInfo } from "./common/DisclaimerInfo"
 import { Popover } from "./common/Popover"
 import { AppBasePath, AppPages, i18n } from "@/common/consts/constants"
 import { CardInteraction } from "./common/CardInteraction"
+import { Skeleton } from "antd"
 
 export const ContentTemplate = () => {
   return (
@@ -45,6 +46,7 @@ export const ContentTemplate = () => {
           </>
         }
       />
+      <Skeleton active loading className="lazy-vaccine-hidden" />
       <div className="content-card content-card-wrapper card-wrapper">
         <div className="card--face card--face--front">
           {":content"}
