@@ -37,6 +37,7 @@ import {
 } from "@/common/consts/constants"
 import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
 import { redirectToUrlInNewTab } from "@/common/utils/domUtils"
+import CacheKeys from "@/common/consts/cacheKeys"
 
 export function registerFlipCardEvent() {
   const flipCard = (e: Event) => {
@@ -760,6 +761,7 @@ export function registerSubscribeEvent(callback: Function) {
         sendTrackingMessage("Subscribe set from suggestion", { setId }).catch((error) => {
           console.error(error)
         })
+        resetSyncStorageCount()
 
         sendInteractSetMessage(setId, InteractionSubscribe)
           .then(() => callback())
@@ -770,6 +772,10 @@ export function registerSubscribeEvent(callback: Function) {
       }
     }
   )
+}
+
+function resetSyncStorageCount() {
+  chrome.storage.sync.remove([CacheKeys.showItemCount, CacheKeys.interactItemCount])
 }
 
 export function registerLikeEvent(callback: Function) {

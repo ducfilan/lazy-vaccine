@@ -11,6 +11,7 @@ import {
   sendGetRandomSubscribedSetSilentMessage,
   sendIdentityUserMessage,
   sendInteractItemMessage,
+  sendTrackingMessage,
 } from "./pages/content-script/messageSenders"
 import {
   registerFlipCardEvent,
@@ -58,7 +59,8 @@ import { getInjectionTargets } from "./common/repo/injection-targets"
 import { renderToString } from "react-dom/server"
 import { FixedWidget } from "./background/templates/FixedWidget"
 import { getRestrictedKeywords } from "./common/repo/restricted-keywords"
-import { appearInPercent } from "./common/utils/utils"
+import { appearInPercent, getStorageSyncData } from "./common/utils/utils"
+import CacheKeys from "./common/consts/cacheKeys"
 
 function hrefComparer(this: any, oldHref: string, newHref: string) {
   for (const target of this?.targets || []) {
@@ -179,7 +181,7 @@ async function initValues() {
         itemsInPageInteractionMap[itemInteractions.itemId] = Object.keys(itemInteractions.interactionCount)
       })
 
-      determineIsNeedRecommendation()
+      await determineIsNeedRecommendation()
     }
   } catch (error: any) {
     if (error?.error?.type === "NotSubscribedError") {
@@ -201,8 +203,28 @@ async function initValues() {
  * If the set got interacted more than 80 percent, then 30% of the time this set is displayed, will show a similar set to recommendation.
  * @returns true if the recommendation card should be displayed in the page.
  */
-function determineIsNeedRecommendation() {
+async function determineIsNeedRecommendation() {
   if (isNeedRecommendation) return
+
+  try {
+    const showItemCount = (await getStorageSyncData<number>(CacheKeys.showItemCount)) || 0
+    const interactItemCount = (await getStorageSyncData<number>(CacheKeys.interactItemCount)) || 0
+    const minimumShowedItemToStartRecommend = 100
+
+    if (
+      showItemCount > minimumShowedItemToStartRecommend &&
+      interactItemCount / showItemCount < 0.03 &&
+      appearInPercent(0.25)
+    ) {
+      console.debug("suggest after no interaction for a long time")
+      sendTrackingMessage("Suggest from no interaction")
+      isNeedRecommendation = true
+
+      return
+    }
+  } catch (error) {
+    console.error(error)
+  }
 
   if (!setInfo) return
 

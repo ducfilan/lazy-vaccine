@@ -7,6 +7,7 @@ import { Http } from "./common/facades/axiosFacade"
 import { interactToSet, interactToSetItem, undoInteractToSet } from "./common/repo/set"
 import { getMyInfo, getUserInteractionRandomSet, suggestSets } from "./common/repo/user"
 import { SetInfo, User } from "./common/types/types"
+import { getStorageSyncData } from "./common/utils/utils"
 
 let lastAudio: HTMLAudioElement
 
@@ -96,8 +97,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case ChromeMessageTypeInteractItem:
       getGoogleAuthTokenSilent().then((token: string) => {
-        const http = new Http(token, LoginTypes.google)
         window.heap.track(request.arg.action === ItemsInteractionShow ? "Show item" : "Interact item", { interaction: request.arg.action, itemId: request.arg.itemId })
+        increaseSyncStorageCount(request.arg.action === ItemsInteractionShow ? CacheKeys.showItemCount : CacheKeys.interactItemCount)
+
+        const http = new Http(token, LoginTypes.google)
         interactItem(http, request.arg.setId, request.arg.itemId, request.arg.action).then(() => {
           sendResponse({ success: true })
         }).catch(error => {
@@ -249,4 +252,10 @@ function toResponseError(error: any) {
 function includeHeapAnalytics() {
   window.heap = window.heap || [], window.heap.load = function (e: any, t: any) { window.heap.appid = e, window.heap.config = t = t || {}; let r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; let a = document.getElementsByTagName("script")[0]; a.parentNode!.insertBefore(r, a); for (let n = function (e: any) { return function () { window.heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)window.heap[p[o]] = n(p[o]) }
   window.heap.load(HeapIoId)
+}
+
+function increaseSyncStorageCount(cacheKey: string) {
+  getStorageSyncData<number>(cacheKey).then(currentValue => {
+    chrome.storage.sync.set({ [CacheKeys.showItemCount]: (currentValue || 0) + 1 })
+  })
 }

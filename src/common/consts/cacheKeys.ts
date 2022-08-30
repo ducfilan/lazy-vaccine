@@ -9,6 +9,8 @@ const CacheKeys = {
   randomSet: "random-set",
   localSetting: "local-setting",
   accessToken: "access-token",
+  showItemCount: "show-injected-card",
+  interactItemCount: "interact-injected-card",
   refreshToken: "refresh-token",
 }
 

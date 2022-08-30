@@ -30,3 +30,15 @@ export function deepClone(obj: any, hash = new WeakMap()) {
 export function appearInPercent(percent: number): boolean {
   return Math.random() < percent
 }
+
+export function getStorageSyncData<T>(key: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get(key, (obj) => {
+      if (chrome.runtime.lastError) {
+        return reject(chrome.runtime.lastError)
+      }
+
+      resolve(obj[key])
+    })
+  })
+}
