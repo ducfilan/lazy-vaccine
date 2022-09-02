@@ -2,8 +2,9 @@ import React from "react"
 
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
 import { Button, Divider, Skeleton } from "antd"
-import { CustomerServiceOutlined, RedoOutlined } from "@ant-design/icons"
+import Icon, { RedoOutlined } from "@ant-design/icons"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
+import SpeakerIcon from "@img/ui/fa/speaker.svg"
 
 import { Popover } from "./common/Popover"
 import {
@@ -20,7 +21,7 @@ import { CardInteraction } from "./common/CardInteraction"
 const TopBar = () => {
   return (
     <div className="card-item--top-bar-wrapper">
-      <Button type="primary" shape="circle" icon={<CustomerServiceOutlined />} className="btn-pronounce" />
+      <Button type="primary" shape="circle" icon={<Icon component={SpeakerIcon} />} className="btn-pronounce" />
       <div />
       <div className="btn-flip-wrapper">
         <Button shape="circle" icon={<RedoOutlined />} className="btn-flip" />

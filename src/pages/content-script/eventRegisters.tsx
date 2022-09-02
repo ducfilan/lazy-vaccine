@@ -761,7 +761,6 @@ export function registerSubscribeEvent(callback: Function) {
         sendTrackingMessage("Subscribe set from suggestion", { setId }).catch((error) => {
           console.error(error)
         })
-        resetSyncStorageCount()
 
         sendInteractSetMessage(setId, InteractionSubscribe)
           .then(() => callback())
@@ -772,10 +771,6 @@ export function registerSubscribeEvent(callback: Function) {
       }
     }
   )
-}
-
-function resetSyncStorageCount() {
-  chrome.storage.sync.remove([CacheKeys.showItemCount, CacheKeys.interactItemCount])
 }
 
 export function registerLikeEvent(callback: Function) {

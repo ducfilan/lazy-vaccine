@@ -213,7 +213,7 @@ async function determineIsNeedRecommendation() {
 
     if (
       showItemCount > minimumShowedItemToStartRecommend &&
-      interactItemCount / showItemCount < 0.03 &&
+      interactItemCount / showItemCount < 0.02 &&
       appearInPercent(0.25)
     ) {
       console.debug("suggest after no interaction for a long time")
@@ -232,7 +232,7 @@ async function determineIsNeedRecommendation() {
   setInfo.itemsInteractions = setInfo.itemsInteractions?.filter((i) => Object.keys(i).length > 0)
 
   const isInteractedMoreThan80Percent = (setInfo.itemsInteractions?.length || 0) > (setInfo.items?.length || 0) * 0.8
-  isNeedRecommendation = isInteractedMoreThan80Percent && appearInPercent(0.3)
+  isNeedRecommendation = isInteractedMoreThan80Percent && appearInPercent(0.2)
 }
 
 function removeOldCards() {

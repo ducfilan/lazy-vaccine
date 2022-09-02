@@ -4,6 +4,7 @@ import { AxiosResponse } from "axios"
 import Apis from "@consts/apis"
 import { ParamError } from "@consts/errors"
 import { DefaultLangCode, InteractionDislike, InteractionLike, InteractionSubscribe } from "@consts/constants"
+import CacheKeys from "@consts/cacheKeys"
 
 export async function createSet(http?: Http, setInfo?: SetInfo): Promise<string> {
   if (!http || !setInfo) throw new ParamError()
@@ -80,6 +81,7 @@ export async function getTopSetsInCategory(http: Http, categoryId: string, langC
 
 export async function interactToSet(http: Http, setId: string, action: string): Promise<void> {
   await http.post<any, AxiosResponse<any>>(Apis.interaction(setId, action))
+  chrome.storage.sync.remove([CacheKeys.showItemCount, CacheKeys.interactItemCount])
 }
 
 export async function undoInteractToSet(http: Http, setId: string, action: string): Promise<void> {

@@ -41,7 +41,7 @@ export const AppPages = {
     key: "my-garden",
     name: "My Garden",
     path: "/my-garden",
-    isSideNav: true,
+    isSideNav: false,
   },
   MySpace: {
     key: "my-space",
