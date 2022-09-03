@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const http = new Http(token, LoginTypes.google)
         getMyInfo(http).then((user: User) => {
           window.heap.identify(user?.email)
-          window.heap.addUserProperties({ "finished_register_step": user?.finishedRegisterStep })
+          window.heap.addUserProperties({ name: user?.name || "", finished_register_step: user?.finishedRegisterStep })
           sendResponse({ success: true, user })
         }).catch(() => {
           sendResponse({ success: false })
@@ -44,7 +44,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         .call(null, LoginTypes.google)
         .then((user: User | null) => {
           window.heap.identify(user?.email)
-          window.heap.addUserProperties({ "finished_register_step": user?.finishedRegisterStep })
+          window.heap.addUserProperties({ name: user?.name || "", finished_register_step: user?.finishedRegisterStep })
           sendResponse({ success: true, result: user })
         })
         .catch((error) => {

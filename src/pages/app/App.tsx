@@ -103,7 +103,7 @@ const AppPage = () => {
             setLocale(langCodeToAntLocaleMap[userInfo.locale] || defaultLocale)
 
             window.heap.identify(userInfo.email)
-            window.heap.addUserProperties({ "finished_register_step": userInfo.finishedRegisterStep })
+            window.heap.addUserProperties({ name: userInfo?.name || "", finished_register_step: userInfo.finishedRegisterStep })
           })
           .catch((error) => {
             source !== "popup" &&

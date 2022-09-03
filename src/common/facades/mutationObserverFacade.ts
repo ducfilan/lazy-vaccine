@@ -17,7 +17,7 @@ export class MutationObserverFacade {
 
   private _callbackForAddedNodes(callback: Function) {
     return function (mutations: MutationRecord[], observer: MutationObserver) {
-      for (var mutation of mutations) {
+      for (const mutation of mutations) {
         if (mutation.type == "childList") {
           callback(mutation.addedNodes)
         }

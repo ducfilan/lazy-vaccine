@@ -73,7 +73,7 @@ export function sendIdentityUserMessage() {
 
 export function sendTrackingMessage(name: string, metadata?: { [key: string]: any } | null) {
   return new Promise<any>((resolve, reject) => {
-    sendMessage(ChromeMessageTypeTracking, { name, metadata }, resolve, reject)
+    sendMessage(ChromeMessageTypeTracking, { name, metadata: { ...metadata, href: window?.location?.href || "unknown" } }, resolve, reject)
   })
 }
 

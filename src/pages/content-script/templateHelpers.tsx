@@ -14,7 +14,7 @@ import { SetInfoItem, KeyValuePair, SetInfo, User } from "@/common/types/types"
 import { encodeBase64, isValidJson } from "@/common/utils/stringUtils"
 import { renderToString } from "react-dom/server"
 import RichTextEditor from "@/pages/app/components/RichTextEditor"
-import { sendGetLocalSettingMessage, sendGetRecommendationsMessage } from "./messageSenders"
+import { sendGetLocalSettingMessage, sendGetRecommendationsMessage, sendTrackingMessage } from "./messageSenders"
 import { ChooseLanguagesStep } from "@/common/consts/registerSteps"
 import { ContentTemplate } from "@/background/templates/ContentTemplate"
 import { FlashcardTemplate } from "@/background/templates/FlashcardTemplate"
@@ -40,22 +40,28 @@ export async function getTemplateFromType(type: string) {
       )
 
     case ItemTypes.QnA.value:
+      sendTrackingMessage("Render QnA item").catch(console.error)
       return renderToString(<QnATemplate />)
 
     case ItemTypes.Content.value:
+      sendTrackingMessage("Render Content item").catch(console.error)
       return renderToString(<ContentTemplate />)
 
     case OtherItemTypes.NotLoggedIn.value:
+      sendTrackingMessage("Render Not logged in item").catch(console.error)
       return renderToString(<SuggestLoginTemplate />)
 
     case OtherItemTypes.NotSubscribed.value:
+      sendTrackingMessage("Render Not subscribed item item").catch(console.error)
       return renderToString(<SuggestSubscribeTemplate />)
 
     case OtherItemTypes.NetworkTimeout.value:
     case OtherItemTypes.NetworkOffline.value:
+      sendTrackingMessage("Render Not network error item").catch(console.error)
       return renderToString(<NetworkErrorTemplate />)
 
     case OtherItemTypes.SuggestionSets.value:
+      sendTrackingMessage("Render Suggestion sets item").catch(console.error)
       return renderToString(<SuggestSetsTemplate />)
 
     default:
@@ -78,24 +84,28 @@ export const toTemplateValues = async (
 async function mapItemTemplateValues(item: SetInfoItem): Promise<KeyValuePair[]> {
   switch (item.type) {
     case ItemTypes.TermDef.value:
-      let settingFrontItem = ((await sendGetLocalSettingMessage(SettingKeyFrontItem)) || "term").toString()
-      let settingBackItem = ((await sendGetLocalSettingMessage(SettingKeyBackItem)) || "definition").toString()
+      try {
+        let settingFrontItem = ((await sendGetLocalSettingMessage(SettingKeyFrontItem)) || "term").toString()
+        let settingBackItem = ((await sendGetLocalSettingMessage(SettingKeyBackItem)) || "definition").toString()
 
-      item.front_content = item[settingFrontItem]
-      item.back_content = item[settingBackItem]
+        item.front_content = item[settingFrontItem]
+        item.back_content = item[settingBackItem]
 
-      const displayFaceToLangCodeMap = {
-        term: item.fromLanguage,
-        definition: item.toLanguage,
-      } as { [key: string]: string }
+        const displayFaceToLangCodeMap = {
+          term: item.fromLanguage,
+          definition: item.toLanguage,
+        } as { [key: string]: string }
 
-      item.langCodeFront = displayFaceToLangCodeMap[settingFrontItem]
-      item.langCodeBack = displayFaceToLangCodeMap[settingBackItem]
+        item.langCodeFront = displayFaceToLangCodeMap[settingFrontItem]
+        item.langCodeBack = displayFaceToLangCodeMap[settingBackItem]
 
-      delete item.term
-      delete item.definition
-      delete item.fromLanguage
-      delete item.toLanguage
+        delete item.term
+        delete item.definition
+        delete item.fromLanguage
+        delete item.toLanguage
+      } catch (error) {
+        console.error(error)
+      }
 
       break
 

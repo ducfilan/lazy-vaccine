@@ -21,7 +21,7 @@ $black: #000;
   position: relative;
   min-width: 300px;
   z-index: 2;
-  max-width: 800px;
+  max-width: min(800px, 100%);
   margin: 0 auto;
   color: $black;
   font-size: 12px;

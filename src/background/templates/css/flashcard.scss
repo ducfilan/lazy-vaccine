@@ -1,6 +1,7 @@
 .lazy-vaccine {
   .flash-card-wrapper {
     width: 100%;
+    max-width: 800px;
     transition: transform 0.5s;
     transform-style: preserve-3d;
     cursor: pointer;

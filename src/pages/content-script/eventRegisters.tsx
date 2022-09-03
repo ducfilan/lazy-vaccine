@@ -37,7 +37,6 @@ import {
 } from "@/common/consts/constants"
 import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
 import { redirectToUrlInNewTab } from "@/common/utils/domUtils"
-import CacheKeys from "@/common/consts/cacheKeys"
 
 export function registerFlipCardEvent() {
   const flipCard = (e: Event) => {
@@ -83,24 +82,27 @@ export function registerNextItemEvent(
     e.stopPropagation()
 
     const nextButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = nextButton.closest(InjectWrapperClassName)
+    const wrapperElement: HTMLElement = nextButton.closest(InjectWrapperClassName)!
 
-    wrapperElement?.querySelector(".ant-skeleton")?.classList.remove("lazy-vaccine-hidden")
-    wrapperElement?.querySelector(".card-wrapper")?.classList.add("lazy-vaccine-hidden")
+    showLoadingCard(wrapperElement)
 
-    if (e.isTrusted) {
-      const currentItem = itemGetter()
-      if (!currentItem) return // TODO: Notice problem.
+    const currentItem = itemGetter()
+    if (!currentItem) return // TODO: Notice problem.
 
-      sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext).catch((error) => {
-        // TODO: handle error case.
-        console.error(error)
-      })
-    }
+    sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext).catch((error) => {
+      // TODO: handle error case.
+      console.error(error)
+    })
 
     let nextItem: SetInfoItem | null = null
     try {
       nextItem = await nextItemGetter()
+
+      if (extraValues.isNeedRecommendationGetter()) {
+        nextItem = {
+          type: OtherItemTypes.SuggestionSets.value,
+        } as SetInfoItem
+      }
     } catch (error) {
       console.error(error)
     }
@@ -124,14 +126,9 @@ export function registerNextItemEvent(
       .then((templateValues) => {
         let type = itemToDisplay.type
 
-        if (extraValues.isNeedRecommendationGetter()) {
-          type = OtherItemTypes.SuggestionSets.value
-        }
-
         getTemplateFromType(type)
           .then((template) => {
             const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
-
             wrapperElement?.replaceWith(newItemNode)
           })
           .catch((error) => {
@@ -143,6 +140,11 @@ export function registerNextItemEvent(
         console.error(error)
       })
   })
+}
+
+function showLoadingCard(wrapperElement: HTMLElement) {
+  wrapperElement?.querySelector(".ant-skeleton")?.classList.remove("lazy-vaccine-hidden")
+  wrapperElement?.querySelector(".card-wrapper")?.classList.add("lazy-vaccine-hidden")
 }
 
 /**
@@ -243,10 +245,9 @@ export function registerPrevItemEvent(
     e.stopPropagation()
 
     const prevButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = prevButton.closest(InjectWrapperClassName)
+    const wrapperElement: HTMLElement = prevButton.closest(InjectWrapperClassName)!
 
-    wrapperElement?.querySelector(".ant-skeleton")?.classList.remove("lazy-vaccine-hidden")
-    wrapperElement?.querySelector(".card-wrapper")?.classList.add("lazy-vaccine-hidden")
+    showLoadingCard(wrapperElement)
 
     const prevItem = prevItemGetter()
     if (!prevItem) return
@@ -347,10 +348,9 @@ export function registerNextSetEvent(preProcess: () => Promise<void>) {
     e.stopPropagation()
 
     const nextSetButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = nextSetButton.closest(InjectWrapperClassName)
+    const wrapperElement: HTMLElement = nextSetButton.closest(InjectWrapperClassName)!
 
-    wrapperElement?.querySelector(".ant-skeleton")?.classList.remove("lazy-vaccine-hidden")
-    wrapperElement?.querySelector(".card-wrapper")?.classList.add("lazy-vaccine-hidden")
+    showLoadingCard(wrapperElement)
 
     try {
       await preProcess()

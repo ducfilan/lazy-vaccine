@@ -5,7 +5,7 @@ import "./background/templates/css/antd-wrapped.less"
 import PageInjector from "./background/PageInjector"
 import InjectionTargetFactory from "./background/InjectionTargetFactory"
 import { InjectionTargetsResponse, KeyValuePair, SetInfo, User } from "./common/types/types"
-import { detectPageChanged } from "./common/utils/domUtils"
+import { detectPageChanged, hrefComparer } from "./common/utils/domUtils"
 import {
   sendClearCachedRandomSetMessage,
   sendGetRandomSubscribedSetSilentMessage,
@@ -62,23 +62,6 @@ import { getRestrictedKeywords } from "./common/repo/restricted-keywords"
 import { appearInPercent, getStorageSyncData } from "./common/utils/utils"
 import CacheKeys from "./common/consts/cacheKeys"
 
-function hrefComparer(this: any, oldHref: string, newHref: string) {
-  for (const target of this?.targets || []) {
-    const oldId = oldHref.match(target.MatchPattern)?.groups?.id
-    const newId = newHref.match(target.MatchPattern)?.groups?.id
-
-    console.debug(`oldHref: ${oldHref}, newHref: ${newHref}, oldId: ${oldId}, newId: ${newId}`)
-
-    if (!oldId && !newId) {
-      continue
-    }
-
-    return oldId === newId
-  }
-
-  return oldHref === newHref
-}
-
 const injectFixedWidgetBubble = () => {
   const node = htmlStringToHtmlNode(renderToString(<FixedWidget />))
   document.querySelector("body")?.prepend(node)
@@ -97,8 +80,9 @@ let lastError: any = null
 let isNeedRecommendation = false
 let identity: User
 
-let allInjectors: PageInjector[] | undefined = []
+let allInjectors: PageInjector[] = []
 let allInjectionTargets: InjectionTargetsResponse
+let allIntervalIds: NodeJS.Timer[] = []
 
 sendIdentityUserMessage()
   .then((user: User) => {
@@ -123,7 +107,8 @@ sendIdentityUserMessage()
         if (!isSiteSupportedInjection(targets, getHref())) return
 
         processInjection().finally(() => {
-          detectPageChanged(processInjection, hrefComparer.bind({ targets }))
+          const intervalId = detectPageChanged(processInjection, hrefComparer.bind({ targets }), allIntervalIds)
+          allIntervalIds.push(intervalId)
         })
       })
       .catch((err) => {
@@ -143,7 +128,8 @@ async function processInjection() {
     removeOldCards()
 
     disconnectExistingObservers()
-    allInjectors = await injectCards()
+    const newInjectors = await injectCards()
+    allInjectors.push(...newInjectors)
   } catch (error) {
     console.error(error)
     console.error("error when injecting set item")
@@ -153,8 +139,9 @@ async function processInjection() {
 function disconnectExistingObservers() {
   if (!allInjectors) return
 
-  allInjectors.forEach((injector) => {
+  allInjectors.forEach((injector, i) => {
     console.debug("getAllObservers: " + injector.getAllObservers().length)
+    allInjectors.splice(i, 1)
     injector.getAllObservers().forEach((observer) => observer.stop())
   })
 }
@@ -299,10 +286,9 @@ const randomTemplateValues = async (increaseOnCall: boolean = false): Promise<Ke
     currentItemPointer++
 
     if (isDisplayedAllItemsInSet()) {
-      await sendClearCachedRandomSetMessage()
-      await initValues()
-
       isNeedRecommendation = true
+      processInjection()
+      return []
     }
   }
 
@@ -324,18 +310,17 @@ const randomTemplateValues = async (increaseOnCall: boolean = false): Promise<Ke
   return templateValues
 }
 
-const isDisplayedAllItemsInSet = () => currentItemPointer + 1 === setInfo?.items?.length
+const isDisplayedAllItemsInSet = () => currentItemPointer + 1 >= (setInfo?.items?.length || 0)
 
 function registerFlashcardEvents() {
   const nextItemGetter = async () => {
+    const item = getItemAtPointer(++currentItemPointer)
     if (isDisplayedAllItemsInSet()) {
-      await sendClearCachedRandomSetMessage()
-      await initValues()
       isNeedRecommendation = true
-      return getItemAtPointer(currentItemPointer++)
+      return null
     }
 
-    return getItemAtPointer(++currentItemPointer)
+    return item
   }
 
   const itemGetter = () => {
@@ -409,7 +394,8 @@ function registerFlashcardEvents() {
       await initValues()
 
       processInjection().finally(() => {
-        detectPageChanged(processInjection, hrefComparer.bind({ allInjectionTargets }))
+        const intervalId = detectPageChanged(processInjection, hrefComparer.bind({ allInjectionTargets }), allIntervalIds)
+        allIntervalIds.push(intervalId)
       })
     }, 5000)
   }
