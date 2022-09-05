@@ -1,9 +1,6 @@
-import {
-  InjectTypes,
-  InjectWrapperClassName,
-} from "@/common/consts/constants"
+import { InjectTypes, InjectWrapperClassName } from "@/common/consts/constants"
 import { KeyValuePair, PageInjectorSiblingSelectorParts } from "@/common/types/types"
-import { formatString, trimQuotes } from "@/common/utils/stringUtils"
+import { encodeBase64, formatString, trimQuotes } from "@/common/utils/stringUtils"
 import { MutationObserverFacade } from "@facades/mutationObserverFacade"
 import { htmlStringToHtmlNode, insertBefore } from "./DomManipulator"
 import { isVisible } from "@/common/utils/domUtils"
@@ -25,6 +22,8 @@ export default class PageInjector {
   private dynamicInjectedCount = 0
 
   private allObservers: MutationObserverFacade[] = []
+
+  private hash: string
 
   /**
    *
@@ -62,6 +61,8 @@ export default class PageInjector {
 
     this.strict = strict || false
     this.waitTimeOutInMs = waitTimeOutInMs
+
+    this.hash = encodeBase64(`${this.rate}${this.type}${this.parentSelector}${this.newGeneratedElementSelector}${this.siblingSelector}${this.strict}${this.waitTimeOutInMs}`)
   }
 
   private parseSelector(selectorString: string) {
@@ -243,6 +244,10 @@ export default class PageInjector {
     this.allObservers.push(observer)
 
     observer.observe()
+  }
+
+  getHash(): string {
+    return this.hash
   }
 
   getAllObservers(): MutationObserverFacade[] {

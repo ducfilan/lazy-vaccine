@@ -233,11 +233,15 @@ async function injectCards(): Promise<PageInjector[]> {
     console.debug("injectCards called, injectionTargets: " + injectionTargets.length)
 
     let injectors: PageInjector[] = []
+    const existingInjectorsHash = allInjectors.map((injector) => injector.getHash())
+    console.debug("existingInjectorsHash: " + existingInjectorsHash)
 
     injectionTargets.forEach(async ({ rate, type, selector, newGeneratedElementSelector, siblingSelector, strict }) => {
       const injector = new PageInjector(rate, type, selector, newGeneratedElementSelector, siblingSelector, strict)
 
-      injectors.push(injector)
+      if (!existingInjectorsHash.includes(injector.getHash())) {
+        injectors.push(injector)
+      }
     })
 
     await Promise.all(injectors.map((i) => i.waitInject(randomTemplateValues)))
@@ -394,7 +398,11 @@ function registerFlashcardEvents() {
       await initValues()
 
       processInjection().finally(() => {
-        const intervalId = detectPageChanged(processInjection, hrefComparer.bind({ allInjectionTargets }), allIntervalIds)
+        const intervalId = detectPageChanged(
+          processInjection,
+          hrefComparer.bind({ allInjectionTargets }),
+          allIntervalIds
+        )
         allIntervalIds.push(intervalId)
       })
     }, 5000)

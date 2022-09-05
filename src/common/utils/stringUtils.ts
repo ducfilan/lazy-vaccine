@@ -62,9 +62,9 @@ export const trimQuotes = (s: string) => s.replace(/^["'](.+(?=["']$))["']$/, '$
 
 export const toTitleCase = (s: string) => s[0].toUpperCase() + s.slice(1)
 
-export const encodeBase64 = (s: string) => window.btoa(unescape(encodeURIComponent(s)))
+export const encodeBase64 = (s: string) => window.btoa(encodeURI(encodeURIComponent(s)))
 
-export const decodeBase64 = (s: string) => decodeURIComponent(escape(window.atob(s)))
+export const decodeBase64 = (s: string) => decodeURIComponent(decodeURI(window.atob(s)))
 
 /**
 * If you don't care about primitives and only objects then this function

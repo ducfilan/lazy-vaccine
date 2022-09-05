@@ -4,7 +4,7 @@ window.chrome = {
   }
 } as any
 
-import { getMainContent, takeFirstLine } from "./stringUtils"
+import { decodeBase64, encodeBase64, getMainContent, takeFirstLine } from "./stringUtils"
 
 test("takeFirstLine from empty string should return an empty string", () => {
   expect(takeFirstLine("")).toBe("")
@@ -33,4 +33,28 @@ test("getMainContent with spaces and newlines at the beginning should return a t
   expect(getMainContent(` 
   
   (test) main content   `)).toBe("main content")
+})
+
+test("encodeBase64 should return base64 encoded string", () => {
+  expect(encodeBase64("test")).toBe("dGVzdA==")
+})
+
+test("decodeBase64 should return base64 decoded string", () => {
+  expect(decodeBase64("dGVzdA==")).toBe("test")
+})
+
+test("encodeBase64 with unicode characters should return base64 encoded string", () => {
+  expect(encodeBase64("tình hình thế nào")).toBe("dCUyNUMzJTI1QUNuaCUyNTIwaCUyNUMzJTI1QUNuaCUyNTIwdGglMjVFMSUyNUJBJTI1QkYlMjUyMG4lMjVDMyUyNUEwbw==")
+})
+
+test("decodeBase64 with unicode characters should return base64 decoded string", () => {
+  expect(decodeBase64("dCUyNUMzJTI1QUNuaCUyNTIwaCUyNUMzJTI1QUNuaCUyNTIwdGglMjVFMSUyNUJBJTI1QkYlMjUyMG4lMjVDMyUyNUEwbw==")).toBe("tình hình thế nào")
+})
+
+test("encodeBase64 empty string should return an empty string", () => {
+  expect(encodeBase64("")).toBe("")
+})
+
+test("decodeBase64 empty string should return an empty string", () => {
+  expect(decodeBase64("")).toBe("")
 })
