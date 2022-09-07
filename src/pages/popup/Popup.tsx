@@ -68,7 +68,7 @@ const PopupPage = () => {
   function renderContent() {
     popupHeightScrollIssueWorkaround()
 
-    if (lastError) return getErrorView(lastError, setLastError, <FirstTime />)
+    if (lastError) return getErrorView(lastError, <FirstTime />)
 
     if (isLoading)
       return (

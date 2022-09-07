@@ -48,9 +48,7 @@ const langCodeToAntLocaleMap = {
 
 const defaultLocale = enUS
 
-export function getErrorView(lastError: any, setLastError: any, defaultView: any) {
-  setLastError(null)
-
+export function getErrorView(lastError: any, defaultView: any) {
   switch (lastError?.code) {
     case "ECONNABORTED":
       if (lastError.message.startsWith("timeout of")) {
@@ -63,9 +61,16 @@ export function getErrorView(lastError: any, setLastError: any, defaultView: any
       break
 
     case "ERR_NETWORK":
+      let errorText = ""
+      if (window.navigator.onLine) {
+        errorText = i18n("network_error_timeout")
+      } else {
+        errorText = i18n("network_error_offline")
+      }
+
       return (
         <div>
-          <NetworkError errorText={i18n("network_error_offline")} />
+          <NetworkError errorText={errorText} />
         </div>
       )
 
@@ -89,7 +94,20 @@ const AppPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
+  window.addEventListener("offline", () => {
+    setUser(null)
+    setLastError({
+      code: "ERR_NETWORK",
+    })
+  })
+
+  window.addEventListener("online", () => {
+    setLastError(null)
+  })
+
   useEffect(() => {
+    if (lastError) return
+
     setIsLoading(true)
 
     getGoogleAuthTokenSilent()
@@ -103,7 +121,10 @@ const AppPage = () => {
             setLocale(langCodeToAntLocaleMap[userInfo.locale] || defaultLocale)
 
             window.heap.identify(userInfo.email)
-            window.heap.addUserProperties({ name: userInfo?.name || "", finished_register_step: userInfo.finishedRegisterStep })
+            window.heap.addUserProperties({
+              name: userInfo?.name || "",
+              finished_register_step: userInfo.finishedRegisterStep,
+            })
           })
           .catch((error) => {
             source !== "popup" &&
@@ -125,7 +146,7 @@ const AppPage = () => {
         setLastError(error)
         setIsLoading(false)
       })
-  }, [])
+  }, [lastError])
 
   return (
     <GlobalContext.Provider value={{ user, setUser, http, setHttp }}>
@@ -163,7 +184,7 @@ const AppPage = () => {
                   isLoading ? (
                     <Skeleton active />
                   ) : (
-                    getErrorView(lastError, setLastError, <BeforeLoginPage />)
+                    getErrorView(lastError, <BeforeLoginPage />)
                   )
                 ) : (
                   <Routes>

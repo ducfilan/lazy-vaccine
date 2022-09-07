@@ -57,7 +57,7 @@ export const GettingStartedPage = () => {
   }, [])
 
   function renderContent() {
-    if (lastError) return getErrorView(lastError, setLastError, <FirstTime />)
+    if (lastError) return getErrorView(lastError, <FirstTime />)
 
     if (isLoading)
       return (
