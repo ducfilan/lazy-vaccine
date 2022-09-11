@@ -342,6 +342,21 @@ export function registerHoverBubblePopoverEvent() {
 const isMoreButton = (element: HTMLElement) =>
   element.classList.contains("inject-card-more-button") || element.closest(".inject-card-more-button")
 
+export function registerHoverBubbleCloseEvent() {
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine-bubble .close-btn", (e: Event) => {
+    sendTrackingMessage("Close inject bubble", null).catch((error) => {
+      console.error(error)
+    })
+
+    e.stopPropagation()
+
+    const closeButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement = closeButton.closest(".lazy-vaccine-bubble")!
+
+    wrapperElement.remove()
+  })
+}
+
 export function registerNextSetEvent(preProcess: () => Promise<void>) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .inject-card-next-set-link", async (e: Event) => {
     e.preventDefault()

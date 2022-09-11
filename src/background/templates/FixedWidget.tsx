@@ -4,10 +4,12 @@ import ShibaTailImg from "@img/emojis/shiba/tail.png"
 import ShibaWanImg from "@img/emojis/shiba/wan.png"
 import { Popover } from "./common/Popover"
 import { AppBasePath, AppPages, ContactFeedbackLink, i18n } from "@/common/consts/constants"
+import { CloseButton } from "./common/CloseButton"
 
 export const FixedWidget = () => {
   return (
     <div className="lazy-vaccine-bubble">
+      <CloseButton />
       <Popover
         styles={{
           bottom: 225,

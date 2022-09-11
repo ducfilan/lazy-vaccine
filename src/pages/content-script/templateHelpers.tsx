@@ -52,7 +52,7 @@ export async function getTemplateFromType(type: string) {
       return renderToString(<SuggestLoginTemplate />)
 
     case OtherItemTypes.NotSubscribed.value:
-      sendTrackingMessage("Render Not subscribed item item").catch(console.error)
+      sendTrackingMessage("Render Not subscribed item").catch(console.error)
       return renderToString(<SuggestSubscribeTemplate />)
 
     case OtherItemTypes.NetworkTimeout.value:

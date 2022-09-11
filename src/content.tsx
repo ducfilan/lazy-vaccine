@@ -28,6 +28,7 @@ import {
   registerSuggestionSearchButtonClickEvent,
   registerSuggestionLoginButtonClickEvent,
   registerHoverBubblePopoverEvent,
+  registerHoverBubbleCloseEvent,
   registerPronounceButtonClickEvent,
   registerTopBarCardButtonsClickEvent,
   registerHoverCardEvent,
@@ -373,6 +374,7 @@ function registerFlashcardEvents() {
   )
 
   registerHoverBubblePopoverEvent()
+  registerHoverBubbleCloseEvent()
 
   registerMorePopoverEvent()
 
