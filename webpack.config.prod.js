@@ -115,7 +115,21 @@ module.exports = ({ heapId }, { mode }) => {
     },
     plugins: [
       new DotenvPlugin({
-        path: isDevelopment ? "./.env" : "./prod.env"
+        path: ((mode) => {
+          switch (mode) {
+            case "development":
+              return "./.env"
+
+            case "none":
+              return "./test.env"
+
+            case "production":
+              return "./prod.env"
+
+            default:
+              return "./.env"
+          }
+        })(mode)
       }),
       new CopyPlugin({
         patterns: [{
