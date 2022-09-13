@@ -272,3 +272,7 @@ declare global {
 }
 
 window.heap = window.heap || {}
+
+export type ContentPageStatistics = {
+  markedStarItemsCount: number,
+}

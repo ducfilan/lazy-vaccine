@@ -210,6 +210,7 @@ export const ItemsInteractionAnswerCorrect = 'answer-correct'
 export const ItemsInteractionAnswerIncorrect = 'answer-incorrect'
 export const ItemsInteractionStar = 'star'
 export const ItemsInteractionFlip = 'flip'
+export const ItemsInteractionReviewStar = "review-star"
 
 export const AchievementChartOrderIndex = {
   LearntItems: 0,

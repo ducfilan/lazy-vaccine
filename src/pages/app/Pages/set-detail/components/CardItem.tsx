@@ -12,7 +12,7 @@ import {
   ItemTypes,
   SettingKeyBackItem,
   SettingKeyFrontItem,
-} from "@/common/consts/constants"
+} from "@consts/constants"
 import { Button, Skeleton } from "antd"
 import { formatString, getMainContent, isValidJson, takeFirstLine } from "@/common/utils/stringUtils"
 import RichTextEditor from "@/pages/app/components/RichTextEditor"
@@ -22,7 +22,7 @@ import useAudio from "@/common/hooks/useAudio"
 import { SetInfo } from "@/common/types/types"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { interactToSetItem } from "@/common/repo/set"
-import { pronounceTextApi } from "@/common/consts/apis"
+import { ApiPronounceText } from "@consts/apis"
 
 const FlashCardFaces = {
   front: "front",
@@ -233,7 +233,7 @@ const TopBar = (props: { currentIndex: number; itemLang: string; cardFace: strin
 
   return (
     <div className="card-item--top-bar-wrapper">
-      <AudioPlayer url={pronounceTextApi(takeFirstLine(getMainContent(getDisplayingItemProperty())), props.itemLang)} />
+      <AudioPlayer url={ApiPronounceText(takeFirstLine(getMainContent(getDisplayingItemProperty())), props.itemLang)} />
       <div className="card-item--top-bar-counter">
         {props.currentIndex + 1} / {setInfo.items!.length}
       </div>

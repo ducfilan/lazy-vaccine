@@ -1,10 +1,8 @@
-import React from "react"
-
 import "./background/templates/css/antd-wrapped.less"
 
 import PageInjector from "./background/PageInjector"
 import InjectionTargetFactory from "./background/InjectionTargetFactory"
-import { InjectionTargetsResponse, KeyValuePair, SetInfo, User } from "./common/types/types"
+import { ContentPageStatistics, InjectionTargetsResponse, KeyValuePair, SetInfo, User } from "./common/types/types"
 import { detectPageChanged, hrefComparer } from "./common/utils/domUtils"
 import {
   sendClearCachedRandomSetMessage,
@@ -55,18 +53,14 @@ import {
 
 import "@/background/templates/css/content.scss"
 
-import { htmlStringToHtmlNode } from "./background/DomManipulator"
 import { getInjectionTargets } from "./common/repo/injection-targets"
-import { renderToString } from "react-dom/server"
-import { FixedWidget } from "./background/templates/FixedWidget"
 import { getRestrictedKeywords } from "./common/repo/restricted-keywords"
 import { appearInPercent, getStorageSyncData } from "./common/utils/utils"
 import CacheKeys from "./common/consts/cacheKeys"
-
-const injectFixedWidgetBubble = () => {
-  const node = htmlStringToHtmlNode(renderToString(<FixedWidget />))
-  document.querySelector("body")?.prepend(node)
-}
+import React from "react"
+import { renderToString } from "react-dom/server"
+import { htmlStringToHtmlNode } from "./background/DomManipulator"
+import { FixedWidget } from "./background/templates/FixedWidget"
 
 let randomItemIndexVisitMap: number[] = []
 let setInfo: SetInfo | null
@@ -80,42 +74,38 @@ let havingSubscribedSets = false
 let lastError: any = null
 let isNeedRecommendation = false
 let identity: User
+let statistics: ContentPageStatistics
 
 let allInjectors: PageInjector[] = []
 let allInjectionTargets: InjectionTargetsResponse
 let allIntervalIds: NodeJS.Timer[] = []
 
-sendIdentityUserMessage()
-  .then((user: User) => {
+// Entry point for injection.
+;(async () => {
+  try {
+    const [{ value: user }, { value: restrictedKeywords }, { value: targets }]: any[] = await Promise.allSettled([
+      sendIdentityUserMessage(),
+      getRestrictedKeywords(),
+      getInjectionTargets(),
+    ])
+
     identity = user
-  })
-  .catch((e) => console.error(e))
-  .finally(() => {
-    getRestrictedKeywords()
-      .then((keywords: string[]) => {
-        const href = getHref()
-        if (keywords.every((keyword: string) => !href.includes(keyword))) {
-          injectFixedWidgetBubble()
-        }
-      })
-      .catch((err) => {
-        console.error(err)
-      })
 
-    getInjectionTargets()
-      .then((targets) => {
-        allInjectionTargets = targets
-        if (!isSiteSupportedInjection(targets, getHref())) return
+    if (restrictedKeywords.every((keyword: string) => !getHref().includes(keyword))) {
+      injectFixedWidgetBubble()
+    }
 
-        processInjection().finally(() => {
-          const intervalId = detectPageChanged(processInjection, hrefComparer.bind({ targets }), allIntervalIds)
-          allIntervalIds.push(intervalId)
-        })
-      })
-      .catch((err) => {
-        console.error(err)
-      })
-  })
+    allInjectionTargets = targets
+    if (!isSiteSupportedInjection(allInjectionTargets, getHref())) return
+
+    processInjection().finally(() => {
+      const intervalId = detectPageChanged(processInjection, hrefComparer.bind({ allInjectionTargets }), allIntervalIds)
+      allIntervalIds.push(intervalId)
+    })
+  } catch (error) {
+    console.error(error)
+  }
+})()
 
 async function processInjection() {
   console.debug("processInjection called")
@@ -162,7 +152,8 @@ async function initValues() {
       havingSubscribedSets = true
 
       setInfo.itemsInteractions?.map((itemInteractions) => {
-        if ((itemInteractions.interactionCount.star || 0) % 2 == 0) {
+        const isMarkedStar = (itemInteractions.interactionCount.star || 0) % 2 == 1
+        if (!isMarkedStar) {
           delete itemInteractions.interactionCount.star
         }
 
@@ -206,6 +197,14 @@ async function determineIsNeedRecommendation() {
     ) {
       console.debug("suggest after no interaction for a long time")
       sendTrackingMessage("Suggest from no interaction")
+      isNeedRecommendation = true
+
+      return
+    }
+
+    // 2% of the cards will be recommendation.
+    if (appearInPercent(0.02)) {
+      sendTrackingMessage("Suggest to subscribe randomly")
       isNeedRecommendation = true
 
       return
@@ -448,4 +447,9 @@ const isItemHidden = (itemId: string): boolean => {
   const itemInteractions = itemsInPageInteractionMap[itemId] || []
 
   return itemInteractions.includes(ItemsInteractionForcedDone) || itemInteractions.includes(ItemsInteractionIgnore)
+}
+
+function injectFixedWidgetBubble() {
+  const node = htmlStringToHtmlNode(renderToString(<FixedWidget />))
+  document.querySelector("body")?.prepend(node)
 }

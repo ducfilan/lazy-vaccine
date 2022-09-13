@@ -1,12 +1,12 @@
 import { AxiosResponse } from "axios"
 import { v4 as uuid } from "uuid"
 
-import Apis from "@consts/apis"
 import GoogleApiUrls from "@consts/googleApiUrls"
 import registerSteps from "@consts/registerSteps"
+import CacheKeys from "@consts/cacheKeys"
 import { NotLoggedInError } from "@consts/errors"
 import { GoogleClientId, LoginTypes, MaxTryAgainSignInCount } from "@consts/constants"
-import CacheKeys from "@consts/cacheKeys"
+import { ApiGetTokenFromCode, ApiRefreshAccessToken, ApiUsers } from "@consts/apis"
 import { GoogleUserInfo, User } from "@/common/types/types"
 import { get, Http } from "./axiosFacade"
 
@@ -40,7 +40,7 @@ export function refreshAccessToken() {
       const refreshToken = obj[CacheKeys.refreshToken]
       if (refreshToken) {
         get<any, AxiosResponse<{ access_token: string }>>(
-          `${Apis.refreshAccessToken(refreshToken)}`
+          `${ApiRefreshAccessToken(refreshToken)}`
         )
           .then((resp) => {
             const access_token = resp?.data?.access_token
@@ -96,7 +96,7 @@ function launchAndGetToken(options: any = {}, tryAgainCount: number = 0) {
         }
       } else if (code) {
         get<any, AxiosResponse<{ access_token: string, refresh_token: string }>>(
-          `${Apis.getTokenFromCode(code)}`
+          `${ApiGetTokenFromCode(code)}`
         ).then((resp) => {
           const { access_token, refresh_token } = resp?.data || {}
 
@@ -137,7 +137,7 @@ export function signIn(this: any, type: string) {
               setHttp && setHttp(http)
 
               const { data: registeredUser } = await http.post<any, AxiosResponse<User>>(
-                Apis.users,
+                ApiUsers,
                 { type, serviceAccessToken: token, finishedRegisterStep: registerSteps.Register, ...userInfo }
               )
 

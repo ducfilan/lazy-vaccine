@@ -1,13 +1,13 @@
 import { AxiosResponse } from "axios"
 import { SetInfo, GeneralInfoCounts, User, UserInteractionSetResponse, UserInteractionSetsResponse, LearningProgressInfo, SearchSetsResponse } from "@/common/types/types"
-import Apis from "@consts/apis"
+import { ApiCountInteractedItems, ApiGeneralInfoCounts, ApiGetUserInteractionSets, ApiItemsInteractions, ApiMe, ApiRandomSet, ApiSuggestSets, ApiUsers } from "@consts/apis"
 import StatusCode from "@consts/statusCodes"
 import { Http } from "@facades/axiosFacade"
 import { InteractionSubscribe, InteractionLike, InteractionDislike } from "@consts/constants"
 import { NotSubscribedError } from "../consts/errors"
 
 export async function getMyInfo(http: Http): Promise<User> {
-  const response = await http.get<any, AxiosResponse<User>>(Apis.me)
+  const response = await http.get<any, AxiosResponse<User>>(ApiMe)
 
   const userInfo = response?.data
   if (!userInfo) throw new Error("cannot get user info")
@@ -16,7 +16,7 @@ export async function getMyInfo(http: Http): Promise<User> {
 }
 
 export async function getUserInfo(http: Http, userId: string): Promise<User> {
-  const response = await http.get<any, AxiosResponse<User>>(`${Apis.users}/${userId}`)
+  const response = await http.get<any, AxiosResponse<User>>(`${ApiUsers}/${userId}`)
 
   const userInfo = response?.data
   if (!userInfo) throw new Error("cannot get user info")
@@ -25,7 +25,7 @@ export async function getUserInfo(http: Http, userId: string): Promise<User> {
 }
 
 export async function getUserInteractionSets(http: Http, userId: string, interaction: string, skip: number, limit: number): Promise<UserInteractionSetsResponse> {
-  const response = await http.get<any, AxiosResponse<UserInteractionSetsResponse>>(Apis.getUserInteractionSets(userId, interaction, skip, limit));
+  const response = await http.get<any, AxiosResponse<UserInteractionSetsResponse>>(ApiGetUserInteractionSets(userId, interaction, skip, limit));
 
   const result = response?.data
   if (!result) {
@@ -51,7 +51,7 @@ export async function getUserInteractionSets(http: Http, userId: string, interac
 }
 
 export async function getUserInteractionRandomSet(http: Http, interaction: string): Promise<SetInfo> {
-  const response = await http.get<any, AxiosResponse<UserInteractionSetResponse>>(Apis.randomSet(interaction))
+  const response = await http.get<any, AxiosResponse<UserInteractionSetResponse>>(ApiRandomSet(interaction))
 
   const result = response?.data
   if (!result) throw new Error("cannot get user interaction sets")
@@ -72,13 +72,13 @@ export async function getUserInteractionRandomSet(http: Http, interaction: strin
 }
 
 export async function updateUserInfo(http: Http, data: Object): Promise<boolean> {
-  const { status } = await http.patch<any, AxiosResponse<boolean>>(Apis.me, data)
+  const { status } = await http.patch<any, AxiosResponse<boolean>>(ApiMe, data)
 
   return status === StatusCode.Ok
 }
 
 export async function getLearningProgressInfo(http: Http, beginDate: string, endDate: string): Promise<LearningProgressInfo[]> {
-  const response = await http.get<any, AxiosResponse<LearningProgressInfo[]>>(Apis.itemsInteractions(beginDate, endDate));
+  const response = await http.get<any, AxiosResponse<LearningProgressInfo[]>>(ApiItemsInteractions(beginDate, endDate));
 
   const learningProgressInfo = response?.data
   if (!learningProgressInfo) throw new Error("cannot get user statistics")
@@ -87,7 +87,7 @@ export async function getLearningProgressInfo(http: Http, beginDate: string, end
 }
 
 export async function getGeneralInfoCounts(http: Http): Promise<GeneralInfoCounts> {
-  const response = await http.get<any, AxiosResponse<GeneralInfoCounts | null>>(Apis.generalInfoCounts);
+  const response = await http.get<any, AxiosResponse<GeneralInfoCounts | null>>(ApiGeneralInfoCounts);
 
   const generalInfoCounts = response?.data
   if (!generalInfoCounts) throw new Error("cannot get user statistics")
@@ -96,7 +96,7 @@ export async function getGeneralInfoCounts(http: Http): Promise<GeneralInfoCount
 }
 
 export async function suggestSets(http: Http, keyword: string, languages: string[], skip: number, limit: number) {
-  const response = await http.get<any, AxiosResponse<SearchSetsResponse>>(`${Apis.suggestSets}?keyword=${keyword}&languages=${languages.join(",")}&skip=${skip}&limit=${limit}`)
+  const response = await http.get<any, AxiosResponse<SearchSetsResponse>>(`${ApiSuggestSets}?keyword=${keyword}&languages=${languages.join(",")}&skip=${skip}&limit=${limit}`)
 
   if (!response?.data) throw new Error(`cannot search sets with keyword: ${keyword}`)
 
@@ -112,4 +112,13 @@ export async function suggestSets(http: Http, keyword: string, languages: string
   })
 
   return resp
+}
+
+export async function countStaredItems(http: Http, interactionInclude: string, interactionIgnore: string): Promise<number> {
+  const response = await http.get<any, AxiosResponse<number>>(ApiCountInteractedItems(interactionInclude, interactionIgnore));
+
+  const count = response?.data
+  if (!count) throw new Error("cannot get user statistics")
+
+  return count
 }

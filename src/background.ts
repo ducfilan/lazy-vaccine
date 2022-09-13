@@ -1,7 +1,7 @@
-import { pronounceTextApi } from "./common/consts/apis"
-import CacheKeys from "./common/consts/cacheKeys"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, HeapIoId, InteractionSubscribe, ItemsInteractionShow, LocalStorageKeyPrefix, LoginTypes, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet } from "./common/consts/constants"
-import { NotLoggedInError, NotSubscribedError } from "./common/consts/errors"
+import { ApiPronounceText } from "@consts/apis"
+import CacheKeys from "@consts/cacheKeys"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, HeapIoId, InteractionSubscribe, ItemsInteractionShow, LocalStorageKeyPrefix, LoginTypes, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet } from "@consts/constants"
+import { NotLoggedInError, NotSubscribedError } from "@consts/errors"
 import { getGoogleAuthToken, getGoogleAuthTokenSilent, signIn } from "./common/facades/authFacade"
 import { Http } from "./common/facades/axiosFacade"
 import { interactToSet, interactToSetItem, undoInteractToSet } from "./common/repo/set"
@@ -155,7 +155,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       getGoogleAuthTokenSilent().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
         http
-          .get(pronounceTextApi(request.arg.text, request.arg.langCode), {
+          .get(ApiPronounceText(request.arg.text, request.arg.langCode), {
             responseType: "arraybuffer",
             headers: {
               "Content-Type": "audio/mpeg",
