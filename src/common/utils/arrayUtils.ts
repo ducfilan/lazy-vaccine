@@ -27,7 +27,7 @@ export const shuffleArray = (a: any[]) => {
   return a
 }
 
-export const generateNumbersArray = (size: number): number[] => Array.from(Array(size).keys())
+export const generateNumbersArray = (size: number, start: number = 0): number[] => Array.from(Array(size).keys()).map(num => num + start)
 
 export const isArraysEqual = (a1: any[], a2: any[]): boolean => {
   if (!a2)

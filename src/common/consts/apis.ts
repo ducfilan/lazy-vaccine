@@ -14,10 +14,10 @@ export const ApiLogin = "/users/login"
 export const ApiMe = "/users/me"
 export const ApiPreSignedUrl = "/images/pre-signed-url"
 export const ApiGetUserInteractionSets = (userId: string, interaction: string, skip: number, limit: number) => `${ApiUsers}/${userId}/sets?interaction=${interaction}&skip=${skip}&limit=${limit}`
-export const ApiRandomSet = (interaction: string) => `${ApiMe}/random-set?interaction=${interaction}`
-export const ApiItemsInteractions = (beginDate: string, endDate: string) => `items-statistics?beginDate=${beginDate}&endDate=${endDate}`
-export const ApiCountInteractedItems = (interactionInclude: string, interactionIgnore: string) => `count?interactionInclude=${interactionInclude}&interactionIgnore=${interactionIgnore}`
-export const ApiGetInteractedItems = (interactionInclude: string, interactionIgnore: string, skip: number = 0, limit: number = 10) => `count?interactionInclude=${interactionInclude}&interactionIgnore=${interactionIgnore}&skip=${skip}&limit=${limit}`
+export const ApiRandomSet = (interaction: string, itemsSkip: number, itemsLimit: number) => `${ApiMe}/random-set?interaction=${interaction}&itemsSkip=${itemsSkip}&itemsLimit=${itemsLimit}`
+export const ApiItemsInteractions = (beginDate: string, endDate: string) => `/items-statistics?beginDate=${beginDate}&endDate=${endDate}`
+export const ApiCountInteractedItems = (interactionInclude: string, interactionIgnore: string) => `/items-interactions/count?interactionInclude=${interactionInclude}&interactionIgnore=${interactionIgnore}`
+export const ApiGetInteractedItems = (interactionInclude: string, interactionIgnore: string, skip: number = 0, limit: number = 10) => `/items-interactions/items?interactionInclude=${interactionInclude}&interactionIgnore=${interactionIgnore}&skip=${skip}&limit=${limit}`
 export const ApiGeneralInfoCounts = "sets-statistics"
 export const ApiUploadTestResult = (setId: string) => `/interactions/${setId}/upload-result`
 export const ApiGetMissions = "/missions"

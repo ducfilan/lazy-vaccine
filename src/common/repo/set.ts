@@ -3,7 +3,7 @@ import { SearchSetsResponse, SetInfo, SetsInCategoryResponse, TestResult, TopSet
 import { AxiosResponse } from "axios"
 import { ApiGetSetsInCategory, ApiInteraction, ApiItemInteraction, ApiSets, ApiTopSets, ApiTopSetsInCategory, ApiUploadTestResult } from "@consts/apis"
 import { ParamError } from "@consts/errors"
-import { DefaultLangCode, InteractionDislike, InteractionLike, InteractionSubscribe } from "@consts/constants"
+import { DefaultLangCode, InteractionDislike, InteractionLike, InteractionSubscribe, IntMax } from "@consts/constants"
 import CacheKeys from "@consts/cacheKeys"
 
 export async function createSet(http?: Http, setInfo?: SetInfo): Promise<string> {
@@ -25,10 +25,10 @@ export async function editSet(http?: Http, setInfo?: SetInfo): Promise<string> {
   return setInfoMinimized._id
 }
 
-export async function getSetInfo(http: Http, setId: string): Promise<SetInfo> {
+export async function getSetInfo(http: Http, setId: string, itemsSkip: number = 0, itemsLimit: number = IntMax): Promise<SetInfo> {
   if (!http || !setId) throw new ParamError()
 
-  const response = await http.get<any, AxiosResponse<SetInfo>>(`${ApiSets}/${setId}`)
+  const response = await http.get<any, AxiosResponse<SetInfo>>(`${ApiSets}/${setId}?itemsSkip=${itemsSkip}&itemsLimit=${itemsLimit}`)
 
   const setInfo = response?.data
   if (!setInfo) throw new Error("cannot get set info")

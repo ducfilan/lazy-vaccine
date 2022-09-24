@@ -1,6 +1,6 @@
 import { sendMessage } from "@/background/MessagingFacade"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet } from "@/common/consts/constants"
-import { SetInfo } from "@/common/types/types"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet, ChromeMessageTypeCountInteractedItems, ChromeMessageTypeGetInteractedItems, ChromeMessageTypeGetSetSilent, ItemsLimitPerGet } from "@/common/consts/constants"
+import { SetInfo, SetInfoItem } from "@/common/types/types"
 
 export function sendClearCachedRandomSetMessage() {
   return new Promise<string>((resolve, reject) => {
@@ -11,9 +11,15 @@ export function sendClearCachedRandomSetMessage() {
 /**
  * Get the subscribed set randomly without showing login popup when no token is cached.
  */
-export function sendGetRandomSubscribedSetSilentMessage() {
+export function sendGetRandomSubscribedSetSilentMessage(itemsSkip: number, itemsLimit: number) {
   return new Promise<SetInfo | null>((resolve, reject) => {
-    sendMessage(ChromeMessageTypeGetRandomSetSilent, null, resolve, reject)
+    sendMessage(ChromeMessageTypeGetRandomSetSilent, { itemsSkip, itemsLimit }, resolve, reject)
+  })
+}
+
+export function sendGetSetSilentMessage(setId: string, itemsSkip: number, itemsLimit: number) {
+  return new Promise<SetInfo | null>((resolve, reject) => {
+    sendMessage(ChromeMessageTypeGetSetSilent, { setId, itemsSkip, itemsLimit }, resolve, reject)
   })
 }
 
@@ -80,5 +86,17 @@ export function sendTrackingMessage(name: string, metadata?: { [key: string]: an
 export function sendGetRecommendationsMessage(keyword: string, languages: string[], skip: number, limit: number) {
   return new Promise<any>((resolve, reject) => {
     sendMessage(ChromeMessageTypeSuggestSets, { keyword, languages, skip, limit }, resolve, reject)
+  })
+}
+
+export function sendCountInteractedItemsMessage(interactionInclude: string, interactionIgnore: string) {
+  return new Promise<number>((resolve, reject) => {
+    sendMessage(ChromeMessageTypeCountInteractedItems, { interactionInclude, interactionIgnore }, resolve, reject)
+  })
+}
+
+export function sendGetStarredItemsMessage(interactionInclude: string, interactionIgnore: string, skip: number = 0, limit: number = ItemsLimitPerGet) {
+  return new Promise<SetInfoItem[]>((resolve, reject) => {
+    sendMessage(ChromeMessageTypeGetInteractedItems, { interactionInclude, interactionIgnore, skip, limit }, resolve, reject)
   })
 }

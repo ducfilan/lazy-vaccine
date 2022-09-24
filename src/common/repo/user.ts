@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios"
-import { SetInfo, GeneralInfoCounts, User, UserInteractionSetResponse, UserInteractionSetsResponse, LearningProgressInfo, SearchSetsResponse } from "@/common/types/types"
-import { ApiCountInteractedItems, ApiGeneralInfoCounts, ApiGetUserInteractionSets, ApiItemsInteractions, ApiMe, ApiRandomSet, ApiSuggestSets, ApiUsers } from "@consts/apis"
+import { SetInfo, GeneralInfoCounts, User, UserInteractionSetResponse, UserInteractionSetsResponse, LearningProgressInfo, SearchSetsResponse, SetInfoItem } from "@/common/types/types"
+import { ApiCountInteractedItems, ApiGeneralInfoCounts, ApiGetInteractedItems, ApiGetUserInteractionSets, ApiItemsInteractions, ApiMe, ApiRandomSet, ApiSuggestSets, ApiUsers } from "@consts/apis"
 import StatusCode from "@consts/statusCodes"
 import { Http } from "@facades/axiosFacade"
 import { InteractionSubscribe, InteractionLike, InteractionDislike } from "@consts/constants"
@@ -50,8 +50,8 @@ export async function getUserInteractionSets(http: Http, userId: string, interac
   return result
 }
 
-export async function getUserInteractionRandomSet(http: Http, interaction: string): Promise<SetInfo> {
-  const response = await http.get<any, AxiosResponse<UserInteractionSetResponse>>(ApiRandomSet(interaction))
+export async function getUserInteractionRandomSet(http: Http, interaction: string, itemsSkip: number, itemsLimit: number): Promise<SetInfo> {
+  const response = await http.get<any, AxiosResponse<UserInteractionSetResponse>>(ApiRandomSet(interaction, itemsSkip, itemsLimit))
 
   const result = response?.data
   if (!result) throw new Error("cannot get user interaction sets")
@@ -114,11 +114,20 @@ export async function suggestSets(http: Http, keyword: string, languages: string
   return resp
 }
 
-export async function countStaredItems(http: Http, interactionInclude: string, interactionIgnore: string): Promise<number> {
+export async function countInteractedItems(http: Http, interactionInclude: string, interactionIgnore: string): Promise<number> {
   const response = await http.get<any, AxiosResponse<number>>(ApiCountInteractedItems(interactionInclude, interactionIgnore));
 
   const count = response?.data
   if (!count) throw new Error("cannot get user statistics")
 
   return count
+}
+
+export async function getInteractedItems(http: Http, interactionInclude: string, interactionIgnore: string, skip: number, limit: number): Promise<SetInfoItem[]> {
+  const response = await http.get<any, AxiosResponse<SetInfoItem[]>>(ApiGetInteractedItems(interactionInclude, interactionIgnore, skip, limit));
+
+  const items = response?.data
+  if (!items) throw new Error("cannot get user statistics")
+
+  return items
 }

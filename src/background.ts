@@ -1,11 +1,11 @@
 import { ApiPronounceText } from "@consts/apis"
 import CacheKeys from "@consts/cacheKeys"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, HeapIoId, InteractionSubscribe, ItemsInteractionShow, LocalStorageKeyPrefix, LoginTypes, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet } from "@consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, HeapIoId, InteractionSubscribe, ItemsInteractionShow, LocalStorageKeyPrefix, LoginTypes, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet, ChromeMessageTypeCountInteractedItems, ChromeMessageTypeGetInteractedItems, SetTypeNormal, ChromeMessageTypeGetSetSilent } from "@consts/constants"
 import { NotLoggedInError, NotSubscribedError } from "@consts/errors"
 import { getGoogleAuthToken, getGoogleAuthTokenSilent, signIn } from "./common/facades/authFacade"
 import { Http } from "./common/facades/axiosFacade"
-import { interactToSet, interactToSetItem, undoInteractToSet } from "./common/repo/set"
-import { getMyInfo, getUserInteractionRandomSet, suggestSets } from "./common/repo/user"
+import { getSetInfo, interactToSet, interactToSetItem, undoInteractToSet } from "./common/repo/set"
+import { countInteractedItems, getInteractedItems, getMyInfo, getUserInteractionRandomSet, suggestSets } from "./common/repo/user"
 import { SetInfo, User } from "./common/types/types"
 import { getStorageSyncData } from "./common/utils/utils"
 
@@ -64,23 +64,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
       break
 
-    case ChromeMessageTypeGetRandomSet:
-      getGoogleAuthToken().then((token: string) => {
-        const http = new Http(token, LoginTypes.google)
-        getRandomSubscribedSet(http).then((set) => {
-          sendResponse({ success: true, result: set })
-        }).catch(error => {
-          sendResponse({ success: false, error: toResponseError(error) })
-        })
-      }).catch((error: Error) => {
-        sendResponse({ success: false, error: toResponseError(error) })
-      })
-      break
-
     case ChromeMessageTypeGetRandomSetSilent:
       getGoogleAuthTokenSilent().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
-        getRandomSubscribedSet(http).then((set) => {
+        const { itemsSkip, itemsLimit } = request.arg
+
+        getRandomSubscribedSet(http, itemsSkip, itemsLimit).then((set) => {
+          set && (set.setType = SetTypeNormal)
           sendResponse({ success: true, result: set })
         }).catch(error => {
           sendResponse({ success: false, error: toResponseError(error) })
@@ -192,6 +182,48 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       })
       break
 
+    case ChromeMessageTypeCountInteractedItems:
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        countInteractedItems(http, request.arg.interactionInclude, request.arg.interactionIgnore).then((result) => {
+          sendResponse({ success: true, result })
+        }).catch(error => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+      }).catch((error: Error) => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
+      break
+
+    case ChromeMessageTypeGetInteractedItems:
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        const { interactionInclude, interactionIgnore, skip, limit } = request.arg
+
+        getInteractedItems(http, interactionInclude, interactionIgnore, skip, limit).then((result) => {
+          sendResponse({ success: true, result })
+        }).catch(error => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+      }).catch((error: Error) => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
+      break
+
+    case ChromeMessageTypeGetSetSilent:
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        const { setId, itemsSkip, itemsLimit } = request.arg
+
+        getSetInfo(http, setId, itemsSkip, itemsLimit).then((set) => {
+          sendResponse({ success: true, result: set })
+        }).catch(error => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+      }).catch((error: Error) => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
+
     default:
       break
   }
@@ -199,12 +231,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true
 })
 
-async function getRandomSubscribedSet(http: Http): Promise<SetInfo | null> {
+async function getRandomSubscribedSet(http: Http, itemsSkip: number, itemsLimit: number): Promise<SetInfo | null> {
   // TODO: Handle situation when set has edited, item ids got changed.
   let randomSetInfo = getCachedSet()
 
   if (!randomSetInfo) {
-    randomSetInfo = await getUserInteractionRandomSet(http, InteractionSubscribe)
+    randomSetInfo = await getUserInteractionRandomSet(http, InteractionSubscribe, itemsSkip, itemsLimit)
     setCachedSet(randomSetInfo)
   }
 

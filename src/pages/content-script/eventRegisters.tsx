@@ -31,9 +31,12 @@ import {
   ItemsInteractionIgnore,
   ItemsInteractionNext,
   ItemsInteractionPrev,
+  ItemsInteractionReviewStar,
   ItemsInteractionStar,
   ItemTypes,
   OtherItemTypes,
+  SetTypeNormal,
+  SetTypeReviewStarredItems,
 } from "@/common/consts/constants"
 import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
 import { redirectToUrlInNewTab } from "@/common/utils/domUtils"
@@ -74,7 +77,7 @@ export function registerFlipCardEvent() {
 
 export function registerNextItemEvent(
   nextItemGetter: () => Promise<SetInfoItem | null>,
-  itemGetter: () => SetInfoItem | null,
+  itemGetter: () => Promise<SetInfoItem | null>,
   setGetter: () => SetInfo | null,
   extraValues: { [key: string]: any }
 ) {
@@ -86,13 +89,20 @@ export function registerNextItemEvent(
 
     showLoadingCard(wrapperElement)
 
-    const currentItem = itemGetter()
+    const currentItem = await itemGetter()
     if (!currentItem) return // TODO: Notice problem.
 
     sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext).catch((error) => {
       // TODO: handle error case.
       console.error(error)
     })
+
+    if (currentItem.setType === SetTypeReviewStarredItems) {
+      sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionReviewStar).catch((error) => {
+        // TODO: handle error case.
+        console.error(error)
+      })
+    }
 
     let nextItem: SetInfoItem | null = null
     try {
@@ -173,9 +183,11 @@ function itemToDisplayItem(item: SetInfoItem, setInfo: SetInfo): SetInfoItem {
 function turnItemToQuestionAndAnswersItem(nextItem: SetInfoItem, setInfo: SetInfo | null): SetInfoItem {
   let qaItem = {
     _id: nextItem._id,
+    isStared: nextItem.isStared,
     type: ItemTypes.QnA.value,
     setId: setInfo?._id,
     setTitle: setInfo?.name,
+    setType: setInfo?.setType,
   } as SetInfoItem
 
   switch (nextItem.type) {
@@ -237,8 +249,8 @@ function getRandomPositions(total: number, size: number): number[] {
 }
 
 export function registerPrevItemEvent(
-  prevItemGetter: () => SetInfoItem | null,
-  itemGetter: () => SetInfoItem | null,
+  prevItemGetter: () => Promise<SetInfoItem | null>,
+  itemGetter: () => Promise<SetInfoItem | null>,
   setInfo: () => SetInfo | null
 ) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--prev-button", async (e: Event) => {
@@ -249,7 +261,7 @@ export function registerPrevItemEvent(
 
     showLoadingCard(wrapperElement)
 
-    const prevItem = prevItemGetter()
+    const prevItem = await prevItemGetter()
     if (!prevItem) return
 
     if (e.isTrusted) {
@@ -407,7 +419,7 @@ function clickNextItemButton(wrapperElement: HTMLElement | null) {
 }
 
 export function registerIgnoreEvent(
-  itemGetter: () => SetInfoItem | null,
+  itemGetter: () => Promise<SetInfoItem | null>,
   recommendationSetter: (value: boolean) => void,
   updateItemInteraction: (itemId: string) => void
 ) {
@@ -417,7 +429,7 @@ export function registerIgnoreEvent(
     const ignoreButton = e.target as HTMLElement
     const wrapperElement: HTMLElement | null = ignoreButton.closest(InjectWrapperClassName)
 
-    const item = itemGetter()
+    const item = await itemGetter()
     if (!item) {
       recommendationSetter(true)
       clickNextItemButton(wrapperElement)
@@ -435,7 +447,7 @@ export function registerIgnoreEvent(
 }
 
 export function registerGotItemEvent(
-  itemGetter: () => SetInfoItem | null,
+  itemGetter: () => Promise<SetInfoItem | null>,
   recommendationSetter: (value: boolean) => void,
   updateItemInteraction: (itemId: string) => void
 ) {
@@ -445,7 +457,7 @@ export function registerGotItemEvent(
     const gotItemButton = e.target as HTMLElement
     const wrapperElement: HTMLElement | null = gotItemButton.closest(InjectWrapperClassName)
 
-    const item = itemGetter()
+    const item = await itemGetter()
     if (!item) {
       recommendationSetter(true)
       clickNextItemButton(wrapperElement)
@@ -463,7 +475,7 @@ export function registerGotItemEvent(
 }
 
 export function registerStarEvent(
-  itemGetter: () => SetInfoItem | null,
+  itemGetter: () => Promise<SetInfoItem | null>,
   updateItemInteraction: (itemId: string) => void
 ) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--star", async (e: Event) => {
@@ -471,7 +483,7 @@ export function registerStarEvent(
     const starBtn = (e.target as HTMLElement).closest("button")
     starBtn?.classList.toggle("stared")
 
-    const item = itemGetter()
+    const item = await itemGetter()
     if (!item) return // TODO: Notice problem.
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionStar)
@@ -878,6 +890,41 @@ export function registerDislikeEvent(callback: Function) {
       }
 
       wrapperElement.dataset.isDislike = (!isDisliked).toString()
+    }
+  )
+}
+
+export function registerReviewStarredItemsEvent(getItem: () => Promise<SetInfoItem | null>) {
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `${InjectWrapperClassName} .lzv-btn-review-starred-items`,
+    async (e: Event) => {
+      e.preventDefault()
+      e.stopPropagation()
+
+      const reviewButton = e.target as HTMLElement
+      const wrapperElement: HTMLElement = reviewButton.closest(InjectWrapperClassName)!
+
+      showLoadingCard(wrapperElement)
+
+      sendTrackingMessage("Review starred items").catch((error) => {
+        console.error(error)
+      })
+
+      const item = await getItem()
+      if (!item) return
+
+      const templateValues = await toTemplateValues(item, generateTemplateExtraValues(item))
+
+      getTemplateFromType(item.type)
+        .then((template) => {
+          const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
+          wrapperElement?.replaceWith(newItemNode)
+        })
+        .catch((error) => {
+          console.error(error)
+        })
     }
   )
 }

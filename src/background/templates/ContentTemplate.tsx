@@ -10,7 +10,7 @@ import { Skeleton } from "antd"
 
 export const ContentTemplate = () => {
   return (
-    <div className="lazy-vaccine" data-set-id=":setId" data-item-id=":itemId">
+    <div className="lazy-vaccine" data-set-id=":setId" data-item-id=":itemId" data-set-type=":setType">
       <DisclaimerInfo />
       <Popover
         styles={{

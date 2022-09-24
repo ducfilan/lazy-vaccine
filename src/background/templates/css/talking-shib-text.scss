@@ -24,7 +24,7 @@ $white: #fff;
       height: 0;
       left: -20px;
       right: auto;
-      top: 30px;
+      top: min(38px, 30%);
       bottom: auto;
       border: 12px solid;
       border-color: $primary $primary transparent transparent;

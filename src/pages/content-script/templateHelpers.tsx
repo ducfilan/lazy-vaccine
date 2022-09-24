@@ -23,6 +23,7 @@ import { QnATemplate } from "@/background/templates/QandATemplate"
 import { SuggestLoginTemplate } from "@/background/templates/SuggestLoginTemplate"
 import { SuggestSetsTemplate } from "@/background/templates/SuggestSetsTemplate"
 import { SuggestSubscribeTemplate } from "@/background/templates/SuggestSubscribeTemplate"
+import { SuggestReviewStaredItems } from "@/background/templates/SuggestReviewStaredItems"
 
 export async function getTemplateFromType(type: string) {
   console.debug("getTemplate called, type: " + type)
@@ -63,6 +64,10 @@ export async function getTemplateFromType(type: string) {
     case OtherItemTypes.SuggestionSets.value:
       sendTrackingMessage("Render Suggestion sets item").catch(console.error)
       return renderToString(<SuggestSetsTemplate />)
+
+    case OtherItemTypes.ReviewStaredItems.value:
+      sendTrackingMessage("Render SuggestionReviewStaredItems item").catch(console.error)
+      return renderToString(<SuggestReviewStaredItems />)
 
     default:
       return ""
@@ -214,4 +219,11 @@ export function getRecommendationTemplateValues(setInfo: SetInfo | null, identit
         })
     }
   })
+}
+
+export function getSuggestReviewTemplateValues(starCount: number): KeyValuePair[] {
+  return [
+    { key: "type", value: OtherItemTypes.ReviewStaredItems.value },
+    { key: "star_count", value: starCount.toString() },
+  ]
 }

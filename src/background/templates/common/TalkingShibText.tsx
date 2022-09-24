@@ -13,7 +13,15 @@ export const TalkingShibText = ({
 }) => {
   return (
     <div className="talking-shib-wrapper" {...othersProps}>
-      <img src={chrome.runtime.getURL(shibImgUrl)} style={{ width: 100, verticalAlign: "top" }} />
+      <img
+        src={chrome.runtime.getURL(shibImgUrl)}
+        style={{
+          width: "100%",
+          maxWidth: 169,
+          minWidth: 60,
+          verticalAlign: "top",
+        }}
+      />
       <div className="talk-bubble tri-right left-in">
         <div className="talk-text">
           <p>{text}</p>

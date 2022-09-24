@@ -1,4 +1,5 @@
 import SupportingLanguages from "@consts/supportingLanguages"
+import { SetTypeNormal, SetTypeReviewStarredItems } from "../consts/constants"
 
 export type KeyValuePair = {
   key: string
@@ -111,6 +112,8 @@ export type UserInteractionSetResponse = {
 
 export type LanguageCode = keyof typeof SupportingLanguages.Set
 
+export type SetType = typeof SetTypeNormal | typeof SetTypeReviewStarredItems
+
 export type SetInfo = {
   _id: string
   name: string
@@ -122,7 +125,7 @@ export type SetInfo = {
   creatorName?: string
   description?: string
   tags?: string[]
-  items?: SetInfoItem[]
+  items: SetInfoItem[]
   fromLanguage: LanguageCode
   toLanguage?: LanguageCode
   captchaToken?: string | null
@@ -136,13 +139,14 @@ export type SetInfo = {
     [key: string]: number
   },
   actions?: string[],
-  total?: number,
+  totalItemsCount?: number,
   itemsInteractions?: {
     itemId: string,
     interactionCount: {
       [key: string]: number
     }
   }[],
+  setType?: SetType
 }
 
 export type SetInfoItem = {
@@ -153,6 +157,8 @@ export type SetInfoItem = {
     answer: string
     [key: string]: any
   }[],
+  fromLanguage?: string,
+  toLanguage?: string,
   [key: string]: any
 }
 
@@ -274,5 +280,8 @@ declare global {
 window.heap = window.heap || {}
 
 export type ContentPageStatistics = {
-  markedStarItemsCount: number,
+  starredItemsCount?: number,
+  reviewedItemsCount?: number, // Current session.
+  showItemCount?: number
+  interactItemCount?: number,
 }
