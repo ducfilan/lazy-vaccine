@@ -25,7 +25,7 @@ export function sendGetSetSilentMessage(setId: string, itemsSkip: number, itemsL
 
 export function sendInteractItemMessage(setId: string, itemId: string, action: string) {
   return new Promise<{ success: boolean }>((resolve, reject) => {
-    sendMessage(ChromeMessageTypeInteractItem, { setId, itemId, action }, resolve, reject)
+    sendMessage(ChromeMessageTypeInteractItem, { setId, itemId, action, href: window?.location?.href || "unknown" }, resolve, reject)
   })
 }
 

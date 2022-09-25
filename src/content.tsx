@@ -265,9 +265,9 @@ async function determineIsNeedRecommendation() {
 function determineIsNeedReviewStaredItems() {
   if (isNeedReviewStaredItems) return
 
-  const minimumShowedItemToStartReview = 10
+  const minimumStarredItemToStartReview = 10
 
-  if ((statistics.starredItemsCount || 0) >= minimumShowedItemToStartReview && appearInPercent(0.2)) {
+  if ((statistics.starredItemsCount || 0) >= minimumStarredItemToStartReview && appearInPercent(0.2)) {
     isNeedReviewStaredItems = true
   }
 

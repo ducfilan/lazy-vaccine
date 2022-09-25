@@ -87,7 +87,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case ChromeMessageTypeInteractItem:
       getGoogleAuthTokenSilent().then((token: string) => {
-        window.heap.track(request.arg.action === ItemsInteractionShow ? "Show item" : "Interact item", { interaction: request.arg.action, itemId: request.arg.itemId })
+        const { action: interaction, itemId, href } = request.arg
+
+        window.heap.track(request.arg.action === ItemsInteractionShow ? "Show item" : "Interact item", { interaction, itemId, href })
         increaseSyncStorageCount(request.arg.action === ItemsInteractionShow ? CacheKeys.showItemCount : CacheKeys.interactItemCount)
 
         const http = new Http(token, LoginTypes.google)
