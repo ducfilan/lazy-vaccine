@@ -9,6 +9,7 @@ import { GoogleClientId, LoginTypes, MaxTryAgainSignInCount } from "@consts/cons
 import { ApiGetTokenFromCode, ApiRefreshAccessToken, ApiUsers } from "@consts/apis"
 import { GoogleUserInfo, User } from "@/common/types/types"
 import { get, Http } from "./axiosFacade"
+import { logout } from "@/common/repo/user"
 
 export function getGoogleAuthToken(options: any = {}, tryAgainCount: number = 0) {
   return new Promise<any>((resolve, reject) => {
@@ -145,8 +146,6 @@ export function signIn(this: any, type: string) {
               resolve(registeredUser)
             })
             .catch((error) => {
-              signOut()
-
               reject(error)
             })
         })
@@ -159,24 +158,33 @@ export function signIn(this: any, type: string) {
   })
 }
 
-export function signOut(callback: () => void = () => { }) {
+export function signOut(http: Http, callback: () => void = () => { }) {
   getGoogleAuthTokenSilent()
     .then((token: string) => {
-      fetch(`${GoogleApiUrls.revokeToken}${token}`).catch((error) => { console.error(error) }).finally(() => {
-        chrome.identity.removeCachedAuthToken({ token: token })
-      })
+      logout(http)
+        .then(() => {
+          clearLoginInfoCache()
+          window.heap.resetIdentity()
+          revokeToken(token)
+        })
+        .catch((error) => console.log(error))
+        .finally(callback)
     })
     .catch((error) => {
       // TODO: Notice user.
       console.error(error)
-    }).finally(() => {
-      chrome.storage.sync.remove([CacheKeys.accessToken, CacheKeys.refreshToken])
-      chrome.storage.sync.set({ [CacheKeys.isSignedOut]: true })
-
-      window.heap.resetIdentity()
-
-      callback()
     })
+}
+
+export function clearLoginInfoCache() {
+  chrome.storage.sync.remove([CacheKeys.accessToken, CacheKeys.refreshToken])
+  chrome.storage.sync.set({ [CacheKeys.isSignedOut]: true })
+}
+
+export function revokeToken(token: string) {
+  fetch(`${GoogleApiUrls.revokeToken}${token}`).catch((error) => { console.error(error) }).finally(() => {
+    chrome.identity.removeCachedAuthToken({ token: token })
+  })
 }
 
 // TODO: Handle onSignInChanged https://developer.chrome.com/docs/extensions/reference/identity/#event-onSignInChanged

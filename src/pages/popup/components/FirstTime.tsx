@@ -4,7 +4,7 @@ import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
 import { Button, Alert, Carousel } from "antd"
 import { GoogleOutlined } from "@ant-design/icons"
-import { signIn } from "@facades/authFacade"
+import { clearLoginInfoCache, signIn } from "@facades/authFacade"
 import { AppBasePath, AppPages, i18n, LoginTypes } from "@consts/constants"
 import { User } from "@/common/types/types"
 
@@ -41,6 +41,7 @@ function FirstTime() {
         setUser(u)
       })
       .catch((error) => {
+        clearLoginInfoCache()
         console.error(error)
         setIsShowLoginError(true)
       })

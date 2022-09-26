@@ -2,12 +2,12 @@ import { ApiPronounceText } from "@consts/apis"
 import CacheKeys from "@consts/cacheKeys"
 import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, HeapIoId, InteractionSubscribe, ItemsInteractionShow, LocalStorageKeyPrefix, LoginTypes, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet, ChromeMessageTypeCountInteractedItems, ChromeMessageTypeGetInteractedItems, SetTypeNormal, ChromeMessageTypeGetSetSilent } from "@consts/constants"
 import { NotLoggedInError, NotSubscribedError } from "@consts/errors"
-import { getGoogleAuthToken, getGoogleAuthTokenSilent, signIn } from "./common/facades/authFacade"
-import { Http } from "./common/facades/axiosFacade"
-import { getSetInfo, interactToSet, interactToSetItem, undoInteractToSet } from "./common/repo/set"
-import { countInteractedItems, getInteractedItems, getMyInfo, getUserInteractionRandomSet, suggestSets } from "./common/repo/user"
+import { clearLoginInfoCache, getGoogleAuthToken, getGoogleAuthTokenSilent, signIn } from "@/common/facades/authFacade"
+import { Http } from "@/common/facades/axiosFacade"
+import { getSetInfo, interactToSet, interactToSetItem, undoInteractToSet } from "@/common/repo/set"
+import { countInteractedItems, getInteractedItems, getMyInfo, getUserInteractionRandomSet, suggestSets } from "@/common/repo/user"
 import { SetInfo, User } from "./common/types/types"
-import { getStorageSyncData } from "./common/utils/utils"
+import { getStorageSyncData } from "@/common/utils/utils"
 
 let lastAudio: HTMLAudioElement
 
@@ -48,6 +48,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           sendResponse({ success: true, result: user })
         })
         .catch((error) => {
+          clearLoginInfoCache()
           sendResponse({ success: false, error: toResponseError(error) })
         })
 

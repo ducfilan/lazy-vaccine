@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios"
 import { SetInfo, GeneralInfoCounts, User, UserInteractionSetResponse, UserInteractionSetsResponse, LearningProgressInfo, SearchSetsResponse, SetInfoItem } from "@/common/types/types"
-import { ApiCountInteractedItems, ApiGeneralInfoCounts, ApiGetInteractedItems, ApiGetUserInteractionSets, ApiItemsInteractions, ApiMe, ApiRandomSet, ApiSuggestSets, ApiUsers } from "@consts/apis"
+import { ApiCountInteractedItems, ApiGeneralInfoCounts, ApiGetInteractedItems, ApiGetUserInteractionSets, ApiItemsInteractions, ApiLogout, ApiMe, ApiRandomSet, ApiSuggestSets, ApiUsers } from "@consts/apis"
 import StatusCode from "@consts/statusCodes"
 import { Http } from "@facades/axiosFacade"
 import { InteractionSubscribe, InteractionLike, InteractionDislike } from "@consts/constants"
@@ -73,6 +73,12 @@ export async function getUserInteractionRandomSet(http: Http, interaction: strin
 
 export async function updateUserInfo(http: Http, data: Object): Promise<boolean> {
   const { status } = await http.patch<any, AxiosResponse<boolean>>(ApiMe, data)
+
+  return status === StatusCode.Ok
+}
+
+export async function logout(http: Http): Promise<boolean> {
+  const { status } = await http.post<any, AxiosResponse>(ApiLogout)
 
   return status === StatusCode.Ok
 }

@@ -9,7 +9,7 @@ import { GoogleOutlined } from "@ant-design/icons"
 import BlockQuote from "@/common/components/BlockQuote"
 import PopupHeader from "@/pages/popup/components/Header"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
-import { signIn } from "@/common/facades/authFacade"
+import { clearLoginInfoCache, signIn } from "@/common/facades/authFacade"
 import { User } from "@/common/types/types"
 
 export default function FirstTime() {
@@ -29,6 +29,7 @@ export default function FirstTime() {
         setUser(u)
       })
       .catch((error) => {
+        clearLoginInfoCache()
         console.error(error)
         setIsShowLoginError(true)
       })

@@ -5,7 +5,7 @@ import ShibaTailImg from "@img/emojis/shiba/tail.png"
 import { Button } from "antd"
 import { GoogleOutlined } from "@ant-design/icons"
 
-import { signIn } from "@/common/facades/authFacade"
+import { clearLoginInfoCache, signIn } from "@/common/facades/authFacade"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { User } from "@/common/types/types"
 
@@ -47,6 +47,7 @@ export const BeforeLoginPage = () => {
                       setUser(user)
                     })
                     .catch((error: any) => {
+                      clearLoginInfoCache()
                       console.error(error)
                     })
                     .finally(() => {

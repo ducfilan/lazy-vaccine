@@ -3,6 +3,7 @@ import * as React from "react"
 import { MinusCircleFilled } from "@ant-design/icons"
 import Flag from "@/common/components/Flag"
 
+/* ABANDONED */
 function LanguageItem({
   isRemovable,
   code,

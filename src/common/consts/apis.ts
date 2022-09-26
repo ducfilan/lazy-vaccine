@@ -11,6 +11,7 @@ export const ApiSuggestSets = "/users/me/suggestions"
 export const ApiTopSets = (langCode: string) => `/top-sets?lang=${langCode}`
 export const ApiItems = "/items"
 export const ApiLogin = "/users/login"
+export const ApiLogout = "/users/logout"
 export const ApiMe = "/users/me"
 export const ApiPreSignedUrl = "/images/pre-signed-url"
 export const ApiGetUserInteractionSets = (userId: string, interaction: string, skip: number, limit: number) => `${ApiUsers}/${userId}/sets?interaction=${interaction}&skip=${skip}&limit=${limit}`

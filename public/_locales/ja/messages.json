@@ -480,5 +480,23 @@
   },
   "user_profile_update_pages_success": {
     "message": "設定が正常に更新されました。"
+  },
+  "suggest_review_stared_items": {
+    "message": "あなたは:star_count個にスターを付けました。彼らはあなたがいなくて寂しいので、ハグが必要です。 今すぐ見直しますか？"
+  },
+  "suggest_review_yes_button_1": {
+    "message": "はい、今すぐ見ます"
+  },
+  "suggest_review_yes_button_2": {
+    "message": "はい、しかしボタンではありません"
+  },
+  "my_starred_items": {
+    "message": "スター付きアイテム"
+  },
+  "getting_started_top_languages": {
+    "message": ":primary_languageのほかに、もっと知っているはずです。\n全部選べる？"
+  },
+  "getting_started_other_languages": {
+    "message": "間違っている場合は、ここから選択してください"
   }
 }

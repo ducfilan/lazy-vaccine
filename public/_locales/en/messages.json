@@ -488,12 +488,18 @@
     "message": "You have starred :star_count items, they miss you and need a hug. Do you want to review now?"
   },
   "suggest_review_yes_button_1": {
-    "message": "Yes, I miss them too"
+    "message": "Yes, review them now"
   },
   "suggest_review_yes_button_2": {
     "message": "Also yes, but not a button"
   },
   "my_starred_items": {
     "message": "My starred items"
+  },
+  "getting_started_top_languages": {
+    "message": "Besides :primary_language, I bet you know some more.\nLet's pick all!"
+  },
+  "getting_started_other_languages": {
+    "message": "Want more? Select your languages from here"
   }
 }

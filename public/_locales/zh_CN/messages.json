@@ -480,5 +480,23 @@
   },
   "user_profile_update_pages_success": {
     "message": "您的偏好已成功更新！"
+  },
+  "suggest_review_stared_items": {
+    "message": "您已为 :star_count 个项目加注星标，他们想念您，需要一个拥抱。 您现在要审核吗？"
+  },
+  "suggest_review_yes_button_1": {
+    "message": "是的，现在查看它们"
+  },
+  "suggest_review_yes_button_2": {
+    "message": "也可以，但不是按钮"
+  },
+  "my_starred_items": {
+    "message": "我加星标的项目"
+  },
+  "getting_started_top_languages": {
+    "message": "除了:primary_language，我敢打赌你还懂一些。\n你能全部挑出来吗？"
+  },
+  "getting_started_other_languages": {
+    "message": "如果我错了，请从这里选择您的语言"
   }
 }

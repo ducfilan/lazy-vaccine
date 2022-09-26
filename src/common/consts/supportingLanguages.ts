@@ -11,6 +11,8 @@ type _ = {
   }
 }
 
+export const TopLanguages = ["vi", "en", "ja", "ko", "zh"]
+
 const SupportingLanguages: _ = {
   UI: [
     {

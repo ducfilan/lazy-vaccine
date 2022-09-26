@@ -477,5 +477,23 @@
   },
   "user_profile_update_pages_success": {
     "message": "Thay đổi của bạn đã được cập nhật thành công!"
+  },
+  "suggest_review_stared_items": {
+    "message": "Bạn đã đánh dấu sao :star_count mục, bọn nó bảo muốn gặp bạn và cần một cái ôm. Bạn có muốn ôn lại luôn không?"
+  },
+  "suggest_review_yes_button_1": {
+    "message": "Có, vào việc luôn nào"
+  },
+  "suggest_review_yes_button_2": {
+    "message": "Vẫn là có, nhưng không phải nút"
+  },
+  "my_starred_items": {
+    "message": "Các mục đã đánh dấu sao"
+  },
+  "getting_started_top_languages": {
+    "message": "Ngoài :primary_language, mình cá là bạn biết thêm một vài trong số này.\nHãy chọn hết nha bạn!"
+  },
+  "getting_started_other_languages": {
+    "message": "Nếu mình sai, hãy chọn thêm ở đây nha"
   }
 }

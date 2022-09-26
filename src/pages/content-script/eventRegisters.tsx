@@ -185,7 +185,7 @@ function turnItemToQuestionAndAnswersItem(nextItem: SetInfoItem, setInfo: SetInf
     _id: nextItem._id,
     isStared: nextItem.isStared,
     type: ItemTypes.QnA.value,
-    setId: setInfo?._id,
+    setId: setInfo?._id || nextItem.setId, // Fallback in case setInfo is a dynamic set (review starred items set)
     setTitle: setInfo?.name,
     setType: setInfo?.setType,
   } as SetInfoItem
