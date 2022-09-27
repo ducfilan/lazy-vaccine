@@ -379,6 +379,12 @@
   "common_success": {
     "message": "Thành công"
   },
+  "common_all_items": {
+    "message": "Tất cả"
+  },
+  "common_starred_only": {
+    "message": "Đã đánh dấu sao"
+  },
   "seed_growing_conditions": {
     "message": "Điều kiện phát triển"
   },

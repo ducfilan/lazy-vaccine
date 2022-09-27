@@ -181,8 +181,8 @@ async function initValues() {
       havingSubscribedSets = true
 
       setInfo.itemsInteractions?.map((itemInteractions) => {
-        const isMarkedStar = (itemInteractions.interactionCount.star || 0) % 2 == 1
-        if (!isMarkedStar) {
+        const isStarred = (itemInteractions.interactionCount.star || 0) % 2 == 1
+        if (!isStarred) {
           delete itemInteractions.interactionCount.star
         }
 

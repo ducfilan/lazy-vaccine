@@ -29,9 +29,7 @@ import { Locale } from "antd/lib/locale-provider"
 import SearchResultPage from "./Pages/search-result/SearchResult"
 import UserProfilePage from "./Pages/user-profile/UserProfile"
 import CategorySetsPage from "./Pages/category-sets/CategorySets"
-import SeedDetailPage from "./Pages/seed-detail/SeedDetail"
 import TestSetPage from "./Pages/test-set/TestSet"
-import MarketPlacePage from "./Pages/marketplace/MarketPlacePage"
 import { BeforeLoginPage } from "./Pages/before-login/BeforeLoginPage"
 import { GettingStartedPage } from "./Pages/getting-started/GettingStartedPage"
 import SupportingLanguages from "@/common/consts/supportingLanguages"
@@ -196,8 +194,6 @@ const AppPage = () => {
                     <Route path={AppPages.UserProfile.path} element={<UserProfilePage />} />
                     <Route path={AppPages.MySpace.path} element={<UserProfilePage />} />
                     <Route path={AppPages.CategorySets.path} element={<CategorySetsPage />} />
-                    <Route path={AppPages.MarketPlace.path} element={<MarketPlacePage />} />
-                    <Route path={AppPages.SeedDetail.path} element={<SeedDetailPage />} />
                     <Route path={AppPages.TestSet.path} element={<TestSetPage />} />
                     <Route path={AppPages.GettingStarted.path} element={<GettingStartedPage />} />
                   </Routes>

@@ -364,6 +364,12 @@
   "common_success": {
     "message": "成功"
   },
+  "common_all_items": {
+    "message": "所有项目"
+  },
+  "common_starred_only": {
+    "message": "仅加星标"
+  },
   "seed_growing_conditions": {
     "message": "生长条件"
   },

@@ -367,6 +367,12 @@
   "common_success": {
     "message": "Success"
   },
+  "common_all_items": {
+    "message": "All items"
+  },
+  "common_starred_only": {
+    "message": "Starred only"
+  },
   "seed_growing_conditions": {
     "message": "Growing conditions"
   },

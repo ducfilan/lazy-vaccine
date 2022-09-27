@@ -26,7 +26,9 @@ const SetDetailPage = () => {
 
     getSetInfo(http, setId!)
       .then(setSetInfo)
-      .catch(() => {
+      .catch((error) => {
+        console.error(error)
+
         notification["error"]({
           message: i18n("error"),
           description: i18n("unexpected_error_message"),

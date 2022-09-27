@@ -3,7 +3,7 @@ import { SearchSetsResponse, SetInfo, SetsInCategoryResponse, TestResult, TopSet
 import { AxiosResponse } from "axios"
 import { ApiGetSetsInCategory, ApiInteraction, ApiItemInteraction, ApiSets, ApiTopSets, ApiTopSetsInCategory, ApiUploadTestResult } from "@consts/apis"
 import { ParamError } from "@consts/errors"
-import { DefaultLangCode, InteractionDislike, InteractionLike, InteractionSubscribe, IntMax } from "@consts/constants"
+import { DefaultLangCode, InteractionDislike, InteractionLike, InteractionSubscribe, IntMax, ItemsInteractionStar } from "@consts/constants"
 import CacheKeys from "@consts/cacheKeys"
 
 export async function createSet(http?: Http, setInfo?: SetInfo): Promise<string> {
@@ -39,7 +39,37 @@ export async function getSetInfo(http: Http, setId: string, itemsSkip: number = 
     setInfo.isDisliked = !setInfo.isLiked && setInfo.actions?.includes(InteractionDislike)
   }
 
+  fillItemsInteractions(setInfo)
+
   return setInfo
+}
+
+function fillItemsInteractions(setInfo: SetInfo) {
+  let itemIdToInteractionMap: {
+    [itemId: string]: {
+      [key: string]: number
+    }
+  } = {}
+
+  setInfo.itemsInteractions?.forEach((itemInteractions) => {
+    const isStarred = (itemInteractions.interactionCount.star || 0) % 2 == 1
+    if (!isStarred) {
+      delete itemInteractions.interactionCount.star
+    }
+
+    itemIdToInteractionMap[itemInteractions.itemId] = itemInteractions.interactionCount
+  })
+
+  setInfo.items.forEach((item, i) => {
+    const interactionCount = itemIdToInteractionMap[item._id]
+    if (!interactionCount) return
+
+    if (interactionCount[ItemsInteractionStar]) {
+      setInfo.items[i].isStarred = true
+    }
+
+    setInfo.items[i].interactionCount = interactionCount
+  })
 }
 
 export async function getTopSets(http: Http, langCode: string = DefaultLangCode): Promise<SetInfo[]> {

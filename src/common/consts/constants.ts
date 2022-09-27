@@ -55,12 +55,6 @@ export const AppPages = {
     path: "/category/:categoryId",
     isSideNav: false,
   },
-  SeedDetail: {
-    key: "seed-detail",
-    name: "Seed detail",
-    path: "/seed-detail/:seedId",
-    isSideNav: false,
-  },
   TestSet: {
     key: "test-set",
     name: "Test set",

@@ -159,6 +159,7 @@ export type SetInfoItem = {
   }[],
   fromLanguage?: string,
   toLanguage?: string,
+  isStarred?: boolean,
   [key: string]: any
 }
 

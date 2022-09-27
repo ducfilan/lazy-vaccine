@@ -382,6 +382,12 @@
   "common_success": {
     "message": "成功"
   },
+  "common_all_items": {
+    "message": "全てのアイテム"
+  },
+  "common_starred_only": {
+    "message": "スター付きのみ"
+  },
   "seed_growing_conditions": {
     "message": "成長条件"
   },
