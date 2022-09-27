@@ -1,13 +1,76 @@
-import React from "react"
-import { Col, Row, Checkbox, Card, Divider, Tabs } from "antd"
+import React, { useMemo, useState } from "react"
+import { Col, Row, Checkbox, Card, Divider, Tabs, Button } from "antd"
+import { StarFilled } from "@ant-design/icons"
 import { useSetDetailContext } from "../contexts/SetDetailContext"
-import { i18n, ItemTypes } from "@/common/consts/constants"
+import { i18n, ItemsInteractionStar, ItemTypes } from "@/common/consts/constants"
 import RichTextEditor from "@/pages/app/components/RichTextEditor"
 import { isValidJson } from "@/common/utils/stringUtils"
-import { SetInfoItem } from "@/common/types/types"
+import { SetInfo, SetInfoItem } from "@/common/types/types"
+import { interactToSetItem } from "@/common/repo/set"
+import { useGlobalContext } from "@/common/contexts/GlobalContext"
+import { Http } from "@/common/facades/axiosFacade"
 
-const turnItemToElements = (items: SetInfoItem[]) => {
-  return items.map((item, si) => {
+export default function Items() {
+  const { http } = useGlobalContext()
+  const { setInfo } = useSetDetailContext()
+  const [displayItems, setDisplayItems] = useState<SetInfoItem[] | undefined>(setInfo?.items)
+
+  const [TabAllItems, TabStarredItems] = ["1", "2"]
+
+  if (!http || !setInfo?.items) return <></>
+
+  const displayItemElements = useMemo(
+    () => turnItemToElements.call({ http, setInfo, setDisplayItems }, displayItems),
+    [displayItems]
+  )
+
+  return (
+    <div className="set-detail--items pad-16px">
+      <Tabs
+        defaultActiveKey={TabAllItems}
+        centered
+        onChange={(activeKey: string) => {
+          switch (activeKey) {
+            case TabAllItems:
+              setDisplayItems(setInfo.items)
+              break
+
+            case TabStarredItems:
+              setDisplayItems(setInfo.items.filter((item) => item.isStarred))
+              break
+
+            default:
+              break
+          }
+        }}
+        items={[
+          {
+            label: i18n("common_all_items"),
+            key: TabAllItems,
+            children: <>{displayItemElements}</>,
+          },
+          {
+            label: i18n("common_starred_only"),
+            key: TabStarredItems,
+            children: <>{displayItemElements}</>,
+          },
+        ]}
+      />
+    </div>
+  )
+}
+
+function turnItemToElements(
+  this: { http: Http | null | undefined; setInfo: SetInfo; setDisplayItems: any },
+  items: SetInfoItem[] | undefined
+) {
+  const { http, setInfo, setDisplayItems } = this
+
+  if (!items) return []
+
+  let itemElements: JSX.Element[] = []
+
+  items.forEach((item, i) => {
     let innerContent
 
     switch (item.type) {
@@ -52,44 +115,30 @@ const turnItemToElements = (items: SetInfoItem[]) => {
       case ItemTypes.Content.value:
         innerContent = <RichTextEditor readOnly value={item.content} />
         break
-
-      default:
-        return <></>
     }
 
-    return (
-      <Card key={si} hoverable className="bot-16px">
+    itemElements.push(
+      <Card key={i} hoverable className="bot-16px">
         {innerContent}
+        <Button
+          type="link"
+          className={`set-detail--item--star ${item.isStarred ? "starred" : ""}`}
+          icon={<StarFilled />}
+          onClick={() => {
+            if (!http || !setInfo) return
+
+            items[i].isStarred = !item.isStarred
+
+            setDisplayItems([...items])
+
+            interactToSetItem(http, setInfo._id, item._id, ItemsInteractionStar).catch((error) => {
+              console.error(error)
+            })
+          }}
+        />
       </Card>
     )
   })
+
+  return itemElements
 }
-
-const Items = () => {
-  const { setInfo } = useSetDetailContext()
-
-  if (!setInfo?.items) return <></>
-
-  return (
-    <div className="set-detail--items pad-16px">
-      <Tabs
-        defaultActiveKey="1"
-        centered
-        items={[
-          {
-            label: i18n("common_all_items"),
-            key: "1",
-            children: <>{turnItemToElements(setInfo.items)}</>,
-          },
-          {
-            label: i18n("common_starred_only"),
-            key: "2",
-            children: <>{turnItemToElements(setInfo.items.filter((item) => item.isStarred))}</>,
-          },
-        ]}
-      />
-    </div>
-  )
-}
-
-export default Items

@@ -377,3 +377,22 @@
     }
   }
 }
+
+.set-detail--item--star {
+  color: $grey-lighter;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: $grey-lighter;
+    opacity: 0.8;
+  }
+
+  &.starred {
+    color: $gold;
+  }
+}

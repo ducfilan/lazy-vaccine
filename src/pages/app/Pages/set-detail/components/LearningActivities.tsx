@@ -8,7 +8,6 @@ import { i18n } from "@/common/consts/constants"
 const { TabPane } = Tabs
 
 const LearningActivities = () => {
-  const { http } = useGlobalContext()
   const { setInfo } = useSetDetailContext()
 
   if (!setInfo) {
