@@ -370,6 +370,15 @@
   "common_starred_only": {
     "message": "仅加星标"
   },
+  "common_copy": {
+    "message": "复制"
+  },
+  "common_copied": {
+    "message": "已复制"
+  },
+  "common_flip": {
+    "message": "翻动"
+  },
   "seed_growing_conditions": {
     "message": "生长条件"
   },

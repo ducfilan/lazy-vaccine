@@ -388,6 +388,15 @@
   "common_starred_only": {
     "message": "スター付きのみ"
   },
+  "common_copy": {
+    "message": "コピー"
+  },
+  "common_copied": {
+    "message": "コピーしました"
+  },
+  "common_flip": {
+    "message": "ひっくり返す"
+  },
   "seed_growing_conditions": {
     "message": "成長条件"
   },

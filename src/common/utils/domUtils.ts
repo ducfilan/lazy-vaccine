@@ -69,13 +69,9 @@ export function hrefComparer(this: any, oldHref: string, newHref: string) {
 export async function writeToClipboard(text: string): Promise<void> {
   if (!navigator.clipboard) {
     fallbackCopyTextToClipboard(text)
-    return
+    return Promise.resolve()
   }
-  navigator.clipboard.writeText(text).then(function () {
-    console.log('Async: Copying to clipboard was successful!')
-  }, function (err) {
-    console.error('Async: Could not copy text: ', err)
-  })
+  return navigator.clipboard.writeText(text)
 }
 
 function fallbackCopyTextToClipboard(text: string) {

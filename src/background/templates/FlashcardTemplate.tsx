@@ -24,8 +24,8 @@ const TopBar = () => {
       <Button type="primary" shape="circle" icon={<Icon component={SpeakerIcon} />} className="btn-pronounce" />
       <div />
       <div className="card-item--top-bar--right-wrapper">
-        <Button shape="circle" icon={<RedoOutlined />} className="btn-flip" />
-        <Button shape="circle" icon={<CopyOutlined />} className="btn-copy" />
+        <Button shape="circle" icon={<RedoOutlined />} data-tooltip={i18n("common_flip")} className="btn-flip" />
+        <Button shape="circle" icon={<CopyOutlined />} data-tooltip={i18n("common_copy")} className="btn-copy" />
       </div>
     </div>
   )

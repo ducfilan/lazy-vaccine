@@ -385,6 +385,15 @@
   "common_starred_only": {
     "message": "Đã đánh dấu sao"
   },
+  "common_copy": {
+    "message": "Sao chép"
+  },
+  "common_copied": {
+    "message": "Đã sao chép"
+  },
+  "common_flip": {
+    "message": "Lật thẻ"
+  },
   "seed_growing_conditions": {
     "message": "Điều kiện phát triển"
   },

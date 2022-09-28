@@ -77,7 +77,11 @@ export function registerFlipCardEvent() {
       console.error(error)
     })
 
-    writeToClipboard(cardFace.innerText)
+    writeToClipboard(cardFace.innerText).then(() => {
+      wrapperElement
+        .querySelector<HTMLElement>(".btn-copy")
+        ?.setAttribute("data-tooltip", `${i18n("common_copied")}: ${cardFace.innerText}`)
+    })
   }
 
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card .card--face .card--content", flipCard)

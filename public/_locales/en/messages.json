@@ -370,6 +370,15 @@
   "common_all_items": {
     "message": "All items"
   },
+  "common_copy": {
+    "message": "Copy"
+  },
+  "common_copied": {
+    "message": "Copied"
+  },
+  "common_flip": {
+    "message": "Flip"
+  },
   "common_starred_only": {
     "message": "Starred only"
   },
