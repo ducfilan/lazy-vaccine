@@ -205,6 +205,9 @@
   "category_sets_total": {
     "message": ":total sets in :category_name"
   },
+  "category_no_sets": {
+    "message": "So sad that we have no sets in :category_name right now.\nYou can be the first one to create now!"
+  },
   "search_result_not_found": {
     "message": "Your search - :keyword - did not match any documents.\nSuggestions:\n - Make sure that all words are spelled correctly.\n- Try different keywords."
   },

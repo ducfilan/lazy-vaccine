@@ -1,5 +1,12 @@
 export const AppBasePath = "pages/lazy-vaccine.html#"
 
+export const AppPageCreateSet = {
+  key: "create-set",
+  name: "Create set",
+  path: "/create-set",
+  isSideNav: false,
+}
+
 export const AppPages = {
   Home: {
     key: "side-home",
@@ -13,12 +20,7 @@ export const AppPages = {
     path: "/sets",
     isSideNav: false,
   },
-  CreateSet: {
-    key: "create-set",
-    name: "Create set",
-    path: "/create-set",
-    isSideNav: false,
-  },
+  CreateSet: AppPageCreateSet,
   EditSet: {
     key: "edit-set",
     name: "Edit set",
