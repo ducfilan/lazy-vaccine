@@ -55,9 +55,10 @@ $black: #000;
         height: 0;
       }
 
-      .btn-flip-wrapper {
+      .card-item--top-bar--right-wrapper {
         display: flex;
         justify-content: flex-end;
+        gap: 10px;
       }
     }
   }

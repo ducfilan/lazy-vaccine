@@ -2,7 +2,7 @@ import React from "react"
 
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
 import { Button, Divider, Skeleton } from "antd"
-import Icon, { RedoOutlined } from "@ant-design/icons"
+import Icon, { RedoOutlined, CopyOutlined } from "@ant-design/icons"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 import SpeakerIcon from "@img/ui/fa/speaker.svg"
 
@@ -23,8 +23,9 @@ const TopBar = () => {
     <div className="card-item--top-bar-wrapper">
       <Button type="primary" shape="circle" icon={<Icon component={SpeakerIcon} />} className="btn-pronounce" />
       <div />
-      <div className="btn-flip-wrapper">
+      <div className="card-item--top-bar--right-wrapper">
         <Button shape="circle" icon={<RedoOutlined />} className="btn-flip" />
+        <Button shape="circle" icon={<CopyOutlined />} className="btn-copy" />
       </div>
     </div>
   )

@@ -26,6 +26,7 @@ import {
   InteractionSubscribe,
   ItemsInteractionAnswerCorrect,
   ItemsInteractionAnswerIncorrect,
+  ItemsInteractionCopyText,
   ItemsInteractionFlip,
   ItemsInteractionForcedDone,
   ItemsInteractionIgnore,
@@ -39,19 +40,15 @@ import {
   SetTypeReviewStarredItems,
 } from "@/common/consts/constants"
 import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
-import { redirectToUrlInNewTab } from "@/common/utils/domUtils"
+import { redirectToUrlInNewTab, writeToClipboard } from "@/common/utils/domUtils"
 
 export function registerFlipCardEvent() {
   const flipCard = (e: Event) => {
-    let cardFace = e.target as HTMLElement
-    if (!cardFace.classList.contains("card--face")) {
-      cardFace = cardFace.closest(".card--face") as HTMLElement
-    }
+    const cardFace = (e.target as HTMLElement).closest<HTMLElement>(".card--face")!
     const wrapperElement: HTMLElement = cardFace.closest(InjectWrapperClassName)!
 
     sendInteractItemMessage(wrapperElement.dataset.setId!, wrapperElement.dataset.itemId!, ItemsInteractionFlip).catch(
       (error) => {
-        // TODO: handle error case.
         console.error(error)
       }
     )
@@ -71,8 +68,21 @@ export function registerFlipCardEvent() {
     cardFace.closest(".flash-card-wrapper")?.classList.toggle("is-flipped")
   }
 
+  const copyCardText = (e: Event) => {
+    const cardFace = (e.target as HTMLElement).closest<HTMLElement>(".card--face")!
+    const wrapperElement: HTMLElement = cardFace.closest(InjectWrapperClassName)!
+
+    const { setId, itemId } = wrapperElement.dataset
+    sendInteractItemMessage(setId!, itemId!, ItemsInteractionCopyText).catch((error) => {
+      console.error(error)
+    })
+
+    writeToClipboard(cardFace.innerText)
+  }
+
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card .card--face .card--content", flipCard)
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card-item--top-bar-wrapper .btn-flip", flipCard)
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine .card-item--top-bar-wrapper .btn-copy", copyCardText)
 }
 
 export function registerNextItemEvent(

@@ -213,6 +213,8 @@ export const ItemsInteractionStar = 'star'
 export const ItemsInteractionFlip = 'flip'
 export const ItemsInteractionReviewStar = "review-star"
 
+export const ItemsInteractionCopyText = "copy-card-text"
+
 export const AchievementChartOrderIndex = {
   LearntItems: 0,
   IncorrectItems: 1,
