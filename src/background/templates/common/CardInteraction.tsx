@@ -15,6 +15,7 @@ export const CardInteraction = () => {
         type="primary"
         className="card--interactions--star :isStared"
         size="large"
+        data-tooltip={i18n("card_star_tooltip")}
         icon={<StarFilled />}
       ></Button>
 

@@ -513,5 +513,8 @@
   },
   "getting_started_other_languages": {
     "message": "如果我错了，请从这里选择您的语言"
+  },
+  "card_star_tooltip": {
+    "message": "保存以备日后提醒"
   }
 }

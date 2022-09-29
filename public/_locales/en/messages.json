@@ -519,5 +519,8 @@
   },
   "getting_started_other_languages": {
     "message": "Want more? Select your languages from here"
+  },
+  "card_star_tooltip": {
+    "message": "Save to remind later"
   }
 }

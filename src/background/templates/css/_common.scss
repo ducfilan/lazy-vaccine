@@ -92,6 +92,7 @@ $black: #000;
     .card--interactions--star {
       color: #d8d8d8 !important;
       border-color: #ffdf50 !important;
+      z-index: 2;
 
       &:hover {
         color: #fde476;

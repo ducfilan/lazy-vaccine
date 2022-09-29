@@ -510,5 +510,8 @@
   },
   "getting_started_other_languages": {
     "message": "Nếu mình sai, hãy chọn thêm ở đây nha"
+  },
+  "card_star_tooltip": {
+    "message": "Lưu để xem lại sau"
   }
 }

@@ -513,5 +513,8 @@
   },
   "getting_started_other_languages": {
     "message": "間違っている場合は、ここから選択してください"
+  },
+  "card_star_tooltip": {
+    "message": "保存して後で思い出させる"
   }
 }
