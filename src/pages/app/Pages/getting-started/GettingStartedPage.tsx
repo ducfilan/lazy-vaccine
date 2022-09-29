@@ -21,6 +21,8 @@ export const GettingStartedPage = () => {
 
   const { user, setUser, setHttp } = useGlobalContext()
 
+  const [finishedRegisterStep, setFinishedRegisterStep] = useState<number>(RegisterSteps.Install)
+
   useEffect(() => {
     window.heap.track("Open getting started page")
   }, [])
@@ -36,9 +38,13 @@ export const GettingStartedPage = () => {
         getMyInfo(newHttp)
           .then((userInfo) => {
             setUser(userInfo)
+            setLastError(null)
 
             window.heap.identify(userInfo.email)
-            window.heap.addUserProperties({ name: userInfo?.name || "", finished_register_step: userInfo.finishedRegisterStep })
+            window.heap.addUserProperties({
+              name: userInfo?.name || "",
+              finished_register_step: userInfo.finishedRegisterStep,
+            })
           })
           .catch((error) => {
             setLastError(error)
@@ -56,6 +62,11 @@ export const GettingStartedPage = () => {
       })
   }, [])
 
+  useEffect(() => {
+    setLastError(null)
+    setFinishedRegisterStep(user?.finishedRegisterStep || RegisterSteps.Install)
+  }, [user])
+
   function renderContent() {
     if (lastError) return getErrorView(lastError, <FirstTime />)
 
@@ -65,8 +76,6 @@ export const GettingStartedPage = () => {
           <Loading />
         </div>
       )
-
-    const finishedRegisterStep = user?.finishedRegisterStep
 
     switch (finishedRegisterStep) {
       case RegisterSteps.ChooseLanguages:
