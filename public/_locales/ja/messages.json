@@ -292,6 +292,18 @@
   "common_back": {
     "message": "戻る"
   },
+  "common_close": {
+    "message": "閉じる"
+  },
+  "common_next": {
+    "message": "次"
+  },
+  "common_skip": {
+    "message": "スキップ"
+  },
+  "common_understand": {
+    "message": "分かりました!"
+  },
   "common_create": {
     "message": "作成"
   },
@@ -513,6 +525,9 @@
   },
   "getting_started_other_languages": {
     "message": "間違っている場合は、ここから選択してください"
+  },
+  "getting_started_guide_subscribe": {
+    "message": "学習したいセットを<span>登録</span>してください。あとは私がお手伝いします!\n例えば、<span>登録</span>してを下通りに表示されます　👇"
   },
   "card_star_tooltip": {
     "message": "保存して後で思い出させる"

@@ -289,6 +289,18 @@
   "common_back": {
     "message": "Quay lại"
   },
+  "common_close": {
+    "message": "Đóng"
+  },
+  "common_next": {
+    "message": "Tiếp theo"
+  },
+  "common_skip": {
+    "message": "Bỏ qua"
+  },
+  "common_understand": {
+    "message": "Mình hiểu rồi nha!"
+  },
   "common_create": {
     "message": "Tạo"
   },
@@ -510,6 +522,9 @@
   },
   "getting_started_other_languages": {
     "message": "Nếu mình sai, hãy chọn thêm ở đây nha"
+  },
+  "getting_started_guide_subscribe": {
+    "message": "Hãy <span>ĐĂNG KÍ</span> bài học mà bạn muốn học nha, còn lại để mình lo!\nVí dụ, sau khi <span>ĐĂNG KÍ</span>, khi bạn lướt web, mình sẽ hiện nội dung bài học 👇"
   },
   "card_star_tooltip": {
     "message": "Lưu để xem lại sau"

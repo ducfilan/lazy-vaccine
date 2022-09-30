@@ -166,7 +166,7 @@ const SetItemCardLong = (props: { set: SetInfo }) => {
           <Row align="bottom">
             <Button
               type="primary"
-              className="is-uppercase"
+              className="is-uppercase btn-subscribe"
               icon={<AimOutlined />}
               loading={isLoading}
               onClick={() => {

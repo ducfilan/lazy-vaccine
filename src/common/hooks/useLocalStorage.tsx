@@ -8,12 +8,13 @@ import { addDuration } from "@/common/utils/stringUtils"
  * @param expireIn Expire in literal string format, [number]d [number]h [number]m [number]s
  * @returns
  */
-function useLocalStorage<T>(key: string, initialValue: T, expireIn: string): any {
+function useLocalStorage<T>(key: string, initialValue: T, expireIn?: string): any {
   const __prefix__ = LocalStorageKeyPrefix
 
-  const isExpired = (expireAtDateString: string) => new Date() > new Date(expireAtDateString)
+  const isExpired = (expireAtDateString: string | null) =>
+    expireAtDateString && new Date() > new Date(expireAtDateString)
 
-  const [storedValue, setStoredValue] = useState<{ value: T; expireAt: Date }>(() => {
+  const [storedValue, setStoredValue] = useState<{ value: T; expireAt: Date | null }>(() => {
     try {
       const cachedObjectJson = window.localStorage.getItem(`${__prefix__}${key}`)
       if (!cachedObjectJson) return null
@@ -27,14 +28,14 @@ function useLocalStorage<T>(key: string, initialValue: T, expireIn: string): any
     }
   })
 
-  const setValue = (value: T | ((val: { value: T; expireAt: Date }) => { value: T; expireAt: Date })) => {
+  const setValue = (value: T | ((val: { value: T; expireAt: Date | null }) => { value: T; expireAt: Date | null })) => {
     try {
       const valueToStore =
         value instanceof Function
           ? value(storedValue)
           : {
               value,
-              expireAt: addDuration(new Date(), expireIn),
+              expireAt: expireIn ? addDuration(new Date(), expireIn) : null,
             }
 
       setStoredValue(valueToStore)

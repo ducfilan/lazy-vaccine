@@ -259,6 +259,18 @@
   "common_back": {
     "message": "回去"
   },
+  "common_close": {
+    "message": "关"
+  },
+  "common_next": {
+    "message": "下一个"
+  },
+  "common_skip": {
+    "message": "跳过"
+  },
+  "common_understand": {
+    "message": "我明白了！"
+  },
   "common_create": {
     "message": "创建"
   },
@@ -513,6 +525,9 @@
   },
   "getting_started_other_languages": {
     "message": "如果我错了，请从这里选择您的语言"
+  },
+  "getting_started_guide_subscribe": {
+    "message": "订阅你想学的套装，剩下的交给我来帮你！\n这是订阅后的示例 👇"
   },
   "card_star_tooltip": {
     "message": "保存以备日后提醒"

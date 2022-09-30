@@ -11,6 +11,9 @@ import shibaWakeUpIcon from "@img/emojis/shiba/wake.png"
 import { formatString } from "@/common/utils/stringUtils"
 import { ColorPrimary, i18n } from "@/common/consts/constants"
 import SupportingLanguages from "@/common/consts/supportingLanguages"
+import useLocalStorage from "@/common/hooks/useLocalStorage"
+import { CacheKeyIsNeedShowSubscribeGuide } from "@/common/consts/cacheKeys"
+import GettingStartedJoyride from "./GettingStartedJoyride"
 
 const SearchResultItems = (props: { keyword: string; languages: string[] }) => {
   if (!props.keyword) {
@@ -28,6 +31,11 @@ const SearchResultItems = (props: { keyword: string; languages: string[] }) => {
   const [isSearching, setIsSearching] = useState<boolean>(false)
   const [totalSetsCount, setTotalSetsCount] = useState<number>(-1)
   const [searchLanguages, setSearchLanguages] = useState<string[]>(props.languages || [])
+
+  const [isFinishedShowSubscribeGuide, setIsFinishedShowSubscribeGuide] = useLocalStorage<boolean>(
+    CacheKeyIsNeedShowSubscribeGuide,
+    false
+  )
 
   const limitItemsPerGet = 5
 
@@ -91,6 +99,14 @@ const SearchResultItems = (props: { keyword: string; languages: string[] }) => {
           onDeselect={resetItemsState}
         />
       </div>
+
+      {!isFinishedShowSubscribeGuide && (
+        <GettingStartedJoyride
+          callback={() => {
+            setIsFinishedShowSubscribeGuide(true)
+          }}
+        />
+      )}
       <InfiniteScroll
         dataLength={sets.length}
         next={handleLoadData}

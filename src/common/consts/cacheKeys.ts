@@ -1,3 +1,7 @@
+
+export const CacheKeyIsNeedShowSubscribeGuide = "is-need-show-subscribe-guide"
+export const CacheKeyRandomSet = "random-set"
+
 const CacheKeys = {
   user: "user",
   isSignedOut: "is-user-signed-out",
@@ -6,7 +10,7 @@ const CacheKeys = {
   selectedMasteredLanguages: "selected-mastered-languages",
   selectedLearningLanguages: "selected-learning-languages",
   selectedPages: "selected-pages",
-  randomSet: "random-set",
+  randomSet: CacheKeyRandomSet,
   localSetting: "local-setting",
   accessToken: "access-token",
   showItemCount: "show-injected-card",

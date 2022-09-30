@@ -262,6 +262,18 @@
   "common_back": {
     "message": "Back"
   },
+  "common_close": {
+    "message": "Close"
+  },
+  "common_next": {
+    "message": "Next"
+  },
+  "common_skip": {
+    "message": "Skip"
+  },
+  "common_understand": {
+    "message": "I got it!"
+  },
   "common_create": {
     "message": "Create"
   },
@@ -519,6 +531,9 @@
   },
   "getting_started_other_languages": {
     "message": "Want more? Select your languages from here"
+  },
+  "getting_started_guide_subscribe": {
+    "message": "<span>SUBSCRIBE</span> for the set you want to learn, and let me help you do the rest!\nHere's an example after you <span>SUBSCRIBE</span> 👇"
   },
   "card_star_tooltip": {
     "message": "Save to remind later"

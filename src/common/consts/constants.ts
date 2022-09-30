@@ -203,6 +203,7 @@ export const InteractionDislike = "dislike"
 export const InteractionCreate = "create"
 
 export const ColorPrimary = "#12b886"
+export const ColorWhite = "#fff"
 
 export const ItemsInteractionShow = 'show'
 export const ItemsInteractionNext = 'next'
