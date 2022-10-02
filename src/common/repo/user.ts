@@ -124,7 +124,7 @@ export async function countInteractedItems(http: Http, interactionInclude: strin
   const response = await http.get<any, AxiosResponse<number>>(ApiCountInteractedItems(interactionInclude, interactionIgnore));
 
   const count = response?.data
-  if (!count) throw new Error("cannot get user statistics")
+  if (!count) return 0
 
   return count
 }
