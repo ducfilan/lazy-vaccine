@@ -1,5 +1,5 @@
 import { sendMessage } from "@/background/MessagingFacade"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet, ChromeMessageTypeCountInteractedItems, ChromeMessageTypeGetInteractedItems, ChromeMessageTypeGetSetSilent, ItemsLimitPerGet } from "@/common/consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet, ChromeMessageTypeCountInteractedItems, ChromeMessageTypeGetInteractedItems, ChromeMessageTypeGetSetSilent, ItemsLimitPerGet, ChromeMessageTypeGetInjectionTargets, ChromeMessageTypeGetRestrictedKeywords } from "@/common/consts/constants"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
 
 export function sendClearCachedRandomSetMessage() {
@@ -98,5 +98,17 @@ export function sendCountInteractedItemsMessage(interactionInclude: string, inte
 export function sendGetStarredItemsMessage(interactionInclude: string, interactionIgnore: string, skip: number = 0, limit: number = ItemsLimitPerGet) {
   return new Promise<SetInfoItem[]>((resolve, reject) => {
     sendMessage(ChromeMessageTypeGetInteractedItems, { interactionInclude, interactionIgnore, skip, limit }, resolve, reject)
+  })
+}
+
+export function sendGetInjectionTargetsMessage() {
+  return new Promise<SetInfoItem[]>((resolve, reject) => {
+    sendMessage(ChromeMessageTypeGetInjectionTargets, null, resolve, reject)
+  })
+}
+
+export function sendGetRestrictedKeywordsMessage() {
+  return new Promise<SetInfoItem[]>((resolve, reject) => {
+    sendMessage(ChromeMessageTypeGetRestrictedKeywords, null, resolve, reject)
   })
 }

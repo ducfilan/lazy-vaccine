@@ -196,6 +196,8 @@ export const ChromeMessageTypeTracking = "tracking"
 export const ChromeMessageTypeSuggestSets = "suggest-sets"
 export const ChromeMessageTypeCountInteractedItems = "count-interacted-items"
 export const ChromeMessageTypeGetInteractedItems = "get-interacted-items"
+export const ChromeMessageTypeGetInjectionTargets = "get-injection-targets"
+export const ChromeMessageTypeGetRestrictedKeywords = "get-restricted-keywords"
 
 export const InteractionSubscribe = "subscribe"
 export const InteractionLike = "like"

@@ -14,7 +14,9 @@ import { detectPageChanged, hrefComparer } from "./common/utils/domUtils"
 import {
   sendClearCachedRandomSetMessage,
   sendCountInteractedItemsMessage,
+  sendGetInjectionTargetsMessage,
   sendGetRandomSubscribedSetSilentMessage,
+  sendGetRestrictedKeywordsMessage,
   sendGetSetSilentMessage,
   sendGetStarredItemsMessage,
   sendIdentityUserMessage,
@@ -70,8 +72,6 @@ import {
 
 import "@/background/templates/css/content.scss"
 
-import { getInjectionTargets } from "./common/repo/injection-targets"
-import { getRestrictedKeywords } from "./common/repo/restricted-keywords"
 import { appearInPercent, getStorageSyncData } from "./common/utils/utils"
 import CacheKeys from "./common/consts/cacheKeys"
 import React from "react"
@@ -104,8 +104,8 @@ let allIntervalIds: NodeJS.Timer[] = []
   try {
     const [{ value: user }, { value: restrictedKeywords }, { value: targets }]: any[] = await Promise.allSettled([
       sendIdentityUserMessage(),
-      getRestrictedKeywords(),
-      getInjectionTargets(),
+      sendGetRestrictedKeywordsMessage(),
+      sendGetInjectionTargetsMessage(),
     ])
 
     identity = user
