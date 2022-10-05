@@ -88,6 +88,7 @@ const AppPage = () => {
 
   const [searchParams] = useSearchParams()
   const source = searchParams.get("source")
+  const keyword = searchParams.get("keyword")
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -156,6 +157,7 @@ const AppPage = () => {
                 placeholder={i18n("create_set_search_place_holder")}
                 className="is-absolute"
                 size="large"
+                defaultValue={keyword || ""}
                 suffix={<SearchOutlined style={{ color: "rgba(0,0,0,.45)" }} />}
                 onPressEnter={({ target }) => {
                   navigate(`${AppPages.Sets.path}?keyword=${(target as HTMLInputElement).value}`)

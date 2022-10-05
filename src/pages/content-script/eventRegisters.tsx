@@ -656,14 +656,7 @@ export function registerSuggestionLoginButtonClickEvent(callback: () => Promise<
       const button = e.target as HTMLInputElement
       button.disabled = true
 
-      sendSignUpMessage()
-        .then(callback)
-        .catch((error) => {
-          console.error(error)
-        })
-        .finally(() => {
-          button.disabled = false
-        })
+      redirectToUrlInNewTab(`${chrome.runtime.getURL(AppBasePath)}${AppPages.GettingStarted.path}?source=popup`)
     }
   )
 }

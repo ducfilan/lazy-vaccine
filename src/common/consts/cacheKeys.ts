@@ -1,5 +1,5 @@
 
-export const CacheKeyIsNeedShowSubscribeGuide = "is-need-show-subscribe-guide"
+export const CacheKeyIsFinishedShowSubscribeGuide = "is-finished-show-subscribe-guide"
 export const CacheKeyRandomSet = "random-set"
 
 const CacheKeys = {

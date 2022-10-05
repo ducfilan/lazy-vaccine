@@ -12,7 +12,7 @@ import { formatString } from "@/common/utils/stringUtils"
 import { ColorPrimary, i18n } from "@/common/consts/constants"
 import SupportingLanguages from "@/common/consts/supportingLanguages"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
-import { CacheKeyIsNeedShowSubscribeGuide } from "@/common/consts/cacheKeys"
+import { CacheKeyIsFinishedShowSubscribeGuide } from "@/common/consts/cacheKeys"
 import GettingStartedJoyride from "./GettingStartedJoyride"
 
 const SearchResultItems = (props: { keyword: string; languages: string[] }) => {
@@ -33,7 +33,7 @@ const SearchResultItems = (props: { keyword: string; languages: string[] }) => {
   const [searchLanguages, setSearchLanguages] = useState<string[]>(props.languages || [])
 
   const [isFinishedShowSubscribeGuide, setIsFinishedShowSubscribeGuide] = useLocalStorage<boolean>(
-    CacheKeyIsNeedShowSubscribeGuide,
+    CacheKeyIsFinishedShowSubscribeGuide,
     false
   )
 

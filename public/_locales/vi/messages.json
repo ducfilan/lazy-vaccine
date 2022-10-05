@@ -460,6 +460,9 @@
   "suggestion_card_not_logged_in_text": {
     "message": "Xin chào bạn! Để bắt đầu giúp bạn học tập, trước tiên bạn cho mình biết tên được không? Hãy đăng nhập nhé, chỉ mất vài giây thôi!"
   },
+  "suggestion_card_not_logged_in_btn": {
+  "message": "Vào việc luôn"
+  },
   "i_love_you": {
     "message": "Mình thích bạn! ❤️"
   },

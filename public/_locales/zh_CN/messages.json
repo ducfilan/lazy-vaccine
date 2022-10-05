@@ -463,6 +463,9 @@
   "suggestion_card_not_logged_in_text": {
     "message": "你好！ 为了帮助你学习，首先，我想知道你是谁。 让我们登录吧。只需几秒钟！"
   },
+  "suggestion_card_not_logged_in_btn": {
+  "message": "立即行动"
+  },
   "i_love_you": {
     "message": "我喜欢你! ❤️"
   },

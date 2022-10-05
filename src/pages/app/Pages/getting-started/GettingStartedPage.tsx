@@ -14,7 +14,7 @@ import Loading from "@/common/components/Loading"
 import FirstTime from "./components/FirstTime"
 import ChooseLanguages from "./components/ChooseLanguages"
 import FinishedGettingStarted from "./components/FinishedGettingStarted"
-import { CacheKeyIsNeedShowSubscribeGuide, CacheKeyRandomSet } from "@/common/consts/cacheKeys"
+import { CacheKeyIsFinishedShowSubscribeGuide, CacheKeyRandomSet } from "@/common/consts/cacheKeys"
 
 export const GettingStartedPage = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -28,7 +28,7 @@ export const GettingStartedPage = () => {
     window.heap.track("Open getting started page")
 
     localStorage.removeItem(LocalStorageKeyPrefix + CacheKeyRandomSet)
-    localStorage.removeItem(LocalStorageKeyPrefix + CacheKeyIsNeedShowSubscribeGuide)
+    localStorage.removeItem(LocalStorageKeyPrefix + CacheKeyIsFinishedShowSubscribeGuide)
   }, [])
 
   useEffect(() => {

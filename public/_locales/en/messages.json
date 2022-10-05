@@ -466,6 +466,9 @@
   "suggestion_card_not_logged_in_text": {
     "message": "Hi there! To help you learn, firstly, May I know who you are? Let's log in. It will take a few seconds only!"
   },
+  "suggestion_card_not_logged_in_btn": {
+  "message": "Complete now"
+  },
   "i_love_you": {
     "message": "I like you! ❤️"
   },

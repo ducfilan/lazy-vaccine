@@ -13,6 +13,15 @@
   }
 }
 
+@keyframes bounce {
+  0% {
+    transform: translateY(3px);
+  }
+  100% {
+    transform: translateY(-3px);
+  }
+}
+
 $primary: #12b886;
 $white: #fff;
 $black: #000;
