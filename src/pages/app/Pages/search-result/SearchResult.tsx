@@ -13,6 +13,7 @@ import CategoriesSider from "@/pages/app/components/CategoriesSider"
 import CacheKeys from "@/common/consts/cacheKeys"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { getCategories } from "@/common/repo/category"
+import { TrackingNameOpenSearchResultPage } from "@/common/consts/trackingNames"
 
 const { Content } = Layout
 
@@ -25,7 +26,7 @@ const SearchResultPage = () => {
   const [searchParams] = useSearchParams()
 
   useEffect(() => {
-    window.heap.track("Open search result page", { keyword: searchParams.get("keyword") })
+    window.heap.track(TrackingNameOpenSearchResultPage, { keyword: searchParams.get("keyword") })
   }, [])
 
   useEffect(() => {

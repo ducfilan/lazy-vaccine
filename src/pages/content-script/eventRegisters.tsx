@@ -41,6 +41,7 @@ import {
 } from "@/common/consts/constants"
 import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
 import { redirectToUrlInNewTab, writeToClipboard } from "@/common/utils/domUtils"
+import { TrackingNameClickCloseCardButton, TrackingNameClickMaximizeCardButton, TrackingNameClickMinimizeCardButton, TrackingNameClickMoreButtonOnInjectCard, TrackingNameClickNextSetLink, TrackingNameCloseInjectBubble, TrackingNameDislikeSetFromSuggestion, TrackingNameHoverInjectBubble, TrackingNameLikeSetFromSuggestion, TrackingNameReviewStarredItems, TrackingNameSubscribeSetFromSuggestion, TrackingNameUnDislikeSetFromSuggestion, TrackingNameUnlikeSetFromSuggestion, TrackingNameUnsubscribeSetFromSuggestion } from "@/common/consts/trackingNames"
 
 export function registerFlipCardEvent() {
   const flipCard = (e: Event) => {
@@ -313,7 +314,7 @@ export function registerMorePopoverEvent() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .inject-card-more-button", (e: Event) => {
     e.stopPropagation()
 
-    sendTrackingMessage("Click more button on inject card", null).catch((error) => {
+    sendTrackingMessage(TrackingNameClickMoreButtonOnInjectCard, null).catch((error) => {
       console.error(error)
     })
 
@@ -340,7 +341,7 @@ export function registerHoverBubblePopoverEvent() {
 
   addDynamicEventListener(document.body, "mouseover", ".lazy-vaccine-bubble .bubble-img", (e: Event) => {
     !isHovered &&
-      sendTrackingMessage("Hover inject bubble", null).catch((error) => {
+      sendTrackingMessage(TrackingNameHoverInjectBubble, null).catch((error) => {
         console.error(error)
       })
     isHovered = true
@@ -370,7 +371,7 @@ const isMoreButton = (element: HTMLElement) =>
 
 export function registerHoverBubbleCloseEvent() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine-bubble .close-btn", (e: Event) => {
-    sendTrackingMessage("Close inject bubble", null).catch((error) => {
+    sendTrackingMessage(TrackingNameCloseInjectBubble, null).catch((error) => {
       console.error(error)
     })
 
@@ -400,7 +401,7 @@ export function registerNextSetEvent(preProcess: () => Promise<void>) {
       return
     }
 
-    sendTrackingMessage("Click next set link", {
+    sendTrackingMessage(TrackingNameClickNextSetLink, {
       setId: wrapperElement?.dataset.setId,
       itemId: wrapperElement?.dataset.itemId,
     }).catch((error) => {
@@ -697,7 +698,7 @@ export function registerTopBarCardButtonsClickEvent() {
       const setId = wrapperElement.dataset.setId!
       const itemId = wrapperElement.dataset.itemId!
 
-      sendTrackingMessage("Click close card button", { setId, itemId }).catch((error) => {
+      sendTrackingMessage(TrackingNameClickCloseCardButton, { setId, itemId }).catch((error) => {
         console.error(error)
       })
 
@@ -717,7 +718,7 @@ export function registerTopBarCardButtonsClickEvent() {
       const setId = wrapperElement.dataset.setId!
       const itemId = wrapperElement.dataset.itemId!
 
-      sendTrackingMessage("Click maximize card button", { setId, itemId }).catch((error) => {
+      sendTrackingMessage(TrackingNameClickMaximizeCardButton, { setId, itemId }).catch((error) => {
         console.error(error)
       })
 
@@ -736,7 +737,7 @@ export function registerTopBarCardButtonsClickEvent() {
       const setId = wrapperElement.dataset.setId!
       const itemId = wrapperElement.dataset.itemId!
 
-      sendTrackingMessage("Click minimize card button", { setId, itemId }).catch((error) => {
+      sendTrackingMessage(TrackingNameClickMinimizeCardButton, { setId, itemId }).catch((error) => {
         console.error(error)
       })
 
@@ -779,7 +780,7 @@ export function registerSubscribeEvent(callback: Function) {
       if (isSubscribed) {
         ;(wrapperElement.querySelector(".subscribe-button > span:nth-child(2)") as HTMLElement).innerText =
           i18n("common_subscribe")
-        sendTrackingMessage("Unsubscribe set from suggestion", { setId }).catch((error) => {
+        sendTrackingMessage(TrackingNameUnsubscribeSetFromSuggestion, { setId }).catch((error) => {
           console.error(error)
         })
 
@@ -792,7 +793,7 @@ export function registerSubscribeEvent(callback: Function) {
       } else {
         ;(wrapperElement.querySelector(".subscribe-button > span:nth-child(2)") as HTMLElement).innerText =
           i18n("common_unsubscribe")
-        sendTrackingMessage("Subscribe set from suggestion", { setId }).catch((error) => {
+        sendTrackingMessage(TrackingNameSubscribeSetFromSuggestion, { setId }).catch((error) => {
           console.error(error)
         })
 
@@ -824,7 +825,7 @@ export function registerLikeEvent(callback: Function) {
       ;(e.target as HTMLElement).closest("button")?.querySelector(".anticon")?.classList.toggle("is-primary")
 
       if (isLiked) {
-        sendTrackingMessage("Unlike set from suggestion", { setId }).catch((error) => {
+        sendTrackingMessage(TrackingNameUnlikeSetFromSuggestion, { setId }).catch((error) => {
           console.error(error)
         })
 
@@ -835,7 +836,7 @@ export function registerLikeEvent(callback: Function) {
             console.error(error)
           })
       } else {
-        sendTrackingMessage("Like set from suggestion", { setId }).catch((error) => {
+        sendTrackingMessage(TrackingNameLikeSetFromSuggestion, { setId }).catch((error) => {
           console.error(error)
         })
 
@@ -871,7 +872,7 @@ export function registerDislikeEvent(callback: Function) {
       ;(e.target as HTMLElement).closest("button")?.querySelector(".anticon")?.classList.toggle("is-primary")
 
       if (isDisliked) {
-        sendTrackingMessage("UnDislike set from suggestion", { setId }).catch((error) => {
+        sendTrackingMessage(TrackingNameUnDislikeSetFromSuggestion, { setId }).catch((error) => {
           console.error(error)
         })
 
@@ -882,7 +883,7 @@ export function registerDislikeEvent(callback: Function) {
             console.error(error)
           })
       } else {
-        sendTrackingMessage("Dislike set from suggestion", { setId }).catch((error) => {
+        sendTrackingMessage(TrackingNameDislikeSetFromSuggestion, { setId }).catch((error) => {
           console.error(error)
         })
 
@@ -915,7 +916,7 @@ export function registerReviewStarredItemsEvent(getItem: () => Promise<SetInfoIt
 
       showLoadingCard(wrapperElement)
 
-      sendTrackingMessage("Review starred items").catch((error) => {
+      sendTrackingMessage(TrackingNameReviewStarredItems).catch((error) => {
         console.error(error)
       })
 

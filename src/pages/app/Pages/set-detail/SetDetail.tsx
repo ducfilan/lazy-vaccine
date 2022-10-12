@@ -11,6 +11,7 @@ import { SetDetailContext } from "./contexts/SetDetailContext"
 import { notification, Skeleton } from "antd"
 import { i18n } from "@/common/consts/constants"
 import LearningActivities from "./components/LearningActivities"
+import { TrackingNameOpenSetDetailPage } from "@/common/consts/trackingNames"
 
 const { useState, useEffect } = React
 
@@ -38,7 +39,7 @@ const SetDetailPage = () => {
   }
 
   useEffect(() => {
-    window.heap.track("Open set detail page")
+    window.heap.track(TrackingNameOpenSetDetailPage)
   }, [])
 
   useEffect(onPageLoaded, [http])

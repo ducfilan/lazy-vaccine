@@ -29,6 +29,7 @@ import TreeIcon from "@img/ui/fa/tree-solid.svg"
 import AchievementChart from "./components/AchievementChart"
 import moment from "moment"
 import ChoosePages from "./components/ChoosePages"
+import { TrackingNameOpenMySpacePage, TrackingNameOpenMySpaceTab } from "@/common/consts/trackingNames"
 
 const { Content } = Layout
 
@@ -72,7 +73,7 @@ const UserProfilePage = (props: any) => {
   }
 
   function onTabChanged(newTab: string) {
-    window.heap.track("My space, selecting tab", { tab: newTab })
+    window.heap.track(TrackingNameOpenMySpaceTab, { tab: newTab })
 
     setSelectedTab(newTab)
     resetStates()
@@ -175,7 +176,7 @@ const UserProfilePage = (props: any) => {
   }
 
   useEffect(() => {
-    window.heap.track("Open my space page")
+    window.heap.track(TrackingNameOpenMySpacePage)
   }, [])
 
   useEffect(() => {

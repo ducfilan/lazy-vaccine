@@ -15,6 +15,7 @@ import FirstTime from "./components/FirstTime"
 import ChooseLanguages from "./components/ChooseLanguages"
 import FinishedGettingStarted from "./components/FinishedGettingStarted"
 import { CacheKeyIsFinishedShowSubscribeGuide, CacheKeyRandomSet } from "@/common/consts/cacheKeys"
+import { TrackingNameFinishLanguageSelection, TrackingNameFinishLogin, TrackingNameOpenGettingStartedPage } from "@/common/consts/trackingNames"
 
 export const GettingStartedPage = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -25,7 +26,7 @@ export const GettingStartedPage = () => {
   const [finishedRegisterStep, setFinishedRegisterStep] = useState<number>(RegisterSteps.Install)
 
   useEffect(() => {
-    window.heap.track("Open getting started page")
+    window.heap.track(TrackingNameOpenGettingStartedPage)
 
     localStorage.removeItem(LocalStorageKeyPrefix + CacheKeyRandomSet)
     localStorage.removeItem(LocalStorageKeyPrefix + CacheKeyIsFinishedShowSubscribeGuide)
@@ -83,14 +84,14 @@ export const GettingStartedPage = () => {
 
     switch (finishedRegisterStep) {
       case RegisterSteps.ChooseLanguages:
-        window.heap.track("Finished language selection")
+        window.heap.track(TrackingNameFinishLanguageSelection)
         return <FinishedGettingStarted />
 
       case RegisterSteps.Install:
         return <FirstTime />
 
       case RegisterSteps.Register:
-        window.heap.track("Finished login")
+        window.heap.track(TrackingNameFinishLogin)
         return (
           <div tabIndex={0}>
             <ChooseLanguages />

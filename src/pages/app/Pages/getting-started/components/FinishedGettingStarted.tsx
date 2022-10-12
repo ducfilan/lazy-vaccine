@@ -10,6 +10,7 @@ import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { formatString } from "@/common/utils/stringUtils"
 
 import PinGuideImg from "@img/ui/pin-guide.gif"
+import { TrackingNameDoneActivation } from "@/common/consts/trackingNames"
 
 export default function FinishedGettingStarted() {
   const { user } = useGlobalContext()
@@ -30,7 +31,7 @@ export default function FinishedGettingStarted() {
           size="large"
           enterButton
           onSearch={(keyword) => {
-            window.heap.track("Done activation")
+            window.heap.track(TrackingNameDoneActivation)
             window.open(
               `${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`,
               "_self"

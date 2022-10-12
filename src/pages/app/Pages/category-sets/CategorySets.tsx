@@ -18,6 +18,7 @@ import { isElementAtBottom } from "@/pages/content-script/domHelpers"
 import { AppPageCreateSet, i18n } from "@/common/consts/constants"
 
 import shibaEmptyBoxIcon from "@img/emojis/shiba/box.png"
+import { TrackingNameOpenCategorySetsPage } from "@/common/consts/trackingNames"
 
 const { Content } = Layout
 const { useState, useEffect } = React
@@ -64,7 +65,7 @@ const CategorySetsPage = (props: any) => {
   }
 
   useEffect(() => {
-    window.heap.track("Open category sets page", { categoryId })
+    window.heap.track(TrackingNameOpenCategorySetsPage, { categoryId })
   }, [])
 
   useEffect(onPageLoaded, [http])

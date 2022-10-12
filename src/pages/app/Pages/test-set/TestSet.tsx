@@ -13,6 +13,7 @@ import TestTrueFalseCard from "../../components/TestTrueFalseCard"
 import TestMultipleChoiceCard from "../../components/TestMultipleChoiceCard"
 import shibaLoveIcon from "@img/emojis/shiba/love.png"
 import CongratsScreen from "@/pages/app/components/CongratsScreen"
+import { TrackingNameOpenTestPage } from "@/common/consts/trackingNames"
 
 const { useState, useEffect } = React
 
@@ -29,7 +30,7 @@ const TestSetPage = (props: any) => {
   let multipleChoiceCardRefs = useRef<any>([])
 
   useEffect(() => {
-    window.heap.track("Open test page")
+    window.heap.track(TrackingNameOpenTestPage)
   }, [])
 
   const { setId } = useParams()

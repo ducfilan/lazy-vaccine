@@ -152,18 +152,13 @@ export const OtherItemTypes = {
 export const TabKeyCode = "Tab"
 
 export const MaxTagsCountPerSet = 20
-
 export const MaxLengthSetTitle = 60
-
 export const DebounceTimeout = 500
-
 export const MaxTryAgainSignInCount = 3
-
 export const TestQuestionAmount = 20
-
 export const TrueFalseQuestionAmount = 10
-
-export const ItemsLimitPerGet = 20
+export const ItemsLimitPerGet = 50
+export const StarItemsLimitPerGet = 20
 
 export const TestResultLevel = {
   High: 0.9,

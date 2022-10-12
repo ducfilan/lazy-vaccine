@@ -24,6 +24,15 @@ import { SuggestLoginTemplate } from "@/background/templates/SuggestLoginTemplat
 import { SuggestSetsTemplate } from "@/background/templates/SuggestSetsTemplate"
 import { SuggestSubscribeTemplate } from "@/background/templates/SuggestSubscribeTemplate"
 import { SuggestReviewStaredItems } from "@/background/templates/SuggestReviewStaredItems"
+import {
+  TrackingNameRenderQnAItem,
+  TrackingNameRenderContentItem,
+  TrackingNameRenderNotLoggedInItem,
+  TrackingNameRenderNotSubscribedItem,
+  TrackingNameRenderNotNetworkErrorItem,
+  TrackingNameRenderSuggestionSetsItem,
+  TrackingNameRenderSuggestionReviewStaredItemsItem,
+} from "@/common/consts/trackingNames"
 
 export async function getTemplateFromType(type: string) {
   console.debug("getTemplate called, type: " + type)
@@ -41,32 +50,32 @@ export async function getTemplateFromType(type: string) {
       )
 
     case ItemTypes.QnA.value:
-      sendTrackingMessage("Render QnA item").catch(console.error)
+      sendTrackingMessage(TrackingNameRenderQnAItem).catch(console.error)
       return renderToString(<QnATemplate />)
 
     case ItemTypes.Content.value:
-      sendTrackingMessage("Render Content item").catch(console.error)
+      sendTrackingMessage(TrackingNameRenderContentItem).catch(console.error)
       return renderToString(<ContentTemplate />)
 
     case OtherItemTypes.NotLoggedIn.value:
-      sendTrackingMessage("Render Not logged in item").catch(console.error)
+      sendTrackingMessage(TrackingNameRenderNotLoggedInItem).catch(console.error)
       return renderToString(<SuggestLoginTemplate />)
 
     case OtherItemTypes.NotSubscribed.value:
-      sendTrackingMessage("Render Not subscribed item").catch(console.error)
+      sendTrackingMessage(TrackingNameRenderNotSubscribedItem).catch(console.error)
       return renderToString(<SuggestSubscribeTemplate />)
 
     case OtherItemTypes.NetworkTimeout.value:
     case OtherItemTypes.NetworkOffline.value:
-      sendTrackingMessage("Render Not network error item").catch(console.error)
+      sendTrackingMessage(TrackingNameRenderNotNetworkErrorItem).catch(console.error)
       return renderToString(<NetworkErrorTemplate />)
 
     case OtherItemTypes.SuggestionSets.value:
-      sendTrackingMessage("Render Suggestion sets item").catch(console.error)
+      sendTrackingMessage(TrackingNameRenderSuggestionSetsItem).catch(console.error)
       return renderToString(<SuggestSetsTemplate />)
 
     case OtherItemTypes.ReviewStaredItems.value:
-      sendTrackingMessage("Render SuggestionReviewStaredItems item").catch(console.error)
+      sendTrackingMessage(TrackingNameRenderSuggestionReviewStaredItemsItem).catch(console.error)
       return renderToString(<SuggestReviewStaredItems />)
 
     default:

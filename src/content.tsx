@@ -62,12 +62,12 @@ import {
   i18n,
   ItemsInteractionForcedDone,
   ItemsInteractionIgnore,
-  ItemsInteractionReviewStar,
   ItemsInteractionShow,
   ItemsInteractionStar,
   ItemsLimitPerGet,
   SetTypeNormal,
   SetTypeReviewStarredItems,
+  StarItemsLimitPerGet,
 } from "./common/consts/constants"
 
 import "@/background/templates/css/content.scss"
@@ -78,6 +78,7 @@ import React from "react"
 import { renderToString } from "react-dom/server"
 import { htmlStringToHtmlNode } from "./background/DomManipulator"
 import { FixedWidget } from "./background/templates/FixedWidget"
+import { TrackingNameSuggestFromNoInteraction, TrackingNameSuggestToSubscribeRandomly } from "./common/consts/trackingNames"
 
 let randomItemIndexVisitMap: number[] = []
 let setInfo: SetInfo | null
@@ -209,7 +210,10 @@ async function initValues() {
 
 async function determineStatisticsValues() {
   statistics.starredItemsCount =
-    (await sendCountInteractedItemsMessage(ItemsInteractionStar, ItemsInteractionForcedDone)) || 0
+    (await sendCountInteractedItemsMessage(
+      ItemsInteractionStar,
+      [ItemsInteractionIgnore, ItemsInteractionForcedDone].join(",")
+    )) || 0
   statistics.showItemCount = (await getStorageSyncData<number>(CacheKeys.showItemCount)) || 0
   statistics.interactItemCount = (await getStorageSyncData<number>(CacheKeys.interactItemCount)) || 0
 }
@@ -236,7 +240,7 @@ async function determineIsNeedRecommendation() {
       appearInPercent(0.25)
     ) {
       console.debug("suggest after no interaction for a long time")
-      sendTrackingMessage("Suggest from no interaction")
+      sendTrackingMessage(TrackingNameSuggestFromNoInteraction)
       isNeedRecommendation = true
 
       return
@@ -244,7 +248,7 @@ async function determineIsNeedRecommendation() {
 
     // 2% of the cards will be recommendation.
     if (appearInPercent(0.02)) {
-      sendTrackingMessage("Suggest to subscribe randomly")
+      sendTrackingMessage(TrackingNameSuggestToSubscribeRandomly)
       isNeedRecommendation = true
 
       return
@@ -526,7 +530,7 @@ const appendNextItemsToCurrentSet = async () => {
       break
 
     case SetTypeReviewStarredItems:
-      setWithNextItems = await buildStarredItemsSetInfo(setInfo.items?.length || 0, ItemsLimitPerGet)
+      setWithNextItems = await buildStarredItemsSetInfo(setInfo.items?.length || 0, StarItemsLimitPerGet)
       break
 
     default:
@@ -549,14 +553,19 @@ function injectFixedWidgetBubble() {
   document.querySelector("body")?.prepend(node)
 }
 
-async function buildStarredItemsSetInfo(skip: number = 0, limit: number = ItemsLimitPerGet): Promise<SetInfo> {
+async function buildStarredItemsSetInfo(skip: number = 0, limit: number = StarItemsLimitPerGet): Promise<SetInfo> {
   let setInfo = {
     name: i18n("my_starred_items"),
     totalItemsCount: statistics.starredItemsCount,
     setType: SetTypeReviewStarredItems,
   } as SetInfo
 
-  const items = await sendGetStarredItemsMessage(ItemsInteractionStar, ItemsInteractionReviewStar, skip, limit)
+  const items = await sendGetStarredItemsMessage(
+    ItemsInteractionStar,
+    [ItemsInteractionIgnore, ItemsInteractionForcedDone].join(","),
+    skip,
+    limit
+  )
   items.forEach((item) => (item.isStared = "stared"))
 
   setInfo.items = items

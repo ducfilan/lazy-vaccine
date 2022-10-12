@@ -8,13 +8,14 @@ import { GoogleOutlined } from "@ant-design/icons"
 import { clearLoginInfoCache, signIn } from "@/common/facades/authFacade"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { User } from "@/common/types/types"
+import { TrackingNameOpenBeforeLoginPage } from "@/common/consts/trackingNames"
 
 export const BeforeLoginPage = () => {
   const { setHttp, setUser } = useGlobalContext()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
-    window.heap.track("Open before login page")
+    window.heap.track(TrackingNameOpenBeforeLoginPage)
   }, [])
 
   return (

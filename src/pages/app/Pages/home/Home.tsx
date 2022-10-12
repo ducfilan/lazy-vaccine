@@ -1,5 +1,6 @@
 import CacheKeys from "@/common/consts/cacheKeys"
 import { i18n } from "@/common/consts/constants"
+import { TrackingNameOpenHomePage } from "@/common/consts/trackingNames"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { getCategories } from "@/common/repo/category"
@@ -25,7 +26,7 @@ const HomePage = (props: any) => {
   }
 
   useEffect(() => {
-    window.heap.track("Open home page")
+    window.heap.track(TrackingNameOpenHomePage)
   }, [])
 
   useEffect(onPageLoaded, [http])

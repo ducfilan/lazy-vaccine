@@ -20,6 +20,7 @@ import { Http } from "@facades/axiosFacade"
 import { LoginTypes } from "@/common/consts/constants"
 import { GlobalContext } from "@/common/contexts/GlobalContext"
 import { getErrorView } from "../app/App"
+import { TrackingNameOpenPopup } from "@/common/consts/trackingNames"
 
 const PopupPage = () => {
   const [user, setUser] = useState<User | null>(null)
@@ -42,7 +43,7 @@ const PopupPage = () => {
   }, [])
 
   useEffect(() => {
-    window.heap.track("Open popup")
+    window.heap.track(TrackingNameOpenPopup)
   }, [])
 
   useEffect(() => {

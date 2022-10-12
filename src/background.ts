@@ -10,6 +10,7 @@ import { SetInfo, User } from "./common/types/types"
 import { getStorageSyncData } from "@/common/utils/utils"
 import { getInjectionTargets } from "./common/repo/injection-targets"
 import { getRestrictedKeywords } from "./common/repo/restricted-keywords"
+import { TrackingNameInteractItem, TrackingNameShowItem, TrackingNameSignupFromInjectedCard } from "./common/consts/trackingNames"
 
 let lastAudio: HTMLAudioElement
 
@@ -41,7 +42,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break
 
     case ChromeMessageTypeSignUp:
-      window.heap.track("Signup from injected card")
+      window.heap.track(TrackingNameSignupFromInjectedCard)
       signIn
         .call(null, LoginTypes.google)
         .then((user: User | null) => {
@@ -92,7 +93,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       getGoogleAuthTokenSilent().then((token: string) => {
         const { action: interaction, itemId, href } = request.arg
 
-        window.heap.track(request.arg.action === ItemsInteractionShow ? "Show item" : "Interact item", { interaction, itemId, href })
+        window.heap.track(request.arg.action === ItemsInteractionShow ? TrackingNameShowItem : TrackingNameInteractItem, { interaction, itemId, href })
         increaseSyncStorageCount(request.arg.action === ItemsInteractionShow ? CacheKeys.showItemCount : CacheKeys.interactItemCount)
 
         const http = new Http(token, LoginTypes.google)
@@ -146,7 +147,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break
 
     case ChromeMessageTypePlayAudio:
-      window.heap.track("Play audio", { langCode: request.arg.langCode, text: request.arg.text })
+      window.heap.track(TrackingNameInteractItem, { interaction: "Play audio", langCode: request.arg.langCode, text: request.arg.text })
       getGoogleAuthTokenSilent().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
         http
