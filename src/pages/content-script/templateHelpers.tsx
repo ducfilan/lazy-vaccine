@@ -197,7 +197,7 @@ export const getNetworkErrorTemplateValues = async (lastError: any) => {
   }
 }
 
-export function getRecommendationTemplateValues(setInfo: SetInfo | null, identity: User) {
+export function getRecommendationTemplateValues(setInfo: SetInfo | null, identity: User | null) {
   return new Promise<KeyValuePair[]>((resolve, reject) => {
     if (!setInfo) {
       reject("No setInfo provided")
