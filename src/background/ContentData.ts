@@ -1,5 +1,5 @@
-import CacheKeys from "@/common/consts/cacheKeys"
-import { ItemsLimitPerGet, ItemsInteractionStar, ItemsInteractionShow, ItemsInteractionForcedDone, ItemsInteractionIgnore, SetTypeNormal, SetTypeReviewStarredItems, StarItemsLimitPerGet, i18n } from "@/common/consts/constants"
+import CacheKeys from "@/common/consts/caching"
+import { ItemsLimitPerGet, ItemsInteractionStar, ItemsInteractionShow, ItemsInteractionForcedDone, ItemsInteractionIgnore, SetTypeNormal, SetTypeReviewStarredItems, StarItemsLimitPerGet, i18n, MaximumItemShow } from "@/common/consts/constants"
 import { TrackingNameSuggestFromNoInteraction, TrackingNameSuggestToSubscribeRandomly } from "@/common/consts/trackingNames"
 import { User, SetInfo, SetInfoItem, ContentPageStatistics, KeyValuePair } from "@/common/types/types"
 import { shuffleArray, generateNumbersArray } from "@/common/utils/arrayUtils"
@@ -14,6 +14,11 @@ export class ContentData {
   public randomItemIndexVisitMap: number[] = []
   public itemsInPageInteractionMap: {
     [itemId: string]: string[]
+  } = {}
+  public itemsInPageInteractionCountMap: {
+    [itemId: string]: {
+      [key: string]: number
+    }
   } = {}
   public statistics: ContentPageStatistics = {}
 
@@ -49,6 +54,7 @@ export class ContentData {
     this.setInfo = null
     this.randomItemIndexVisitMap = []
     this.itemsInPageInteractionMap = {}
+    this.itemsInPageInteractionCountMap = {}
     this.havingSubscribedSets = false
     this.lastError = null
   }
@@ -103,8 +109,11 @@ export class ContentData {
         delete itemInteractions.interactionCount.star
       }
 
+      this.itemsInPageInteractionCountMap[itemInteractions.itemId] = itemInteractions.interactionCount
       this.itemsInPageInteractionMap[itemInteractions.itemId] = Object.keys(itemInteractions.interactionCount)
     })
+
+    console.log(this.itemsInPageInteractionCountMap)
   }
 
   public appendSetItems(items: SetInfoItem[]) {
@@ -118,6 +127,10 @@ export class ContentData {
 
   public interactItem(itemId: string, interaction: string) {
     this.itemsInPageInteractionMap[itemId] = [...(this.itemsInPageInteractionMap[itemId] || []), interaction]
+
+    const itemInteractionsCount = this.itemsInPageInteractionCountMap[itemId]
+    itemInteractionsCount[interaction] = (itemInteractionsCount[interaction] || 0) + 1
+    this.itemsInPageInteractionCountMap[itemId] = itemInteractionsCount
   }
 
   /**
@@ -170,10 +183,9 @@ export class ContentData {
 
   public isItemHidden(itemId: string): boolean {
     const itemInteractions = this.itemsInPageInteractionMap[itemId] || []
+    const isShownMoreThanMax = (this.itemsInPageInteractionCountMap[itemId] || {})[ItemsInteractionShow] > MaximumItemShow
 
-    !itemInteractions.includes(ItemsInteractionStar) && itemInteractions.includes(ItemsInteractionShow)
-
-    return itemInteractions.includes(ItemsInteractionForcedDone) || itemInteractions.includes(ItemsInteractionIgnore)
+    return itemInteractions.includes(ItemsInteractionForcedDone) || itemInteractions.includes(ItemsInteractionIgnore) || isShownMoreThanMax
   }
 
   public async appendNextItemsToCurrentSet() {

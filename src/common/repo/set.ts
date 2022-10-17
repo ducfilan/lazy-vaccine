@@ -4,7 +4,7 @@ import { AxiosResponse } from "axios"
 import { ApiGetSetsInCategory, ApiInteraction, ApiItemInteraction, ApiSets, ApiTopSets, ApiTopSetsInCategory, ApiUploadTestResult } from "@consts/apis"
 import { ParamError } from "@consts/errors"
 import { DefaultLangCode, InteractionDislike, InteractionLike, InteractionSubscribe, IntMax, ItemsInteractionStar } from "@consts/constants"
-import CacheKeys from "@consts/cacheKeys"
+import CacheKeys from "@/common/consts/caching"
 
 export async function createSet(http?: Http, setInfo?: SetInfo): Promise<string> {
   if (!http || !setInfo) throw new ParamError()

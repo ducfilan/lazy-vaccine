@@ -1,4 +1,4 @@
-import CacheKeys from "@/common/consts/cacheKeys"
+import CacheKeys from "@/common/consts/caching"
 import { i18n } from "@/common/consts/constants"
 import { TrackingNameOpenHomePage } from "@/common/consts/trackingNames"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"

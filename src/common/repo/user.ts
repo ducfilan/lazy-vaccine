@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios"
 import { SetInfo, GeneralInfoCounts, User, UserInteractionSetResponse, UserInteractionSetsResponse, LearningProgressInfo, SearchSetsResponse, SetInfoItem } from "@/common/types/types"
-import { ApiCountInteractedItems, ApiGeneralInfoCounts, ApiGetInteractedItems, ApiGetUserInteractionSets, ApiItemsInteractions, ApiLogout, ApiMe, ApiRandomSet, ApiSuggestSets, ApiUsers } from "@consts/apis"
+import { ApiClearCache, ApiCountInteractedItems, ApiGeneralInfoCounts, ApiGetInteractedItems, ApiGetUserInteractionSets, ApiItemsInteractions, ApiLogout, ApiMe, ApiRandomSet, ApiSuggestSets, ApiUsers } from "@consts/apis"
 import StatusCode from "@consts/statusCodes"
 import { Http } from "@facades/axiosFacade"
 import { InteractionSubscribe, InteractionLike, InteractionDislike } from "@consts/constants"
@@ -25,7 +25,7 @@ export async function getUserInfo(http: Http, userId: string): Promise<User> {
 }
 
 export async function getUserInteractionSets(http: Http, userId: string, interaction: string, skip: number, limit: number): Promise<UserInteractionSetsResponse> {
-  const response = await http.get<any, AxiosResponse<UserInteractionSetsResponse>>(ApiGetUserInteractionSets(userId, interaction, skip, limit));
+  const response = await http.get<any, AxiosResponse<UserInteractionSetsResponse>>(ApiGetUserInteractionSets(userId, interaction, skip, limit))
 
   const result = response?.data
   if (!result) {
@@ -84,7 +84,7 @@ export async function logout(http: Http): Promise<boolean> {
 }
 
 export async function getLearningProgressInfo(http: Http, beginDate: string, endDate: string): Promise<LearningProgressInfo[]> {
-  const response = await http.get<any, AxiosResponse<LearningProgressInfo[]>>(ApiItemsInteractions(beginDate, endDate));
+  const response = await http.get<any, AxiosResponse<LearningProgressInfo[]>>(ApiItemsInteractions(beginDate, endDate))
 
   const learningProgressInfo = response?.data
   if (!learningProgressInfo) throw new Error("cannot get user statistics")
@@ -121,7 +121,7 @@ export async function suggestSets(http: Http, keyword: string, languages: string
 }
 
 export async function countInteractedItems(http: Http, interactionInclude: string, interactionIgnore: string): Promise<number> {
-  const response = await http.get<any, AxiosResponse<number>>(ApiCountInteractedItems(interactionInclude, interactionIgnore));
+  const response = await http.get<any, AxiosResponse<number>>(ApiCountInteractedItems(interactionInclude, interactionIgnore))
 
   const count = response?.data
   if (!count) return 0
@@ -130,10 +130,14 @@ export async function countInteractedItems(http: Http, interactionInclude: strin
 }
 
 export async function getInteractedItems(http: Http, interactionInclude: string, interactionIgnore: string, skip: number, limit: number): Promise<SetInfoItem[]> {
-  const response = await http.get<any, AxiosResponse<SetInfoItem[]>>(ApiGetInteractedItems(interactionInclude, interactionIgnore, skip, limit));
+  const response = await http.get<any, AxiosResponse<SetInfoItem[]>>(ApiGetInteractedItems(interactionInclude, interactionIgnore, skip, limit))
 
   const items = response?.data
   if (!items) throw new Error("cannot get user statistics")
 
   return items
+}
+
+export async function clearServerCache(http: Http, cacheType: string): Promise<void> {
+  await http.delete<any, AxiosResponse<SetInfoItem[]>>(ApiClearCache(cacheType))
 }

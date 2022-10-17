@@ -14,7 +14,7 @@ import Loading from "@/common/components/Loading"
 import FirstTime from "./components/FirstTime"
 import ChooseLanguages from "./components/ChooseLanguages"
 import FinishedGettingStarted from "./components/FinishedGettingStarted"
-import { CacheKeyIsFinishedShowSubscribeGuide, CacheKeyRandomSet } from "@/common/consts/cacheKeys"
+import { CacheKeyIsFinishedShowSubscribeGuide, CacheKeyRandomSet } from "@/common/consts/caching"
 import { TrackingNameFinishLanguageSelection, TrackingNameFinishLogin, TrackingNameOpenGettingStartedPage } from "@/common/consts/trackingNames"
 
 export const GettingStartedPage = () => {

@@ -12,7 +12,7 @@ import { formatString } from "@/common/utils/stringUtils"
 import { ColorPrimary, i18n } from "@/common/consts/constants"
 import SupportingLanguages from "@/common/consts/supportingLanguages"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
-import { CacheKeyIsFinishedShowSubscribeGuide } from "@/common/consts/cacheKeys"
+import { CacheKeyIsFinishedShowSubscribeGuide } from "@/common/consts/caching"
 import GettingStartedJoyride from "./GettingStartedJoyride"
 
 const SearchResultItems = (props: { keyword: string; languages: string[] }) => {

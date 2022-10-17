@@ -1,10 +1,11 @@
 import { sendMessage } from "@/background/MessagingFacade"
+import { CacheTypeUserRandomSet } from "@/common/consts/caching"
 import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet, ChromeMessageTypeCountInteractedItems, ChromeMessageTypeGetInteractedItems, ChromeMessageTypeGetSetSilent, ItemsLimitPerGet, ChromeMessageTypeGetInjectionTargets, ChromeMessageTypeGetRestrictedKeywords, StarItemsLimitPerGet } from "@/common/consts/constants"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
 
 export function sendClearCachedRandomSetMessage() {
   return new Promise<string>((resolve, reject) => {
-    sendMessage(ChromeMessageClearRandomSetCache, null, resolve, reject)
+    sendMessage(ChromeMessageClearRandomSetCache, { cacheType: CacheTypeUserRandomSet }, resolve, reject)
   })
 }
 

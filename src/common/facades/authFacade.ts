@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid"
 
 import GoogleApiUrls from "@consts/googleApiUrls"
 import registerSteps from "@consts/registerSteps"
-import CacheKeys from "@consts/cacheKeys"
+import CacheKeys from "@/common/consts/caching"
 import { NotLoggedInError } from "@consts/errors"
 import { GoogleClientId, LoginTypes, MaxTryAgainSignInCount } from "@consts/constants"
 import { ApiGetTokenFromCode, ApiRefreshAccessToken, ApiUsers } from "@consts/apis"

@@ -19,6 +19,7 @@ export const ApiRandomSet = (interaction: string, itemsSkip: number, itemsLimit:
 export const ApiItemsInteractions = (beginDate: string, endDate: string) => `/items-statistics?beginDate=${beginDate}&endDate=${endDate}`
 export const ApiCountInteractedItems = (interactionInclude: string, interactionIgnore: string) => `/items-interactions/count?interactionInclude=${interactionInclude}&interactionIgnore=${interactionIgnore}`
 export const ApiGetInteractedItems = (interactionInclude: string, interactionIgnore: string, skip: number = 0, limit: number = 10) => `/items-interactions/items?interactionInclude=${interactionInclude}&interactionIgnore=${interactionIgnore}&skip=${skip}&limit=${limit}`
+export const ApiClearCache = (cacheType: string) => `${ApiUsers}/cache?cacheType=${cacheType}`
 export const ApiGeneralInfoCounts = "sets-statistics"
 export const ApiUploadTestResult = (setId: string) => `/interactions/${setId}/upload-result`
 export const ApiGetMissions = "/missions"

@@ -1,6 +1,6 @@
 import React from "react"
 
-import CacheKeys from "@/common/consts/cacheKeys"
+import CacheKeys from "@/common/consts/caching"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { getCategories } from "@/common/repo/category"

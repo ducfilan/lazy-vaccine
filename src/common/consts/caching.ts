@@ -2,6 +2,8 @@
 export const CacheKeyIsFinishedShowSubscribeGuide = "is-finished-show-subscribe-guide"
 export const CacheKeyRandomSet = "random-set"
 
+export const CacheTypeUserRandomSet = "user-random-set"
+
 const CacheKeys = {
   user: "user",
   isSignedOut: "is-user-signed-out",
