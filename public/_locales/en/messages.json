@@ -530,7 +530,7 @@
     "message": "My starred items"
   },
   "getting_started_top_languages": {
-    "message": "Besides :primary_language, I bet you know some more.\nLet's pick all!"
+    "message": "Besides :primary_language, I bet you know or learning some more.\nLet's pick all!"
   },
   "getting_started_other_languages": {
     "message": "Want more? Select your languages from here"
