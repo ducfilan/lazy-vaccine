@@ -33,6 +33,7 @@ import {
   ItemsInteractionNext,
   ItemsInteractionPrev,
   ItemsInteractionReviewStar,
+  ItemsInteractionShow,
   ItemsInteractionStar,
   ItemTypes,
   OtherItemTypes,
@@ -41,7 +42,22 @@ import {
 } from "@/common/consts/constants"
 import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
 import { redirectToUrlInNewTab, writeToClipboard } from "@/common/utils/domUtils"
-import { TrackingNameClickCloseCardButton, TrackingNameClickMaximizeCardButton, TrackingNameClickMinimizeCardButton, TrackingNameClickMoreButtonOnInjectCard, TrackingNameClickNextSetLink, TrackingNameCloseInjectBubble, TrackingNameDislikeSetFromSuggestion, TrackingNameHoverInjectBubble, TrackingNameLikeSetFromSuggestion, TrackingNameReviewStarredItems, TrackingNameSubscribeSetFromSuggestion, TrackingNameUnDislikeSetFromSuggestion, TrackingNameUnlikeSetFromSuggestion, TrackingNameUnsubscribeSetFromSuggestion } from "@/common/consts/trackingNames"
+import {
+  TrackingNameClickCloseCardButton,
+  TrackingNameClickMaximizeCardButton,
+  TrackingNameClickMinimizeCardButton,
+  TrackingNameClickMoreButtonOnInjectCard,
+  TrackingNameClickNextSetLink,
+  TrackingNameCloseInjectBubble,
+  TrackingNameDislikeSetFromSuggestion,
+  TrackingNameHoverInjectBubble,
+  TrackingNameLikeSetFromSuggestion,
+  TrackingNameReviewStarredItems,
+  TrackingNameSubscribeSetFromSuggestion,
+  TrackingNameUnDislikeSetFromSuggestion,
+  TrackingNameUnlikeSetFromSuggestion,
+  TrackingNameUnsubscribeSetFromSuggestion,
+} from "@/common/consts/trackingNames"
 
 export function registerFlipCardEvent() {
   const flipCard = (e: Event) => {
@@ -133,6 +149,11 @@ export function registerNextItemEvent(
     }
 
     if (!nextItem) return // TODO: Notice problem.
+
+    sendInteractItemMessage(nextItem.setId, nextItem._id, ItemsInteractionShow).catch((error) => {
+      // TODO: handle error case.
+      console.error(error)
+    })
 
     const currentSet = setGetter()
     if (!currentSet) throw new Error("cannot get set")
