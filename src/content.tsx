@@ -134,6 +134,7 @@ async function injectCards(): Promise<PageInjector[]> {
           const templateValues = await contentData.randomTemplateValues()
 
           if (!templateValues || templateValues.length == 0) {
+            console.debug("no template values, showing recommendation")
             contentData.isNeedRecommendation = true
             processInjection()
           }

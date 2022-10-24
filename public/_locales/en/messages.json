@@ -26,7 +26,19 @@
     "message": "Logout"
   },
   "popup_introduce_first": {
-    "message": "WE SPEND SO MUCH TIME ON THE INTERNET.\nYes, no excuse. But a day remains 24 hours since we have the clock. From now on, I will help you use Internet more efficient.\nJust TRY to SEE! 😊"
+    "message": "WE SPEND SO MUCH TIME ON THE INTERNET.\nTime doesn't stop when we wait.\nLet's make it useful with Lazy Vaccine! 😊"
+  },
+  "popup_introduce_shib_self_intro": {
+    "message": ":greeting_string my friend! 🤗 You can call me ✨Lava✨.\nDestiny has arranged me here to be with you on your learning. Let's get to know each other really quick."
+  },
+  "good_morning": {
+    "message": "Good morning"
+  },
+  "good_afternoon": {
+    "message": "Good afternoon"
+  },
+  "good_evening": {
+    "message": "Good evening"
   },
   "popup_introduce_choose_lang_codes": {
     "message": "Nice to meet you, :user_name! 🎉 I see your first language is :first_language, do you want to show content in other languages?"
@@ -467,7 +479,7 @@
     "message": "Hi there! To help you learn, firstly, May I know who you are? Let's log in. It will take a few seconds only!"
   },
   "suggestion_card_not_logged_in_btn": {
-  "message": "Complete now"
+    "message": "Complete now"
   },
   "i_love_you": {
     "message": "I like you! ❤️"
@@ -489,12 +501,6 @@
   },
   "rich_text_image_url": {
     "message": "Image url"
-  },
-  "first_page_quote_1": {
-    "message": "Effortless learning is no more an exaggerated story, using Lazy Vaccine and subscribe to a learning set to see the difference by yourself. I promise!"
-  },
-  "first_page_quote_2": {
-    "message": "Duc invited me to try Lazy Vaccine, I created a learning set for my English lesson, then stated watching Youtube for awhile and realized that I remembered many words! It really works!"
   },
   "search_result_in_languages": {
     "message": "In langues"

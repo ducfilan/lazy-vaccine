@@ -81,6 +81,7 @@ export class ContentData {
         this.havingSubscribedSets = true
 
         await this.determineIsNeedRecommendation()
+        console.debug(this.isNeedRecommendation)
       }
     } catch (error: any) {
       if (error?.error?.type === "NotSubscribedError") {
@@ -112,8 +113,6 @@ export class ContentData {
       this.itemsInPageInteractionCountMap[itemInteractions.itemId] = itemInteractions.interactionCount
       this.itemsInPageInteractionMap[itemInteractions.itemId] = Object.keys(itemInteractions.interactionCount)
     })
-
-    console.log(this.itemsInPageInteractionCountMap)
   }
 
   public appendSetItems(items: SetInfoItem[]) {
@@ -128,7 +127,7 @@ export class ContentData {
   public interactItem(itemId: string, interaction: string) {
     this.itemsInPageInteractionMap[itemId] = [...(this.itemsInPageInteractionMap[itemId] || []), interaction]
 
-    const itemInteractionsCount = this.itemsInPageInteractionCountMap[itemId]
+    const itemInteractionsCount = this.itemsInPageInteractionCountMap[itemId] || {}
     itemInteractionsCount[interaction] = (itemInteractionsCount[interaction] || 0) + 1
     this.itemsInPageInteractionCountMap[itemId] = itemInteractionsCount
   }
@@ -218,6 +217,7 @@ export class ContentData {
    * @returns true if the recommendation card should be displayed in the page.
    */
   public async determineIsNeedRecommendation() {
+    console.debug("enter determineIsNeedRecommendation")
     if (this.isNeedReviewStaredItems) {
       this.isNeedRecommendation = false
     }
@@ -242,6 +242,7 @@ export class ContentData {
 
       // 2% of the cards will be recommendation.
       if (appearInPercent(0.02)) {
+        console.debug("match 2% of the cards will be recommendation")
         sendTrackingMessage(TrackingNameSuggestToSubscribeRandomly)
         this.isNeedRecommendation = true
 
@@ -259,7 +260,10 @@ export class ContentData {
     )
 
     const isInteractedMoreThan80Percent =
-      (this.setInfo.itemsInteractions?.length || 0) > (this.setInfo.items?.length || 0) * 0.8
+      (this.setInfo.itemsInteractions?.length || 0) > (this.setInfo.totalItemsCount || this.setInfo.items?.length || 0) * 0.8
+
+    console.debug("isInteractedMoreThan80Percent: " + isInteractedMoreThan80Percent + "itemsInteractions?.length: " + this.setInfo.itemsInteractions?.length + " totalItemsCount: " + this.setInfo.totalItemsCount)
+
     this.isNeedRecommendation = isInteractedMoreThan80Percent && appearInPercent(0.2)
   }
 
@@ -353,12 +357,17 @@ export class ContentData {
     let templateValues: KeyValuePair[] = []
     if (item) {
       try {
-        await sendInteractItemMessage(this.setId || "", item._id || "", ItemsInteractionShow)
-        this.interactItem(item._id, ItemsInteractionShow)
+        sendInteractItemMessage(this.setId || "", item._id || "", ItemsInteractionShow)
+          .then(() => this.interactItem(item._id, ItemsInteractionShow))
+          .catch((error) => {
+            // TODO: handle error case.
+            console.error(error)
+          })
 
         templateValues = await toTemplateValues(item, generateTemplateExtraValues(item))
       } catch (error) {
-        console.error(templateValues)
+        console.error(error)
+        console.log(templateValues)
       }
     }
 

@@ -10,7 +10,10 @@ import BlockQuote from "@/common/components/BlockQuote"
 import PopupHeader from "@/pages/popup/components/Header"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { clearLoginInfoCache, signIn } from "@/common/facades/authFacade"
-import { User } from "@/common/types/types"
+import { KeyValuePair, User } from "@/common/types/types"
+import { TalkingShibText } from "@/background/templates/common/TalkingShibText"
+import { formatString, getGreetingTime } from "@/common/utils/stringUtils"
+import Clock from "@/common/components/Clock"
 
 export default function FirstTime() {
   const [isLoading, setIsLoading] = useState(false)
@@ -40,8 +43,23 @@ export default function FirstTime() {
 
   return (
     <>
+      <Clock
+        parentProps={{
+          textAlign: "center",
+          position: "absolute",
+          top: -90,
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+        textStyle={{
+          marginBottom: 0,
+          fontSize: 80,
+          fontWeight: 700,
+          color: "rgba(0, 0, 0, 0.5)",
+        }}
+      />
       <div className="first-time-intro--wrapper is-relative">
-        <PopupHeader content={i18n("popup_introduce_first")} iconUrl={shibImg} />
+        <PopupHeader content={i18n("popup_introduce_first")} />
         <div className="first-time-intro--login-button has-text-centered">
           <Button
             shape="round"
@@ -66,14 +84,17 @@ export default function FirstTime() {
           closable
           style={{ display: isShowLoginError ? "flex" : "none" }}
         />
-        <Carousel autoplay>
-          {[
-            { quote: i18n("first_page_quote_1"), author: "Duc Hoang" },
-            { quote: i18n("first_page_quote_2"), author: "Lona" },
-          ].map(({ quote, author }, i) => (
-            <BlockQuote key={i} quote={quote} author={`- ${author}`} />
-          ))}
-        </Carousel>
+        <div className="first-time-intro--shib-self-intro">
+          <TalkingShibText
+            shibImgUrl={shibImg}
+            text={formatString(i18n("popup_introduce_shib_self_intro"), [
+              {
+                key: "greeting_string",
+                value: getGreetingTime(),
+              },
+            ] as KeyValuePair[])}
+          />
+        </div>
       </div>
     </>
   )
