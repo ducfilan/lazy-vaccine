@@ -2,6 +2,12 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "jsdom",
+  globalSetup: './tests/config/setup.ts',
+  globalTeardown: './tests/config/teardown.ts',
+  setupFilesAfterEnv: ['./tests/config/setupAfterEnv.ts'],
+  coveragePathIgnorePatterns: [
+    '/node_modules/'
+  ],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
     "@img/(.*)$": "<rootDir>/src/images/$1",
