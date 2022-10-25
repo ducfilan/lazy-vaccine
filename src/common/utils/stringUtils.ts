@@ -107,7 +107,7 @@ export const getGreetingTime = (time?: Date) => {
   if (currentHour >= splitAfternoon && currentHour <= splitEvening) {
     // Between 12 PM and 5PM
     return i18n("good_afternoon")
-  } else if (currentHour >= splitEvening) {
+  } else if (currentHour > splitEvening) {
     // Between 5PM and Midnight
     return i18n("good_evening")
   }
