@@ -4,7 +4,7 @@ import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
 import { Select, Row, Col, notification, Card } from "antd"
 
-import { DefaultLangCode, i18n } from "@consts/constants"
+import { DefaultLangCode, i18n, RegisterStepsLabels } from "@consts/constants"
 import SupportingLanguages, { TopLanguages } from "@consts/supportingLanguages"
 import { formatString, langCodeToName } from "@/common/utils/stringUtils"
 import { KeyValuePair, User } from "@/common/types/types"
@@ -13,6 +13,7 @@ import { updateUserInfo } from "@/common/repo/user"
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
 import PopupHeader from "@/pages/popup/components/Header"
 import Flag from "@/common/components/Flag"
+import FriendRoad from "@/pages/app/components/FriendRoad"
 
 const { useState } = React
 const { Option } = Select
@@ -157,6 +158,7 @@ function ChooseLanguages() {
           </Col>
         </Row>
       </div>
+      <FriendRoad steps={RegisterStepsLabels} />
     </div>
   )
 }

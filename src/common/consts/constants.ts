@@ -246,3 +246,22 @@ export const DefaultImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAA
 
 export const SetTypeNormal = 1
 export const SetTypeReviewStarredItems = 2
+
+export const RegisterStepsLabels = [
+  {
+    title: "Login",
+    description: "Then I know how to call your name",
+  },
+  {
+    title: "Languages",
+    description: "Let me know which languages to help you",
+  },
+  {
+    title: "Subscribe",
+    description: "So I can help you learn what you will choose",
+  },
+  {
+    title: "Final",
+    description: "I am your buddy when you are online!",
+  },
+]

@@ -15,7 +15,12 @@ import FirstTime from "./components/FirstTime"
 import ChooseLanguages from "./components/ChooseLanguages"
 import FinishedGettingStarted from "./components/FinishedGettingStarted"
 import { CacheKeyIsFinishedShowSubscribeGuide, CacheKeyRandomSet } from "@/common/consts/caching"
-import { TrackingNameFinishLanguageSelection, TrackingNameFinishLogin, TrackingNameOpenGettingStartedPage } from "@/common/consts/trackingNames"
+import {
+  TrackingNameFinishLanguageSelection,
+  TrackingNameFinishLogin,
+  TrackingNameOpenGettingStartedPage,
+} from "@/common/consts/trackingNames"
+import MissionIntro from "./components/MissionIntro"
 
 export const GettingStartedPage = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -23,7 +28,7 @@ export const GettingStartedPage = () => {
 
   const { user, setUser, setHttp } = useGlobalContext()
 
-  const [finishedRegisterStep, setFinishedRegisterStep] = useState<number>(RegisterSteps.Install)
+  const [finishedRegisterStep, setFinishedRegisterStep] = useState<number>()
 
   useEffect(() => {
     window.heap.track(TrackingNameOpenGettingStartedPage)
@@ -69,7 +74,7 @@ export const GettingStartedPage = () => {
 
   useEffect(() => {
     setLastError(null)
-    setFinishedRegisterStep(user?.finishedRegisterStep || RegisterSteps.Install)
+    user && setFinishedRegisterStep(user?.finishedRegisterStep || RegisterSteps.Install)
   }, [user])
 
   function renderContent() {
@@ -99,7 +104,7 @@ export const GettingStartedPage = () => {
         )
 
       default:
-        return <FirstTime />
+        return <Loading />
     }
   }
 

@@ -1,6 +1,6 @@
 import React from "react"
 
-import { AppBasePath, AppPages, i18n } from "@/common/consts/constants"
+import { AppBasePath, AppPages, i18n, RegisterStepsLabels } from "@/common/consts/constants"
 import WakeImg from "@img/emojis/shiba/wake.png"
 import LoveImg from "@img/emojis/shiba/love.png"
 import { Carousel, Input } from "antd"
@@ -11,6 +11,7 @@ import { formatString } from "@/common/utils/stringUtils"
 
 import PinGuideImg from "@img/ui/pin-guide.gif"
 import { TrackingNameDoneActivation } from "@/common/consts/trackingNames"
+import FriendRoad from "@/pages/app/components/FriendRoad"
 
 export default function FinishedGettingStarted() {
   const { user } = useGlobalContext()
@@ -53,6 +54,7 @@ export default function FinishedGettingStarted() {
           </div>
         </Carousel>
       </div>
+      <FriendRoad steps={RegisterStepsLabels} />
     </>
   )
 }
