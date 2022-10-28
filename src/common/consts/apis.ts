@@ -1,6 +1,6 @@
 import { ApiBaseUrl, StaticApiBaseUrl } from "@consts/constants"
 
-export const ApiCategories = (langCode: string) => `/categories?lang=${langCode}`
+export const ApiCategories = (langCode: string, isTopCategory: boolean = false) => `/categories?lang=${langCode}&isTopCategory=${isTopCategory}`
 export const ApiGetSetsInCategory = (categoryId: string, skip: number, limit: number) => `/categories/${categoryId}/sets?skip=${skip}&limit=${limit}`
 export const ApiTopSetsInCategory = (langCode: string, categoryId: string) => `/categories/${categoryId}/top-sets?lang=${langCode}`
 export const ApiInteraction = (setId: string, action: string) => `/interactions/${setId}/interactions?action=${action}`
@@ -23,8 +23,10 @@ export const ApiClearCache = (cacheType: string) => `${ApiUsers}/cache?cacheType
 export const ApiGeneralInfoCounts = "sets-statistics"
 export const ApiUploadTestResult = (setId: string) => `/interactions/${setId}/upload-result`
 export const ApiGetMissions = "/missions"
-export const ApiGetInjectionTargets = `${StaticApiBaseUrl}/injection-targets.json`
-export const ApiGetRestrictedKeywords = `${StaticApiBaseUrl}/restricted-keywords.json`
 export const ApiGetTokenFromCode = (code: string) => `${ApiBaseUrl}/token?code=${code}`
 export const ApiRefreshAccessToken = (refreshToken: string) => `${ApiBaseUrl}/token/refresh?refreshToken=${refreshToken}`
 export const ApiPronounceText = (text: string, langCode: string) => `${ApiBaseUrl}/audio/pronounce?text=${text}&langCode=${langCode}`
+
+export const ApiGetInjectionTargets = `${StaticApiBaseUrl}/injection-targets.json`
+export const ApiGetRestrictedKeywords = `${StaticApiBaseUrl}/restricted-keywords.json`
+export const ApiGetTopSearchKeywords = `${StaticApiBaseUrl}/top-search-keywords.json`

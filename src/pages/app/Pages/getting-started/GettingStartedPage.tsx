@@ -114,7 +114,7 @@ export const GettingStartedPage = () => {
         closable={false}
         footer={null}
         centered
-        visible={true}
+        open={true}
         onOk={() => window.close()}
         width={783}
         wrapClassName="getting-started-modal-wrapper"

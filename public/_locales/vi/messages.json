@@ -23,7 +23,22 @@
     "message": "đăng xuất"
   },
   "popup_introduce_first": {
-    "message": "Chúng ta dành quá nhiều thời gian trên Internet.\nĐúng vậy, không có gì phải bào chữa. Tuy nhiên bạn cần biết rằng 1 ngày luôn chỉ có 24 giờ. Từ giờ, tiện ích này sẽ giúp thời gian sử dụng Internet của bạn hiệu quả hơn. Hãy thử và xem kết quả nhé! 😊"
+    "message": "CHÚNG TA DÀNH QUÁ NHIỀU THỜI GIAN TRÊN INTERNET.\nThời gian không chờ đợi bất kì một ai.\nCùng Lazy Vaccine biến thời gian chờ đợi trở nên hữu ích nhé! 😊"
+  },
+  "popup_introduce_shib_self_intro": {
+    "message": ":greeting_string bạn nha! 🤗 Bạn hãy gọi mình là ✨Lava✨.\nTình hình là ông trời đã sắp xếp mình ở đây để cùng bạn học tập rồi bạn ạ. Trước hết mình cùng hiểu thêm về nhau chút nha ^^!"
+  },
+  "popup_introduce_close_friend_message": {
+    "message": "Giờ chúng ta đang ở rất gần nhau rồi, chỉ cần một vài bước nữa thôi!"
+  },
+  "good_morning": {
+    "message": "Buổi sáng vui vẻ"
+  },
+  "good_afternoon": {
+    "message": "Buổi chiều vui vẻ"
+  },
+  "good_evening": {
+    "message": "Buổi tối vui vẻ"
   },
   "popup_introduce_choose_lang_codes": {
     "message": "Chào bạn, :user_name! 🎉 Có vẻ ngôn ngữ chính của bạn là :first_language, bạn còn muốn hiển thị nội dung từ ngôn ngữ khác mà bạn biết không?"
@@ -113,7 +128,7 @@
     "message": "Thời gian thu hoạch (điểm)"
   },
   "common_category": {
-    "message": "Phân loại"
+    "message": "Danh mục"
   },
   "common_cancel": {
     "message": "Hủy"
@@ -167,7 +182,7 @@
     "message": "Chỉnh sửa"
   },
   "create_set_request_category": {
-    "message": "Bấm vào đây để yêu cầu 1 phân loại mới"
+    "message": "Bấm vào đây để yêu cầu 1 danh mục mới"
   },
   "create_set_help_text_2_title": {
     "message": "Tip để tạo 1 bài học tốt"
@@ -263,7 +278,7 @@
     "message": "Bạn cho mình biết bạn muốn học gì, mình sẽ tìm nội dung học tập tương ứng cho bạn nha! Nhập từ khóa vào ô tìm kiếm và nhấn Enter nha!"
   },
   "home_category_lookup": {
-    "message": "Tìm kiếm phân loại"
+    "message": "Tìm kiếm danh mục"
   },
   "home_everyone_favorite": {
     "message": "Nội dung nổi bật nhất"
@@ -397,6 +412,15 @@
   "common_starred_only": {
     "message": "Đã đánh dấu sao"
   },
+  "common_top_searches": {
+    "message": "Từ khóa được tìm kiếm nhiều nhất"
+  },
+  "common_browse_categories": {
+    "message": "Xem vòng vòng các danh mục"
+  },
+  "common_friend": {
+    "message": "Bạn"
+  },
   "common_copy": {
     "message": "Sao chép"
   },
@@ -461,7 +485,7 @@
     "message": "Xin chào bạn! Để bắt đầu giúp bạn học tập, trước tiên bạn cho mình biết tên được không? Hãy đăng nhập nhé, chỉ mất vài giây thôi!"
   },
   "suggestion_card_not_logged_in_btn": {
-  "message": "Vào việc luôn"
+    "message": "Bắt đầu ngay"
   },
   "i_love_you": {
     "message": "Mình thích bạn! ❤️"

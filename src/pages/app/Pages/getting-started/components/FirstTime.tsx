@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-import { i18n, LoginTypes } from "@/common/consts/constants"
+import { i18n, LoginTypes, RegisterStepsLabels } from "@/common/consts/constants"
 import WanImg from "@img/emojis/shiba/wan.png"
 import GoodImg from "@img/emojis/shiba/good.png"
 import { Alert, Button } from "antd"
@@ -8,36 +8,50 @@ import { GoogleOutlined } from "@ant-design/icons"
 
 import PopupHeader from "@/pages/popup/components/Header"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
-import { clearLoginInfoCache, signIn } from "@/common/facades/authFacade"
+import { clearLoginInfoCache, signIn, signOut } from "@/common/facades/authFacade"
 import { KeyValuePair, User } from "@/common/types/types"
 import { TalkingShibText } from "@/background/templates/common/TalkingShibText"
 import { formatString, getGreetingTime } from "@/common/utils/stringUtils"
 import Clock from "@/common/components/Clock"
+import FriendRoad from "@/pages/app/components/FriendRoad"
 
 export default function FirstTime() {
   const [isLoading, setIsLoading] = useState(false)
   const [isShowLoginError, setIsShowLoginError] = useState(false)
   const [shibImg, setShibImg] = useState(WanImg)
 
-  const { setUser, setHttp } = useGlobalContext()
+  const { setUser, http, setHttp } = useGlobalContext()
 
   function loginWithGoogle() {
     setIsLoading(true)
     setIsShowLoginError(false)
 
-    signIn
-      .call({ setHttp }, LoginTypes.google)
-      .then((u: User | null) => {
-        setUser(u)
-      })
-      .catch((error) => {
-        clearLoginInfoCache()
-        console.error(error)
-        setIsShowLoginError(true)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
+    new Promise((resolve) => {
+      if (http) {
+        signOut(http, () => {
+          setUser(null)
+          setHttp(null)
+
+          resolve(true)
+        })
+      } else {
+        resolve(true)
+      }
+    }).finally(() => {
+      signIn
+        .call({ setHttp }, LoginTypes.google)
+        .then((u: User | null) => {
+          setUser(u)
+        })
+        .catch((error) => {
+          clearLoginInfoCache()
+          console.error(error)
+          setIsShowLoginError(true)
+        })
+        .finally(() => {
+          setIsLoading(false)
+        })
+    })
   }
 
   return (
@@ -95,6 +109,7 @@ export default function FirstTime() {
           />
         </div>
       </div>
+      <FriendRoad steps={RegisterStepsLabels} />
     </>
   )
 }

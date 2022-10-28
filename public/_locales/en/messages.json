@@ -26,10 +26,13 @@
     "message": "Logout"
   },
   "popup_introduce_first": {
-    "message": "WE SPEND SO MUCH TIME ON THE INTERNET.\nTime doesn't stop when we wait.\nLet's make it useful with Lazy Vaccine! 😊"
+    "message": "WE SPEND SO MUCH TIME ON THE INTERNET.\nTime doesn't stop when we wait.\nLet's make waiting time useful with Lazy Vaccine! 😊"
   },
   "popup_introduce_shib_self_intro": {
     "message": ":greeting_string my friend! 🤗 You can call me ✨Lava✨.\nDestiny has arranged me here to be with you on your learning. Let's get to know each other really quick."
+  },
+  "popup_introduce_close_friend_message": {
+    "message": "We are so close right now, just one more step!"
   },
   "good_morning": {
     "message": "Good morning"
@@ -408,6 +411,15 @@
   },
   "common_starred_only": {
     "message": "Starred only"
+  },
+  "common_top_searches": {
+    "message": "Top searches"
+  },
+  "common_browse_categories": {
+    "message": "Browse categories"
+  },
+  "common_friend": {
+    "message": "Friend"
   },
   "seed_growing_conditions": {
     "message": "Growing conditions"

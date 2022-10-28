@@ -8,8 +8,8 @@ import { getSetInfo, interactToSet, interactToSetItem, undoInteractToSet } from 
 import { clearServerCache, countInteractedItems, getInteractedItems, getMyInfo, getUserInteractionRandomSet, suggestSets } from "@/common/repo/user"
 import { SetInfo, User } from "./common/types/types"
 import { getStorageSyncData } from "@/common/utils/utils"
-import { getInjectionTargets } from "./common/repo/injection-targets"
-import { getRestrictedKeywords } from "./common/repo/restricted-keywords"
+import { getInjectionTargets } from "./common/repo/staticApis"
+import { getRestrictedKeywords } from "./common/repo/staticApis"
 import { TrackingNameInteractItem, TrackingNameShowItem, TrackingNameSignupFromInjectedCard } from "./common/consts/trackingNames"
 
 let lastAudio: HTMLAudioElement

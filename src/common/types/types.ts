@@ -216,6 +216,7 @@ export type GeneralInfoCounts = {
 export type InjectionTargetsResponse = { Title: string, MatchPattern: string; Targets: InjectionTarget[], Order: number }[]
 
 export type RestrictedKeywordsResponse = { restrictedKeywords: string[] }
+export type TopSearchKeywordsResponse = { topSearchKeywords: string[] }
 
 export type TestResult = {
   result: {

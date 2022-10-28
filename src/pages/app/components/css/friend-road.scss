@@ -3,7 +3,11 @@
 
   .images-pins--wrapper {
     position: relative;
-    padding: 10px 23px;
+    padding: 10px 20px;
+
+    .ant-badge {
+      position: unset !important;
+    }
   }
 
   .ant-steps-item-process {

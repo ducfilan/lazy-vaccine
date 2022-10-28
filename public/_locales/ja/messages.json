@@ -26,7 +26,22 @@
     "message": "ログアウト"
   },
   "popup_introduce_first": {
-    "message": "私たちはインターネットに多くの時間を費やしています。\nそうですよ！、言い訳はできません。しかし、1日は24時間残っています。今後、この拡張機能はインターネットをより効率的に使用するのに役立ちます。見てみてください！ 😊"
+    "message": "私たちはインターネットに多くの時間を費やしています。\n待っていても時間は止まりません。\nLazy Vaccineで待ち時間を役に立ちましょう！ 😊"
+  },
+  "popup_introduce_shib_self_intro": {
+    "message": ":greeting_string、私の友人！ 🤗 ✨Lava✨と呼んでください。 運命は、私があなたと一緒に学ぶためにここにいるように手配しました. 早くお互いを知りましょう。"
+  },
+  "popup_introduce_close_friend_message": {
+    "message": "私たちは今とても近くにいます、あと一歩です!"
+  },
+  "good_morning": {
+    "message": "おはようございます"
+  },
+  "good_afternoon": {
+    "message": "こんにちは"
+  },
+  "good_evening": {
+    "message": "こんばんは"
   },
   "popup_introduce_choose_lang_codes": {
     "message": "はじめまして、:user_nameさん！ 🎉あなたの第一言語は:first_languageですが、他の言語でコンテンツを表示しますか？"
@@ -399,6 +414,15 @@
   },
   "common_starred_only": {
     "message": "スター付きのみ"
+  },
+  "common_top_searches": {
+    "message": "よく検索されたキーワード"
+  },
+  "common_browse_categories": {
+    "message": "カテゴリを参照"
+  },
+  "common_friend": {
+    "message": "友達"
   },
   "common_copy": {
     "message": "コピー"

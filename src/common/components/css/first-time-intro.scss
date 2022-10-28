@@ -27,4 +27,21 @@
 
 .first-time-intro--body-wrapper {
   margin-top: 3em;
+  padding: 0 50px;
+}
+
+.top-keywords--wrapper {
+  margin-top: 16px;
+  .ant-tag {
+    cursor: pointer;
+    font-size: 14px;
+    border-color: $primary;
+  }
+}
+
+.categories-list--wrapper {
+  margin: 16px 0;
+  button {
+    margin: 0 10px 10px 0;
+  }
 }

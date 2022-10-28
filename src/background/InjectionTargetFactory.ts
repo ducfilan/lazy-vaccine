@@ -1,4 +1,4 @@
-import { getInjectionTargets } from "@/common/repo/injection-targets"
+import { getInjectionTargets } from "@/common/repo/staticApis"
 import { InjectionTarget } from "@/common/types/types"
 
 export default class InjectionTargetFactory {

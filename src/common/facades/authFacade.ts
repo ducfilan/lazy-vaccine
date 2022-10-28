@@ -173,6 +173,7 @@ export function signOut(http: Http, callback: () => void = () => { }) {
     .catch((error) => {
       // TODO: Notice user.
       console.error(error)
+      callback()
     })
 }
 

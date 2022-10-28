@@ -1,7 +1,13 @@
-import * as React from "react"
+import React from "react"
 import "./css/image-pin.scss"
 
-const ImagePin = (props: { style?: object; widthPx?: number; heightPx?: number; imgUrl: string; imgStyle: object }) => {
+const ImagePin = (props: {
+  style?: object
+  widthPx?: number
+  heightPx?: number
+  img: string | JSX.Element
+  imgStyle?: object
+}) => {
   return (
     <div style={props.style}>
       <div className="image-pin--wrapper">
@@ -12,7 +18,7 @@ const ImagePin = (props: { style?: object; widthPx?: number; heightPx?: number; 
             height: props.heightPx || 100,
           }}
         />
-        <img src={props.imgUrl} style={props.imgStyle} />
+        {typeof props.img === "string" ? <img src={props.img} style={props.imgStyle} /> : props.img}
       </div>
     </div>
   )

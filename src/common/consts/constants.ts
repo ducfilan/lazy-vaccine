@@ -160,6 +160,7 @@ export const TrueFalseQuestionAmount = 10
 export const ItemsLimitPerGet = 50
 export const StarItemsLimitPerGet = 20
 export const MaximumItemShow = 5
+export const MaxRegistrationsStep = 2
 
 export const TestResultLevel = {
   High: 0.9,
