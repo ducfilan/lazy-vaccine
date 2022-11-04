@@ -15,7 +15,7 @@ import {
 } from "@/common/consts/constants"
 import { pickRandomFlatColor } from "@/common/utils/arrayUtils"
 
-import "../css/set-item-card-small.scss"
+import "../css/set-item-card.scss"
 
 const { useCallback, useState } = React
 

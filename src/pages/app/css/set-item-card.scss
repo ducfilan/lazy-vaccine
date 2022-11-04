@@ -1,0 +1,31 @@
+.card-set-item-small,
+.card-set-item-long {
+  .empty-img {
+    font-size: 5em;
+    text-align: center;
+    padding-top: 50%;
+    color: #fff;
+
+    p {
+      transform: translateY(-50%);
+    }
+  }
+}
+
+.card-set-item-small {
+  .empty-img {
+    height: 300px;
+  }
+}
+
+.card-set-item-long {
+  padding: 0 40px;
+  width: 100%;
+
+  .empty-img,
+  .set-img {
+    height: 200px;
+    width: 200px;
+    border-radius: 40% 70% 70% 40%;
+  }
+}
