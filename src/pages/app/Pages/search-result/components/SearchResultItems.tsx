@@ -14,6 +14,7 @@ import SupportingLanguages from "@/common/consts/supportingLanguages"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { CacheKeyIsFinishedShowSubscribeGuide } from "@/common/consts/caching"
 import GettingStartedJoyride from "./GettingStartedJoyride"
+import { updateUserInfo } from "@/common/repo/user"
 
 const SearchResultItems = (props: { keyword: string; languages: string[] }) => {
   if (!props.keyword) {
@@ -24,7 +25,7 @@ const SearchResultItems = (props: { keyword: string; languages: string[] }) => {
     )
   }
 
-  const { http } = useGlobalContext()
+  const { http, user, setUser } = useGlobalContext()
 
   const [sets, setSets] = useState<SetInfo[]>([])
   const [skip, setSkip] = useState<number>()
@@ -94,7 +95,11 @@ const SearchResultItems = (props: { keyword: string; languages: string[] }) => {
           }}
           defaultValue={searchLanguages}
           options={Object.values(SupportingLanguages.Set).map((lang) => ({ label: lang.name, value: lang.code }))}
-          onChange={(values) => setSearchLanguages(values)}
+          onChange={(values) => {
+            user && setUser({ ...user, langCodes: values })
+            http && updateUserInfo(http, { langCodes: values }).catch((error) => console.error(error))
+            setSearchLanguages(values)
+          }}
           onBlur={resetItemsState}
           onDeselect={resetItemsState}
         />
