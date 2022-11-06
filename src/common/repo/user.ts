@@ -50,8 +50,8 @@ export async function getUserInteractionSets(http: Http, userId: string, interac
   return result
 }
 
-export async function getUserInteractionRandomSet(http: Http, interaction: string, itemsSkip: number, itemsLimit: number): Promise<SetInfo> {
-  const response = await http.get<any, AxiosResponse<UserInteractionSetResponse>>(ApiRandomSet(interaction, itemsSkip, itemsLimit))
+export async function getUserInteractionRandomSet(http: Http, interactions: string[], itemsSkip: number, itemsLimit: number): Promise<SetInfo> {
+  const response = await http.get<any, AxiosResponse<UserInteractionSetResponse>>(ApiRandomSet(interactions.join(","), itemsSkip, itemsLimit))
 
   const result = response?.data
   if (!result) throw new Error("cannot get user interaction sets")
@@ -59,7 +59,7 @@ export async function getUserInteractionRandomSet(http: Http, interaction: strin
   const { actions, set } = result
 
   if (!set) {
-    if (interaction === InteractionSubscribe) {
+    if (interactions.includes(InteractionSubscribe)) {
       throw new NotSubscribedError("not subscribed sets")
     }
   }

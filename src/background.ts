@@ -1,6 +1,6 @@
 import { ApiPronounceText } from "@consts/apis"
 import CacheKeys from "@/common/consts/caching"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, HeapIoId, InteractionSubscribe, ItemsInteractionShow, LocalStorageKeyPrefix, LoginTypes, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet, ChromeMessageTypeCountInteractedItems, ChromeMessageTypeGetInteractedItems, SetTypeNormal, ChromeMessageTypeGetSetSilent, ChromeMessageTypeGetInjectionTargets, ChromeMessageTypeGetRestrictedKeywords } from "@consts/constants"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, HeapIoId, InteractionSubscribe, ItemsInteractionShow, LocalStorageKeyPrefix, LoginTypes, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet, ChromeMessageTypeCountInteractedItems, ChromeMessageTypeGetInteractedItems, SetTypeNormal, ChromeMessageTypeGetSetSilent, ChromeMessageTypeGetInjectionTargets, ChromeMessageTypeGetRestrictedKeywords, InteractionCreate } from "@consts/constants"
 import { NotLoggedInError, NotSubscribedError } from "@consts/errors"
 import { clearLoginInfoCache, getGoogleAuthToken, getGoogleAuthTokenSilent, signIn } from "@/common/facades/authFacade"
 import { Http } from "@/common/facades/axiosFacade"
@@ -8,8 +8,7 @@ import { getSetInfo, interactToSet, interactToSetItem, undoInteractToSet } from 
 import { clearServerCache, countInteractedItems, getInteractedItems, getMyInfo, getUserInteractionRandomSet, suggestSets } from "@/common/repo/user"
 import { SetInfo, User } from "./common/types/types"
 import { getStorageSyncData } from "@/common/utils/utils"
-import { getInjectionTargets } from "./common/repo/staticApis"
-import { getRestrictedKeywords } from "./common/repo/staticApis"
+import { getInjectionTargets, getRestrictedKeywords } from "./common/repo/staticApis"
 import { TrackingNameInteractItem, TrackingNameShowItem, TrackingNameSignupFromInjectedCard } from "./common/consts/trackingNames"
 
 let lastAudio: HTMLAudioElement
@@ -270,7 +269,7 @@ async function getRandomSubscribedSet(http: Http, itemsSkip: number, itemsLimit:
   let randomSetInfo = getCachedSet()
 
   if (!randomSetInfo) {
-    randomSetInfo = await getUserInteractionRandomSet(http, InteractionSubscribe, itemsSkip, itemsLimit)
+    randomSetInfo = await getUserInteractionRandomSet(http, [InteractionSubscribe], itemsSkip, itemsLimit)
     setCachedSet(randomSetInfo)
   }
 

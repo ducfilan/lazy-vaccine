@@ -164,6 +164,7 @@ export function signOut(http: Http, callback: () => void = () => { }) {
       logout(http)
         .then(() => {
           clearLoginInfoCache()
+          clearLocalCache()
           window.heap.resetIdentity()
           revokeToken(token)
         })
@@ -180,6 +181,10 @@ export function signOut(http: Http, callback: () => void = () => { }) {
 export function clearLoginInfoCache() {
   chrome.storage.sync.remove([CacheKeys.accessToken, CacheKeys.refreshToken])
   chrome.storage.sync.set({ [CacheKeys.isSignedOut]: true })
+}
+
+function clearLocalCache() {
+  localStorage.clear()
 }
 
 export function revokeToken(token: string) {
