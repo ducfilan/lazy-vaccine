@@ -1,14 +1,19 @@
-import { pronounceTextApi } from "./common/consts/apis"
-import CacheKeys from "./common/consts/cacheKeys"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSet, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, InteractionSubscribe, LocalStorageKeyPrefix, LoginTypes } from "./common/consts/constants"
-import { NotLoggedInError, NotSubscribedError } from "./common/consts/errors"
-import { getGoogleAuthToken, getGoogleAuthTokenSilent, signIn } from "./common/facades/authFacade"
-import { Http } from "./common/facades/axiosFacade"
-import { interactToSetItem } from "./common/repo/set"
-import { getUserInteractionRandomSet } from "./common/repo/user"
+import { ApiPronounceText } from "@consts/apis"
+import CacheKeys from "@/common/consts/caching"
+import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, HeapIoId, InteractionSubscribe, ItemsInteractionShow, LocalStorageKeyPrefix, LoginTypes, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet, ChromeMessageTypeCountInteractedItems, ChromeMessageTypeGetInteractedItems, SetTypeNormal, ChromeMessageTypeGetSetSilent, ChromeMessageTypeGetInjectionTargets, ChromeMessageTypeGetRestrictedKeywords, InteractionCreate } from "@consts/constants"
+import { NotLoggedInError, NotSubscribedError } from "@consts/errors"
+import { clearLoginInfoCache, getGoogleAuthToken, getGoogleAuthTokenSilent, signIn } from "@/common/facades/authFacade"
+import { Http } from "@/common/facades/axiosFacade"
+import { getSetInfo, interactToSet, interactToSetItem, undoInteractToSet } from "@/common/repo/set"
+import { clearServerCache, countInteractedItems, getInteractedItems, getMyInfo, getUserInteractionRandomSet, suggestSets } from "@/common/repo/user"
 import { SetInfo, User } from "./common/types/types"
+import { getStorageSyncData } from "@/common/utils/utils"
+import { getInjectionTargets, getRestrictedKeywords } from "./common/repo/staticApis"
+import { TrackingNameInteractItem, TrackingNameShowItem, TrackingNameSignupFromInjectedCard } from "./common/consts/trackingNames"
 
 let lastAudio: HTMLAudioElement
+
+includeHeapAnalytics()
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.type) {
@@ -20,35 +25,55 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       })
       break
 
+    case ChromeMessageTypeIdentifyUser:
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        getMyInfo(http).then((user: User) => {
+          window.heap.identify(user?.email)
+          window.heap.addUserProperties({ name: user?.name || "", finished_register_step: user?.finishedRegisterStep })
+          sendResponse({ success: true, user })
+        }).catch(() => {
+          sendResponse({ success: false })
+        })
+      }).catch(() => {
+        sendResponse({ success: false })
+      })
+      break
+
     case ChromeMessageTypeSignUp:
+      window.heap.track(TrackingNameSignupFromInjectedCard)
       signIn
         .call(null, LoginTypes.google)
         .then((user: User | null) => {
+          window.heap.identify(user?.email)
+          window.heap.addUserProperties({ name: user?.name || "", finished_register_step: user?.finishedRegisterStep })
           sendResponse({ success: true, result: user })
         })
         .catch((error) => {
+          clearLoginInfoCache()
           sendResponse({ success: false, error: toResponseError(error) })
         })
 
       break
 
-    case ChromeMessageTypeGetRandomSet:
-      getGoogleAuthToken().then((token: string) => {
-        const http = new Http(token, LoginTypes.google)
-        getRandomSubscribedSet(http).then((set) => {
-          sendResponse({ success: true, result: set })
-        }).catch(error => {
-          sendResponse({ success: false, error: toResponseError(error) })
-        })
-      }).catch((error: Error) => {
-        sendResponse({ success: false, error: toResponseError(error) })
-      })
+    case ChromeMessageTypeTracking:
+      if (!request.arg.name) return
+
+      if (!request.arg.metadata) {
+        window.heap.track(request.arg.name)
+      } else {
+        window.heap.track(request.arg.name, request.arg.metadata)
+      }
+
       break
 
     case ChromeMessageTypeGetRandomSetSilent:
       getGoogleAuthTokenSilent().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
-        getRandomSubscribedSet(http).then((set) => {
+        const { itemsSkip, itemsLimit } = request.arg
+
+        getRandomSubscribedSet(http, itemsSkip, itemsLimit).then((set) => {
+          set && (set.setType = SetTypeNormal)
           sendResponse({ success: true, result: set })
         }).catch(error => {
           sendResponse({ success: false, error: toResponseError(error) })
@@ -59,12 +84,29 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break
 
     case ChromeMessageClearRandomSetCache:
-      clearCachedRandomSet()
-      sendResponse({ success: true })
+      clearLocalCachedRandomSet()
+
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        const { cacheType } = request.arg
+
+        clearServerRandomSetCache(http, cacheType)
+          .then(() => sendResponse({ success: true }))
+          .catch(error => {
+            sendResponse({ success: false, error: toResponseError(error) })
+          })
+      }).catch((error: Error) => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
       break
 
     case ChromeMessageTypeInteractItem:
-      getGoogleAuthToken().then((token: string) => {
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const { action: interaction, itemId, href } = request.arg
+
+        window.heap.track(request.arg.action === ItemsInteractionShow ? TrackingNameShowItem : TrackingNameInteractItem, { interaction, itemId, href })
+        increaseSyncStorageCount(request.arg.action === ItemsInteractionShow ? CacheKeys.showItemCount : CacheKeys.interactItemCount)
+
         const http = new Http(token, LoginTypes.google)
         interactItem(http, request.arg.setId, request.arg.itemId, request.arg.action).then(() => {
           sendResponse({ success: true })
@@ -75,6 +117,34 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse({ success: false, error: toResponseError(error) })
       })
       sendResponse({ success: true })
+      break
+
+    case ChromeMessageTypeInteractSet:
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+
+        interactToSet(http, request.arg.setId, request.arg.action).then(() => {
+          sendResponse({ success: true })
+        }).catch(error => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+      }).catch(error => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
+      break
+
+    case ChromeMessageTypeUndoInteractSet:
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+
+        undoInteractToSet(http, request.arg.setId, request.arg.action).then(() => {
+          sendResponse({ success: true })
+        }).catch(error => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+      }).catch(error => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
       break
 
     case ChromeMessageTypeSetLocalSetting:
@@ -88,10 +158,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break
 
     case ChromeMessageTypePlayAudio:
-      getGoogleAuthToken().then((token: string) => {
+      window.heap.track(TrackingNameInteractItem, { interaction: "Play audio", langCode: request.arg.langCode, text: request.arg.text })
+      getGoogleAuthTokenSilent().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
         http
-          .get(pronounceTextApi(request.arg.text, request.arg.langCode), {
+          .get(ApiPronounceText(request.arg.text, request.arg.langCode), {
             responseType: "arraybuffer",
             headers: {
               "Content-Type": "audio/mpeg",
@@ -115,6 +186,77 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       })
       break
 
+    case ChromeMessageTypeSuggestSets:
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        suggestSets(http, request.arg.keyword, request.arg.languages, request.arg.skip, request.arg.limit).then((res) => {
+          sendResponse({ success: true, result: res })
+        }).catch(error => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+      }).catch((error: Error) => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
+      break
+
+    case ChromeMessageTypeCountInteractedItems:
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        countInteractedItems(http, request.arg.interactionInclude, request.arg.interactionIgnore).then((result) => {
+          sendResponse({ success: true, result })
+        }).catch(error => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+      }).catch((error: Error) => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
+      break
+
+    case ChromeMessageTypeGetInteractedItems:
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        const { interactionInclude, interactionIgnore, skip, limit } = request.arg
+
+        getInteractedItems(http, interactionInclude, interactionIgnore, skip, limit).then((result) => {
+          sendResponse({ success: true, result })
+        }).catch(error => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+      }).catch((error: Error) => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
+      break
+
+    case ChromeMessageTypeGetSetSilent:
+      getGoogleAuthTokenSilent().then((token: string) => {
+        const http = new Http(token, LoginTypes.google)
+        const { setId, itemsSkip, itemsLimit } = request.arg
+
+        getSetInfo(http, setId, itemsSkip, itemsLimit).then((set) => {
+          sendResponse({ success: true, result: set })
+        }).catch(error => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
+      }).catch((error: Error) => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
+
+    case ChromeMessageTypeGetInjectionTargets:
+      getInjectionTargets().then((injectTargets) => {
+        sendResponse({ success: true, result: injectTargets })
+      }).catch(error => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
+      break
+
+    case ChromeMessageTypeGetRestrictedKeywords:
+      getRestrictedKeywords().then((restrictedKeywords) => {
+        sendResponse({ success: true, result: restrictedKeywords })
+      }).catch(error => {
+        sendResponse({ success: false, error: toResponseError(error) })
+      })
+      break
+
     default:
       break
   }
@@ -122,12 +264,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true
 })
 
-async function getRandomSubscribedSet(http: Http): Promise<SetInfo | null> {
+async function getRandomSubscribedSet(http: Http, itemsSkip: number, itemsLimit: number): Promise<SetInfo | null> {
   // TODO: Handle situation when set has edited, item ids got changed.
   let randomSetInfo = getCachedSet()
 
   if (!randomSetInfo) {
-    randomSetInfo = await getUserInteractionRandomSet(http, InteractionSubscribe)
+    randomSetInfo = await getUserInteractionRandomSet(http, [InteractionSubscribe], itemsSkip, itemsLimit)
     setCachedSet(randomSetInfo)
   }
 
@@ -147,8 +289,12 @@ function setCachedSet(set: SetInfo) {
   localStorage.setItem(LocalStorageKeyPrefix + CacheKeys.randomSet, JSON.stringify(set))
 }
 
-function clearCachedRandomSet() {
+function clearLocalCachedRandomSet() {
   localStorage.setItem(LocalStorageKeyPrefix + CacheKeys.randomSet, "")
+}
+
+async function clearServerRandomSetCache(http: Http, cacheType: string) {
+  await clearServerCache(http, cacheType)
 }
 
 // Local settings.
@@ -170,4 +316,15 @@ function toResponseError(error: any) {
   }
 
   return { success: false, error: { type: type, message: error.message, code: error.code } }
+}
+
+function includeHeapAnalytics() {
+  window.heap = window.heap || [], window.heap.load = function (e: any, t: any) { window.heap.appid = e, window.heap.config = t = t || {}; let r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; let a = document.getElementsByTagName("script")[0]; a.parentNode!.insertBefore(r, a); for (let n = function (e: any) { return function () { window.heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)window.heap[p[o]] = n(p[o]) }
+  window.heap.load(HeapIoId)
+}
+
+function increaseSyncStorageCount(cacheKey: string) {
+  getStorageSyncData<number>(cacheKey).then(currentValue => {
+    chrome.storage.sync.set({ [CacheKeys.showItemCount]: (currentValue || 0) + 1 })
+  })
 }

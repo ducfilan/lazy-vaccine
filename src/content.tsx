@@ -1,15 +1,14 @@
-import React from "react"
-
 import "./background/templates/css/antd-wrapped.less"
 
 import PageInjector from "./background/PageInjector"
 import InjectionTargetFactory from "./background/InjectionTargetFactory"
-import { SetInfo } from "./common/types/types"
-import { detectPageChanged } from "./common/utils/domUtils"
+import { InjectionTargetsResponse } from "./common/types/types"
+import { detectPageChanged, hrefComparer } from "./common/utils/domUtils"
 import {
   sendClearCachedRandomSetMessage,
-  sendGetRandomSubscribedSetSilentMessage,
-  sendInteractItemMessage,
+  sendGetInjectionTargetsMessage,
+  sendGetRestrictedKeywordsMessage,
+  sendIdentityUserMessage,
 } from "./pages/content-script/messageSenders"
 import {
   registerFlipCardEvent,
@@ -26,136 +25,69 @@ import {
   registerSuggestionSearchButtonClickEvent,
   registerSuggestionLoginButtonClickEvent,
   registerHoverBubblePopoverEvent,
+  registerHoverBubbleCloseEvent,
   registerPronounceButtonClickEvent,
   registerTopBarCardButtonsClickEvent,
   registerHoverCardEvent,
+  registerSubscribeEvent,
+  registerLikeEvent,
+  registerDislikeEvent,
+  registerReviewStarredItemsEvent,
 } from "./pages/content-script/eventRegisters"
 import { getHref, isSiteSupportedInjection } from "./pages/content-script/domHelpers"
-import { shuffleArray } from "./common/utils/arrayUtils"
-import { generateTemplateExtraValues, toTemplateValues } from "./pages/content-script/templateHelpers"
-import {
-  i18n,
-  ItemsInteractionForcedDone,
-  ItemsInteractionIgnore,
-  ItemsInteractionShow,
-  ItemsInteractionStar,
-  OtherItemTypes,
-} from "./common/consts/constants"
+import { ItemsInteractionForcedDone, ItemsInteractionIgnore, ItemsInteractionStar } from "./common/consts/constants"
 
-import "@/background/templates/css/_common.scss"
 import "@/background/templates/css/content.scss"
-import "@/background/templates/css/flashcard.scss"
-import "@/background/templates/css/QandA.scss"
-import "@/background/templates/css/suggest-subscribe.scss"
-import "@/background/templates/css/bubble.scss"
 
-import { htmlStringToHtmlNode } from "./background/DomManipulator"
-import { getInjectionTargets } from "./common/repo/injection-targets"
+import React from "react"
 import { renderToString } from "react-dom/server"
+import { htmlStringToHtmlNode } from "./background/DomManipulator"
 import { FixedWidget } from "./background/templates/FixedWidget"
-import { getRestrictedKeywords } from "./common/repo/restricted-keywords"
+import { ContentData } from "./background/ContentData"
 
-function hrefComparer(this: any, oldHref: string, newHref: string) {
-  for (const target of this?.targets || []) {
-    const oldId = oldHref.match(target.MatchPattern)?.groups?.id
-    const newId = newHref.match(target.MatchPattern)?.groups?.id
+let contentData = new ContentData()
 
-    console.debug(`oldHref: ${oldHref}, newHref: ${newHref}, oldId: ${oldId}, newId: ${newId}`)
+let allInjectors: PageInjector[] = []
+let allInjectionTargets: InjectionTargetsResponse
+let allIntervalIds: NodeJS.Timer[] = []
 
-    if (!oldId && !newId) {
-      continue
-    }
+// Entry point for injection.
+;(async () => {
+  try {
+    const [{ value: user }, { value: restrictedKeywords }, { value: targets }]: any[] = await Promise.allSettled([
+      sendIdentityUserMessage(),
+      sendGetRestrictedKeywordsMessage(),
+      sendGetInjectionTargetsMessage(),
+    ])
 
-    return oldId === newId
-  }
+    contentData.setIdentity(user)
 
-  return oldHref === newHref
-}
-
-const getNotLoggedInTemplateValues = async () => {
-  return [{ key: "type", value: OtherItemTypes.NotLoggedIn.value }]
-}
-
-const getNotSubscribedTemplateValues = async () => {
-  return [{ key: "type", value: OtherItemTypes.NotSubscribed.value }]
-}
-
-const getNetworkErrorTemplateValues = async () => {
-  switch (lastError?.error?.code) {
-    case "ECONNABORTED":
-      if (lastError?.error?.message?.startsWith("timeout of")) {
-        return [
-          { key: "type", value: OtherItemTypes.NetworkTimeout.value },
-          { key: "errorText", value: i18n("network_error_timeout") },
-        ]
-      }
-      return []
-
-    case "ERR_NETWORK":
-      return [
-        { key: "type", value: OtherItemTypes.NetworkOffline.value },
-        { key: "errorText", value: i18n("network_error_offline") },
-      ]
-
-    default:
-      return []
-  }
-}
-
-const injectFixedWidgetBubble = () => {
-  const node = htmlStringToHtmlNode(renderToString(<FixedWidget />))
-  document.querySelector("body")?.prepend(node)
-}
-
-let randomItemIndexVisitMap: number[] = []
-let setInfo: SetInfo | null
-let currentItemPointer = 0
-let itemsInPageInteractionMap: {
-  [itemId: string]: string[]
-} = {}
-
-let isLoggedIn = false
-let havingSubscribedSets = false
-let lastError: any = null
-
-let allInjectors: PageInjector[] | undefined = []
-
-getRestrictedKeywords()
-  .then((keywords: string[]) => {
-    const href = getHref()
-    if (keywords.every((keyword: string) => !href.includes(keyword))) {
+    if (restrictedKeywords.every((keyword: string) => !getHref().includes(keyword))) {
       injectFixedWidgetBubble()
     }
-  })
-  .catch((err) => {
-    console.error(err)
-  })
 
-getInjectionTargets()
-  .then((targets) => {
-    if (!isSiteSupportedInjection(targets, getHref())) return
+    allInjectionTargets = targets
+    if (!isSiteSupportedInjection(allInjectionTargets, getHref())) return
 
     processInjection().finally(() => {
-      detectPageChanged(processInjection, hrefComparer.bind({ targets }))
+      const intervalId = detectPageChanged(processInjection, hrefComparer.bind({ allInjectionTargets }), allIntervalIds)
+      allIntervalIds.push(intervalId)
     })
-  })
-  .catch((err) => {
-    console.error(err)
-  })
+  } catch (error) {
+    console.error(error)
+  }
+})()
 
 async function processInjection() {
   console.debug("processInjection called")
 
   try {
-    // Remove cache from background page (app's scope).
-    await sendClearCachedRandomSetMessage()
-
-    await initValues()
+    await contentData.initValues()
 
     removeOldCards()
-
     disconnectExistingObservers()
-    allInjectors = await injectCards()
+    const newInjectors = await injectCards()
+    allInjectors.push(...newInjectors)
   } catch (error) {
     console.error(error)
     console.error("error when injecting set item")
@@ -165,49 +97,14 @@ async function processInjection() {
 function disconnectExistingObservers() {
   if (!allInjectors) return
 
-  allInjectors.forEach((injector) => {
+  allInjectors.forEach((injector, i) => {
     console.debug("getAllObservers: " + injector.getAllObservers().length)
+    allInjectors.splice(i, 1)
     injector.getAllObservers().forEach((observer) => observer.stop())
   })
 }
 
 registerFlashcardEvents()
-
-async function initValues() {
-  try {
-    currentItemPointer = 0
-    havingSubscribedSets = false
-    lastError = null
-
-    setInfo = await sendGetRandomSubscribedSetSilentMessage()
-    if (setInfo) {
-      randomItemIndexVisitMap = shuffleArray(Array.from(Array(setInfo.items?.length || 0).keys()))
-      isLoggedIn = true
-      havingSubscribedSets = true
-
-      setInfo.itemsInteractions?.map((itemInteractions) => {
-        if ((itemInteractions.interactionCount.star || 0) % 2 == 0) {
-          delete itemInteractions.interactionCount.star
-        }
-
-        itemsInPageInteractionMap[itemInteractions.itemId] = Object.keys(itemInteractions.interactionCount)
-      })
-    }
-  } catch (error: any) {
-    if (error?.error?.type === "NotSubscribedError") {
-      console.debug("NotSubscribedError")
-      havingSubscribedSets = false
-      isLoggedIn = true
-    } else if (error?.error?.type === "NotLoggedInError") {
-      console.debug("NotLoggedInError")
-      havingSubscribedSets = false
-      isLoggedIn = false
-    } else {
-      lastError = error
-      console.error(error)
-    }
-  }
-}
 
 function removeOldCards() {
   console.debug("Removing old cards...")
@@ -220,14 +117,32 @@ async function injectCards(): Promise<PageInjector[]> {
     console.debug("injectCards called, injectionTargets: " + injectionTargets.length)
 
     let injectors: PageInjector[] = []
+    const existingInjectorsHash = allInjectors.map((injector) => injector.getHash())
+    console.debug("existingInjectorsHash: " + existingInjectorsHash)
 
     injectionTargets.forEach(async ({ rate, type, selector, newGeneratedElementSelector, siblingSelector, strict }) => {
       const injector = new PageInjector(rate, type, selector, newGeneratedElementSelector, siblingSelector, strict)
 
-      injectors.push(injector)
+      if (!existingInjectorsHash.includes(injector.getHash())) {
+        injectors.push(injector)
+      }
     })
 
-    await Promise.all(injectors.map((i) => i.waitInject(randomTemplateValues)))
+    await Promise.all(
+      injectors.map((i) =>
+        i.waitInject(async () => {
+          const templateValues = await contentData.randomTemplateValues()
+
+          if (!templateValues || templateValues.length == 0) {
+            console.debug("no template values, showing recommendation")
+            contentData.isNeedRecommendation = true
+            processInjection()
+          }
+
+          return templateValues
+        })
+      )
+    )
     console.debug("all injection done!")
 
     return injectors
@@ -237,76 +152,37 @@ async function injectCards(): Promise<PageInjector[]> {
   }
 }
 
-const randomTemplateValues = async (increaseOnCall: boolean = false) => {
-  console.debug(
-    "randomTemplateValues called, isLoggedIn: " +
-      isLoggedIn +
-      ", havingSubscribedSets: " +
-      havingSubscribedSets +
-      ", items count: " +
-      setInfo?.items?.length
-  )
-
-  if (lastError) {
-    const networkErrorValues = await getNetworkErrorTemplateValues()
-
-    if (networkErrorValues && networkErrorValues.length > 0) {
-      return networkErrorValues
-    }
-  }
-
-  if (!isLoggedIn) {
-    return getNotLoggedInTemplateValues()
-  }
-
-  if (!havingSubscribedSets) {
-    return getNotSubscribedTemplateValues()
-  }
-
-  const item = getItemAtPointer(currentItemPointer)
-  if (increaseOnCall) {
-    currentItemPointer++
-
-    // TODO: Possible infinity loop check.
-    if (isDisplayedAllItemsInSet()) {
-      await sendClearCachedRandomSetMessage()
-      await initValues()
-    }
-  }
-
-  item &&
-    sendInteractItemMessage(setInfo?._id || "", item?._id || "", ItemsInteractionShow)
-      .then(() => {
-        itemsInPageInteractionMap[item?._id] = [...(itemsInPageInteractionMap[item?._id] || []), ItemsInteractionShow]
-      })
-      .catch((error) => {
-        // TODO: handle error case.
-        console.error(error)
-      })
-
-  return item ? toTemplateValues(item, generateTemplateExtraValues(item)) : []
-}
-
-const isDisplayedAllItemsInSet = () => currentItemPointer + 1 === setInfo?.items?.length
-
 function registerFlashcardEvents() {
   const nextItemGetter = async () => {
-    if (isDisplayedAllItemsInSet()) {
-      await sendClearCachedRandomSetMessage()
-      await initValues()
-      return getItemAtPointer(currentItemPointer++)
+    const item = await contentData.getItemAtPointer(++contentData.currentItemPointer)
+    if (contentData.isDisplayedAllItemsInSet) {
+      contentData.isNeedRecommendation = true
+      return null
     }
 
-    return getItemAtPointer(++currentItemPointer)
+    return item
+  }
+
+  const prevItemGetter = async () => {
+    if (contentData.currentItemPointer <= 0) {
+      return null
+    }
+
+    const skipStep = -1
+    return contentData.getItemAtPointer(--contentData.currentItemPointer, skipStep, () => {
+      contentData.currentItemPointer += skipStep
+    })
   }
 
   const itemGetter = () => {
-    return getItemAtPointer(currentItemPointer)
+    return contentData.getItemAtPointer(contentData.currentItemPointer)
   }
 
   const setGetter = () => {
-    return setInfo
+    return contentData.setInfo
   }
+
+  const recommendationSetter = (value: boolean) => (contentData.isNeedRecommendation = value)
 
   registerFlipCardEvent()
 
@@ -314,42 +190,27 @@ function registerFlashcardEvents() {
 
   registerCheckAnswerEvent()
 
-  registerIgnoreEvent(itemGetter, (itemId: string) => {
-    itemsInPageInteractionMap[itemId] = [...(itemsInPageInteractionMap[itemId] || []), ItemsInteractionIgnore]
-    filterItemList(itemId)
+  registerIgnoreEvent(itemGetter, recommendationSetter, (itemId: string) => {
+    contentData.interactItem(itemId, ItemsInteractionIgnore)
   })
 
-  registerGotItemEvent(itemGetter, (itemId: string) => {
-    itemsInPageInteractionMap[itemId] = [...(itemsInPageInteractionMap[itemId] || []), ItemsInteractionForcedDone]
-    filterItemList(itemId)
+  registerGotItemEvent(itemGetter, recommendationSetter, (itemId: string) => {
+    contentData.interactItem(itemId, ItemsInteractionForcedDone)
   })
-
-  const filterItemList = (itemId: string) => {
-    setInfo = setInfo && {
-      ...setInfo,
-      items: setInfo?.items?.filter((item) => item._id !== itemId),
-    }
-  }
 
   registerStarEvent(itemGetter, (itemId: string) => {
-    itemsInPageInteractionMap[itemId] = [...(itemsInPageInteractionMap[itemId] || []), ItemsInteractionStar]
+    contentData.interactItem(itemId, ItemsInteractionStar)
   })
 
-  registerNextItemEvent(nextItemGetter, itemGetter, setGetter)
+  registerNextItemEvent(nextItemGetter, itemGetter, setGetter, {
+    isNeedRecommendationGetter: () => contentData.isNeedRecommendation,
+    identityGetter: contentData.getIdentity,
+  })
 
-  registerPrevItemEvent(
-    () => {
-      if (currentItemPointer <= 0) {
-        return null
-      }
-
-      return getItemAtPointer(--currentItemPointer, -1)
-    },
-    itemGetter,
-    setGetter
-  )
+  registerPrevItemEvent(prevItemGetter, itemGetter, setGetter)
 
   registerHoverBubblePopoverEvent()
+  registerHoverBubbleCloseEvent()
 
   registerMorePopoverEvent()
 
@@ -357,7 +218,7 @@ function registerFlashcardEvents() {
 
   registerNextSetEvent(async () => {
     await sendClearCachedRandomSetMessage()
-    await initValues()
+    await contentData.initValues()
   })
 
   registerSuggestionSearchButtonClickEvent()
@@ -365,37 +226,31 @@ function registerFlashcardEvents() {
   registerPronounceButtonClickEvent()
   registerTopBarCardButtonsClickEvent()
   registerHoverCardEvent()
-}
 
-/**
- * Get item at pointer, skip hidden items.
- * @param pointerPosition position to point to the set items.
- * @param skipStep Step to skip when a hidden item is met.
- * @returns item
- */
-const getItemAtPointer = (pointerPosition: number, skipStep: number = 1): any => {
-  let rawItem = setInfo?.items && setInfo?.items[randomItemIndexVisitMap[pointerPosition]]
+  const suggestionInteractCallback = () => {
+    setTimeout(async () => {
+      if (!allInjectionTargets) return
+      contentData.isNeedRecommendation = false
 
-  if (!rawItem) return null
+      await contentData.initValues()
 
-  if (isItemHidden(rawItem._id)) {
-    return getItemAtPointer(pointerPosition + skipStep, skipStep)
+      processInjection().finally(() => {
+        const intervalId = detectPageChanged(
+          processInjection,
+          hrefComparer.bind({ allInjectionTargets }),
+          allIntervalIds
+        )
+        allIntervalIds.push(intervalId)
+      })
+    }, 5000)
   }
-
-  return rawItem
-    ? {
-        ...rawItem,
-        setId: setInfo?._id || "",
-        setTitle: setInfo?.name || "",
-        isStared: itemsInPageInteractionMap[rawItem._id]?.includes("star") ? "stared" : "",
-        fromLanguage: setInfo?.fromLanguage,
-        toLanguage: setInfo?.toLanguage,
-      }
-    : null
+  registerSubscribeEvent(suggestionInteractCallback)
+  registerLikeEvent(suggestionInteractCallback)
+  registerDislikeEvent(suggestionInteractCallback)
+  registerReviewStarredItemsEvent(itemGetter)
 }
 
-const isItemHidden = (itemId: string): boolean => {
-  const itemInteractions = itemsInPageInteractionMap[itemId] || []
-
-  return itemInteractions.includes(ItemsInteractionForcedDone) || itemInteractions.includes(ItemsInteractionIgnore)
+function injectFixedWidgetBubble() {
+  const node = htmlStringToHtmlNode(renderToString(<FixedWidget />))
+  document.querySelector("body")?.prepend(node)
 }

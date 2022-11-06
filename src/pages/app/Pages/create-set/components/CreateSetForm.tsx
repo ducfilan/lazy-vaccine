@@ -2,7 +2,7 @@ import React from "react"
 import Resizer from "react-image-file-resizer"
 
 import { getCategories } from "@/common/repo/category"
-import CacheKeys from "@/common/consts/cacheKeys"
+import CacheKeys from "@/common/consts/caching"
 import {
   RequestToAddCategoryLink,
   CreateSetDescriptionMaxLength,

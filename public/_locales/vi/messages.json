@@ -23,13 +23,31 @@
     "message": "đăng xuất"
   },
   "popup_introduce_first": {
-    "message": "Chúng ta dành quá nhiều thời gian trên Internet.\nĐúng vậy, không có gì phải bào chữa. Tuy nhiên bạn cần biết rằng 1 ngày luôn chỉ có 24 giờ. Từ giờ, tiện ích này sẽ giúp thời gian sử dụng Internet của bạn hiệu quả hơn. Hãy thử và xem kết quả nhé! 😊"
+    "message": "CHÚNG TA DÀNH QUÁ NHIỀU THỜI GIAN TRÊN INTERNET.\nThời gian không chờ đợi bất kì một ai.\nCùng Lazy Vaccine biến thời gian chờ đợi trở nên hữu ích nhé! 😊"
+  },
+  "popup_introduce_shib_self_intro": {
+    "message": ":greeting_string bạn nha! 🤗 Bạn hãy gọi mình là ✨Lava✨.\nTình hình là ông trời đã sắp xếp mình ở đây để cùng bạn học tập rồi bạn ạ. Trước hết mình cùng hiểu thêm về nhau chút nha ^^!"
+  },
+  "popup_introduce_close_friend_message": {
+    "message": "Giờ chúng ta đang ở rất gần nhau rồi, chỉ cần một vài bước nữa thôi!"
+  },
+  "good_morning": {
+    "message": "Buổi sáng vui vẻ"
+  },
+  "good_afternoon": {
+    "message": "Buổi chiều vui vẻ"
+  },
+  "good_evening": {
+    "message": "Buổi tối vui vẻ"
   },
   "popup_introduce_choose_lang_codes": {
     "message": "Chào bạn, :user_name! 🎉 Có vẻ ngôn ngữ chính của bạn là :first_language, bạn còn muốn hiển thị nội dung từ ngôn ngữ khác mà bạn biết không?"
   },
   "popup_introduce_choose_pages": {
     "message": "Bạn có thể tùy biến những trang web mà bạn thường xuyên truy cập để hiển thị nội dung"
+  },
+  "popup_introduce_finished": {
+    "message": "Tốt rồi, :user_name!👏\nChúng ta lại thân nhau thêm 1 chút nữa, bạn của tôi! Bây giờ hãy tìm một bài học và học cùng mình nhé!"
   },
   "popup_select_a_language": {
     "message": "Chọn ngôn ngữ"
@@ -110,7 +128,7 @@
     "message": "Thời gian thu hoạch (điểm)"
   },
   "common_category": {
-    "message": "Phân loại"
+    "message": "Danh mục"
   },
   "common_cancel": {
     "message": "Hủy"
@@ -164,7 +182,7 @@
     "message": "Chỉnh sửa"
   },
   "create_set_request_category": {
-    "message": "Bấm vào đây để yêu cầu 1 phân loại mới"
+    "message": "Bấm vào đây để yêu cầu 1 danh mục mới"
   },
   "create_set_help_text_2_title": {
     "message": "Tip để tạo 1 bài học tốt"
@@ -260,7 +278,7 @@
     "message": "Bạn cho mình biết bạn muốn học gì, mình sẽ tìm nội dung học tập tương ứng cho bạn nha! Nhập từ khóa vào ô tìm kiếm và nhấn Enter nha!"
   },
   "home_category_lookup": {
-    "message": "Tìm kiếm phân loại"
+    "message": "Tìm kiếm danh mục"
   },
   "home_everyone_favorite": {
     "message": "Nội dung nổi bật nhất"
@@ -285,6 +303,18 @@
   },
   "common_back": {
     "message": "Quay lại"
+  },
+  "common_close": {
+    "message": "Đóng"
+  },
+  "common_next": {
+    "message": "Tiếp theo"
+  },
+  "common_skip": {
+    "message": "Bỏ qua"
+  },
+  "common_understand": {
+    "message": "Mình hiểu rồi nha!"
   },
   "common_create": {
     "message": "Tạo"
@@ -376,6 +406,30 @@
   "common_success": {
     "message": "Thành công"
   },
+  "common_all_items": {
+    "message": "Tất cả"
+  },
+  "common_starred_only": {
+    "message": "Đã đánh dấu sao"
+  },
+  "common_top_searches": {
+    "message": "Từ khóa được tìm kiếm nhiều nhất"
+  },
+  "common_browse_categories": {
+    "message": "Xem vòng vòng các danh mục"
+  },
+  "common_friend": {
+    "message": "Bạn"
+  },
+  "common_copy": {
+    "message": "Sao chép"
+  },
+  "common_copied": {
+    "message": "Đã sao chép"
+  },
+  "common_flip": {
+    "message": "Lật thẻ"
+  },
   "seed_growing_conditions": {
     "message": "Điều kiện phát triển"
   },
@@ -430,6 +484,18 @@
   "suggestion_card_not_logged_in_text": {
     "message": "Xin chào bạn! Để bắt đầu giúp bạn học tập, trước tiên bạn cho mình biết tên được không? Hãy đăng nhập nhé, chỉ mất vài giây thôi!"
   },
+  "suggestion_card_not_logged_in_btn": {
+    "message": "Bắt đầu ngay"
+  },
+  "i_love_you": {
+    "message": "Mình thích bạn! ❤️"
+  },
+  "suggestion_pin_extension": {
+    "message": "Mình gợi ý là bạn hãy ghim tiện ích này để có thể theo dõi quá trình của mình dễ dàng hơn."
+  },
+  "suggestion_subscribe_set": {
+    "message": "Mình nghĩ là bạn sẽ thích bài này đây! Hãy ĐĂNG KÍ để tiếp tục học nhé!"
+  },
   "rich_text_upload_modal_title": {
     "message": "Thêm ảnh"
   },
@@ -441,12 +507,6 @@
   },
   "rich_text_image_url": {
     "message": "Link ảnh"
-  },
-  "first_page_quote_1": {
-    "message": "Effortless learning không còn là chuyện phóng đại, hãy sử dụng Lazy Vaccine và đăng ký một bài học bạn quan tâm để tự mình thấy sự khác biệt. Mình đã thử và thành công!"
-  },
-  "first_page_quote_2": {
-    "message": "Đức mời tôi dùng thử Lazy Vaccine, tôi đã tạo một bài học để học thêm từ vựng tiếng Anh, sau khi xem Youtube, Facebook một vài ngày và nhận ra rằng tôi đã nhớ được nhiều từ vựng! Nó thật sự có hiệu quả!"
   },
   "search_result_in_languages": {
     "message": "Ngôn ngữ cho kết quả"
@@ -465,5 +525,29 @@
   },
   "user_profile_update_pages_success": {
     "message": "Thay đổi của bạn đã được cập nhật thành công!"
+  },
+  "suggest_review_stared_items": {
+    "message": "Bạn đã đánh dấu sao :star_count mục, bọn nó bảo muốn gặp bạn và cần một cái ôm. Bạn có muốn ôn lại luôn không?"
+  },
+  "suggest_review_yes_button_1": {
+    "message": "Có, vào việc luôn nào"
+  },
+  "suggest_review_yes_button_2": {
+    "message": "Vẫn là có, nhưng không phải nút"
+  },
+  "my_starred_items": {
+    "message": "Các mục đã đánh dấu sao"
+  },
+  "getting_started_top_languages": {
+    "message": "Ngoài :primary_language, mình cá là bạn biết hoặc đang học thêm một vài trong số này.\nHãy chọn hết nha bạn!"
+  },
+  "getting_started_other_languages": {
+    "message": "Nếu mình sai, hãy chọn thêm ở đây nha"
+  },
+  "getting_started_guide_subscribe": {
+    "message": "Hãy <span>ĐĂNG KÍ</span> bài học mà bạn muốn học nha, còn lại để mình lo!\nVí dụ, sau khi <span>ĐĂNG KÍ</span>, khi bạn lướt web, mình sẽ hiện nội dung bài học 👇"
+  },
+  "card_star_tooltip": {
+    "message": "Lưu để xem lại sau"
   }
 }

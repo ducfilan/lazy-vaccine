@@ -10,9 +10,10 @@ import { Category } from "@/common/types/types"
 import SearchResultItems from "./components/SearchResultItems"
 import { i18n } from "@/common/consts/constants"
 import CategoriesSider from "@/pages/app/components/CategoriesSider"
-import CacheKeys from "@/common/consts/cacheKeys"
+import CacheKeys from "@/common/consts/caching"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { getCategories } from "@/common/repo/category"
+import { TrackingNameOpenSearchResultPage } from "@/common/consts/trackingNames"
 
 const { Content } = Layout
 
@@ -23,6 +24,10 @@ const SearchResultPage = () => {
   const [categories, setCategories] = useState<Category[]>()
   const [cachedCategories, setCachedCategories] = useLocalStorage<Category[]>(CacheKeys.categories, [], "1d")
   const [searchParams] = useSearchParams()
+
+  useEffect(() => {
+    window.heap.track(TrackingNameOpenSearchResultPage, { keyword: searchParams.get("keyword") })
+  }, [])
 
   useEffect(() => {
     if (!http || !user) return

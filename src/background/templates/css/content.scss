@@ -1,5 +1,14 @@
 $primary: #12b886;
 $white: #fff;
+$google-color: #4285f4;
+
+@import "./_common.scss";
+@import "./flashcard.scss";
+@import "./QandA.scss";
+@import "./suggest-subscribe.scss";
+@import "./suggestion-card.scss";
+@import "./bubble.scss";
+@import "./tooltip.scss";
 
 .lazy-vaccine,
 .lazy-vaccine-bubble {

@@ -1,9 +1,10 @@
 import React from "react"
 
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
-import { Button, Divider } from "antd"
-import { CustomerServiceOutlined, RedoOutlined } from "@ant-design/icons"
+import { Button, Divider, Skeleton } from "antd"
+import Icon, { RedoOutlined, CopyOutlined } from "@ant-design/icons"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
+import SpeakerIcon from "@img/ui/fa/speaker.svg"
 
 import { Popover } from "./common/Popover"
 import {
@@ -20,10 +21,11 @@ import { CardInteraction } from "./common/CardInteraction"
 const TopBar = () => {
   return (
     <div className="card-item--top-bar-wrapper">
-      <Button type="primary" shape="circle" icon={<CustomerServiceOutlined />} className="btn-pronounce" />
+      <Button type="primary" shape="circle" icon={<Icon component={SpeakerIcon} />} className="btn-pronounce" />
       <div />
-      <div className="btn-flip-wrapper">
-        <Button shape="circle" icon={<RedoOutlined />} className="btn-flip" />
+      <div className="card-item--top-bar--right-wrapper">
+        <Button shape="circle" icon={<RedoOutlined />} data-tooltip={i18n("common_flip")} className="btn-flip" />
+        <Button shape="circle" icon={<CopyOutlined />} data-tooltip={i18n("common_copy")} className="btn-copy" />
       </div>
     </div>
   )
@@ -31,7 +33,7 @@ const TopBar = () => {
 
 export const FlashcardTemplate = (props: { selectedFrontItem: string; selectedBackItem: string }) => {
   return (
-    <div className="lazy-vaccine" data-setid=":setId" data-itemid=":itemId">
+    <div className="lazy-vaccine" data-set-id=":setId" data-item-id=":itemId" data-set-type=":setType">
       <DisclaimerInfo />
       <Popover
         styles={{
@@ -82,6 +84,7 @@ export const FlashcardTemplate = (props: { selectedFrontItem: string; selectedBa
           </>
         }
       />
+      <Skeleton active loading className="lazy-vaccine-hidden" />
       <div className="flash-card flash-card-wrapper card-wrapper">
         <div className="card--face card--face--front">
           <TopBar />

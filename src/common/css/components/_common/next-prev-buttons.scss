@@ -2,7 +2,7 @@
   button {
     @include box-shadow;
 
-    position: fixed;
+    position: absolute;
     z-index: 1;
     top: calc(50% + 50px);
     border: none;

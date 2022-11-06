@@ -1,7 +1,7 @@
-import React from "react"
+import React, { useState, useCallback } from "react"
 import parse from "html-react-parser"
 
-import { Col, Row, Typography, Image, Card, Button, Space, Statistic } from "antd"
+import { Col, Row, Typography, Card, Button, Space, Statistic } from "antd"
 import { AimOutlined, LikeFilled, DislikeFilled } from "@ant-design/icons"
 import { SetInfo } from "@/common/types/types"
 import {
@@ -16,11 +16,7 @@ import { formatString, langCodeToName } from "@/common/utils/stringUtils"
 import { Link } from "react-router-dom"
 import { interactToSet, undoInteractToSet } from "@/common/repo/set"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
-import { useState, useCallback } from "react"
-
-const setImgStyle = {
-  borderRadius: "40% 70% 70% 40%",
-}
+import { pickRandomFlatColor } from "@/common/utils/arrayUtils"
 
 const SetItemCardLong = (props: { set: SetInfo }) => {
   const { http } = useGlobalContext()
@@ -73,10 +69,16 @@ const SetItemCardLong = (props: { set: SetInfo }) => {
   )
 
   return (
-    <Card style={{ padding: "0 40px", width: "100%" }}>
+    <Card className="card-set-item-long">
       <Row justify="space-around" gutter={[16, 0]}>
         <Col flex="none">
-          <Image style={setImgStyle} width={200} height={200} src={props.set.imgUrl} preview={false} />
+          {props.set.imgUrl ? (
+            <img className="set-img" alt={props.set.name} src={props.set.imgUrl} />
+          ) : (
+            <div className="empty-img" style={{ backgroundColor: pickRandomFlatColor() }}>
+              <p>{props.set.name[0]}</p>
+            </div>
+          )}
         </Col>
         <Col flex="24">
           <Row>
@@ -102,6 +104,7 @@ const SetItemCardLong = (props: { set: SetInfo }) => {
                     shape="circle"
                     size="large"
                     onClick={() => {
+                      window.heap.track(isLiked ? "Unlike set" : "Like set", { setId: props.set._id })
                       handleInteract(isLiked, setIsLiked, likeCount, setLikeCount, InteractionLike)
                       !isLiked &&
                         isDisliked &&
@@ -120,6 +123,7 @@ const SetItemCardLong = (props: { set: SetInfo }) => {
                     shape="circle"
                     size="large"
                     onClick={() => {
+                      window.heap.track(isDisliked ? "Undislike set" : "Dislike set", { setId: props.set._id })
                       handleInteract(isDisliked, setIsDisliked, dislikeCount, setDislikeCount, InteractionDislike)
                       !isDisliked && isLiked && undoInteract(setIsLiked, likeCount, setLikeCount, InteractionLike)
                     }}
@@ -158,10 +162,11 @@ const SetItemCardLong = (props: { set: SetInfo }) => {
           <Row align="bottom">
             <Button
               type="primary"
-              className="is-uppercase"
+              className="is-uppercase btn-subscribe"
               icon={<AimOutlined />}
               loading={isLoading}
               onClick={() => {
+                window.heap.track(isSubscribed ? "Unsubscribe to set" : "Subscribe to set", { setId: props.set._id })
                 handleInteract(isSubscribed, setIsSubscribed, null, null, InteractionSubscribe)
               }}
             >

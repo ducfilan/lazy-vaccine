@@ -1,5 +1,5 @@
 import { i18n } from "@/common/consts/constants"
-import { getInjectionTargets } from "@/common/repo/injection-targets"
+import { getInjectionTargets } from "@/common/repo/staticApis"
 
 let _getConditionalCallback = function (selector: string, callback: Function) {
   return function (this: Element, e: any) {

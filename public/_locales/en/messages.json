@@ -26,13 +26,31 @@
     "message": "Logout"
   },
   "popup_introduce_first": {
-    "message": "WE SPEND SO MUCH TIME ON THE INTERNET.\nYes, no excuse. But a day remains 24 hours since we have the clock. From now on, I will help you use Internet more efficient.\nJust TRY to SEE! 😊"
+    "message": "WE SPEND SO MUCH TIME ON THE INTERNET.\nTime doesn't stop when we wait.\nLet's make waiting time useful with Lazy Vaccine! 😊"
+  },
+  "popup_introduce_shib_self_intro": {
+    "message": ":greeting_string my friend! 🤗 You can call me ✨Lava✨.\nDestiny has arranged me here to be with you on your learning. Let's get to know each other really quick."
+  },
+  "popup_introduce_close_friend_message": {
+    "message": "We are so close right now, just one more step!"
+  },
+  "good_morning": {
+    "message": "Good morning"
+  },
+  "good_afternoon": {
+    "message": "Good afternoon"
+  },
+  "good_evening": {
+    "message": "Good evening"
   },
   "popup_introduce_choose_lang_codes": {
     "message": "Nice to meet you, :user_name! 🎉 I see your first language is :first_language, do you want to show content in other languages?"
   },
   "popup_introduce_choose_pages": {
     "message": "You can customize your most visited websites to inject content"
+  },
+  "popup_introduce_finished": {
+    "message": "Well done, :user_name!👏\nWe are now 1 step closer, my dear friend! Let's find something to learn with me!"
   },
   "popup_select_a_language": {
     "message": "Select a language"
@@ -202,6 +220,9 @@
   "category_sets_total": {
     "message": ":total sets in :category_name"
   },
+  "category_no_sets": {
+    "message": "So sad that we have no sets in :category_name right now.\nYou can be the first one to create now!"
+  },
   "search_result_not_found": {
     "message": "Your search - :keyword - did not match any documents.\nSuggestions:\n - Make sure that all words are spelled correctly.\n- Try different keywords."
   },
@@ -255,6 +276,18 @@
   },
   "common_back": {
     "message": "Back"
+  },
+  "common_close": {
+    "message": "Close"
+  },
+  "common_next": {
+    "message": "Next"
+  },
+  "common_skip": {
+    "message": "Skip"
+  },
+  "common_understand": {
+    "message": "I got it!"
   },
   "common_create": {
     "message": "Create"
@@ -364,6 +397,30 @@
   "common_success": {
     "message": "Success"
   },
+  "common_all_items": {
+    "message": "All items"
+  },
+  "common_copy": {
+    "message": "Copy"
+  },
+  "common_copied": {
+    "message": "Copied"
+  },
+  "common_flip": {
+    "message": "Flip"
+  },
+  "common_starred_only": {
+    "message": "Starred only"
+  },
+  "common_top_searches": {
+    "message": "Top searches"
+  },
+  "common_browse_categories": {
+    "message": "Browse categories"
+  },
+  "common_friend": {
+    "message": "Friend"
+  },
   "seed_growing_conditions": {
     "message": "Growing conditions"
   },
@@ -433,6 +490,18 @@
   "suggestion_card_not_logged_in_text": {
     "message": "Hi there! To help you learn, firstly, May I know who you are? Let's log in. It will take a few seconds only!"
   },
+  "suggestion_card_not_logged_in_btn": {
+    "message": "Complete now"
+  },
+  "i_love_you": {
+    "message": "I like you! ❤️"
+  },
+  "suggestion_pin_extension": {
+    "message": "I suggest you to pin Lazy Vaccine to access your progress faster!"
+  },
+  "suggestion_subscribe_set": {
+    "message": "I think you might like this set, let's SUBSCRIBE!"
+  },
   "rich_text_upload_modal_title": {
     "message": "Insert a new photo"
   },
@@ -444,12 +513,6 @@
   },
   "rich_text_image_url": {
     "message": "Image url"
-  },
-  "first_page_quote_1": {
-    "message": "Effortless learning is no more an exaggerated story, using Lazy Vaccine and subscribe to a learning set to see the difference by yourself. I promise!"
-  },
-  "first_page_quote_2": {
-    "message": "Duc invited me to try Lazy Vaccine, I created a learning set for my English lesson, then stated watching Youtube for awhile and realized that I remembered many words! It really works!"
   },
   "search_result_in_languages": {
     "message": "In langues"
@@ -471,5 +534,29 @@
   },
   "user_profile_update_pages_success": {
     "message": "Your preferences have been updated successfully!"
+  },
+  "suggest_review_stared_items": {
+    "message": "You have starred :star_count items, they miss you and need a hug. Do you want to review now?"
+  },
+  "suggest_review_yes_button_1": {
+    "message": "Yes, review them now"
+  },
+  "suggest_review_yes_button_2": {
+    "message": "Also yes, but not a button"
+  },
+  "my_starred_items": {
+    "message": "My starred items"
+  },
+  "getting_started_top_languages": {
+    "message": "Besides :primary_language, I bet you know or learning some more.\nLet's pick all!"
+  },
+  "getting_started_other_languages": {
+    "message": "Want more? Select your languages from here"
+  },
+  "getting_started_guide_subscribe": {
+    "message": "<span>SUBSCRIBE</span> for the set you want to learn, and let me help you do the rest!\nHere's an example after you <span>SUBSCRIBE</span> 👇"
+  },
+  "card_star_tooltip": {
+    "message": "Save to remind later"
   }
 }

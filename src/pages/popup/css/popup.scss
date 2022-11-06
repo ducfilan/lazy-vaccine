@@ -6,11 +6,12 @@
 
 @import "~@/common/css/components/_common/navbar";
 @import "~@/common/css/components/_common/next-prev-buttons";
+@import "~@/common/css/components/_common/popup-header";
 
-@import "./components/first-time-intro";
-@import "./components/choose-languages";
+@import "~@/common/components/css/first-time-intro";
+@import "~@/common/components/css/choose-languages";
+
 @import "./components/completed-info";
-@import "./components/popup-header";
 
 html {
   height: unset;

@@ -21,3 +21,24 @@ export function deepClone(obj: any, hash = new WeakMap()) {
   }
   return cloneObj
 }
+
+/**
+ * True at percent / total of the times.
+ * @param percent percentage of appearance (0-1)
+ * @returns true / false randomly based on percentage.
+ */
+export function appearInPercent(percent: number): boolean {
+  return Math.random() < percent
+}
+
+export function getStorageSyncData<T>(key: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get(key, (obj) => {
+      if (chrome.runtime.lastError) {
+        return reject(chrome.runtime.lastError)
+      }
+
+      resolve(obj[key])
+    })
+  })
+}

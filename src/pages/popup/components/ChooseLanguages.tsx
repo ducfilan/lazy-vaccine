@@ -68,7 +68,7 @@ function ChooseLanguages() {
       <PopupHeader content={headerText} />
 
       <div className="choose-languages--pages-list">
-        <NextPrevButton direction={"right"} onNext={async () => await goForward()} />
+        <NextPrevButton direction={"right"} onNext={goForward} />
 
         <Row gutter={[16, 16]} className="choose-languages--selected-languages-wrapper">
           <Col span={12} offset={6}>
@@ -91,7 +91,7 @@ function ChooseLanguages() {
               className="choose-languages--dropdown-button"
               placeholder={i18n("popup_select_a_language")}
               optionFilterProp="children"
-              filterOption={(input, option) => option?.value.toLowerCase().includes(input.toLowerCase())}
+              filterOption={(input, option) => `${option?.value || ""}`.toLowerCase().includes(input.toLowerCase())}
               onChange={addLanguage}
             >
               {Object.values(SupportingLanguages.Set).map((language) => (

@@ -26,13 +26,31 @@
     "message": "登出"
   },
   "popup_introduce_first": {
-    "message": "我们在互联网上花费了很多时间。\n是的，没有任何借口。 但是，自从我们有了时钟以来，一天仍然是 24 小时。 从现在开始，我将帮助您更有效地使用互联网。\n只是尝试看看！ 😊"
+    "message": "我们在互联网上花费了很多时间。\n当我们等待时，时间不会停止。\n让我们使用懒惰的疫苗让等待时间变得有用！ 😊"
+  },
+  "popup_introduce_shib_self_intro": {
+    "message": ":greeting_string我的朋友！ 🤗 你可以叫我✨Lava✨。\n命运安排我在这里陪你学习。\n让我们快速了解彼此。"
+  },
+  "popup_introduce_close_friend_message": {
+    "message": "现在离我们很近，只差一步!"
+  },
+  "good_morning": {
+    "message": "早上好"
+  },
+  "good_afternoon": {
+    "message": "下午好"
+  },
+  "good_evening": {
+    "message": "晚上好"
   },
   "popup_introduce_choose_lang_codes": {
     "message": "很高兴认识你，:user_name！ 🎉 我看到你的第一语言是:first_language，你想用其他语言显示内容吗？"
   },
   "popup_introduce_choose_pages": {
     "message": "您可以自定义您最常访问的网站以注入内容"
+  },
+  "popup_introduce_finished": {
+    "message": "干得好，:user_name！👏\n亲爱的朋友，我们现在离我们更近了一步！ 找点东西跟我一起学吧！"
   },
   "popup_select_a_language": {
     "message": "选择语言"
@@ -256,6 +274,18 @@
   "common_back": {
     "message": "回去"
   },
+  "common_close": {
+    "message": "关"
+  },
+  "common_next": {
+    "message": "下一个"
+  },
+  "common_skip": {
+    "message": "跳过"
+  },
+  "common_understand": {
+    "message": "我明白了！"
+  },
   "common_create": {
     "message": "创建"
   },
@@ -364,6 +394,30 @@
   "common_success": {
     "message": "成功"
   },
+  "common_all_items": {
+    "message": "所有项目"
+  },
+  "common_starred_only": {
+    "message": "仅加星标"
+  },
+  "common_top_searches": {
+    "message": "热门搜索关键字"
+  },
+  "common_browse_categories": {
+    "message": "浏览分类"
+  },
+  "common_friend": {
+    "message": "朋友"
+  },
+  "common_copy": {
+    "message": "复制"
+  },
+  "common_copied": {
+    "message": "已复制"
+  },
+  "common_flip": {
+    "message": "翻动"
+  },
   "seed_growing_conditions": {
     "message": "生长条件"
   },
@@ -433,6 +487,18 @@
   "suggestion_card_not_logged_in_text": {
     "message": "你好！ 为了帮助你学习，首先，我想知道你是谁。 让我们登录吧。只需几秒钟！"
   },
+  "suggestion_card_not_logged_in_btn": {
+  "message": "立即行动"
+  },
+  "i_love_you": {
+    "message": "我喜欢你! ❤️"
+  },
+  "suggestion_pin_extension": {
+    "message": "我建议您固定 Lazy Vaccine 以更快地访问您的进度！"
+  },
+  "suggestion_subscribe_set": {
+    "message": "我想你可能会喜欢这个组，请订阅！"
+  },
   "rich_text_upload_modal_title": {
     "message": "插入一张新照片"
   },
@@ -444,12 +510,6 @@
   },
   "rich_text_image_url": {
     "message": "图片网址"
-  },
-  "first_page_quote_1": {
-    "message": "轻松学习不再是夸大其词，使用 Lazy Vaccine 并订阅学习集，自己看看不同之处。 我试过了，成功了！"
-  },
-  "first_page_quote_2": {
-    "message": "杜克先生邀请我尝试 Lazy Vaccine，我为我的英语课创建了一个学习集，然后开始观看 Youtube 并意识到我记住了很多单词！ 它真的有效！"
   },
   "search_result_in_languages": {
     "message": "结果语言"
@@ -468,5 +528,29 @@
   },
   "user_profile_update_pages_success": {
     "message": "您的偏好已成功更新！"
+  },
+  "suggest_review_stared_items": {
+    "message": "您已为 :star_count 个项目加注星标，他们想念您，需要一个拥抱。 您现在要审核吗？"
+  },
+  "suggest_review_yes_button_1": {
+    "message": "是的，现在查看它们"
+  },
+  "suggest_review_yes_button_2": {
+    "message": "也可以，但不是按钮"
+  },
+  "my_starred_items": {
+    "message": "我加星标的项目"
+  },
+  "getting_started_top_languages": {
+    "message": "除了:primary_language，我打赌你知道或学习更多。\n你能全部挑出来吗？"
+  },
+  "getting_started_other_languages": {
+    "message": "如果我错了，请从这里选择您的语言"
+  },
+  "getting_started_guide_subscribe": {
+    "message": "订阅你想学的套装，剩下的交给我来帮你！\n这是订阅后的示例 👇"
+  },
+  "card_star_tooltip": {
+    "message": "保存以备日后提醒"
   }
 }

@@ -1,0 +1,33 @@
+$primary: #12b886;
+$primary-light: #42e6a4;
+
+.image-pin--wrapper {
+  position: relative;
+  animation: bounce ease-in-out 0.7s infinite alternate;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+  }
+
+  .lzv-pin-img {
+    margin-bottom: 17px;
+    border-radius: 50% 50% 50% 5%;
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    background: linear-gradient(to bottom left, $primary 6%, rgba(240, 124, 0, 0)),
+      linear-gradient(
+          to bottom right,
+          rgba(255, 255, 255, 0),
+          rgba(255, 198, 138, 0.15) 48%,
+          rgba(163, 84, 0, 0.2) 51.5%,
+          rgba(0, 0, 0, 0)
+        )
+        no-repeat,
+      linear-gradient(to bottom left, $primary, $primary-light);
+  }
+}

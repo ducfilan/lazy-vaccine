@@ -2,6 +2,13 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "jsdom",
+  clearMocks: true,
+  globalSetup: './tests/config/setup.ts',
+  globalTeardown: './tests/config/teardown.ts',
+  setupFilesAfterEnv: ['./tests/config/setupAfterEnv.ts'],
+  coveragePathIgnorePatterns: [
+    '/node_modules/'
+  ],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
     "@img/(.*)$": "<rootDir>/src/images/$1",
@@ -10,4 +17,4 @@ module.exports = {
     "@facades/(.*)$": "<rootDir>/src/common/facades/$1",
     "@bg/(.*)$": "<rootDir>/src/background/$1",
   }
-};
+}

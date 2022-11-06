@@ -1,0 +1,18 @@
+.friend-road--wrapper {
+  padding: 10px;
+
+  .images-pins--wrapper {
+    position: relative;
+    padding: 10px 20px;
+
+    .ant-badge {
+      position: unset !important;
+    }
+  }
+
+  .ant-steps-item-process {
+    .ant-steps-icon-dot {
+      left: -2px !important;
+    }
+  }
+}

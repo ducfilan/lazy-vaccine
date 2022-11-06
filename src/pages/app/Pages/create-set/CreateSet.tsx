@@ -13,6 +13,7 @@ import { CreateSetForm } from "./components/CreateSetForm"
 import { CreateSetRightHelper } from "./components/CreateSetRightHelper"
 import { CreateSetItemsForm } from "./components/CreateSetItemsForm"
 import { i18n } from "@/common/consts/constants"
+import { TrackingNameOpenCreateSetPage } from "@/common/consts/trackingNames"
 
 const { useEffect, useState } = React
 
@@ -44,6 +45,10 @@ const CreateSetPage = () => {
   }
 
   useEffect(onPageLoaded, [http])
+
+  useEffect(() => {
+    window.heap.track(TrackingNameOpenCreateSetPage)
+  }, [])
 
   const renderContent = () => {
     switch (currentStep) {

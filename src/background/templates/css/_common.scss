@@ -13,6 +13,15 @@
   }
 }
 
+@keyframes bounce {
+  0% {
+    transform: translateY(3px);
+  }
+  100% {
+    transform: translateY(-3px);
+  }
+}
+
 $primary: #12b886;
 $white: #fff;
 $black: #000;
@@ -21,7 +30,8 @@ $black: #000;
   position: relative;
   min-width: 300px;
   z-index: 2;
-  max-width: 800px;
+  max-width: min(800px, 100%);
+  height: fit-content;
   margin: 0 auto;
   color: $black;
   font-size: 12px;
@@ -54,9 +64,10 @@ $black: #000;
         height: 0;
       }
 
-      .btn-flip-wrapper {
+      .card-item--top-bar--right-wrapper {
         display: flex;
         justify-content: flex-end;
+        gap: 10px;
       }
     }
   }
@@ -90,6 +101,7 @@ $black: #000;
     .card--interactions--star {
       color: #d8d8d8 !important;
       border-color: #ffdf50 !important;
+      z-index: 2;
 
       &:hover {
         color: #fde476;
@@ -139,6 +151,23 @@ $black: #000;
       border-top-left-radius: 13px !important;
       border-bottom-left-radius: 13px !important;
     }
+  }
+
+  .is-uppercase {
+    text-transform: uppercase;
+  }
+
+  .is-primary {
+    color: $primary !important;
+  }
+
+  .ant-skeleton {
+    padding: 20px 50px;
+    background: white;
+  }
+
+  .is-center {
+    text-align: center;
   }
 }
 

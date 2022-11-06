@@ -3,9 +3,9 @@ import { User } from "@/common/types/types"
 import { Http } from "@facades/axiosFacade"
 
 type Context = {
-  user: User | null | undefined
+  user: User | null
   setUser: (user: User | null) => void
-  http?: Http | null | undefined
+  http?: Http | null
   setHttp: (http: Http | null) => void
 }
 

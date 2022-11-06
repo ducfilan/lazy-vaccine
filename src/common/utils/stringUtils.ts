@@ -1,6 +1,6 @@
 import SupportingLanguages from "@consts/supportingLanguages"
 import { KeyValuePair } from "@/common/types/types"
-import { DefaultLangCode, LiteralDurationsExtractRegex } from "@consts/constants"
+import { DefaultLangCode, i18n, LiteralDurationsExtractRegex } from "@consts/constants"
 
 export function formatString(template: string, values: KeyValuePair[]): string {
   for (const pair of values) {
@@ -62,9 +62,9 @@ export const trimQuotes = (s: string) => s.replace(/^["'](.+(?=["']$))["']$/, '$
 
 export const toTitleCase = (s: string) => s[0].toUpperCase() + s.slice(1)
 
-export const encodeBase64 = (s: string) => window.btoa(unescape(encodeURIComponent(s)))
+export const encodeBase64 = (s: string) => window.btoa(encodeURI(encodeURIComponent(s)))
 
-export const decodeBase64 = (s: string) => decodeURIComponent(escape(window.atob(s)))
+export const decodeBase64 = (s: string) => decodeURIComponent(decodeURI(window.atob(s)))
 
 /**
 * If you don't care about primitives and only objects then this function
@@ -91,3 +91,26 @@ export const isValidJson = (jsonString: string) => {
 export const getMainContent = (s: string): string => s.replace(/\([^)]*\)|（[^（]*）|【[^【]*】|《[^《]*》|＜[^＜]*＞|「[^「]*」|\[[^\[]*\]|\<[^<]*\>/g, "").trim()
 
 export const takeFirstLine = (s: string): string => s.trim().split("\n")[0]
+
+/**
+ * Get the greeting string based on the current time. E.g. morning, afternoon, evening.
+ * @param time: Date time to get the time period. Default to current time.
+ * @return greeting string.
+ */
+export const getGreetingTime = (time?: Date) => {
+  if (!time) time = new Date()
+
+  const splitAfternoon = 12
+  const splitEvening = 17
+  const currentHour = time.getHours()
+
+  if (currentHour >= splitAfternoon && currentHour <= splitEvening) {
+    // Between 12 PM and 5PM
+    return i18n("good_afternoon")
+  } else if (currentHour > splitEvening) {
+    // Between 5PM and Midnight
+    return i18n("good_evening")
+  }
+  // Between dawn and noon
+  return i18n("good_morning")
+}

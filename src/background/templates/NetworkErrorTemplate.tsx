@@ -3,6 +3,7 @@ import React from "react"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
 import shibaSleepIcon from "@img/emojis/shiba/sleep.png"
+import { TalkingShibText } from "./common/TalkingShibText"
 
 export const NetworkErrorTemplate = () => {
   return (
@@ -10,12 +11,7 @@ export const NetworkErrorTemplate = () => {
       <DisclaimerInfo />
       <div className="suggestion-card suggestion-card-wrapper card-wrapper">
         <div className="card--face">
-          <img src={chrome.runtime.getURL(`${shibaSleepIcon}`)} style={{ width: 169, verticalAlign: "top" }} />
-          <div className="talk-bubble tri-right left-in">
-            <div className="talk-text">
-              <p>:errorText</p>
-            </div>
-          </div>
+          <TalkingShibText shibImgUrl={shibaSleepIcon} text={":errorText"} />
         </div>
       </div>
     </div>

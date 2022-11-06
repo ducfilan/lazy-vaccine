@@ -1,7 +1,7 @@
 import React from "react"
 
 import NextPrevButton from "@/pages/popup/components/NextPrevButton"
-import { Button } from "antd"
+import { Button, Skeleton } from "antd"
 import { DisclaimerInfo } from "./common/DisclaimerInfo"
 
 import { Popover } from "./common/Popover"
@@ -10,7 +10,7 @@ import { CardInteraction } from "./common/CardInteraction"
 
 export const QnATemplate = () => {
   return (
-    <div className="lazy-vaccine" data-setid=":setId" data-itemid=":itemId" data-answered="false">
+    <div className="lazy-vaccine" data-set-id=":setId" data-item-id=":itemId" data-answered="false" data-set-type=":setType">
       <DisclaimerInfo />
       <Popover
         styles={{
@@ -48,6 +48,7 @@ export const QnATemplate = () => {
           </>
         }
       />
+      <Skeleton active loading className="lazy-vaccine-hidden" />
       <div className="qna-card qna-card-wrapper card-wrapper" data-answers={":listOfAnswers"}>
         <div className="card--content">
           <p className="card--question">{":question"}</p>

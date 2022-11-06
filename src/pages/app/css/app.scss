@@ -6,18 +6,22 @@
 @import "~@/common/css/global/brand-colors";
 
 @import "~@/common/css/components/_common/navbar";
+@import "~@/common/css/components/_common/next-prev-buttons";
 @import "~@/common/css/components/_common/page-footer";
+@import "~@/common/css/components/_common/popup-header";
+
+@import "~@/common/components/css/first-time-intro";
+@import "~@/common/components/css/choose-languages";
+
 @import "~@/common/css/components/_common/categories-sider";
-@import "~@/common/css/components/_common/marketplace-sider";
 
 @import "../Pages/create-set/css/create-set";
 @import "../Pages/set-detail/css/set-detail";
 @import "../Pages/home/css/home";
 @import "../Pages/before-login/css/before-login";
+@import "../Pages/getting-started/css/getting-started";
 @import "../Pages/user-profile/css/user-profile";
 @import "../Pages/category-sets/css/category-sets";
-@import "../Pages/marketplace/css/marketplace";
-@import "../Pages/seed-detail/css/seed-detail";
 @import "../Pages/test-set/css/test-set";
 @import "../Pages/search-result/css/search-result";
 

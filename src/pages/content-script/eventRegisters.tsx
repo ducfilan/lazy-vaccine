@@ -1,42 +1,71 @@
 import { addDynamicEventListener, htmlStringToHtmlNode } from "@/background/DomManipulator"
 import { decodeBase64, formatString, getMainContent, takeFirstLine } from "@/common/utils/stringUtils"
-import { generateTemplateExtraValues, toTemplateValues } from "./templateHelpers"
+import {
+  generateTemplateExtraValues,
+  getRecommendationTemplateValues,
+  getTemplateFromType,
+  toTemplateValues,
+} from "./templateHelpers"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
 import {
   sendInteractItemMessage,
+  sendInteractSetMessage,
   sendPronounceMessage,
   sendSetLocalSettingMessage,
   sendSignUpMessage,
+  sendTrackingMessage,
+  sendUndoInteractSetMessage,
 } from "./messageSenders"
 import {
   AppBasePath,
   AppPages,
+  i18n,
   InjectWrapperClassName,
+  InteractionDislike,
+  InteractionLike,
+  InteractionSubscribe,
   ItemsInteractionAnswerCorrect,
   ItemsInteractionAnswerIncorrect,
+  ItemsInteractionCopyText,
   ItemsInteractionFlip,
   ItemsInteractionForcedDone,
   ItemsInteractionIgnore,
   ItemsInteractionNext,
   ItemsInteractionPrev,
+  ItemsInteractionReviewStar,
+  ItemsInteractionShow,
   ItemsInteractionStar,
   ItemTypes,
+  OtherItemTypes,
+  SetTypeNormal,
+  SetTypeReviewStarredItems,
 } from "@/common/consts/constants"
-import { getTemplate } from "@/background/PageInjector"
 import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
-import { redirectToUrlInNewTab } from "@/common/utils/domUtils"
+import { redirectToUrlInNewTab, writeToClipboard } from "@/common/utils/domUtils"
+import {
+  TrackingNameClickCloseCardButton,
+  TrackingNameClickMaximizeCardButton,
+  TrackingNameClickMinimizeCardButton,
+  TrackingNameClickMoreButtonOnInjectCard,
+  TrackingNameClickNextSetLink,
+  TrackingNameCloseInjectBubble,
+  TrackingNameDislikeSetFromSuggestion,
+  TrackingNameHoverInjectBubble,
+  TrackingNameLikeSetFromSuggestion,
+  TrackingNameReviewStarredItems,
+  TrackingNameSubscribeSetFromSuggestion,
+  TrackingNameUnDislikeSetFromSuggestion,
+  TrackingNameUnlikeSetFromSuggestion,
+  TrackingNameUnsubscribeSetFromSuggestion,
+} from "@/common/consts/trackingNames"
 
 export function registerFlipCardEvent() {
   const flipCard = (e: Event) => {
-    let cardFace = e.target as HTMLElement
-    if (!cardFace.classList.contains("card--face")) {
-      cardFace = cardFace.closest(".card--face") as HTMLElement
-    }
+    const cardFace = (e.target as HTMLElement).closest<HTMLElement>(".card--face")!
     const wrapperElement: HTMLElement = cardFace.closest(InjectWrapperClassName)!
 
-    sendInteractItemMessage(wrapperElement.dataset.setid!, wrapperElement.dataset.itemid!, ItemsInteractionFlip).catch(
+    sendInteractItemMessage(wrapperElement.dataset.setId!, wrapperElement.dataset.itemId!, ItemsInteractionFlip).catch(
       (error) => {
-        // TODO: handle error case.
         console.error(error)
       }
     )
@@ -56,52 +85,112 @@ export function registerFlipCardEvent() {
     cardFace.closest(".flash-card-wrapper")?.classList.toggle("is-flipped")
   }
 
+  const copyCardText = (e: Event) => {
+    const cardFace = (e.target as HTMLElement).closest<HTMLElement>(".card--face")!
+    const wrapperElement: HTMLElement = cardFace.closest(InjectWrapperClassName)!
+
+    const { setId, itemId } = wrapperElement.dataset
+    sendInteractItemMessage(setId!, itemId!, ItemsInteractionCopyText).catch((error) => {
+      console.error(error)
+    })
+
+    writeToClipboard(cardFace.innerText).then(() => {
+      wrapperElement
+        .querySelector<HTMLElement>(".btn-copy")
+        ?.setAttribute("data-tooltip", `${i18n("common_copied")}: ${cardFace.innerText}`)
+    })
+  }
+
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .flash-card .card--face .card--content", flipCard)
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card-item--top-bar-wrapper .btn-flip", flipCard)
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine .card-item--top-bar-wrapper .btn-copy", copyCardText)
 }
 
 export function registerNextItemEvent(
   nextItemGetter: () => Promise<SetInfoItem | null>,
-  itemGetter: () => SetInfoItem | null,
-  setGetter: () => SetInfo | null
+  itemGetter: () => Promise<SetInfoItem | null>,
+  setGetter: () => SetInfo | null,
+  extraValues: { [key: string]: any }
 ) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--next-button", async (e: Event) => {
     e.stopPropagation()
 
-    if (e.isTrusted) {
-      const currentItem = itemGetter()
-      if (!currentItem) return // TODO: Notice problem.
+    const nextButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement = nextButton.closest(InjectWrapperClassName)!
 
-      sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext).catch((error) => {
+    showLoadingCard(wrapperElement)
+
+    const currentItem = await itemGetter()
+    if (!currentItem) return // TODO: Notice problem.
+
+    sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionNext).catch((error) => {
+      // TODO: handle error case.
+      console.error(error)
+    })
+
+    if (currentItem.setType === SetTypeReviewStarredItems) {
+      sendInteractItemMessage(currentItem.setId, currentItem._id, ItemsInteractionReviewStar).catch((error) => {
         // TODO: handle error case.
         console.error(error)
       })
     }
 
-    const nextItem = await nextItemGetter()
+    let nextItem: SetInfoItem | null = null
+    try {
+      nextItem = await nextItemGetter()
+
+      if (extraValues.isNeedRecommendationGetter()) {
+        nextItem = {
+          type: OtherItemTypes.SuggestionSets.value,
+        } as SetInfoItem
+      }
+    } catch (error) {
+      console.error(error)
+    }
+
     if (!nextItem) return // TODO: Notice problem.
 
-    const nextButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = nextButton.closest(InjectWrapperClassName)
+    sendInteractItemMessage(nextItem.setId, nextItem._id, ItemsInteractionShow).catch((error) => {
+      // TODO: handle error case.
+      console.error(error)
+    })
 
     const currentSet = setGetter()
     if (!currentSet) throw new Error("cannot get set")
 
     const itemToDisplay = itemToDisplayItem(nextItem, currentSet)
 
-    toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay))
-      .then((templateValues) => {
-        getTemplate(itemToDisplay.type).then((template) => {
-          const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
+    const getTemplateValues = () => {
+      if (extraValues.isNeedRecommendationGetter()) {
+        return getRecommendationTemplateValues(currentSet, extraValues.identityGetter())
+      }
 
-          wrapperElement?.replaceWith(newItemNode)
-        })
+      return toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay))
+    }
+
+    getTemplateValues()
+      .then((templateValues) => {
+        let type = itemToDisplay.type
+
+        getTemplateFromType(type)
+          .then((template) => {
+            const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
+            wrapperElement?.replaceWith(newItemNode)
+          })
+          .catch((error) => {
+            console.error(error)
+          })
       })
       .catch((error) => {
         // There is some error when getting the next item, trigger next item.
         console.error(error)
       })
   })
+}
+
+function showLoadingCard(wrapperElement: HTMLElement) {
+  wrapperElement?.querySelector(".ant-skeleton")?.classList.remove("lazy-vaccine-hidden")
+  wrapperElement?.querySelector(".card-wrapper")?.classList.add("lazy-vaccine-hidden")
 }
 
 /**
@@ -130,9 +219,11 @@ function itemToDisplayItem(item: SetInfoItem, setInfo: SetInfo): SetInfoItem {
 function turnItemToQuestionAndAnswersItem(nextItem: SetInfoItem, setInfo: SetInfo | null): SetInfoItem {
   let qaItem = {
     _id: nextItem._id,
+    isStared: nextItem.isStared,
     type: ItemTypes.QnA.value,
-    setId: setInfo?._id,
+    setId: setInfo?._id || nextItem.setId, // Fallback in case setInfo is a dynamic set (review starred items set)
     setTitle: setInfo?.name,
+    setType: setInfo?.setType,
   } as SetInfoItem
 
   switch (nextItem.type) {
@@ -194,17 +285,19 @@ function getRandomPositions(total: number, size: number): number[] {
 }
 
 export function registerPrevItemEvent(
-  prevItemGetter: () => SetInfoItem | null,
-  itemGetter: () => SetInfoItem | null,
+  prevItemGetter: () => Promise<SetInfoItem | null>,
+  itemGetter: () => Promise<SetInfoItem | null>,
   setInfo: () => SetInfo | null
 ) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .next-prev-buttons--prev-button", async (e: Event) => {
     e.stopPropagation()
 
     const prevButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = prevButton.closest(InjectWrapperClassName)
+    const wrapperElement: HTMLElement = prevButton.closest(InjectWrapperClassName)!
 
-    const prevItem = prevItemGetter()
+    showLoadingCard(wrapperElement)
+
+    const prevItem = await prevItemGetter()
     if (!prevItem) return
 
     if (e.isTrusted) {
@@ -221,11 +314,15 @@ export function registerPrevItemEvent(
 
     toTemplateValues(itemToDisplay, generateTemplateExtraValues(itemToDisplay))
       .then((templateValues) => {
-        getTemplate(itemToDisplay.type).then((template) => {
-          const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
+        getTemplateFromType(itemToDisplay.type)
+          .then((template) => {
+            const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
 
-          wrapperElement?.replaceWith(newItemNode)
-        })
+            wrapperElement?.replaceWith(newItemNode)
+          })
+          .catch((error) => {
+            console.error(error)
+          })
       })
       .catch((error) => {
         // There is some error when getting the next item, trigger next item.
@@ -237,6 +334,10 @@ export function registerPrevItemEvent(
 export function registerMorePopoverEvent() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .inject-card-more-button", (e: Event) => {
     e.stopPropagation()
+
+    sendTrackingMessage(TrackingNameClickMoreButtonOnInjectCard, null).catch((error) => {
+      console.error(error)
+    })
 
     const moreButton = e.target as HTMLElement
     const wrapperElement: HTMLElement = moreButton.closest(InjectWrapperClassName)!
@@ -257,7 +358,14 @@ export function registerMorePopoverEvent() {
 }
 
 export function registerHoverBubblePopoverEvent() {
+  let isHovered = false
+
   addDynamicEventListener(document.body, "mouseover", ".lazy-vaccine-bubble .bubble-img", (e: Event) => {
+    !isHovered &&
+      sendTrackingMessage(TrackingNameHoverInjectBubble, null).catch((error) => {
+        console.error(error)
+      })
+    isHovered = true
     e.stopPropagation()
 
     const moreButton = e.target as HTMLElement
@@ -273,6 +381,7 @@ export function registerHoverBubblePopoverEvent() {
     wrapperElements.forEach((wrapperElement) => {
       if (!wrapperElement.contains(target) && !isMoreButton(target)) {
         hidePopover(wrapperElement.closest(".lazy-vaccine-bubble"))
+        isHovered = false
       }
     })
   })
@@ -281,15 +390,44 @@ export function registerHoverBubblePopoverEvent() {
 const isMoreButton = (element: HTMLElement) =>
   element.classList.contains("inject-card-more-button") || element.closest(".inject-card-more-button")
 
+export function registerHoverBubbleCloseEvent() {
+  addDynamicEventListener(document.body, "click", ".lazy-vaccine-bubble .close-btn", (e: Event) => {
+    sendTrackingMessage(TrackingNameCloseInjectBubble, null).catch((error) => {
+      console.error(error)
+    })
+
+    e.stopPropagation()
+
+    const closeButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement = closeButton.closest(".lazy-vaccine-bubble")!
+
+    wrapperElement.remove()
+  })
+}
+
 export function registerNextSetEvent(preProcess: () => Promise<void>) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .inject-card-next-set-link", async (e: Event) => {
     e.preventDefault()
     e.stopPropagation()
 
-    await preProcess()
-
     const nextSetButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = nextSetButton.closest(InjectWrapperClassName)
+    const wrapperElement: HTMLElement = nextSetButton.closest(InjectWrapperClassName)!
+
+    showLoadingCard(wrapperElement)
+
+    try {
+      await preProcess()
+    } catch (error) {
+      console.error(error)
+      return
+    }
+
+    sendTrackingMessage(TrackingNameClickNextSetLink, {
+      setId: wrapperElement?.dataset.setId,
+      itemId: wrapperElement?.dataset.itemId,
+    }).catch((error) => {
+      console.error(error)
+    })
 
     toggleHiddenPopover(wrapperElement)
     clickNextItemButton(wrapperElement)
@@ -317,14 +455,22 @@ function clickNextItemButton(wrapperElement: HTMLElement | null) {
 }
 
 export function registerIgnoreEvent(
-  itemGetter: () => SetInfoItem | null,
+  itemGetter: () => Promise<SetInfoItem | null>,
+  recommendationSetter: (value: boolean) => void,
   updateItemInteraction: (itemId: string) => void
 ) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--ignore", async (e: Event) => {
     e.stopPropagation()
 
-    const item = itemGetter()
-    if (!item) return // TODO: Notice problem.
+    const ignoreButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement | null = ignoreButton.closest(InjectWrapperClassName)
+
+    const item = await itemGetter()
+    if (!item) {
+      recommendationSetter(true)
+      clickNextItemButton(wrapperElement)
+      return
+    }
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionIgnore)
       .then(() => updateItemInteraction(item._id))
@@ -332,22 +478,27 @@ export function registerIgnoreEvent(
         // TODO: handle error case.
         console.error(error)
       })
-
-    const ignoreButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = ignoreButton.closest(InjectWrapperClassName)
     clickNextItemButton(wrapperElement)
   })
 }
 
 export function registerGotItemEvent(
-  itemGetter: () => SetInfoItem | null,
+  itemGetter: () => Promise<SetInfoItem | null>,
+  recommendationSetter: (value: boolean) => void,
   updateItemInteraction: (itemId: string) => void
 ) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--got-it", async (e: Event) => {
     e.stopPropagation()
 
-    const item = itemGetter()
-    if (!item) return // TODO: Notice problem.
+    const gotItemButton = e.target as HTMLElement
+    const wrapperElement: HTMLElement | null = gotItemButton.closest(InjectWrapperClassName)
+
+    const item = await itemGetter()
+    if (!item) {
+      recommendationSetter(true)
+      clickNextItemButton(wrapperElement)
+      return
+    }
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionForcedDone)
       .then(() => updateItemInteraction(item._id))
@@ -355,15 +506,12 @@ export function registerGotItemEvent(
         // TODO: handle error case.
         console.error(error)
       })
-
-    const gotItemButton = e.target as HTMLElement
-    const wrapperElement: HTMLElement | null = gotItemButton.closest(InjectWrapperClassName)
     clickNextItemButton(wrapperElement)
   })
 }
 
 export function registerStarEvent(
-  itemGetter: () => SetInfoItem | null,
+  itemGetter: () => Promise<SetInfoItem | null>,
   updateItemInteraction: (itemId: string) => void
 ) {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .card--interactions--star", async (e: Event) => {
@@ -371,7 +519,7 @@ export function registerStarEvent(
     const starBtn = (e.target as HTMLElement).closest("button")
     starBtn?.classList.toggle("stared")
 
-    const item = itemGetter()
+    const item = await itemGetter()
     if (!item) return // TODO: Notice problem.
 
     sendInteractItemMessage(item.setId, item._id, ItemsInteractionStar)
@@ -426,11 +574,11 @@ export function registerCheckAnswerEvent() {
     const isAnswered = wrapperElement.dataset.answered === "true"
 
     !isAnswered &&
-      wrapperElement.dataset.setid &&
-      wrapperElement.dataset.itemid &&
+      wrapperElement.dataset.setId &&
+      wrapperElement.dataset.itemId &&
       sendInteractItemMessage(
-        wrapperElement.dataset.setid!,
-        wrapperElement.dataset.itemid!,
+        wrapperElement.dataset.setId!,
+        wrapperElement.dataset.itemId!,
         isAnsweredCorrect ? ItemsInteractionAnswerCorrect : ItemsInteractionAnswerIncorrect
       )
         .then(() => {
@@ -479,7 +627,11 @@ export function registerSelectEvent() {
       let wrapper = option.closest(wrapperSelector) as HTMLElement
       const settingKey = wrapper.dataset.settingKey
 
-      settingKey && selectedOptionKey && sendSetLocalSettingMessage(settingKey, selectedOptionKey)
+      settingKey &&
+        selectedOptionKey &&
+        sendSetLocalSettingMessage(settingKey, selectedOptionKey).catch((error) => {
+          console.error(error)
+        })
       ;(wrapper?.querySelector(".sBtn-text") as HTMLElement).innerText = selectedOptionLabel
       wrapper?.classList.remove("active")
     }
@@ -526,14 +678,7 @@ export function registerSuggestionLoginButtonClickEvent(callback: () => Promise<
       const button = e.target as HTMLInputElement
       button.disabled = true
 
-      sendSignUpMessage()
-        .then(callback)
-        .catch((error) => {
-          console.error(error)
-        })
-        .finally(() => {
-          button.disabled = false
-        })
+      redirectToUrlInNewTab(`${chrome.runtime.getURL(AppBasePath)}${AppPages.GettingStarted.path}?source=popup`)
     }
   )
 }
@@ -570,6 +715,14 @@ export function registerTopBarCardButtonsClickEvent() {
     async (e: Event) => {
       e.stopPropagation()
 
+      const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
+      const setId = wrapperElement.dataset.setId!
+      const itemId = wrapperElement.dataset.itemId!
+
+      sendTrackingMessage(TrackingNameClickCloseCardButton, { setId, itemId }).catch((error) => {
+        console.error(error)
+      })
+
       const button = e.target as HTMLInputElement
       button.closest(InjectWrapperClassName)?.remove()
     }
@@ -583,7 +736,12 @@ export function registerTopBarCardButtonsClickEvent() {
       e.stopPropagation()
       const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
 
-      const setId = wrapperElement.dataset.setid!
+      const setId = wrapperElement.dataset.setId!
+      const itemId = wrapperElement.dataset.itemId!
+
+      sendTrackingMessage(TrackingNameClickMaximizeCardButton, { setId, itemId }).catch((error) => {
+        console.error(error)
+      })
 
       redirectToUrlInNewTab(`${chrome.runtime.getURL(AppBasePath)}${AppPages.SetDetail.path}`.replace(":setId", setId))
     }
@@ -597,10 +755,19 @@ export function registerTopBarCardButtonsClickEvent() {
       e.stopPropagation()
       const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
 
+      const setId = wrapperElement.dataset.setId!
+      const itemId = wrapperElement.dataset.itemId!
+
+      sendTrackingMessage(TrackingNameClickMinimizeCardButton, { setId, itemId }).catch((error) => {
+        console.error(error)
+      })
+
       const hiddenClassName = "lazy-vaccine-hidden"
       wrapperElement.querySelector(".card-wrapper")?.classList.toggle(hiddenClassName)
       wrapperElement.querySelector(".card--interactions")?.classList.toggle(hiddenClassName)
       wrapperElement.querySelector(".next-prev-buttons--wrapper")?.classList.toggle(hiddenClassName)
+      wrapperElement.querySelector(".card-set-item-small")?.classList.toggle(hiddenClassName)
+      wrapperElement.querySelector(".talking-shib-wrapper")?.classList.toggle(hiddenClassName)
     }
   )
 }
@@ -617,4 +784,176 @@ export function registerHoverCardEvent() {
     document.querySelector(".lazy-vaccine-bubble .bubble-img")?.classList.remove("lazy-vaccine-hidden")
     document.querySelector(".lazy-vaccine-bubble .bubble-img-wan")?.classList.add("lazy-vaccine-hidden")
   })
+}
+
+export function registerSubscribeEvent(callback: Function) {
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `${InjectWrapperClassName} .card-set-item-small .subscribe-button`,
+    async (e: Event) => {
+      e.stopPropagation()
+      const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
+
+      const setId = wrapperElement.dataset.setId!
+      const isSubscribed = (e.target as HTMLElement).closest("button")?.innerText === i18n("common_subscribe")
+
+      if (isSubscribed) {
+        ;(wrapperElement.querySelector(".subscribe-button > span:nth-child(2)") as HTMLElement).innerText =
+          i18n("common_subscribe")
+        sendTrackingMessage(TrackingNameUnsubscribeSetFromSuggestion, { setId }).catch((error) => {
+          console.error(error)
+        })
+
+        sendUndoInteractSetMessage(setId, InteractionSubscribe)
+          .then(() => callback())
+          .catch((error) => {
+            // TODO: handle error case.
+            console.error(error)
+          })
+      } else {
+        ;(wrapperElement.querySelector(".subscribe-button > span:nth-child(2)") as HTMLElement).innerText =
+          i18n("common_unsubscribe")
+        sendTrackingMessage(TrackingNameSubscribeSetFromSuggestion, { setId }).catch((error) => {
+          console.error(error)
+        })
+
+        sendInteractSetMessage(setId, InteractionSubscribe)
+          .then(() => callback())
+          .catch((error) => {
+            // TODO: handle error case.
+            console.error(error)
+          })
+      }
+    }
+  )
+}
+
+export function registerLikeEvent(callback: Function) {
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `${InjectWrapperClassName} .card-set-item-small .like-button`,
+    async (e: Event) => {
+      e.stopPropagation()
+      const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
+
+      const setId = wrapperElement.dataset.setId!
+      const isLiked = String(wrapperElement.dataset.isLiked?.toLowerCase()) == "true"
+      const isDisliked = String(wrapperElement.dataset.isDislike?.toLowerCase()) == "true"
+
+      wrapperElement.querySelectorAll(".dislike-button .anticon").forEach((el) => el.classList.remove("is-primary"))
+      ;(e.target as HTMLElement).closest("button")?.querySelector(".anticon")?.classList.toggle("is-primary")
+
+      if (isLiked) {
+        sendTrackingMessage(TrackingNameUnlikeSetFromSuggestion, { setId }).catch((error) => {
+          console.error(error)
+        })
+
+        sendUndoInteractSetMessage(setId, InteractionLike)
+          .then(() => callback())
+          .catch((error) => {
+            // TODO: handle error case.
+            console.error(error)
+          })
+      } else {
+        sendTrackingMessage(TrackingNameLikeSetFromSuggestion, { setId }).catch((error) => {
+          console.error(error)
+        })
+
+        if (isDisliked) await sendUndoInteractSetMessage(setId, InteractionDislike)
+
+        sendInteractSetMessage(setId, InteractionLike)
+          .then(() => callback())
+          .catch((error) => {
+            // TODO: handle error case.
+            console.error(error)
+          })
+      }
+
+      wrapperElement.dataset.isLiked = (!isLiked).toString()
+    }
+  )
+}
+
+export function registerDislikeEvent(callback: Function) {
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `${InjectWrapperClassName} .card-set-item-small .dislike-button`,
+    async (e: Event) => {
+      e.stopPropagation()
+      const wrapperElement: HTMLElement = (e.target as HTMLElement).closest(InjectWrapperClassName)!
+
+      const setId = wrapperElement.dataset.setId!
+      const isLiked = String(wrapperElement.dataset.isLiked?.toLowerCase()) == "true"
+      const isDisliked = String(wrapperElement.dataset.isDislike?.toLowerCase()) == "true"
+
+      wrapperElement.querySelectorAll(".like-button .anticon").forEach((el) => el.classList.remove("is-primary"))
+      ;(e.target as HTMLElement).closest("button")?.querySelector(".anticon")?.classList.toggle("is-primary")
+
+      if (isDisliked) {
+        sendTrackingMessage(TrackingNameUnDislikeSetFromSuggestion, { setId }).catch((error) => {
+          console.error(error)
+        })
+
+        sendUndoInteractSetMessage(setId, InteractionDislike)
+          .then(() => callback())
+          .catch((error) => {
+            // TODO: handle error case.
+            console.error(error)
+          })
+      } else {
+        sendTrackingMessage(TrackingNameDislikeSetFromSuggestion, { setId }).catch((error) => {
+          console.error(error)
+        })
+
+        if (isLiked) await sendUndoInteractSetMessage(setId, InteractionLike)
+
+        sendInteractSetMessage(setId, InteractionDislike)
+          .then(() => callback())
+          .catch((error) => {
+            // TODO: handle error case.
+            console.error(error)
+          })
+      }
+
+      wrapperElement.dataset.isDislike = (!isDisliked).toString()
+    }
+  )
+}
+
+export function registerReviewStarredItemsEvent(getItem: () => Promise<SetInfoItem | null>) {
+  addDynamicEventListener(
+    document.body,
+    "click",
+    `${InjectWrapperClassName} .lzv-btn-review-starred-items`,
+    async (e: Event) => {
+      e.preventDefault()
+      e.stopPropagation()
+
+      const reviewButton = e.target as HTMLElement
+      const wrapperElement: HTMLElement = reviewButton.closest(InjectWrapperClassName)!
+
+      showLoadingCard(wrapperElement)
+
+      sendTrackingMessage(TrackingNameReviewStarredItems).catch((error) => {
+        console.error(error)
+      })
+
+      const item = await getItem()
+      if (!item) return
+
+      const templateValues = await toTemplateValues(item, generateTemplateExtraValues(item))
+
+      getTemplateFromType(item.type)
+        .then((template) => {
+          const newItemNode = htmlStringToHtmlNode(formatString(template, templateValues))
+          wrapperElement?.replaceWith(newItemNode)
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    }
+  )
 }

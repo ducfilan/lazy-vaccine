@@ -498,7 +498,7 @@ const InsertImageButton = () => {
 
       <Modal
         title={i18n("rich_text_upload_modal_title")}
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         onOk={() => {
           setIsModalVisible(false)

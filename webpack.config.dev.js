@@ -2,8 +2,8 @@ const { merge } = require("webpack-merge");
 
 const getCommonConfigs = require("./webpack.config.prod");
 
-module.exports = (_, { mode }) => {
-  const commonConfigs = getCommonConfigs(_, { mode })
+module.exports = ({ heapId }, { mode }) => {
+  const commonConfigs = getCommonConfigs({ heapId }, { mode })
 
   return merge(commonConfigs, {
     devtool: "inline-source-map",

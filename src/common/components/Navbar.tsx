@@ -11,7 +11,7 @@ import AvatarImage from "./AvatarImage"
 import { AppBasePath, AppPages, i18n } from "@consts/constants"
 
 const DropdownMenu = (props: { isLoggedIn: boolean; target?: string }) => {
-  const { user, setUser, setHttp } = useGlobalContext()
+  const { user, setUser, http, setHttp } = useGlobalContext()
 
   return props.isLoggedIn ? (
     <Dropdown
@@ -33,7 +33,9 @@ const DropdownMenu = (props: { isLoggedIn: boolean; target?: string }) => {
                 <Button
                   type="link"
                   onClick={() => {
-                    signOut(() => {
+                    if (!http) return
+
+                    signOut(http, () => {
                       setUser(null)
                       setHttp(null)
                     })

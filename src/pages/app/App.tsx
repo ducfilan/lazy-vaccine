@@ -21,18 +21,17 @@ import PagesNavigator from "./components/PagesNavigator"
 import { User } from "@/common/types/types"
 import { getMyInfo } from "@/common/repo/user"
 import { AppPages, i18n, LoginTypes } from "@/common/consts/constants"
-import { getGoogleAuthToken } from "@facades/authFacade"
+import { getGoogleAuthTokenSilent } from "@facades/authFacade"
 import { Http } from "@facades/axiosFacade"
 import { GlobalContext } from "@/common/contexts/GlobalContext"
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom"
+import { Routes, Route, useNavigate, useLocation, useSearchParams } from "react-router-dom"
 import { Locale } from "antd/lib/locale-provider"
 import SearchResultPage from "./Pages/search-result/SearchResult"
 import UserProfilePage from "./Pages/user-profile/UserProfile"
 import CategorySetsPage from "./Pages/category-sets/CategorySets"
-import SeedDetailPage from "./Pages/seed-detail/SeedDetail"
 import TestSetPage from "./Pages/test-set/TestSet"
-import MarketPlacePage from "./Pages/marketplace/MarketPlacePage"
 import { BeforeLoginPage } from "./Pages/before-login/BeforeLoginPage"
+import { GettingStartedPage } from "./Pages/getting-started/GettingStartedPage"
 import SupportingLanguages from "@/common/consts/supportingLanguages"
 import NetworkError from "@/common/components/NetworkError"
 
@@ -47,6 +46,39 @@ const langCodeToAntLocaleMap = {
 
 const defaultLocale = enUS
 
+export function getErrorView(lastError: any, defaultView: any) {
+  switch (lastError?.code) {
+    case "ECONNABORTED":
+      if (lastError.message.startsWith("timeout of")) {
+        return (
+          <div>
+            <NetworkError errorText={i18n("network_error_timeout")} />
+          </div>
+        )
+      }
+      break
+
+    case "ERR_NETWORK":
+      let errorText = ""
+      if (window.navigator.onLine) {
+        errorText = i18n("network_error_timeout")
+      } else {
+        errorText = i18n("network_error_offline")
+      }
+
+      return (
+        <div>
+          <NetworkError errorText={errorText} />
+        </div>
+      )
+
+    default:
+      break
+  }
+
+  return defaultView
+}
+
 const AppPage = () => {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -54,72 +86,66 @@ const AppPage = () => {
   const [locale, setLocale] = useState<Locale>(enUS)
   const [lastError, setLastError] = useState<any>(null)
 
+  const [searchParams] = useSearchParams()
+  const source = searchParams.get("source")
+  const keyword = searchParams.get("keyword")
+
   const navigate = useNavigate()
   const location = useLocation()
 
+  window.addEventListener("offline", () => {
+    setUser(null)
+    setLastError({
+      code: "ERR_NETWORK",
+    })
+  })
+
+  window.addEventListener("online", () => {
+    setLastError(null)
+  })
+
   useEffect(() => {
-    getGoogleAuthToken()
+    if (lastError) return
+
+    setIsLoading(true)
+
+    getGoogleAuthTokenSilent()
       .then((token: string) => {
-        setHttp(new Http(token, LoginTypes.google))
+        const newHttp = new Http(token, LoginTypes.google)
+        setHttp(newHttp)
+
+        getMyInfo(newHttp)
+          .then((userInfo) => {
+            setUser(userInfo)
+            setLocale(langCodeToAntLocaleMap[userInfo.locale] || defaultLocale)
+
+            window.heap.identify(userInfo.email)
+            window.heap.addUserProperties({
+              name: userInfo?.name || "",
+              finished_register_step: userInfo.finishedRegisterStep,
+            })
+          })
+          .catch((error) => {
+            source !== "popup" &&
+              notification["error"]({
+                message: i18n("error"),
+                description: i18n("unexpected_error_message"),
+                duration: null,
+              })
+
+            console.error(error)
+            setLastError(error)
+          })
+          .finally(() => {
+            setIsLoading(false)
+          })
       })
       .catch((error: any) => {
         console.error(error)
         setLastError(error)
-      })
-  }, [])
-
-  useEffect(() => {
-    if (!http) return
-
-    setIsLoading(true)
-
-    getMyInfo(http)
-      .then((userInfo) => {
-        setUser(userInfo)
-        setLocale(langCodeToAntLocaleMap[userInfo.locale] || defaultLocale)
-      })
-      .catch((error) => {
-        notification["error"]({
-          message: i18n("error"),
-          description: i18n("unexpected_error_message"),
-          duration: null,
-        })
-
-        console.error(error)
-        setLastError(error)
-      })
-      .finally(() => {
         setIsLoading(false)
       })
-  }, [http])
-
-  const getErrorView = () => {
-    if (lastError) {
-      switch (lastError.code) {
-        case "ECONNABORTED":
-          if (lastError.message.startsWith("timeout of")) {
-            return (
-              <div>
-                <NetworkError errorText={i18n("network_error_timeout")} />
-              </div>
-            )
-          }
-          break
-
-        case "ERR_NETWORK":
-          return (
-            <div>
-              <NetworkError errorText={i18n("network_error_offline")} />
-            </div>
-          )
-
-        default:
-          break
-      }
-    }
-
-    return <BeforeLoginPage />
-  }
+  }, [lastError])
 
   return (
     <GlobalContext.Provider value={{ user, setUser, http, setHttp }}>
@@ -131,6 +157,7 @@ const AppPage = () => {
                 placeholder={i18n("create_set_search_place_holder")}
                 className="is-absolute"
                 size="large"
+                defaultValue={keyword || ""}
                 suffix={<SearchOutlined style={{ color: "rgba(0,0,0,.45)" }} />}
                 onPressEnter={({ target }) => {
                   navigate(`${AppPages.Sets.path}?keyword=${(target as HTMLInputElement).value}`)
@@ -153,11 +180,11 @@ const AppPage = () => {
             <PagesNavigator path={location.pathname} />
             <Layout style={{ padding: 24 }}>
               <Content>
-                {!http || !user ? (
+                {(!http || !user) && source !== "popup" ? (
                   isLoading ? (
                     <Skeleton active />
                   ) : (
-                    getErrorView()
+                    getErrorView(lastError, <BeforeLoginPage />)
                   )
                 ) : (
                   <Routes>
@@ -169,9 +196,8 @@ const AppPage = () => {
                     <Route path={AppPages.UserProfile.path} element={<UserProfilePage />} />
                     <Route path={AppPages.MySpace.path} element={<UserProfilePage />} />
                     <Route path={AppPages.CategorySets.path} element={<CategorySetsPage />} />
-                    <Route path={AppPages.MarketPlace.path} element={<MarketPlacePage />} />
-                    <Route path={AppPages.SeedDetail.path} element={<SeedDetailPage />} />
                     <Route path={AppPages.TestSet.path} element={<TestSetPage />} />
+                    <Route path={AppPages.GettingStarted.path} element={<GettingStartedPage />} />
                   </Routes>
                 )}
               </Content>

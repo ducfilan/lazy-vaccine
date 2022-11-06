@@ -1,10 +1,10 @@
 import { AxiosResponse } from "axios"
 import { Category, CategoryResponse } from "@/common/types/types"
-import Apis from "@consts/apis"
+import { ApiCategories } from "@consts/apis"
 import { Http } from "@facades/axiosFacade"
 
 export async function getCategories(http: Http, langCode: string): Promise<Category[]> {
-  const response = await http.get<any, AxiosResponse<CategoryResponse[]>>(Apis.categories(langCode))
+  const response = await http.get<any, AxiosResponse<CategoryResponse[]>>(ApiCategories(langCode))
 
   if (!response?.data) throw new Error("cannot get categories")
 
@@ -38,4 +38,18 @@ let _buildSubCategories = (rawCategories: Category[], parentPath: string | null 
 
     _buildSubCategories(rawCategories, nextLevelPath)
   })
+}
+
+export async function getTopCategories(http: Http, langCode: string): Promise<Category[]> {
+  const response = await http.get<any, AxiosResponse<CategoryResponse[]>>(ApiCategories(langCode, true))
+
+  if (!response?.data) throw new Error("cannot get categories")
+
+  const categories = response?.data
+    .map(({ _id, name, description, isTopCategory, path }: CategoryResponse) =>
+      new CategoryResponse(_id, name, description, isTopCategory, path)
+    )
+    .map((c: CategoryResponse) => c.toCategories(langCode))
+
+  return categories
 }

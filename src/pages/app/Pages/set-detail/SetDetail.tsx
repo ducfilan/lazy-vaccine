@@ -11,6 +11,7 @@ import { SetDetailContext } from "./contexts/SetDetailContext"
 import { notification, Skeleton } from "antd"
 import { i18n } from "@/common/consts/constants"
 import LearningActivities from "./components/LearningActivities"
+import { TrackingNameOpenSetDetailPage } from "@/common/consts/trackingNames"
 
 const { useState, useEffect } = React
 
@@ -26,7 +27,9 @@ const SetDetailPage = () => {
 
     getSetInfo(http, setId!)
       .then(setSetInfo)
-      .catch(() => {
+      .catch((error) => {
+        console.error(error)
+
         notification["error"]({
           message: i18n("error"),
           description: i18n("unexpected_error_message"),
@@ -34,6 +37,10 @@ const SetDetailPage = () => {
         })
       })
   }
+
+  useEffect(() => {
+    window.heap.track(TrackingNameOpenSetDetailPage)
+  }, [])
 
   useEffect(onPageLoaded, [http])
   useEffect(() => setInfo && setLoading(false), [setInfo])

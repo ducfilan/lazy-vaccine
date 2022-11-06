@@ -1,24 +1,35 @@
-import * as React from "react"
+import React, { useEffect } from "react"
 
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 
 import { Button, Alert, Carousel } from "antd"
 import { GoogleOutlined } from "@ant-design/icons"
-import { signIn } from "@facades/authFacade"
-import { i18n, LoginTypes } from "@consts/constants"
+import { clearLoginInfoCache, signIn } from "@facades/authFacade"
+import { AppBasePath, AppPages, i18n, LoginTypes } from "@consts/constants"
 import { User } from "@/common/types/types"
 
 import WanImg from "@img/emojis/shiba/wan.png"
+import GoodImg from "@img/emojis/shiba/good.png"
 import PopupHeader from "./Header"
 import BlockQuote from "@/common/components/BlockQuote"
+import { redirectToUrlInNewTab } from "@/common/utils/domUtils"
 
 const { useState } = React
 
 function FirstTime() {
   const [isLoading, setIsLoading] = useState(false)
   const [isShowLoginError, setIsShowLoginError] = useState(false)
+  const [shibImg, setShibImg] = useState(WanImg)
 
   const { setUser, setHttp } = useGlobalContext()
+
+  useEffect(() => {
+    const needToShowExternalPopup = new URLSearchParams(window.location.search).get("external") == null
+
+    if (needToShowExternalPopup) {
+      redirectToUrlInNewTab(`${chrome.runtime.getURL(AppBasePath)}${AppPages.GettingStarted.path}?source=popup`)
+    }
+  }, [])
 
   function loginWithGoogle() {
     setIsLoading(true)
@@ -26,10 +37,11 @@ function FirstTime() {
 
     signIn
       .call({ setHttp }, LoginTypes.google)
-      .then((user: User | null) => {
-        setUser(user)
+      .then((u: User | null) => {
+        setUser(u)
       })
       .catch((error) => {
+        clearLoginInfoCache()
         console.error(error)
         setIsShowLoginError(true)
       })
@@ -41,9 +53,17 @@ function FirstTime() {
   return (
     <>
       <div className="first-time-intro--wrapper is-relative">
-        <PopupHeader content={i18n("popup_introduce_first")} iconUrl={WanImg} />
+        <PopupHeader content={i18n("popup_introduce_first")} iconUrl={shibImg} />
         <div className="first-time-intro--login-button has-text-centered">
-          <Button shape="round" icon={<GoogleOutlined />} size={"large"} loading={isLoading} onClick={loginWithGoogle}>
+          <Button
+            shape="round"
+            icon={<GoogleOutlined />}
+            size={"large"}
+            loading={isLoading}
+            onClick={loginWithGoogle}
+            onMouseOver={() => setShibImg(GoodImg)}
+            onMouseLeave={() => setTimeout(() => setShibImg(WanImg), 2000)}
+          >
             {i18n("login_google")}
           </Button>
         </div>

@@ -1,0 +1,47 @@
+.first-time-intro--wrapper {
+  .first-time-intro--login-button {
+    position: absolute;
+    bottom: -2em;
+    width: 100%;
+
+    button {
+      @include box-shadow;
+
+      height: 60px;
+      font-size: 24px;
+      color: $primary;
+      padding: 0 50px;
+
+      &:after {
+        border-color: transparent transparent #dbdbdb #dbdbdb !important;
+      }
+
+      .anticon {
+        color: $google-color;
+        font-size: 32px;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+.first-time-intro--body-wrapper {
+  margin-top: 3em;
+  padding: 0 50px;
+}
+
+.top-keywords--wrapper {
+  margin-top: 16px;
+  .ant-tag {
+    cursor: pointer;
+    font-size: 14px;
+    border-color: $primary;
+  }
+}
+
+.categories-list--wrapper {
+  margin: 16px 0;
+  button {
+    margin: 0 10px 10px 0;
+  }
+}
