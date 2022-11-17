@@ -10,7 +10,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const path = require("path");
 
 module.exports = ({ heapId }, { mode }) => {
-  const isDevelopment = mode === "development";
+  const isDevelopment = mode !== "production";
 
   return {
     entry: {

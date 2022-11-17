@@ -48,6 +48,7 @@
   ],
   "web_accessible_resources": [
     "static/*",
-    "pages/lazy-vaccine.html"
+    "pages/lazy-vaccine.html",
+    "pages/oauth.html"
   ]
 }

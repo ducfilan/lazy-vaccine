@@ -276,7 +276,7 @@ export type EmptyText = {
 }
 
 declare global {
-  interface Window { heap: any }
+  interface Window { heap: any, receiveToken: any, acceptedGoogleLogin: boolean }
 }
 
 window.heap = window.heap || {}

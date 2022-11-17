@@ -5,11 +5,12 @@ import GoogleApiUrls from "@consts/googleApiUrls"
 import registerSteps from "@consts/registerSteps"
 import CacheKeys from "@/common/consts/caching"
 import { NotLoggedInError } from "@consts/errors"
-import { GoogleClientId, LoginTypes, MaxTryAgainSignInCount } from "@consts/constants"
+import { GoogleClientId, i18n, LoginTypes, MaxTryAgainSignInCount } from "@consts/constants"
 import { ApiGetTokenFromCode, ApiRefreshAccessToken, ApiUsers } from "@consts/apis"
 import { GoogleUserInfo, User } from "@/common/types/types"
 import { get, Http } from "./axiosFacade"
 import { logout } from "@/common/repo/user"
+import { openPopupCenter } from "@/common/utils/domUtils"
 
 export function getGoogleAuthToken(options: any = {}, tryAgainCount: number = 0) {
   return new Promise<any>((resolve, reject) => {
@@ -69,7 +70,7 @@ function launchAndGetToken(options: any = {}, tryAgainCount: number = 0) {
 
     const url = new URLSearchParams(Object.entries({
       client_id: GoogleClientId,
-      redirect_uri: chrome.identity.getRedirectURL(),
+      redirect_uri: process.env.GOOGLE_REDIRECT_URI!,
       response_type: "code",
       scope: "profile email openid",
       access_type: "offline",
@@ -78,10 +79,14 @@ function launchAndGetToken(options: any = {}, tryAgainCount: number = 0) {
       state: initialState
     }))
 
-    chrome.identity.launchWebAuthFlow({ url: "https://accounts.google.com/o/oauth2/v2/auth?" + url.toString(), ...options }, function (redirectURL) {
-      const state = redirectURL?.match("state=(.*?)&")?.at(1)
-      const code = redirectURL?.match("code=(.*?)&")?.at(1)
+    openPopupCenter({
+      url: "https://accounts.google.com/o/oauth2/v2/auth?" + url.toString(),
+      h: 500,
+      w: 500, title: i18n("login_google"),
+      onPopupClosed: () => !window.acceptedGoogleLogin && reject(new NotLoggedInError("not approve access"))
+    })
 
+    window.receiveToken = ({ state, code }: any) => {
       if (state && initialState !== state) {
         reject("Wrong response state")
       }
@@ -111,7 +116,7 @@ function launchAndGetToken(options: any = {}, tryAgainCount: number = 0) {
       } else {
         reject("The OAuth Token was null")
       }
-    })
+    }
   })
 }
 
