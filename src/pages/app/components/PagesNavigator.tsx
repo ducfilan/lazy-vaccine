@@ -4,10 +4,12 @@ import { Layout, Menu, Typography } from "antd"
 const { Title } = Typography
 const { Header } = Layout
 
-import { AppPages } from "@/common/consts/constants"
+import { AppPageGettingStarted, AppPages } from "@/common/consts/constants"
 import { Link } from "react-router-dom"
 
 const PagesNavigator = (props: { path: string }) => {
+  if (props.path === AppPageGettingStarted.path) return <></>
+
   return (
     <Header className="pages-navigator--wrapper">
       <Menu

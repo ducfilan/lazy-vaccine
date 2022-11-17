@@ -7,6 +7,13 @@ export const AppPageCreateSet = {
   isSideNav: false,
 }
 
+export const AppPageGettingStarted = {
+  key: "getting-started",
+  name: "Getting started",
+  path: "/getting-started",
+  isSideNav: false,
+}
+
 export const AppPages = {
   Home: {
     key: "side-home",
@@ -63,12 +70,7 @@ export const AppPages = {
     path: "/test-set/:setId",
     isSideNav: false,
   },
-  GettingStarted: {
-    key: "getting-started",
-    name: "Getting started",
-    path: "/getting-started",
-    isSideNav: false,
-  },
+  GettingStarted: AppPageGettingStarted,
 }
 
 export const LoginTypes = {
