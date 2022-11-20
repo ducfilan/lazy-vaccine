@@ -62,7 +62,9 @@ export default class PageInjector {
     this.strict = strict || false
     this.waitTimeOutInMs = waitTimeOutInMs
 
-    this.hash = encodeBase64(`${this.rate}${this.type}${this.parentSelector}${this.newGeneratedElementSelector}${this.siblingSelector}${this.strict}${this.waitTimeOutInMs}`)
+    this.hash = encodeBase64(
+      `${this.rate}${this.type}${this.parentSelector}${this.newGeneratedElementSelector}${this.siblingSelector}${this.strict}${this.waitTimeOutInMs}`
+    )
   }
 
   private parseSelector(selectorString: string) {
@@ -213,17 +215,18 @@ export default class PageInjector {
       .then((htmlTemplate) => {
         const htmlString = formatString(htmlTemplate, templateValue)
 
-        document.querySelectorAll(this.parentSelector).forEach((elem) => {
-          const node = htmlStringToHtmlNode(htmlString)
-          if (!node) {
-            throw new Error("invalid htmlTemplate")
-          }
+        const elem = document.querySelector(this.parentSelector)
+        if (!elem) return
 
-          elem.querySelectorAll(InjectWrapperClassName).forEach((child) => {
-            child.remove()
-          })
-          elem.prepend(node)
+        const node = htmlStringToHtmlNode(htmlString)
+        if (!node) {
+          throw new Error("invalid htmlTemplate")
+        }
+
+        elem.querySelectorAll(InjectWrapperClassName).forEach((child) => {
+          child.remove()
         })
+        elem.prepend(node)
       })
       .catch((error) => {
         console.error(error)

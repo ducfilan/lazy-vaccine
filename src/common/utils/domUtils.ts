@@ -28,10 +28,10 @@ export const detectPageChangedMutationObserver = (callback: () => any,
 export const detectPageChanged = (
   callback: () => any,
   equalFn: (oldHref: string, newHref: string) => boolean = (o: string, n: string) => o === n,
-  allOldIntervalId: NodeJS.Timer[] = []
+  allOldIntervalIds: NodeJS.Timer[] = []
 ) => {
-  console.debug("oldIntervalId: " + allOldIntervalId)
-  allOldIntervalId.length > 0 && allOldIntervalId.forEach(id => clearInterval(id))
+  console.debug("oldIntervalIds: " + allOldIntervalIds)
+  allOldIntervalIds.length > 0 && allOldIntervalIds.forEach(id => clearInterval(id))
   let oldHref = document.location.href
 
   return setInterval(async () => {
