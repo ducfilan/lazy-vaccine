@@ -55,6 +55,9 @@
   "popup_select_a_language": {
     "message": "言語選択"
   },
+  "popup_default_lang_notification": {
+    "message": "それはあなたのデフォルトの言語です。私が選択しました。"
+  },
   "popup_stats_sets": {
     "message": "セット数"
   },

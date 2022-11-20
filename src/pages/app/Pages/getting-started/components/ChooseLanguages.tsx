@@ -100,12 +100,24 @@ function ChooseLanguages() {
           <Card bordered={false}>
             {displayedLanguages.map(({ code, isSelected }, i) => (
               <Card.Grid key={code} hoverable={false}>
-                <div className={`lzv--top-languages-item has-text-centered`}>
+                <div
+                  className={`lzv--top-languages-item has-text-centered`}
+                  onClick={(e) => {
+                    const checkedCode = (e.target as HTMLElement).closest(".lzv--top-languages-item")!.querySelector("input")!.dataset.langCode
+                    if (checkedCode !== user?.locale) return
+
+                    notification["info"]({
+                      message: i18n("common_friend"),
+                      description: i18n("popup_default_lang_notification"),
+                    })
+                  }}
+                >
                   <label className="checkbox-wrapper">
                     <input
                       type="checkbox"
                       className="lzv--checkbox-input"
                       checked={isSelected}
+                      disabled={code === user?.locale}
                       data-lang-code={code}
                       onChange={(e) => {
                         const checkedCode = e.target.dataset.langCode
@@ -113,7 +125,7 @@ function ChooseLanguages() {
 
                         if (!checkedCode) return
 
-                        const updatedDisplayedLanguages = displayedLanguages.map((lang, i) =>
+                        const updatedDisplayedLanguages: any = displayedLanguages.map((lang, i) =>
                           lang.code === checkedCode ? { code: checkedCode, isSelected: isChecked } : lang
                         )
 

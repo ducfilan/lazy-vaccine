@@ -55,6 +55,9 @@
   "popup_select_a_language": {
     "message": "Select a language"
   },
+  "popup_default_lang_notification": {
+    "message": "It's your default language, I have selected it for you."
+  },
   "popup_stats_sets": {
     "message": "Sets"
   },

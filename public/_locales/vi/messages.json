@@ -52,6 +52,9 @@
   "popup_select_a_language": {
     "message": "Chọn ngôn ngữ"
   },
+  "popup_default_lang_notification": {
+    "message": "Đây là ngôn ngữ mặc định của bạn, mình đã chọn sẵn cho bạn rồi nha!"
+  },
   "popup_stats_sets": {
     "message": "Bài"
   },

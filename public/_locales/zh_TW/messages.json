@@ -55,6 +55,9 @@
   "popup_select_a_language": {
     "message": "选择语言"
   },
+  "popup_default_lang_notification": {
+    "message": "这是你的默认语言，我已经为你选择了。"
+  },
   "popup_stats_sets": {
     "message": "组数"
   },
