@@ -1,19 +1,39 @@
+import "regenerator-runtime/runtime.js"
 import { ApiPronounceText } from "@consts/apis"
 import CacheKeys from "@/common/consts/caching"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, HeapIoId, InteractionSubscribe, ItemsInteractionShow, LocalStorageKeyPrefix, LoginTypes, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet, ChromeMessageTypeCountInteractedItems, ChromeMessageTypeGetInteractedItems, SetTypeNormal, ChromeMessageTypeGetSetSilent, ChromeMessageTypeGetInjectionTargets, ChromeMessageTypeGetRestrictedKeywords, InteractionCreate } from "@consts/constants"
+import {
+  ChromeMessageClearRandomSetCache,
+  ChromeMessageTypeGetLocalSetting,
+  ChromeMessageTypeGetRandomSetSilent,
+  ChromeMessageTypeIdentifyUser,
+  ChromeMessageTypeInteractItem,
+  ChromeMessageTypePlayAudio,
+  ChromeMessageTypeSuggestSets,
+  ChromeMessageTypeSetLocalSetting,
+  ChromeMessageTypeToken,
+  InteractionSubscribe,
+  ItemsInteractionShow,
+  LocalStorageKeyPrefix,
+  LoginTypes,
+  ChromeMessageTypeInteractSet,
+  ChromeMessageTypeUndoInteractSet,
+  ChromeMessageTypeCountInteractedItems,
+  ChromeMessageTypeGetInteractedItems,
+  SetTypeNormal,
+  ChromeMessageTypeGetSetSilent,
+  ChromeMessageTypeGetInjectionTargets,
+  ChromeMessageTypeGetRestrictedKeywords
+} from "@consts/constants"
 import { NotLoggedInError, NotSubscribedError } from "@consts/errors"
-import { clearLoginInfoCache, getGoogleAuthToken, getGoogleAuthTokenSilent, signIn } from "@/common/facades/authFacade"
+import { getGoogleAuthToken, getGoogleAuthTokenSilent } from "@/common/facades/authFacade"
 import { Http } from "@/common/facades/axiosFacade"
 import { getSetInfo, interactToSet, interactToSetItem, undoInteractToSet } from "@/common/repo/set"
 import { clearServerCache, countInteractedItems, getInteractedItems, getMyInfo, getUserInteractionRandomSet, suggestSets } from "@/common/repo/user"
 import { SetInfo, User } from "./common/types/types"
-import { getStorageSyncData } from "@/common/utils/utils"
+import { getStorageLocalData, getStorageSyncData, setStorageLocalData } from "@/common/utils/utils"
 import { getInjectionTargets, getRestrictedKeywords } from "./common/repo/staticApis"
-import { TrackingNameInteractItem, TrackingNameShowItem, TrackingNameSignupFromInjectedCard } from "./common/consts/trackingNames"
 
 let lastAudio: HTMLAudioElement
-
-includeHeapAnalytics()
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.type) {
@@ -29,42 +49,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       getGoogleAuthTokenSilent().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
         getMyInfo(http).then((user: User) => {
-          window.heap.identify(user?.email)
-          window.heap.addUserProperties({ name: user?.name || "", finished_register_step: user?.finishedRegisterStep })
           sendResponse({ success: true, user })
-        }).catch(() => {
+        }).catch((e) => {
+          console.error(e)
           sendResponse({ success: false })
         })
-      }).catch(() => {
+      }).catch((e) => {
+        console.error(e)
         sendResponse({ success: false })
       })
-      break
-
-    case ChromeMessageTypeSignUp:
-      window.heap.track(TrackingNameSignupFromInjectedCard)
-      signIn
-        .call(null, LoginTypes.google)
-        .then((user: User | null) => {
-          window.heap.identify(user?.email)
-          window.heap.addUserProperties({ name: user?.name || "", finished_register_step: user?.finishedRegisterStep })
-          sendResponse({ success: true, result: user })
-        })
-        .catch((error) => {
-          clearLoginInfoCache()
-          sendResponse({ success: false, error: toResponseError(error) })
-        })
-
-      break
-
-    case ChromeMessageTypeTracking:
-      if (!request.arg.name) return
-
-      if (!request.arg.metadata) {
-        window.heap.track(request.arg.name)
-      } else {
-        window.heap.track(request.arg.name, request.arg.metadata)
-      }
-
       break
 
     case ChromeMessageTypeGetRandomSetSilent:
@@ -84,27 +77,27 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break
 
     case ChromeMessageClearRandomSetCache:
-      clearLocalCachedRandomSet()
+      clearLocalCachedRandomSet().then(() => {
+        getGoogleAuthTokenSilent().then((token: string) => {
+          const http = new Http(token, LoginTypes.google)
+          const { cacheType } = request.arg
 
-      getGoogleAuthTokenSilent().then((token: string) => {
-        const http = new Http(token, LoginTypes.google)
-        const { cacheType } = request.arg
-
-        clearServerRandomSetCache(http, cacheType)
-          .then(() => sendResponse({ success: true }))
-          .catch(error => {
-            sendResponse({ success: false, error: toResponseError(error) })
-          })
-      }).catch((error: Error) => {
-        sendResponse({ success: false, error: toResponseError(error) })
+          clearServerRandomSetCache(http, cacheType)
+            .then(() => sendResponse({ success: true }))
+            .catch(error => {
+              sendResponse({ success: false, error: toResponseError(error) })
+            })
+        }).catch((error: Error) => {
+          sendResponse({ success: false, error: toResponseError(error) })
+        })
       })
+
       break
 
     case ChromeMessageTypeInteractItem:
       getGoogleAuthTokenSilent().then((token: string) => {
         const { action: interaction, itemId, href } = request.arg
 
-        window.heap.track(request.arg.action === ItemsInteractionShow ? TrackingNameShowItem : TrackingNameInteractItem, { interaction, itemId, href })
         increaseSyncStorageCount(request.arg.action === ItemsInteractionShow ? CacheKeys.showItemCount : CacheKeys.interactItemCount)
 
         const http = new Http(token, LoginTypes.google)
@@ -148,17 +141,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       break
 
     case ChromeMessageTypeSetLocalSetting:
-      setLocalSetting(request.arg.settingKey, request.arg.settingValue)
-      sendResponse({ success: true })
+      setLocalSetting(request.arg.settingKey, request.arg.settingValue).then(() => {
+        sendResponse({ success: true })
+      }).catch(() => {
+        sendResponse({ success: false })
+      })
       break
 
     case ChromeMessageTypeGetLocalSetting:
-      const setting = getLocalSetting(request.arg.settingKey)
-      sendResponse({ success: true, result: setting })
+      getLocalSetting<string>(request.arg.settingKey).then(setting => {
+        sendResponse({ success: true, result: setting })
+      }).catch(() => {
+        sendResponse({ success: false })
+      })
       break
 
     case ChromeMessageTypePlayAudio:
-      window.heap.track(TrackingNameInteractItem, { interaction: "Play audio", langCode: request.arg.langCode, text: request.arg.text })
       getGoogleAuthTokenSilent().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
         http
@@ -240,6 +238,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }).catch((error: Error) => {
         sendResponse({ success: false, error: toResponseError(error) })
       })
+      break
 
     case ChromeMessageTypeGetInjectionTargets:
       getInjectionTargets().then((injectTargets) => {
@@ -266,11 +265,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 async function getRandomSubscribedSet(http: Http, itemsSkip: number, itemsLimit: number): Promise<SetInfo | null> {
   // TODO: Handle situation when set has edited, item ids got changed.
-  let randomSetInfo = getCachedSet()
+  let randomSetInfo = await getCachedSet()
 
   if (!randomSetInfo) {
     randomSetInfo = await getUserInteractionRandomSet(http, [InteractionSubscribe], itemsSkip, itemsLimit)
-    setCachedSet(randomSetInfo)
+    await setCachedSet(randomSetInfo)
   }
 
   return randomSetInfo
@@ -280,17 +279,17 @@ async function interactItem(http: Http, setId: string, itemId: string, action: s
   return interactToSetItem(http, setId, itemId, action)
 }
 
-function getCachedSet(): SetInfo {
-  const cachedRandomSetInfo = localStorage.getItem(LocalStorageKeyPrefix + CacheKeys.randomSet)
+async function getCachedSet(): Promise<SetInfo> {
+  const cachedRandomSetInfo = await getLocalSetting<string>(LocalStorageKeyPrefix + CacheKeys.randomSet)
   return cachedRandomSetInfo ? JSON.parse(cachedRandomSetInfo) : null
 }
 
 function setCachedSet(set: SetInfo) {
-  localStorage.setItem(LocalStorageKeyPrefix + CacheKeys.randomSet, JSON.stringify(set))
+  return setLocalSetting(LocalStorageKeyPrefix + CacheKeys.randomSet, JSON.stringify(set))
 }
 
 function clearLocalCachedRandomSet() {
-  localStorage.setItem(LocalStorageKeyPrefix + CacheKeys.randomSet, "")
+  return setLocalSetting(LocalStorageKeyPrefix + CacheKeys.randomSet, "")
 }
 
 async function clearServerRandomSetCache(http: Http, cacheType: string) {
@@ -298,12 +297,12 @@ async function clearServerRandomSetCache(http: Http, cacheType: string) {
 }
 
 // Local settings.
-function getLocalSetting(settingKey: string) {
-  return localStorage.getItem(`${LocalStorageKeyPrefix}${CacheKeys.localSetting}.${settingKey}`)
+function getLocalSetting<T>(settingKey: string): Promise<T> {
+  return getStorageLocalData<T>(`${LocalStorageKeyPrefix}${CacheKeys.localSetting}.${settingKey}`)
 }
 
 function setLocalSetting(settingKey: string, settingValue: string) {
-  return localStorage.setItem(`${LocalStorageKeyPrefix}${CacheKeys.localSetting}.${settingKey}`, settingValue)
+  return setStorageLocalData(`${LocalStorageKeyPrefix}${CacheKeys.localSetting}.${settingKey}`, settingValue)
 }
 
 function toResponseError(error: any) {
@@ -316,11 +315,6 @@ function toResponseError(error: any) {
   }
 
   return { success: false, error: { type: type, message: error.message, code: error.code } }
-}
-
-function includeHeapAnalytics() {
-  window.heap = window.heap || [], window.heap.load = function (e: any, t: any) { window.heap.appid = e, window.heap.config = t = t || {}; let r = document.createElement("script"); r.type = "text/javascript", r.async = !0, r.src = "https://cdn.heapanalytics.com/js/heap-" + e + ".js"; let a = document.getElementsByTagName("script")[0]; a.parentNode!.insertBefore(r, a); for (let n = function (e: any) { return function () { window.heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)window.heap[p[o]] = n(p[o]) }
-  window.heap.load(HeapIoId)
 }
 
 function increaseSyncStorageCount(cacheKey: string) {

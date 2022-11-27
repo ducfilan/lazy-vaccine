@@ -1,7 +1,27 @@
 import { sendMessage } from "@/background/MessagingFacade"
 import { CacheTypeUserRandomSet } from "@/common/consts/caching"
-import { ChromeMessageClearRandomSetCache, ChromeMessageTypeGetLocalSetting, ChromeMessageTypeGetRandomSetSilent, ChromeMessageTypeIdentifyUser, ChromeMessageTypeInteractItem, ChromeMessageTypePlayAudio, ChromeMessageTypeSuggestSets, ChromeMessageTypeSetLocalSetting, ChromeMessageTypeSignUp, ChromeMessageTypeToken, ChromeMessageTypeTracking, ChromeMessageTypeInteractSet, ChromeMessageTypeUndoInteractSet, ChromeMessageTypeCountInteractedItems, ChromeMessageTypeGetInteractedItems, ChromeMessageTypeGetSetSilent, ItemsLimitPerGet, ChromeMessageTypeGetInjectionTargets, ChromeMessageTypeGetRestrictedKeywords, StarItemsLimitPerGet } from "@/common/consts/constants"
+import {
+  ChromeMessageClearRandomSetCache,
+  ChromeMessageTypeGetLocalSetting,
+  ChromeMessageTypeGetRandomSetSilent,
+  ChromeMessageTypeIdentifyUser,
+  ChromeMessageTypeInteractItem,
+  ChromeMessageTypePlayAudio,
+  ChromeMessageTypeSuggestSets,
+  ChromeMessageTypeSetLocalSetting,
+  ChromeMessageTypeToken,
+  ChromeMessageTypeInteractSet,
+  ChromeMessageTypeUndoInteractSet,
+  ChromeMessageTypeCountInteractedItems,
+  ChromeMessageTypeGetInteractedItems,
+  ChromeMessageTypeGetSetSilent,
+  ChromeMessageTypeGetInjectionTargets,
+  ChromeMessageTypeGetRestrictedKeywords,
+  StarItemsLimitPerGet
+} from "@/common/consts/constants"
+import { TrackingNameInteractItem } from "@/common/consts/trackingNames"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
+import { trackUserItemInteraction } from "@/common/utils/utils"
 
 export function sendClearCachedRandomSetMessage() {
   return new Promise<string>((resolve, reject) => {
@@ -25,6 +45,7 @@ export function sendGetSetSilentMessage(setId: string, itemsSkip: number, itemsL
 }
 
 export function sendInteractItemMessage(setId: string, itemId: string, action: string) {
+  trackUserItemInteraction(action, itemId)
   return new Promise<{ success: boolean }>((resolve, reject) => {
     sendMessage(ChromeMessageTypeInteractItem, { setId, itemId, action, href: window?.location?.href || "unknown" }, resolve, reject)
   })
@@ -60,13 +81,9 @@ export function sendGetGoogleTokenMessage() {
   })
 }
 
-export function sendSignUpMessage() {
-  return new Promise<{ token: string }>((resolve, reject) => {
-    sendMessage(ChromeMessageTypeSignUp, null, resolve, reject)
-  })
-}
-
 export function sendPronounceMessage(text: string, langCode: string) {
+  window.heap.track(TrackingNameInteractItem, { interaction: "Play audio", langCode, text })
+
   return new Promise<any>((resolve, reject) => {
     sendMessage(ChromeMessageTypePlayAudio, { text, langCode }, resolve, reject)
   })
@@ -75,12 +92,6 @@ export function sendPronounceMessage(text: string, langCode: string) {
 export function sendIdentityUserMessage() {
   return new Promise<any>((resolve, reject) => {
     sendMessage(ChromeMessageTypeIdentifyUser, null, resolve, reject)
-  })
-}
-
-export function sendTrackingMessage(name: string, metadata?: { [key: string]: any } | null) {
-  return new Promise<any>((resolve, reject) => {
-    sendMessage(ChromeMessageTypeTracking, { name, metadata: { ...metadata, href: window?.location?.href || "unknown", domain: window?.location?.host || "unknown" } }, resolve, reject)
   })
 }
 

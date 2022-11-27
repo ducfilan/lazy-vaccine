@@ -1,3 +1,6 @@
+import { ItemsInteractionShow } from "../consts/constants"
+import { TrackingNameInteractItem, TrackingNameShowItem } from "../consts/trackingNames"
+
 export const preventReload = (isPrevent: boolean) => {
   if (isPrevent) {
     window.onbeforeunload = () => true
@@ -38,7 +41,35 @@ export function getStorageSyncData<T>(key: string): Promise<T> {
         return reject(chrome.runtime.lastError)
       }
 
-      resolve(obj[key])
+      resolve(obj[key] as T)
     })
   })
+}
+
+export function getStorageLocalData<T>(key: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(key, (obj) => {
+      if (chrome.runtime.lastError) {
+        return reject(chrome.runtime.lastError)
+      }
+
+      resolve(obj[key] as T)
+    })
+  })
+}
+
+export function setStorageSyncData(key: string, value: any): Promise<void> {
+  return chrome.storage.sync.set({ [key]: value })
+}
+
+export function setStorageLocalData(key: string, value: any): Promise<void> {
+  return chrome.storage.local.set({ [key]: value })
+}
+
+export function trackUserBehavior(name: string, metadata?: { [key: string]: any } | null) {
+  window.heap.track(name, metadata || {})
+}
+
+export function trackUserItemInteraction(interaction: string, itemId: string) {
+  trackUserBehavior(interaction === ItemsInteractionShow ? TrackingNameShowItem : TrackingNameInteractItem, { interaction, itemId })
 }

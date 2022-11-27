@@ -1,3 +1,4 @@
+import fetchAdapter from "@vespaiach/axios-fetch-adapter"
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 
 import StatusCode from "@consts/statusCodes"
@@ -37,6 +38,7 @@ export class Http {
       },
       withCredentials: false,
       timeout: ApiTimeOut,
+      adapter: fetchAdapter
     })
 
     http.interceptors.response.use(
@@ -129,7 +131,7 @@ export class Http {
 }
 
 export function get<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
-  return axios.get<T, R>(url, config)
+  return axios.get<T, R>(url, { ...(config || {}), adapter: fetchAdapter })
 }
 
 export function post<T = any, R = AxiosResponse<T>>(
@@ -137,7 +139,7 @@ export function post<T = any, R = AxiosResponse<T>>(
   data?: T,
   config?: AxiosRequestConfig
 ): Promise<R> {
-  return axios.post<T, R>(url, data, config)
+  return axios.post<T, R>(url, data, { ...(config || {}), adapter: fetchAdapter })
 }
 
 export function put<T = any, R = AxiosResponse<T>>(
@@ -145,5 +147,5 @@ export function put<T = any, R = AxiosResponse<T>>(
   data?: T,
   config?: AxiosRequestConfig
 ): Promise<R> {
-  return axios.put<T, R>(url, data, config)
+  return axios.put<T, R>(url, data, { ...(config || {}), adapter: fetchAdapter })
 }

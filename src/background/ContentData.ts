@@ -3,9 +3,24 @@ import { ItemsLimitPerGet, ItemsInteractionStar, ItemsInteractionShow, ItemsInte
 import { TrackingNameSuggestFromNoInteraction, TrackingNameSuggestToSubscribeRandomly } from "@/common/consts/trackingNames"
 import { User, SetInfo, SetInfoItem, ContentPageStatistics, KeyValuePair } from "@/common/types/types"
 import { shuffleArray, generateNumbersArray } from "@/common/utils/arrayUtils"
-import { appearInPercent, getStorageSyncData } from "@/common/utils/utils"
-import { sendClearCachedRandomSetMessage, sendCountInteractedItemsMessage, sendGetRandomSubscribedSetSilentMessage, sendGetSetSilentMessage, sendGetStarredItemsMessage, sendInteractItemMessage, sendTrackingMessage } from "@/pages/content-script/messageSenders"
-import { generateTemplateExtraValues, getNetworkErrorTemplateValues, getNotLoggedInTemplateValues, getNotSubscribedTemplateValues, getRecommendationTemplateValues, getSuggestReviewTemplateValues, toTemplateValues } from "@/pages/content-script/templateHelpers"
+import { appearInPercent, getStorageSyncData, trackUserBehavior } from "@/common/utils/utils"
+import {
+  sendClearCachedRandomSetMessage,
+  sendCountInteractedItemsMessage,
+  sendGetRandomSubscribedSetSilentMessage,
+  sendGetSetSilentMessage,
+  sendGetStarredItemsMessage,
+  sendInteractItemMessage
+} from "@/pages/content-script/messageSenders"
+import {
+  generateTemplateExtraValues,
+  getNetworkErrorTemplateValues,
+  getNotLoggedInTemplateValues,
+  getNotSubscribedTemplateValues,
+  getRecommendationTemplateValues,
+  getSuggestReviewTemplateValues,
+  toTemplateValues
+} from "@/pages/content-script/templateHelpers"
 
 export class ContentData {
   public identity: User | null = null
@@ -234,7 +249,7 @@ export class ContentData {
         appearInPercent(0.25)
       ) {
         console.debug("suggest after no interaction for a long time")
-        sendTrackingMessage(TrackingNameSuggestFromNoInteraction)
+        trackUserBehavior(TrackingNameSuggestFromNoInteraction)
         this.isNeedRecommendation = true
 
         return
@@ -243,7 +258,7 @@ export class ContentData {
       // 2% of the cards will be recommendation.
       if (appearInPercent(0.02)) {
         console.debug("match 2% of the cards will be recommendation")
-        sendTrackingMessage(TrackingNameSuggestToSubscribeRandomly)
+        trackUserBehavior(TrackingNameSuggestToSubscribeRandomly)
         this.isNeedRecommendation = true
 
         return

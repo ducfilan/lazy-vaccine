@@ -8,7 +8,7 @@ import {
   sendClearCachedRandomSetMessage,
   sendGetInjectionTargetsMessage,
   sendGetRestrictedKeywordsMessage,
-  sendIdentityUserMessage,
+  sendIdentityUserMessage as sendIdentifyUserMessage,
 } from "./pages/content-script/messageSenders"
 import {
   registerFlipCardEvent,
@@ -35,7 +35,7 @@ import {
   registerReviewStarredItemsEvent,
 } from "./pages/content-script/eventRegisters"
 import { getHref, isSiteSupportedInjection } from "./pages/content-script/domHelpers"
-import { ItemsInteractionForcedDone, ItemsInteractionIgnore, ItemsInteractionStar } from "./common/consts/constants"
+import { HeapIoId, ItemsInteractionForcedDone, ItemsInteractionIgnore, ItemsInteractionStar } from "./common/consts/constants"
 
 import "@/background/templates/css/content.scss"
 
@@ -54,15 +54,19 @@ let allIntervalIds: NodeJS.Timer[] = []
 // Entry point for injection.
 ;(async () => {
   try {
+    includeHeapAnalytics()
+
     const [{ value: user }, { value: restrictedKeywords }, { value: targets }]: any[] = await Promise.allSettled([
-      sendIdentityUserMessage(),
+      sendIdentifyUserMessage(),
       sendGetRestrictedKeywordsMessage(),
       sendGetInjectionTargetsMessage(),
     ])
 
     contentData.setIdentity(user)
+    window.heap.identify(user?.email)
+    window.heap.addUserProperties({ name: user?.name || "", finished_register_step: user?.finishedRegisterStep })
 
-    if (restrictedKeywords.every((keyword: string) => !getHref().includes(keyword))) {
+    if (restrictedKeywords?.every((keyword: string) => !getHref().includes(keyword))) {
       injectFixedWidgetBubble()
     }
 
@@ -253,4 +257,9 @@ function registerFlashcardEvents() {
 function injectFixedWidgetBubble() {
   const node = htmlStringToHtmlNode(renderToString(<FixedWidget />))
   document.querySelector("body")?.prepend(node)
+}
+
+function includeHeapAnalytics() {
+  window.heap = window.heap || [], window.heap.load = function (e: any, t: any) { window.heap.appid = e, window.heap.config = t = t || {}; for (let n = function (e: any) { return function () { window.heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], o = 0; o < p.length; o++)window.heap[p[o]] = n(p[o]) }
+  window.heap.load(HeapIoId)
 }

@@ -14,7 +14,7 @@ import { SetInfoItem, KeyValuePair, SetInfo, User } from "@/common/types/types"
 import { encodeBase64, isValidJson } from "@/common/utils/stringUtils"
 import { renderToString } from "react-dom/server"
 import RichTextEditor from "@/pages/app/components/RichTextEditor"
-import { sendGetLocalSettingMessage, sendGetRecommendationsMessage, sendTrackingMessage } from "./messageSenders"
+import { sendGetLocalSettingMessage, sendGetRecommendationsMessage } from "./messageSenders"
 import { ChooseLanguagesStep } from "@/common/consts/registerSteps"
 import { ContentTemplate } from "@/background/templates/ContentTemplate"
 import { FlashcardTemplate } from "@/background/templates/FlashcardTemplate"
@@ -33,6 +33,7 @@ import {
   TrackingNameRenderSuggestionSetsItem,
   TrackingNameRenderSuggestionReviewStaredItemsItem,
 } from "@/common/consts/trackingNames"
+import { trackUserBehavior } from "@/common/utils/utils"
 
 export async function getTemplateFromType(type: string) {
   console.debug("getTemplate called, type: " + type)
@@ -50,32 +51,32 @@ export async function getTemplateFromType(type: string) {
       )
 
     case ItemTypes.QnA.value:
-      sendTrackingMessage(TrackingNameRenderQnAItem).catch(console.error)
+      trackUserBehavior(TrackingNameRenderQnAItem)
       return renderToString(<QnATemplate />)
 
     case ItemTypes.Content.value:
-      sendTrackingMessage(TrackingNameRenderContentItem).catch(console.error)
+      trackUserBehavior(TrackingNameRenderContentItem)
       return renderToString(<ContentTemplate />)
 
     case OtherItemTypes.NotLoggedIn.value:
-      sendTrackingMessage(TrackingNameRenderNotLoggedInItem).catch(console.error)
+      trackUserBehavior(TrackingNameRenderNotLoggedInItem)
       return renderToString(<SuggestLoginTemplate />)
 
     case OtherItemTypes.NotSubscribed.value:
-      sendTrackingMessage(TrackingNameRenderNotSubscribedItem).catch(console.error)
+      trackUserBehavior(TrackingNameRenderNotSubscribedItem)
       return renderToString(<SuggestSubscribeTemplate />)
 
     case OtherItemTypes.NetworkTimeout.value:
     case OtherItemTypes.NetworkOffline.value:
-      sendTrackingMessage(TrackingNameRenderNotNetworkErrorItem).catch(console.error)
+      trackUserBehavior(TrackingNameRenderNotNetworkErrorItem)
       return renderToString(<NetworkErrorTemplate />)
 
     case OtherItemTypes.SuggestionSets.value:
-      sendTrackingMessage(TrackingNameRenderSuggestionSetsItem).catch(console.error)
+      trackUserBehavior(TrackingNameRenderSuggestionSetsItem)
       return renderToString(<SuggestSetsTemplate />)
 
     case OtherItemTypes.ReviewStaredItems.value:
-      sendTrackingMessage(TrackingNameRenderSuggestionReviewStaredItemsItem).catch(console.error)
+      trackUserBehavior(TrackingNameRenderSuggestionReviewStaredItemsItem)
       return renderToString(<SuggestReviewStaredItems />)
 
     default:

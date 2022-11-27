@@ -14,6 +14,8 @@ export const isElementAtBottom = (target: HTMLElement, threshold: number = 0.8) 
 };
 
 export const isSiteSupportedInjection = (targets: InjectionTargetsResponse, href: string): boolean => {
+    if (!targets) return false
+
     for (const target of targets) {
         if (RegExp(target.MatchPattern).test(href)) {
             return true

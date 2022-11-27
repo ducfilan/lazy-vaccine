@@ -12,8 +12,6 @@ import {
   sendInteractSetMessage,
   sendPronounceMessage,
   sendSetLocalSettingMessage,
-  sendSignUpMessage,
-  sendTrackingMessage,
   sendUndoInteractSetMessage,
 } from "./messageSenders"
 import {
@@ -37,7 +35,6 @@ import {
   ItemsInteractionStar,
   ItemTypes,
   OtherItemTypes,
-  SetTypeNormal,
   SetTypeReviewStarredItems,
 } from "@/common/consts/constants"
 import { generateNumbersArray, isArraysEqual, shuffleArray } from "@/common/utils/arrayUtils"
@@ -58,6 +55,7 @@ import {
   TrackingNameUnlikeSetFromSuggestion,
   TrackingNameUnsubscribeSetFromSuggestion,
 } from "@/common/consts/trackingNames"
+import { trackUserBehavior } from "@/common/utils/utils"
 
 export function registerFlipCardEvent() {
   const flipCard = (e: Event) => {
@@ -335,9 +333,7 @@ export function registerMorePopoverEvent() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine .inject-card-more-button", (e: Event) => {
     e.stopPropagation()
 
-    sendTrackingMessage(TrackingNameClickMoreButtonOnInjectCard, null).catch((error) => {
-      console.error(error)
-    })
+    trackUserBehavior(TrackingNameClickMoreButtonOnInjectCard, null)
 
     const moreButton = e.target as HTMLElement
     const wrapperElement: HTMLElement = moreButton.closest(InjectWrapperClassName)!
@@ -362,9 +358,7 @@ export function registerHoverBubblePopoverEvent() {
 
   addDynamicEventListener(document.body, "mouseover", ".lazy-vaccine-bubble .bubble-img", (e: Event) => {
     !isHovered &&
-      sendTrackingMessage(TrackingNameHoverInjectBubble, null).catch((error) => {
-        console.error(error)
-      })
+      trackUserBehavior(TrackingNameHoverInjectBubble, null)
     isHovered = true
     e.stopPropagation()
 
@@ -392,9 +386,7 @@ const isMoreButton = (element: HTMLElement) =>
 
 export function registerHoverBubbleCloseEvent() {
   addDynamicEventListener(document.body, "click", ".lazy-vaccine-bubble .close-btn", (e: Event) => {
-    sendTrackingMessage(TrackingNameCloseInjectBubble, null).catch((error) => {
-      console.error(error)
-    })
+    trackUserBehavior(TrackingNameCloseInjectBubble, null)
 
     e.stopPropagation()
 
@@ -422,11 +414,9 @@ export function registerNextSetEvent(preProcess: () => Promise<void>) {
       return
     }
 
-    sendTrackingMessage(TrackingNameClickNextSetLink, {
+    trackUserBehavior(TrackingNameClickNextSetLink, {
       setId: wrapperElement?.dataset.setId,
       itemId: wrapperElement?.dataset.itemId,
-    }).catch((error) => {
-      console.error(error)
     })
 
     toggleHiddenPopover(wrapperElement)
@@ -719,9 +709,7 @@ export function registerTopBarCardButtonsClickEvent() {
       const setId = wrapperElement.dataset.setId!
       const itemId = wrapperElement.dataset.itemId!
 
-      sendTrackingMessage(TrackingNameClickCloseCardButton, { setId, itemId }).catch((error) => {
-        console.error(error)
-      })
+      trackUserBehavior(TrackingNameClickCloseCardButton, { setId, itemId })
 
       const button = e.target as HTMLInputElement
       button.closest(InjectWrapperClassName)?.remove()
@@ -739,9 +727,7 @@ export function registerTopBarCardButtonsClickEvent() {
       const setId = wrapperElement.dataset.setId!
       const itemId = wrapperElement.dataset.itemId!
 
-      sendTrackingMessage(TrackingNameClickMaximizeCardButton, { setId, itemId }).catch((error) => {
-        console.error(error)
-      })
+      trackUserBehavior(TrackingNameClickMaximizeCardButton, { setId, itemId })
 
       redirectToUrlInNewTab(`${chrome.runtime.getURL(AppBasePath)}${AppPages.SetDetail.path}`.replace(":setId", setId))
     }
@@ -758,9 +744,7 @@ export function registerTopBarCardButtonsClickEvent() {
       const setId = wrapperElement.dataset.setId!
       const itemId = wrapperElement.dataset.itemId!
 
-      sendTrackingMessage(TrackingNameClickMinimizeCardButton, { setId, itemId }).catch((error) => {
-        console.error(error)
-      })
+      trackUserBehavior(TrackingNameClickMinimizeCardButton, { setId, itemId })
 
       const hiddenClassName = "lazy-vaccine-hidden"
       wrapperElement.querySelector(".card-wrapper")?.classList.toggle(hiddenClassName)
@@ -801,9 +785,7 @@ export function registerSubscribeEvent(callback: Function) {
       if (isSubscribed) {
         ;(wrapperElement.querySelector(".subscribe-button > span:nth-child(2)") as HTMLElement).innerText =
           i18n("common_subscribe")
-        sendTrackingMessage(TrackingNameUnsubscribeSetFromSuggestion, { setId }).catch((error) => {
-          console.error(error)
-        })
+        trackUserBehavior(TrackingNameUnsubscribeSetFromSuggestion, { setId })
 
         sendUndoInteractSetMessage(setId, InteractionSubscribe)
           .then(() => callback())
@@ -814,9 +796,7 @@ export function registerSubscribeEvent(callback: Function) {
       } else {
         ;(wrapperElement.querySelector(".subscribe-button > span:nth-child(2)") as HTMLElement).innerText =
           i18n("common_unsubscribe")
-        sendTrackingMessage(TrackingNameSubscribeSetFromSuggestion, { setId }).catch((error) => {
-          console.error(error)
-        })
+        trackUserBehavior(TrackingNameSubscribeSetFromSuggestion, { setId })
 
         sendInteractSetMessage(setId, InteractionSubscribe)
           .then(() => callback())
@@ -846,9 +826,7 @@ export function registerLikeEvent(callback: Function) {
       ;(e.target as HTMLElement).closest("button")?.querySelector(".anticon")?.classList.toggle("is-primary")
 
       if (isLiked) {
-        sendTrackingMessage(TrackingNameUnlikeSetFromSuggestion, { setId }).catch((error) => {
-          console.error(error)
-        })
+        trackUserBehavior(TrackingNameUnlikeSetFromSuggestion, { setId })
 
         sendUndoInteractSetMessage(setId, InteractionLike)
           .then(() => callback())
@@ -857,9 +835,7 @@ export function registerLikeEvent(callback: Function) {
             console.error(error)
           })
       } else {
-        sendTrackingMessage(TrackingNameLikeSetFromSuggestion, { setId }).catch((error) => {
-          console.error(error)
-        })
+        trackUserBehavior(TrackingNameLikeSetFromSuggestion, { setId })
 
         if (isDisliked) await sendUndoInteractSetMessage(setId, InteractionDislike)
 
@@ -893,9 +869,7 @@ export function registerDislikeEvent(callback: Function) {
       ;(e.target as HTMLElement).closest("button")?.querySelector(".anticon")?.classList.toggle("is-primary")
 
       if (isDisliked) {
-        sendTrackingMessage(TrackingNameUnDislikeSetFromSuggestion, { setId }).catch((error) => {
-          console.error(error)
-        })
+        trackUserBehavior(TrackingNameUnDislikeSetFromSuggestion, { setId })
 
         sendUndoInteractSetMessage(setId, InteractionDislike)
           .then(() => callback())
@@ -904,9 +878,7 @@ export function registerDislikeEvent(callback: Function) {
             console.error(error)
           })
       } else {
-        sendTrackingMessage(TrackingNameDislikeSetFromSuggestion, { setId }).catch((error) => {
-          console.error(error)
-        })
+        trackUserBehavior(TrackingNameDislikeSetFromSuggestion, { setId })
 
         if (isLiked) await sendUndoInteractSetMessage(setId, InteractionLike)
 
@@ -937,9 +909,7 @@ export function registerReviewStarredItemsEvent(getItem: () => Promise<SetInfoIt
 
       showLoadingCard(wrapperElement)
 
-      sendTrackingMessage(TrackingNameReviewStarredItems).catch((error) => {
-        console.error(error)
-      })
+      trackUserBehavior(TrackingNameReviewStarredItems)
 
       const item = await getItem()
       if (!item) return
