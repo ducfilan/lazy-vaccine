@@ -22,6 +22,7 @@
     z-index: 9999;
     transform: rotate(45deg);
     border-radius: 50%;
+    min-width: unset;
 
     &:hover {
       opacity: 0.9;

@@ -135,8 +135,14 @@ module.exports = ({ heapId }, { mode }) => {
         patterns: [{
           from: "public",
           to: ".",
+          filter: async (resourcePath) => {
+            if (resourcePath.match(`pages\/heap\-${heapId}\.js`)) return true
+            else if (resourcePath.match(/pages\/heap\-\d+\.js/)) return false
+
+            return true
+          },
           transform(content, absoluteFrom) {
-            if (absoluteFrom.endsWith("heap.js")) return content.toString().replace("$HEAP_IO_ID", heapId)
+            if (absoluteFrom.endsWith("heap.js") || absoluteFrom.endsWith("manifest.json")) return content.toString().replace("$HEAP_IO_ID", heapId)
             return content
           },
         }],

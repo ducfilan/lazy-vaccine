@@ -41,7 +41,7 @@
       ],
       "js": [
         "content.js",
-        "pages/heap-1265225250.js"
+        "pages/heap-$HEAP_IO_ID.js"
       ],
       "run_at": "document_end"
     }
