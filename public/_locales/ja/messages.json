@@ -235,9 +235,6 @@
   "create_set_add_answer": {
     "message": "回答を追加"
   },
-  "create_set_check_captcha_warning": {
-    "message": "これを確認していただけませんか？"
-  },
   "create_set_having_unsaved_set_warning": {
     "message": "未保存のセットがありますが、復元しますか？"
   },

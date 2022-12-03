@@ -163,9 +163,6 @@
   "create_set_add_answer": {
     "message": "添加答案"
   },
-  "create_set_check_captcha_warning": {
-    "message": "请检查一下好吗？"
-  },
   "pageSetsListTitle": {
     "message": "组列表"
   },

@@ -138,6 +138,14 @@ export const CreateSetItemsForm = () => {
         preserve={false}
         initialValues={{ items: setInfo?.items, fromLanguage: setInfo?.fromLanguage, toLanguage: setInfo?.toLanguage }}
       >
+        <ReCAPTCHA
+          ref={recaptchaRef}
+          size="invisible"
+          sitekey={RecaptchaSiteKey}
+          onChange={onReCaptchaChange}
+          onErrored={onReCaptchaErrored}
+          onExpired={onReCaptchaExpired}
+        />
         <Affix offsetTop={16}>
           <Card className="create-set-items--head">
             <Row gutter={8}>
@@ -170,32 +178,17 @@ export const CreateSetItemsForm = () => {
               <Col span={6}>{`${i18n("common_items")}: ${itemCount}`}</Col>
               <Col span={18}>
                 <Space className="float-right">
-                  <Popconfirm
-                    title={
-                      <div className="create-set-items--captcha">
-                        <ReCAPTCHA
-                          ref={recaptchaRef}
-                          sitekey={RecaptchaSiteKey}
-                          onChange={onReCaptchaChange}
-                          onErrored={onReCaptchaErrored}
-                          onExpired={onReCaptchaExpired}
-                        />
-                        {!setInfo?.captchaToken && (
-                          <Typography.Text type="danger">{i18n("create_set_check_captcha_warning")}</Typography.Text>
-                        )}
-                      </div>
-                    }
-                    icon={""}
-                    placement="bottom"
-                    onConfirm={() => formRef.submit()}
-                    okButtonProps={{ disabled: !setInfo?.captchaToken }}
-                    okText={isEdit ? i18n("common_save_changes") : i18n("common_create")}
-                    cancelText={i18n("common_back")}
+                  <Button
+                    size="large"
+                    type="primary"
+                    className="is-uppercase"
+                    onClick={() => {
+                      recaptchaRef.current.execute()
+                      formRef.submit()
+                    }}
                   >
-                    <Button size="large" type="primary" className="is-uppercase">
-                      {isEdit ? i18n("common_save_changes") : i18n("create_set_create_button")}
-                    </Button>
-                  </Popconfirm>
+                    {isEdit ? i18n("common_save_changes") : i18n("create_set_create_button")}
+                  </Button>
                 </Space>
               </Col>
             </Row>

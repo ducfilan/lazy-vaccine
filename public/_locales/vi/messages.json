@@ -232,9 +232,6 @@
   "create_set_add_answer": {
     "message": "Thêm đáp án"
   },
-  "create_set_check_captcha_warning": {
-    "message": "Xin hãy click vào đây để xác nhận"
-  },
   "create_set_having_unsaved_set_warning": {
     "message": "Bạn có bài học chưa tạo xong vẫn còn lưu, bạn muốn phục hồi không?"
   },

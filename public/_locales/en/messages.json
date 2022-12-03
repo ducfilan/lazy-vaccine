@@ -163,9 +163,6 @@
   "create_set_add_answer": {
     "message": "Add answer"
   },
-  "create_set_check_captcha_warning": {
-    "message": "Could you please check this?"
-  },
   "pageSetsListTitle": {
     "message": "Set list"
   },
