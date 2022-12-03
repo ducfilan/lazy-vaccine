@@ -5,7 +5,8 @@
   "scripts": {
     "test": "jest",
     "build": "webpack --config webpack.config.dev.js --mode=development --env heapId=1265225250",
-    "build:prod": "webpack --config webpack.config.prod.js --mode=production --env heapId=2553677209",
+    "build:prod:edge": "yes | cp prod.edge.env prod.env && webpack --config webpack.config.prod.js --mode=production --env heapId=2553677209",
+    "build:prod:chrome": "yes | cp prod.chrome.env prod.env && webpack --config webpack.config.prod.js --mode=production --env heapId=2553677209",
     "start": "webpack --watch --config webpack.config.dev.js --mode=development --env heapId=1265225250 --hot",
     "start:test": "webpack --watch --config webpack.config.dev.js --mode=none --env heapId=1265225250 --hot"
   },

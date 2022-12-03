@@ -66,7 +66,7 @@ export function refreshAccessToken() {
 
 function launchAndGetToken(options: any = {}, tryAgainCount: number = 0) {
   return new Promise<any>((resolve, reject) => {
-    const initialState = uuid()
+    const initialState = `${process.env.EXTENSION_TARGET_BROWSER}_${uuid()}`
 
     const url = new URLSearchParams(Object.entries({
       client_id: GoogleClientId,
