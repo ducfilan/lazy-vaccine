@@ -4,5 +4,5 @@ Lazy vaccine extension - Not lazy when you're lazy - Learn while you're not lear
 ### Add `.env` file
 
 ```
-API_BASE_URL = "http://localhost/api/v1"
+API_BASE_URL = "http://localhost"
 ```

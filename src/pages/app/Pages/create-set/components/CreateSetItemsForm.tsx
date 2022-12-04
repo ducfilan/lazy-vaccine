@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, { useEffect, useRef, useState } from "react"
 
 import { useNavigate } from "react-router-dom"
 import ReCAPTCHA from "react-google-recaptcha"
@@ -14,7 +14,6 @@ import {
   Form,
   Input,
   notification,
-  Popconfirm,
   Row,
   Select,
   Space,
@@ -38,8 +37,6 @@ import SupportingLanguages from "@/common/consts/supportingLanguages"
 import { removeToNewArrayAtIndex } from "@/common/utils/arrayUtils"
 import RichTextEditor from "@/pages/app/components/RichTextEditor"
 
-const { useRef, useState } = React
-
 const DefaultInitAnswersCount = 4
 const DefaultInitItemCount = 5
 const { Option } = Select
@@ -59,6 +56,8 @@ export const CreateSetItemsForm = () => {
     Array.from(Array(itemCount).keys()).map((i: number) => setInfo?.items?.at(i)?.type || ItemTypes.TermDef.value)
   )
   const [lastItemType, setLastItemType] = useState<string>(ItemTypes.TermDef.value)
+  const [createLoading, setCreateLoading] = useState<boolean>(false)
+
   const [, setCachedLastSetInfo] = useLocalStorage<SetInfo | null>(CacheKeys.lastSetInfo, null, "365d")
 
   const recaptchaRef = useRef<any>()
@@ -80,6 +79,12 @@ export const CreateSetItemsForm = () => {
     setSetInfo(newSetInfo)
   }
 
+  useEffect(() => {
+    if (setInfo?.captchaToken) {
+      formRef.submit()
+    }
+  }, [setInfo])
+
   const onSetItemsFormFinished = async (itemsInfo: {
     items: []
     fromLanguage: LanguageCode
@@ -90,18 +95,21 @@ export const CreateSetItemsForm = () => {
     const newSetInfo = { ...setInfo, ...itemsInfo } as SetInfo
 
     try {
+      setCreateLoading(true)
       const insertedSetId = isEdit ? await editSet(http, newSetInfo) : await createSet(http, newSetInfo)
 
       navigate(AppPages.SetDetail.path.replace(":setId", insertedSetId))
     } catch (error) {
       setCachedLastSetInfo(newSetInfo || null)
 
-      if (error instanceof ParamError) {
-        notification["error"]({
-          message: i18n("error"),
-          description: `${i18n("unexpected_error_message")} ${i18n("data_saved_message")}`,
-        })
-      }
+      notification["error"]({
+        message: i18n("error"),
+        description: `${i18n("unexpected_error_message")}${
+          error instanceof ParamError ? i18n("data_saved_message") : ""
+        }`,
+      })
+    } finally {
+      setCreateLoading(false)
     }
   }
 
@@ -182,9 +190,9 @@ export const CreateSetItemsForm = () => {
                     size="large"
                     type="primary"
                     className="is-uppercase"
+                    loading={createLoading}
                     onClick={() => {
                       recaptchaRef.current.execute()
-                      formRef.submit()
                     }}
                   >
                     {isEdit ? i18n("common_save_changes") : i18n("create_set_create_button")}
