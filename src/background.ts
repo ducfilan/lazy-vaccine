@@ -49,7 +49,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       getGoogleAuthTokenSilent().then((token: string) => {
         const http = new Http(token, LoginTypes.google)
         getMyInfo(http).then((user: User) => {
-          sendResponse({ success: true, user })
+          sendResponse({ success: true, result: user })
         }).catch((e) => {
           console.error(e)
           sendResponse({ success: false })

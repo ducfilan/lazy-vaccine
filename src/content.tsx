@@ -8,7 +8,7 @@ import {
   sendClearCachedRandomSetMessage,
   sendGetInjectionTargetsMessage,
   sendGetRestrictedKeywordsMessage,
-  sendIdentityUserMessage as sendIdentifyUserMessage,
+  sendIdentifyUserMessage,
 } from "./pages/content-script/messageSenders"
 import {
   registerFlipCardEvent,

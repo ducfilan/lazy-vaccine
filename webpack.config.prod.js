@@ -25,7 +25,7 @@ module.exports = ({ heapId }, { mode }) => {
       content: path.join(__dirname, "src/content.tsx"),
       background: path.join(__dirname, "src/background.ts"),
     },
-    output: { path: path.join(__dirname, "dist"), filename: "[name].js", publicPath: '/' },
+    output: { path: path.join(__dirname, "dist"), filename: "[name].js", publicPath: '/', clean: true },
     module: {
       rules: [
         {
@@ -119,9 +119,6 @@ module.exports = ({ heapId }, { mode }) => {
           switch (mode) {
             case "development":
               return "./.env"
-
-            case "none":
-              return "./test.env"
 
             case "production":
               return "./prod.env"

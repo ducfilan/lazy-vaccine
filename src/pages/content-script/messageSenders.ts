@@ -89,7 +89,7 @@ export function sendPronounceMessage(text: string, langCode: string) {
   })
 }
 
-export function sendIdentityUserMessage() {
+export function sendIdentifyUserMessage() {
   return new Promise<any>((resolve, reject) => {
     sendMessage(ChromeMessageTypeIdentifyUser, null, resolve, reject)
   })
