@@ -9,13 +9,14 @@ import { clearLoginInfoCache, signIn } from "@/common/facades/authFacade"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { User } from "@/common/types/types"
 import { TrackingNameOpenBeforeLoginPage } from "@/common/consts/trackingNames"
+import { track } from "@amplitude/analytics-browser"
 
 export const BeforeLoginPage = () => {
   const { setHttp, setUser } = useGlobalContext()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
-    window.heap.track(TrackingNameOpenBeforeLoginPage)
+    track(TrackingNameOpenBeforeLoginPage)
   }, [])
 
   return (

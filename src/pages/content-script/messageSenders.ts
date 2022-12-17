@@ -22,6 +22,7 @@ import {
 import { TrackingNameInteractItem } from "@/common/consts/trackingNames"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
 import { trackUserItemInteraction } from "@/common/utils/utils"
+import { track } from "@amplitude/analytics-browser"
 
 export function sendClearCachedRandomSetMessage() {
   return new Promise<string>((resolve, reject) => {
@@ -82,7 +83,7 @@ export function sendGetGoogleTokenMessage() {
 }
 
 export function sendPronounceMessage(text: string, langCode: string) {
-  window.heap.track(TrackingNameInteractItem, { interaction: "Play audio", langCode, text })
+  track(TrackingNameInteractItem, { interaction: "Play audio", langCode, text })
 
   return new Promise<any>((resolve, reject) => {
     sendMessage(ChromeMessageTypePlayAudio, { text, langCode }, resolve, reject)

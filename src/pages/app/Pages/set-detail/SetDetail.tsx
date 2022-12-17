@@ -12,6 +12,7 @@ import { notification, Skeleton } from "antd"
 import { i18n } from "@/common/consts/constants"
 import LearningActivities from "./components/LearningActivities"
 import { TrackingNameOpenSetDetailPage } from "@/common/consts/trackingNames"
+import { track } from "@amplitude/analytics-browser"
 
 const { useState, useEffect } = React
 
@@ -39,7 +40,7 @@ const SetDetailPage = () => {
   }
 
   useEffect(() => {
-    window.heap.track(TrackingNameOpenSetDetailPage)
+    track(TrackingNameOpenSetDetailPage)
   }, [])
 
   useEffect(onPageLoaded, [http])

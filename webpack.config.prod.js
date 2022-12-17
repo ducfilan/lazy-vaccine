@@ -9,7 +9,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 
 const path = require("path");
 
-module.exports = ({ heapId }, { mode }) => {
+module.exports = (env, { mode }) => {
   const isDevelopment = mode === "development";
 
   return {
@@ -132,16 +132,6 @@ module.exports = ({ heapId }, { mode }) => {
         patterns: [{
           from: "public",
           to: ".",
-          filter: async (resourcePath) => {
-            if (resourcePath.match(`pages\/heap\-${heapId}\.js`)) return true
-            else if (resourcePath.match(/pages\/heap\-\d+\.js/)) return false
-
-            return true
-          },
-          transform(content, absoluteFrom) {
-            if (absoluteFrom.endsWith("heap.js") || absoluteFrom.endsWith("manifest.json")) return content.toString().replace("$HEAP_IO_ID", heapId)
-            return content
-          },
         }],
       }),
       new webpack.HotModuleReplacementPlugin(),

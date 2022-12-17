@@ -30,6 +30,7 @@ import AchievementChart from "./components/AchievementChart"
 import moment from "moment"
 import ChoosePages from "./components/ChoosePages"
 import { TrackingNameOpenMySpacePage, TrackingNameOpenMySpaceTab } from "@/common/consts/trackingNames"
+import { track } from "@amplitude/analytics-browser"
 
 const { Content } = Layout
 
@@ -73,7 +74,7 @@ const UserProfilePage = (props: any) => {
   }
 
   function onTabChanged(newTab: string) {
-    window.heap.track(TrackingNameOpenMySpaceTab, { tab: newTab })
+    track(TrackingNameOpenMySpaceTab, { tab: newTab })
 
     setSelectedTab(newTab)
     resetStates()
@@ -176,7 +177,7 @@ const UserProfilePage = (props: any) => {
   }
 
   useEffect(() => {
-    window.heap.track(TrackingNameOpenMySpacePage)
+    track(TrackingNameOpenMySpacePage)
   }, [])
 
   useEffect(() => {

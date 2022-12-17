@@ -126,7 +126,7 @@ export const CreateSetDescriptionMaxLength = 500
 
 export const RecaptchaSiteKey = process.env.RECAPTCHA_SITE_KEY || ""
 export const GoogleClientId = process.env.GOOGLE_CLIENT_ID || ""
-export const HeapIoId = process.env.HEAP_IO_ID || ""
+export const AmplitudeApiKey = process.env.AMPLITUDE_API_KEY || ""
 
 export const LocalStorageKeyPrefix = "duc.lazy-vaccine."
 

@@ -16,6 +16,7 @@ import {
 import { pickRandomFlatColor } from "@/common/utils/arrayUtils"
 
 import "../css/set-item-card.scss"
+import { track } from "@amplitude/analytics-browser"
 
 const { useCallback, useState } = React
 
@@ -75,7 +76,7 @@ const SetItemCardSmall = (props: { set: SetInfo }) => {
           icon={<AimOutlined />}
           loading={isLoading}
           onClick={() => {
-            window.heap.track(isSubscribed ? "Unsubscribe to set" : "Subscribe to set", { setId: props.set._id })
+            track(isSubscribed ? "Unsubscribe to set" : "Subscribe to set", { setId: props.set._id })
             handleInteract(isSubscribed, setIsSubscribed, InteractionSubscribe)
           }}
         >
@@ -87,7 +88,7 @@ const SetItemCardSmall = (props: { set: SetInfo }) => {
             shape="circle"
             size="large"
             onClick={() => {
-              window.heap.track(isLiked ? "Unlike set" : "Like set", { setId: props.set._id })
+              track(isLiked ? "Unlike set" : "Like set", { setId: props.set._id })
               handleInteract(isLiked, setIsLiked, InteractionLike)
               !isLiked && isDisliked && undoInteract(setIsDisliked, InteractionDislike)
             }}
@@ -98,7 +99,7 @@ const SetItemCardSmall = (props: { set: SetInfo }) => {
             shape="circle"
             size="large"
             onClick={() => {
-              window.heap.track(isDisliked ? "Undislike set" : "Dislike set", { setId: props.set._id })
+              track(isDisliked ? "Undislike set" : "Dislike set", { setId: props.set._id })
               handleInteract(isDisliked, setIsDisliked, InteractionDislike)
               !isDisliked && isLiked && undoInteract(setIsLiked, InteractionLike)
             }}

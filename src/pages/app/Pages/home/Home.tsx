@@ -6,6 +6,7 @@ import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { getCategories } from "@/common/repo/category"
 import { Category } from "@/common/types/types"
 import CategoriesSider from "@/pages/app/components/CategoriesSider"
+import { track } from "@amplitude/analytics-browser"
 import { Layout, List, Skeleton, Typography } from "antd"
 import * as React from "react"
 import TopSets from "./components/TopSets"
@@ -26,7 +27,7 @@ const HomePage = (props: any) => {
   }
 
   useEffect(() => {
-    window.heap.track(TrackingNameOpenHomePage)
+    track(TrackingNameOpenHomePage)
   }, [])
 
   useEffect(onPageLoaded, [http])

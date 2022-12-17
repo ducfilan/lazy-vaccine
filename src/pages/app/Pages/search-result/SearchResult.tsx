@@ -14,6 +14,7 @@ import CacheKeys from "@/common/consts/caching"
 import useLocalStorage from "@/common/hooks/useLocalStorage"
 import { getCategories } from "@/common/repo/category"
 import { TrackingNameOpenSearchResultPage } from "@/common/consts/trackingNames"
+import { track } from "@amplitude/analytics-browser"
 
 const { Content } = Layout
 
@@ -26,7 +27,7 @@ const SearchResultPage = () => {
   const [searchParams] = useSearchParams()
 
   useEffect(() => {
-    window.heap.track(TrackingNameOpenSearchResultPage, { keyword: searchParams.get("keyword") })
+    track(TrackingNameOpenSearchResultPage, { keyword: searchParams.get("keyword") })
   }, [])
 
   useEffect(() => {

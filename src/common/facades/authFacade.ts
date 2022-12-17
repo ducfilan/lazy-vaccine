@@ -11,6 +11,7 @@ import { GoogleUserInfo, User } from "@/common/types/types"
 import { get, Http } from "./axiosFacade"
 import { logout } from "@/common/repo/user"
 import { openPopupCenter } from "@/common/utils/domUtils"
+import { reset as resetTrackingIdentity } from "@amplitude/analytics-browser"
 
 export function getGoogleAuthToken(options: any = {}, tryAgainCount: number = 0) {
   return new Promise<any>((resolve, reject) => {
@@ -170,7 +171,7 @@ export function signOut(http: Http, callback: () => void = () => { }) {
         .then(() => {
           clearLoginInfoCache()
           clearLocalCache()
-          window.heap.resetIdentity()
+          resetTrackingIdentity()
           revokeToken(token)
         })
         .catch((error) => console.log(error))

@@ -15,6 +15,7 @@ import { formatString, getGreetingTime } from "@/common/utils/stringUtils"
 import Clock from "@/common/components/Clock"
 import FriendRoad from "@/pages/app/components/FriendRoad"
 import { TrackingNameClickLoginButton } from "@/common/consts/trackingNames"
+import { track } from "@amplitude/analytics-browser"
 
 export default function FirstTime() {
   const [isLoading, setIsLoading] = useState(false)
@@ -24,7 +25,7 @@ export default function FirstTime() {
   const { setUser, http, setHttp } = useGlobalContext()
 
   function loginWithGoogle() {
-    window.heap.track(TrackingNameClickLoginButton)
+    track(TrackingNameClickLoginButton)
 
     setIsLoading(true)
     setIsShowLoginError(false)

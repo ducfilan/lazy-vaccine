@@ -1,3 +1,4 @@
+import { track } from "@amplitude/analytics-browser"
 import { ItemsInteractionShow } from "../consts/constants"
 import { TrackingNameInteractItem, TrackingNameShowItem } from "../consts/trackingNames"
 
@@ -67,7 +68,7 @@ export function setStorageLocalData(key: string, value: any): Promise<void> {
 }
 
 export function trackUserBehavior(name: string, metadata?: { [key: string]: any } | null) {
-  window.heap.track(name, metadata || {})
+  track(name, metadata || {})
 }
 
 export function trackUserItemInteraction(interaction: string, itemId: string) {

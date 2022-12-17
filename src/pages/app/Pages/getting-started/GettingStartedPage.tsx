@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 
-import { LocalStorageKeyPrefix, LoginTypes } from "@/common/consts/constants"
+import { AmplitudeApiKey, LocalStorageKeyPrefix, LoginTypes } from "@/common/consts/constants"
 import { Modal } from "antd"
 
 import { getGoogleAuthTokenSilent } from "@/common/facades/authFacade"
@@ -21,6 +21,7 @@ import {
   TrackingNameOpenGettingStartedPage,
 } from "@/common/consts/trackingNames"
 import MissionIntro from "./components/MissionIntro"
+import { identify, Identify, init, track } from "@amplitude/analytics-browser"
 
 export const GettingStartedPage = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -31,7 +32,7 @@ export const GettingStartedPage = () => {
   const [finishedRegisterStep, setFinishedRegisterStep] = useState<number>()
 
   useEffect(() => {
-    window.heap.track(TrackingNameOpenGettingStartedPage)
+    track(TrackingNameOpenGettingStartedPage)
 
     localStorage.removeItem(LocalStorageKeyPrefix + CacheKeyRandomSet)
     localStorage.removeItem(LocalStorageKeyPrefix + CacheKeyIsFinishedShowSubscribeGuide)
@@ -50,11 +51,12 @@ export const GettingStartedPage = () => {
             setUser(userInfo)
             setLastError(null)
 
-            window.heap.identify(userInfo.email)
-            window.heap.addUserProperties({
-              name: userInfo?.name || "",
-              finished_register_step: userInfo.finishedRegisterStep,
-            })
+            init(AmplitudeApiKey, userInfo.email)
+    
+            const identifyObj = new Identify()
+            identifyObj.set("name", userInfo.name)
+            identifyObj.set("finished_register_step", userInfo.finishedRegisterStep)
+            identify(identifyObj)
           })
           .catch((error) => {
             setLastError(error)
@@ -89,14 +91,14 @@ export const GettingStartedPage = () => {
 
     switch (finishedRegisterStep) {
       case RegisterSteps.ChooseLanguages:
-        window.heap.track(TrackingNameFinishLanguageSelection)
+        track(TrackingNameFinishLanguageSelection)
         return <FinishedGettingStarted />
 
       case RegisterSteps.Install:
         return <FirstTime />
 
       case RegisterSteps.Register:
-        window.heap.track(TrackingNameFinishLogin)
+        track(TrackingNameFinishLogin)
         return (
           <div tabIndex={0}>
             <ChooseLanguages />

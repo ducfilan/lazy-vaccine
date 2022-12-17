@@ -40,8 +40,7 @@
         "<all_urls>"
       ],
       "js": [
-        "content.js",
-        "pages/heap-$HEAP_IO_ID.js"
+        "content.js"
       ],
       "run_at": "document_end"
     }

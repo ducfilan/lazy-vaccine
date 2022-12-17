@@ -20,7 +20,7 @@ import PagesNavigator from "./components/PagesNavigator"
 
 import { User } from "@/common/types/types"
 import { getMyInfo } from "@/common/repo/user"
-import { AppPages, i18n, LoginTypes } from "@/common/consts/constants"
+import { AmplitudeApiKey, AppPages, i18n, LoginTypes } from "@/common/consts/constants"
 import { getGoogleAuthTokenSilent } from "@facades/authFacade"
 import { Http } from "@facades/axiosFacade"
 import { GlobalContext } from "@/common/contexts/GlobalContext"
@@ -34,6 +34,7 @@ import { BeforeLoginPage } from "./Pages/before-login/BeforeLoginPage"
 import { GettingStartedPage } from "./Pages/getting-started/GettingStartedPage"
 import SupportingLanguages from "@/common/consts/supportingLanguages"
 import NetworkError from "@/common/components/NetworkError"
+import { identify, Identify, init } from "@amplitude/analytics-browser"
 
 const { Content } = Layout
 
@@ -119,11 +120,12 @@ const AppPage = () => {
             setUser(userInfo)
             setLocale(langCodeToAntLocaleMap[userInfo.locale] || defaultLocale)
 
-            window.heap.identify(userInfo.email)
-            window.heap.addUserProperties({
-              name: userInfo?.name || "",
-              finished_register_step: userInfo.finishedRegisterStep,
-            })
+            init(AmplitudeApiKey, userInfo.email)
+    
+            const identifyObj = new Identify()
+            identifyObj.set("name", userInfo.name || "")
+            identifyObj.set("finished_register_step", userInfo.finishedRegisterStep)
+            identify(identifyObj)
           })
           .catch((error) => {
             source !== "popup" &&

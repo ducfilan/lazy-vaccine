@@ -276,10 +276,10 @@ export type EmptyText = {
 }
 
 declare global {
-  interface Window { heap: any, receiveToken: any, acceptedGoogleLogin: boolean }
+  interface Window { amplitude: any, receiveToken: any, acceptedGoogleLogin: boolean }
 }
 
-window.heap = window.heap || {}
+window.amplitude = window.amplitude || {}
 
 export type ContentPageStatistics = {
   starredItemsCount?: number,

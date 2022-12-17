@@ -17,6 +17,7 @@ import { updateUserInfo } from "@/common/repo/user"
 import { getTopSearchKeywords } from "@/common/repo/staticApis"
 import Loading from "@/common/components/Loading"
 import { getTopCategories } from "@/common/repo/category"
+import { track } from "@amplitude/analytics-browser"
 
 export default function FinishedGettingStarted() {
   const { user, http, setUser } = useGlobalContext()
@@ -69,7 +70,7 @@ export default function FinishedGettingStarted() {
   }
 
   const openSearchPage = (keyword: string) => {
-    window.heap.track(TrackingNameDoneActivation)
+    track(TrackingNameDoneActivation)
     window.open(
       `${chrome.runtime.getURL(AppBasePath)}${AppPages.Sets.path}?keyword=${encodeURIComponent(keyword)}`,
       "_self"
@@ -77,7 +78,7 @@ export default function FinishedGettingStarted() {
   }
 
   const openCategoriesPage = (categoryId: string) => {
-    window.heap.track(TrackingNameDoneActivation)
+    track(TrackingNameDoneActivation)
     window.open(
       `${chrome.runtime.getURL(AppBasePath)}${AppPages.CategorySets.path.replace(":categoryId", categoryId)}`,
       "_self"

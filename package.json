@@ -4,11 +4,11 @@
   "description": "",
   "scripts": {
     "test": "jest",
-    "build": "webpack --config webpack.config.dev.js --mode=development --env heapId=1265225250",
-    "build:prod:edge": "yes | cp prod.edge.env prod.env && webpack --config webpack.config.prod.js --mode=production --env heapId=2553677209  && cd ./dist; zip -r ./edge.zip *",
-    "build:prod:chrome": "yes | cp prod.chrome.env prod.env && webpack --config webpack.config.prod.js --mode=production --env heapId=2553677209 && cd ./dist; zip -r ./chrome.zip *",
-    "start": "yes | cp local.env .env && webpack --watch --config webpack.config.dev.js --mode=development --env heapId=1265225250 --hot",
-    "start:test": "yes | cp test.env .env && webpack --watch --config webpack.config.dev.js --mode=development --env heapId=1265225250 --hot"
+    "build": "webpack --config webpack.config.dev.js --mode=development",
+    "build:prod:edge": "yes | cp prod.edge.env prod.env && webpack --config webpack.config.prod.js --mode=production && cd ./dist; zip -r ./edge.zip *",
+    "build:prod:chrome": "yes | cp prod.chrome.env prod.env && webpack --config webpack.config.prod.js --mode=production && cd ./dist; zip -r ./chrome.zip *",
+    "start": "yes | cp local.env .env && webpack --watch --config webpack.config.dev.js --mode=development --hot",
+    "start:test": "yes | cp test.env .env && webpack --watch --config webpack.config.dev.js --mode=development --hot"
   },
   "keywords": [],
   "license": "ISC",
@@ -58,6 +58,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^1.6.6",
     "@babel/runtime": "^7.19.0",
     "@emotion/css": "^11.10.0",
     "@emotion/react": "^11.10.4",

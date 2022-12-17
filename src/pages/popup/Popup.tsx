@@ -17,10 +17,11 @@ import { getMyInfo } from "@/common/repo/user"
 import { User } from "@/common/types/types"
 import { getGoogleAuthTokenSilent } from "@facades/authFacade"
 import { Http } from "@facades/axiosFacade"
-import { LoginTypes } from "@/common/consts/constants"
+import { AmplitudeApiKey, LoginTypes } from "@/common/consts/constants"
 import { GlobalContext } from "@/common/contexts/GlobalContext"
 import { getErrorView } from "../app/App"
 import { TrackingNameOpenPopup } from "@/common/consts/trackingNames"
+import { identify, Identify, init, track } from "@amplitude/analytics-browser"
 
 const PopupPage = () => {
   const [user, setUser] = useState<User | null>(null)
@@ -43,7 +44,7 @@ const PopupPage = () => {
   }, [])
 
   useEffect(() => {
-    window.heap.track(TrackingNameOpenPopup)
+    track(TrackingNameOpenPopup)
   }, [])
 
   useEffect(() => {
@@ -53,8 +54,12 @@ const PopupPage = () => {
       .then((userInfo) => {
         setUser(userInfo)
 
-        window.heap.identify(userInfo.email)
-        window.heap.addUserProperties({ name: user?.name || "", finished_register_step: userInfo.finishedRegisterStep })
+        init(AmplitudeApiKey, userInfo.email)
+    
+        const identifyObj = new Identify()
+        identifyObj.set("name", userInfo.name)
+        identifyObj.set("finished_register_step", userInfo.finishedRegisterStep)
+        identify(identifyObj)
       })
       .catch((error) => {
         setLastError(error)

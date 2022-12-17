@@ -19,6 +19,7 @@ import { AppPageCreateSet, i18n } from "@/common/consts/constants"
 
 import shibaEmptyBoxIcon from "@img/emojis/shiba/box.png"
 import { TrackingNameOpenCategorySetsPage } from "@/common/consts/trackingNames"
+import { track } from "@amplitude/analytics-browser"
 
 const { Content } = Layout
 const { useState, useEffect } = React
@@ -65,7 +66,7 @@ const CategorySetsPage = (props: any) => {
   }
 
   useEffect(() => {
-    window.heap.track(TrackingNameOpenCategorySetsPage, { categoryId })
+    track(TrackingNameOpenCategorySetsPage, { categoryId })
   }, [])
 
   useEffect(onPageLoaded, [http])
