@@ -81,7 +81,7 @@ export function sendGetGoogleTokenMessage() {
   })
 }
 
-export function sendPronounceMessage(text: string, langCode: string) {
+export function sendGetPronounceAudioMessage(text: string, langCode: string) {
   window.heap.track(TrackingNameInteractItem, { interaction: "Play audio", langCode, text })
 
   return new Promise<any>((resolve, reject) => {

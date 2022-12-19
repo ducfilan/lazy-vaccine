@@ -30,10 +30,8 @@ import { Http } from "@/common/facades/axiosFacade"
 import { getSetInfo, interactToSet, interactToSetItem, undoInteractToSet } from "@/common/repo/set"
 import { clearServerCache, countInteractedItems, getInteractedItems, getMyInfo, getUserInteractionRandomSet, suggestSets } from "@/common/repo/user"
 import { SetInfo, User } from "./common/types/types"
-import { getStorageLocalData, getStorageSyncData, setStorageLocalData } from "@/common/utils/utils"
+import { arrayBufferToBase64, getStorageLocalData, getStorageSyncData, setStorageLocalData } from "@/common/utils/utils"
 import { getInjectionTargets, getRestrictedKeywords } from "./common/repo/staticApis"
-
-let lastAudio: HTMLAudioElement
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.type) {
@@ -167,18 +165,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             },
           })
           .then((result) => {
-            const blob = new Blob([result.data], {
-              type: "audio/mpeg",
-            })
-
-            lastAudio && lastAudio.pause()
-            lastAudio = new Audio(URL.createObjectURL(blob))
-            lastAudio.play()
+            sendResponse({ success: true, result: arrayBufferToBase64(result.data) })
           })
           .catch((error) => {
             console.debug(error)
+            sendResponse({ success: false, error: toResponseError(error) })
           })
-        sendResponse({ success: true })
       }).catch((error: Error) => {
         sendResponse({ success: false, error: toResponseError(error) })
       })

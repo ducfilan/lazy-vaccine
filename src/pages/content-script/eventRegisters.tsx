@@ -10,7 +10,7 @@ import { SetInfo, SetInfoItem } from "@/common/types/types"
 import {
   sendInteractItemMessage,
   sendInteractSetMessage,
-  sendPronounceMessage,
+  sendGetPronounceAudioMessage,
   sendSetLocalSettingMessage,
   sendUndoInteractSetMessage,
 } from "./messageSenders"
@@ -55,7 +55,7 @@ import {
   TrackingNameUnlikeSetFromSuggestion,
   TrackingNameUnsubscribeSetFromSuggestion,
 } from "@/common/consts/trackingNames"
-import { trackUserBehavior } from "@/common/utils/utils"
+import { base64ToArrayBuffer, trackUserBehavior } from "@/common/utils/utils"
 
 export function registerFlipCardEvent() {
   const flipCard = (e: Event) => {
@@ -357,8 +357,7 @@ export function registerHoverBubblePopoverEvent() {
   let isHovered = false
 
   addDynamicEventListener(document.body, "mouseover", ".lazy-vaccine-bubble .bubble-img", (e: Event) => {
-    !isHovered &&
-      trackUserBehavior(TrackingNameHoverInjectBubble, null)
+    !isHovered && trackUserBehavior(TrackingNameHoverInjectBubble, null)
     isHovered = true
     e.stopPropagation()
 
@@ -673,6 +672,8 @@ export function registerSuggestionLoginButtonClickEvent(callback: () => Promise<
   )
 }
 
+let lastAudio: HTMLAudioElement
+
 export function registerPronounceButtonClickEvent() {
   addDynamicEventListener(
     document.body,
@@ -688,8 +689,16 @@ export function registerPronounceButtonClickEvent() {
 
       text &&
         langCode &&
-        sendPronounceMessage(text, langCode)
-          .then()
+        sendGetPronounceAudioMessage(text, langCode)
+          .then((audioDataBase64) => {
+            const audioBlob = new Blob([base64ToArrayBuffer(audioDataBase64)], {
+              type: "audio/mpeg",
+            })
+            lastAudio && lastAudio.pause()
+            lastAudio = new Audio(URL.createObjectURL(audioBlob))
+            lastAudio.crossOrigin = "anonymous"
+            lastAudio.play()
+          })
           .catch((error) => {
             console.error(error)
           })
