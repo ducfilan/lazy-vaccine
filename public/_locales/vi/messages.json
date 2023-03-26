@@ -412,6 +412,9 @@
   "common_starred_only": {
     "message": "Đã đánh dấu sao"
   },
+  "common_starred_not_done": {
+    "message": "Chưa hoàn thành"
+  },
   "common_top_searches": {
     "message": "Từ khóa được tìm kiếm nhiều nhất"
   },

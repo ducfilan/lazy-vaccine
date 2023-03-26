@@ -6,6 +6,8 @@ import { CardInteraction } from "./CardInteraction"
 import { useSetDetailContext } from "../contexts/SetDetailContext"
 import {
   ItemsInteractionFlip,
+  ItemsInteractionForcedDone,
+  ItemsInteractionIgnore,
   ItemsInteractionNext,
   ItemsInteractionPrev,
   ItemTypes,
@@ -86,6 +88,13 @@ export const CardItem = () => {
 
   const renderCardFaceElement = () => {
     const item = setInfo.items?.at(currentIndex)
+    const isSkip =
+      item?.interactionCount &&
+      (item?.interactionCount[ItemsInteractionForcedDone] > 0 || item?.interactionCount[ItemsInteractionIgnore] > 0)
+    if (isSkip) {
+      currentIndex < setInfo.items.length - 1 && setCurrentIndex(currentIndex + 1)
+      return <></>
+    }
 
     let element = <></>
 
@@ -183,7 +192,7 @@ export const CardItem = () => {
 const TopBar = (props: { currentIndex: number; itemLang: string; cardFace: string }) => {
   const { setInfo } = useSetDetailContext()
 
-  if (!setInfo || !props.itemLang) return <></>
+  if (!setInfo) return <></>
 
   const item = setInfo?.items?.at(props.currentIndex)
   const getDisplayingItemProperty = () => {
@@ -208,7 +217,13 @@ const TopBar = (props: { currentIndex: number; itemLang: string; cardFace: strin
 
   return (
     <div className="card-item--top-bar-wrapper">
-      <AudioPlayer url={ApiPronounceText(takeFirstLine(getMainContent(getDisplayingItemProperty())), props.itemLang)} />
+      {props.itemLang ? (
+        <AudioPlayer
+          url={ApiPronounceText(takeFirstLine(getMainContent(getDisplayingItemProperty())), props.itemLang)}
+        />
+      ) : (
+        <></>
+      )}
       <div className="card-item--top-bar-counter">
         {props.currentIndex + 1} / {setInfo.items!.length}
       </div>

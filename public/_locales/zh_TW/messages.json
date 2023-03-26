@@ -397,6 +397,9 @@
   "common_starred_only": {
     "message": "仅加星标"
   },
+  "common_starred_not_done": {
+    "message": "还没完"
+  },
   "common_top_searches": {
     "message": "热门搜索关键字"
   },

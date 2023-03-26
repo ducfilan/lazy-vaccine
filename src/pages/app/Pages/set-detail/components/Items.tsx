@@ -2,7 +2,13 @@ import React, { useMemo, useState } from "react"
 import { Col, Row, Checkbox, Card, Divider, Tabs, Button } from "antd"
 import { StarFilled } from "@ant-design/icons"
 import { useSetDetailContext } from "../contexts/SetDetailContext"
-import { i18n, ItemsInteractionStar, ItemTypes } from "@/common/consts/constants"
+import {
+  i18n,
+  ItemsInteractionForcedDone,
+  ItemsInteractionIgnore,
+  ItemsInteractionStar,
+  ItemTypes,
+} from "@/common/consts/constants"
 import RichTextEditor from "@/pages/app/components/RichTextEditor"
 import { isValidJson } from "@/common/utils/stringUtils"
 import { SetInfo, SetInfoItem } from "@/common/types/types"
@@ -15,7 +21,7 @@ export default function Items() {
   const { setInfo } = useSetDetailContext()
   const [displayItems, setDisplayItems] = useState<SetInfoItem[] | undefined>(setInfo?.items)
 
-  const [TabAllItems, TabStarredItems] = ["1", "2"]
+  const [TabAllItems, TabStarredItems, TabNotDoneItems] = ["1", "2", "3"]
 
   if (!http || !setInfo?.items) return <></>
 
@@ -39,6 +45,19 @@ export default function Items() {
               setDisplayItems(setInfo.items.filter((item) => item.isStarred))
               break
 
+            case TabNotDoneItems:
+              setDisplayItems(
+                setInfo.items.filter((item) => {
+                  const isSkip =
+                    item?.interactionCount &&
+                    (item?.interactionCount[ItemsInteractionForcedDone] > 0 ||
+                      item?.interactionCount[ItemsInteractionIgnore] > 0)
+
+                  return !isSkip
+                })
+              )
+              break
+
             default:
               break
           }
@@ -52,6 +71,11 @@ export default function Items() {
           {
             label: i18n("common_starred_only"),
             key: TabStarredItems,
+            children: <>{displayItemElements}</>,
+          },
+          {
+            label: i18n("common_starred_not_done"),
+            key: TabNotDoneItems,
             children: <>{displayItemElements}</>,
           },
         ]}
@@ -92,7 +116,7 @@ function turnItemToElements(
 
       case ItemTypes.QnA.value:
         innerContent = (
-          <>
+          <div className="pad-right-24px">
             {isValidJson(item.question) ? (
               <RichTextEditor readOnly value={item.question} />
             ) : (
@@ -108,7 +132,7 @@ function turnItemToElements(
                 <Col flex="auto">{answer.answer}</Col>
               </Row>
             ))}
-          </>
+          </div>
         )
         break
 

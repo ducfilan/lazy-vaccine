@@ -415,6 +415,9 @@
   "common_starred_only": {
     "message": "スター付きのみ"
   },
+  "common_starred_not_done": {
+    "message": "残ってる"
+  },
   "common_top_searches": {
     "message": "よく検索されたキーワード"
   },

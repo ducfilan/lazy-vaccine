@@ -412,6 +412,9 @@
   "common_starred_only": {
     "message": "Starred only"
   },
+  "common_starred_not_done": {
+    "message": "Not done"
+  },
   "common_top_searches": {
     "message": "Top searches"
   },
