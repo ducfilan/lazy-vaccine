@@ -1,6 +1,5 @@
 import React from "react"
 import { Tabs } from "antd"
-import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { useSetDetailContext } from "../contexts/SetDetailContext"
 import { CardItem } from "./CardItem"
 import { i18n } from "@/common/consts/constants"

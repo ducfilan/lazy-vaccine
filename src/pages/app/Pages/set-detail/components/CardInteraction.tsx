@@ -21,15 +21,13 @@ export const CardInteraction = ({
   const { setInfo } = useSetDetailContext()
   const { http } = useGlobalContext()
 
-  if (!setInfo) {
-    return <></>
-  }
-
-  const currentItem = setInfo.items?.at(currentIndex)
+  const currentItem = setInfo?.items?.at(currentIndex)
 
   const [isStarred, setIsStarred] = useState<boolean>(false)
 
   useEffect(() => {
+    if (!setInfo) return
+
     const isCurrentItemStarred =
       (setInfo.itemsInteractions?.find((i) => i.itemId === currentItem?._id)?.interactionCount[ItemsInteractionStar] ||
         0) %
@@ -37,6 +35,10 @@ export const CardInteraction = ({
       1
     setIsStarred(isCurrentItemStarred)
   }, [currentIndex])
+
+  if (!setInfo) {
+    return <></>
+  }
 
   const interactItem = (itemId: string | undefined, action: string) => {
     if (!http || !itemId) return

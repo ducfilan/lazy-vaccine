@@ -5,7 +5,6 @@ import NextPrevButton from "@/pages/popup/components/NextPrevButton"
 import { CardInteraction } from "./CardInteraction"
 import { useSetDetailContext } from "../contexts/SetDetailContext"
 import {
-  i18n,
   ItemsInteractionFlip,
   ItemsInteractionNext,
   ItemsInteractionPrev,
@@ -14,7 +13,7 @@ import {
   SettingKeyFrontItem,
 } from "@consts/constants"
 import { Button, Skeleton } from "antd"
-import { formatString, getMainContent, isValidJson, takeFirstLine } from "@/common/utils/stringUtils"
+import { getMainContent, takeFirstLine } from "@/common/utils/stringUtils"
 import RichTextEditor from "@/pages/app/components/RichTextEditor"
 import { sendGetLocalSettingMessage } from "@/pages/content-script/messageSenders"
 import { CSSTransition } from "react-transition-group"
@@ -23,6 +22,7 @@ import { SetInfo } from "@/common/types/types"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
 import { interactToSetItem } from "@/common/repo/set"
 import { ApiPronounceText } from "@consts/apis"
+import ReviewQAItem from "./ReviewQAItem"
 
 const FlashCardFaces = {
   front: "front",
@@ -33,15 +33,13 @@ export const CardItem = () => {
   const { setInfo } = useSetDetailContext()
   const { http } = useGlobalContext()
 
-  if (!setInfo) {
-    return <></>
-  }
-
   // TODO: Add interaction requests.
 
   const [flashCardSettingKey, setFlashCardSettingKey] = useState<{ front: string; back: string } | undefined>()
 
   useEffect(() => {
+    if (!setInfo) return
+
     Promise.all([sendGetLocalSettingMessage(SettingKeyFrontItem), sendGetLocalSettingMessage(SettingKeyBackItem)])
       .then(([frontSettingValue, backSettingValue]) => {
         setFlashCardSettingKey({
@@ -60,6 +58,10 @@ export const CardItem = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(0)
   const [flashCardDisplayFace, setFlashCardDisplayFace] = useState<string>(FlashCardFaces.front)
   const [isAnimating, setIsAnimating] = useState<boolean>(false)
+
+  if (!setInfo) {
+    return <></>
+  }
 
   const getCurrentDisplayLang = (): string => {
     if (!flashCardDisplayFace || !flashCardSettingKey) return ""
@@ -132,34 +134,7 @@ export const CardItem = () => {
         break
 
       case ItemTypes.QnA.value:
-        element = (
-          <div key={item?._id} className="qna-card-wrapper">
-            <div className="card--content">
-              <p className="card--question">
-                {isValidJson(item.question) ? (
-                  <RichTextEditor readOnly value={item.question} />
-                ) : (
-                  <p className="set-detail--item-question">{item.question}</p>
-                )}
-              </p>
-              <p>
-                {formatString(i18n("inject_card_select"), [
-                  { key: "correctAnswerCount", value: `${item.answers?.filter((a) => a.isCorrect).length || 1}` },
-                ])}
-              </p>
-              <div className="answer--wrapper">
-                {item.answers?.map((answer) => (
-                  <div className="answer-btn">{answer.answer}</div>
-                ))}
-              </div>
-              <div className="check--wrapper">
-                <Button type="primary" size="middle" className="check--btn">
-                  {i18n("common_check")}
-                </Button>
-              </div>
-            </div>
-          </div>
-        )
+        element = <ReviewQAItem item={item} setId={setInfo._id} />
         break
 
       default:
