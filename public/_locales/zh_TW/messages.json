@@ -397,7 +397,10 @@
   "common_starred_only": {
     "message": "仅加星标"
   },
-  "common_starred_not_done": {
+  "common_done": {
+    "message": "完成"
+  },
+  "common_not_done": {
     "message": "还没完"
   },
   "common_top_searches": {

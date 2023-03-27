@@ -21,7 +21,7 @@ export default function Items() {
   const { setInfo } = useSetDetailContext()
   const [displayItems, setDisplayItems] = useState<SetInfoItem[] | undefined>(setInfo?.items)
 
-  const [TabAllItems, TabStarredItems, TabNotDoneItems] = ["1", "2", "3"]
+  const [TabAllItems, TabStarredItems, TabDoneItems, TabNotDoneItems] = ["1", "2", "3", "4"]
 
   if (!http || !setInfo?.items) return <></>
 
@@ -43,6 +43,19 @@ export default function Items() {
 
             case TabStarredItems:
               setDisplayItems(setInfo.items.filter((item) => item.isStarred))
+              break
+
+            case TabDoneItems:
+              setDisplayItems(
+                setInfo.items.filter((item) => {
+                  const isSkip =
+                    item?.interactionCount &&
+                    (item?.interactionCount[ItemsInteractionForcedDone] > 0 ||
+                      item?.interactionCount[ItemsInteractionIgnore] > 0)
+
+                  return isSkip
+                })
+              )
               break
 
             case TabNotDoneItems:
@@ -74,7 +87,12 @@ export default function Items() {
             children: <>{displayItemElements}</>,
           },
           {
-            label: i18n("common_starred_not_done"),
+            label: i18n("common_done"),
+            key: TabDoneItems,
+            children: <>{displayItemElements}</>,
+          },
+          {
+            label: i18n("common_not_done"),
             key: TabNotDoneItems,
             children: <>{displayItemElements}</>,
           },

@@ -415,7 +415,10 @@
   "common_starred_only": {
     "message": "スター付きのみ"
   },
-  "common_starred_not_done": {
+  "common_done": {
+    "message": "完了"
+  },
+  "common_not_done": {
     "message": "残ってる"
   },
   "common_top_searches": {
