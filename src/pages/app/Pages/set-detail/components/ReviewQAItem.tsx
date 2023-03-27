@@ -49,10 +49,11 @@ const ReviewQAItem = ({ item, setId }: { item: SetInfoItem; setId: string }) => 
               key={answer.answer}
               className={`answer-btn ${selectedAnswerIndex === i ? "selected" : ""} ${
                 selectedAnswerIndex === i && isAnswered && isAnsweredCorrect ? "correct" : ""
-              }${item.answers && item.answers[i].isCorrect && isAnswered ? "correct" : ""} ${
+              } ${item.answers && item.answers[i].isCorrect && isAnswered ? "correct" : ""} ${
                 selectedAnswerIndex === i && isAnswered && !isAnsweredCorrect ? "incorrect" : ""
               }`}
               onClick={() => {
+                setIsAnswered(false)
                 setSelectedAnswerIndex(i)
               }}
             >
