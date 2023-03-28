@@ -11,6 +11,7 @@ import {
   Card,
   Checkbox,
   Col,
+  Divider,
   Form,
   Input,
   notification,
@@ -85,12 +86,22 @@ export const CreateSetItemsForm = () => {
     }
   }, [setInfo])
 
+  const standardizeItems = (items: any[]) => {
+    for (let i = 0; i < items.length; i++) {
+      if (!items[i].moreInfo) delete items[i].moreInfo
+    }
+
+    return items
+  }
+
   const onSetItemsFormFinished = async (itemsInfo: {
-    items: []
+    items: any[]
     fromLanguage: LanguageCode
     toLanguage: LanguageCode
   }) => {
     if (!http) return
+
+    itemsInfo.items = standardizeItems(itemsInfo.items)
 
     const newSetInfo = { ...setInfo, ...itemsInfo } as SetInfo
 
@@ -395,6 +406,14 @@ export const CreateSetItemsForm = () => {
                                 </>
                               )}
                             </Form.List>
+                            <Divider />
+                            <Form.Item
+                              {...restField}
+                              name={[name, "moreInfo"]}
+                              label={i18n("create_set_hint_placeholder")}
+                            >
+                              <RichTextEditor value="" placeholder={i18n("create_set_hint_placeholder")} />
+                            </Form.Item>
                           </>
                         )
 

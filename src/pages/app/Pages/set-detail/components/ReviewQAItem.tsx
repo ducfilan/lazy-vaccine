@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react"
 
-import { Button } from "antd"
+import { Button, Divider } from "antd"
 import { formatString, isValidJson } from "@/common/utils/stringUtils"
 import { useGlobalContext } from "@/common/contexts/GlobalContext"
-import { i18n, ItemsInteractionAnswerCorrect, ItemsInteractionAnswerIncorrect } from "@/common/consts/constants"
+import {
+  i18n,
+  ItemsInteractionAnswerCorrect,
+  ItemsInteractionAnswerIncorrect,
+  ItemTypes,
+} from "@/common/consts/constants"
 import { SetInfoItem } from "@/common/types/types"
 import RichTextEditor from "@/pages/app/components/RichTextEditor"
 import { interactToSetItem } from "@/common/repo/set"
@@ -79,6 +84,14 @@ const ReviewQAItem = ({ item, setId }: { item: SetInfoItem; setId: string }) => 
             {i18n("common_check")}
           </Button>
         </div>
+        {isAnswered && item.type === ItemTypes.QnA.value && item.moreInfo ? (
+          <>
+            <Divider />
+            <RichTextEditor readOnly value={item.moreInfo} />
+          </>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   )

@@ -142,6 +142,9 @@
   "create_set_question_placeholder": {
     "message": "Question"
   },
+  "create_set_hint_placeholder": {
+    "message": "Hint/More Info"
+  },
   "create_set_answer_placeholder": {
     "message": "Answer"
   },

@@ -40,8 +40,6 @@ export const CardItem = () => {
   const [flashCardSettingKey, setFlashCardSettingKey] = useState<{ front: string; back: string } | undefined>()
 
   useEffect(() => {
-    if (!setInfo) return
-
     Promise.all([sendGetLocalSettingMessage(SettingKeyFrontItem), sendGetLocalSettingMessage(SettingKeyBackItem)])
       .then(([frontSettingValue, backSettingValue]) => {
         setFlashCardSettingKey({

@@ -42,10 +42,10 @@ const HOTKEYS: { [key: string]: string } = {
 const LIST_TYPES = ["numbered-list", "bulleted-list"]
 const TEXT_ALIGN_TYPES = ["left", "center", "right"]
 
-const initialEditorValue: any[] = [
+const initEditorValue = (value: any): any[] => [
   {
     type: "paragraph",
-    children: [{ text: "" }],
+    children: [{ text: value || "" }],
   },
 ]
 
@@ -54,7 +54,15 @@ const RichTextEditor = ({ readOnly, placeholder, onChange, value, ...restProps }
   const renderLeaf = useCallback((props: any) => <Leaf {...props} />, [])
   const editor = useMemo(() => withImages(withHistory(withReact(createEditor() as ReactEditor))), [])
 
-  value = typeof value === "object" ? value : JSON.parse(value || null) || initialEditorValue
+  if (typeof value !== "object") {
+    try {
+      if (!value) value = initEditorValue(value)
+      else value = JSON.parse(value || null)
+    } catch (error) {
+      value = initEditorValue(value)
+    }
+  }
+
   editor.children = value
 
   return (

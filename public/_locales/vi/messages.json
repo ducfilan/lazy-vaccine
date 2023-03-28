@@ -211,6 +211,9 @@
   "create_set_question_placeholder": {
     "message": "Câu hỏi"
   },
+  "create_set_hint_placeholder": {
+    "message": "Gợi ý/Thông tin thêm"
+  },
   "create_set_answer_placeholder": {
     "message": "Câu trả lời"
   },

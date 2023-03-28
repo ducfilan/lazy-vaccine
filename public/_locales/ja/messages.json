@@ -214,6 +214,9 @@
   "create_set_question_placeholder": {
     "message": "質問"
   },
+  "create_set_hint_placeholder": {
+    "message": "ヒント・詳しい情報"
+  },
   "create_set_answer_placeholder": {
     "message": "答え"
   },

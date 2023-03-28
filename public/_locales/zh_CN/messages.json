@@ -142,6 +142,9 @@
   "create_set_question_placeholder": {
     "message": "问题"
   },
+  "create_set_hint_placeholder": {
+    "message": "提示/更多信息"
+  },
   "create_set_answer_placeholder": {
     "message": "答案"
   },
