@@ -1,4 +1,3 @@
-import fetchAdapter from "@vespaiach/axios-fetch-adapter"
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 
 import StatusCode from "@consts/statusCodes"
@@ -38,7 +37,6 @@ export class Http {
       },
       withCredentials: false,
       timeout: ApiTimeOut,
-      adapter: fetchAdapter
     })
 
     http.interceptors.response.use(
@@ -53,6 +51,13 @@ export class Http {
 
     this.instance = http
     return http
+  }
+
+  updateToken(token?: string) {
+    if (this.token === token) return
+
+    token && (this.token = token)
+    this.instance!.defaults.headers.Authorization = `Bearer ${token || this.token}`
   }
 
   request<T = any, R = AxiosResponse<T>>(config: AxiosRequestConfig): Promise<R> {
@@ -111,6 +116,7 @@ export class Http {
             .then((token: string) => {
               this.token = token
 
+              this.updateToken(token)
               error.config.headers.Authorization = `Bearer ${token}`
               this.retryCount++
 
@@ -131,7 +137,7 @@ export class Http {
 }
 
 export function get<T = any, R = AxiosResponse<T>>(url: string, config?: AxiosRequestConfig): Promise<R> {
-  return axios.get<T, R>(url, { ...(config || {}), adapter: fetchAdapter })
+  return axios.get<T, R>(url, { ...(config || {}) })
 }
 
 export function post<T = any, R = AxiosResponse<T>>(
@@ -139,7 +145,7 @@ export function post<T = any, R = AxiosResponse<T>>(
   data?: T,
   config?: AxiosRequestConfig
 ): Promise<R> {
-  return axios.post<T, R>(url, data, { ...(config || {}), adapter: fetchAdapter })
+  return axios.post<T, R>(url, data, { ...(config || {}) })
 }
 
 export function put<T = any, R = AxiosResponse<T>>(
@@ -147,5 +153,5 @@ export function put<T = any, R = AxiosResponse<T>>(
   data?: T,
   config?: AxiosRequestConfig
 ): Promise<R> {
-  return axios.put<T, R>(url, data, { ...(config || {}), adapter: fetchAdapter })
+  return axios.put<T, R>(url, data, { ...(config || {}) })
 }
